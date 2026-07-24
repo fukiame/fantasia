@@ -8,18 +8,21 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v7
-            - name: Set up JDK ${{ matrix.java }}
-              uses: actions/setup-java@v5
-              with:
-                  distribution: 'temurin'
-                  java-version: 17
             - name: Configure git
               run: |
                   git config --global user.email "no-reply@github.com"
                   git config --global user.name "Github Actions"
-            - name: Patch and build
+            - name: patch
               run: |
-                  ./patchwork build
+                  ./patchwork p
+            - name: Set up Flutter
+              uses: subosito/flutter-action@v2
+              with:
+                channel: stable
+                flutter-version-file: fantasia/pubspec.yaml
+            - name: build
+              run: |
+                  ./patchwork b
             - name: Upload a build artifact
               uses: actions/upload-artifact@v7
               with:
