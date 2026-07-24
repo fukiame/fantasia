@@ -6,12 +6,13 @@ jobs:
         strategy:
             fail-fast: true
         steps:
-            - name: Checkout
-              uses: actions/checkout@v7
-            - name: Configure git
+            - uses: actions/checkout@v7
+            - name: configure
               run: |
                   git config --global user.email "no-reply@github.com"
                   git config --global user.name "Github Actions"
+                  sudo apt update && sudo apt upgrade
+                  sudo apt install libc6-dev build-essential
             - name: patch
               run: |
                   ./patchwork p
