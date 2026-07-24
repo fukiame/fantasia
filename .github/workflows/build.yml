@@ -11,7 +11,6 @@ jobs:
               run: |
                   git config --global user.email "no-reply@github.com"
                   git config --global user.name "Github Actions"
-                  sudo apt update && sudo apt upgrade
                   sudo apt install libc6-dev build-essential
             - name: patch
               run: |
