@@ -22,11 +22,7 @@ jobs:
             - name: build
               run: |
                   ./patchwork b
-            - name: catch them all
-              run: |
-                  find . -iname '*.apk'
-            - name: Upload a build artifact
-              uses: actions/upload-artifact@v7
+            - uses: actions/upload-artifact@v7
               with:
-                name: idk lbruh
-                path: fantasia/app/build/outputs/apk/debug/app-debug.apk
+                name: abcd
+                path: fantasia/build/app/outputs/flutter-apk/app-release.apk
