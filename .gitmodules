@@ -1,0 +1,3 @@
+[submodule "Flick"]
+	path = Flick
+	url = https://github.com/moss-apps/Flick
