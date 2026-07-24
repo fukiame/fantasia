@@ -21,7 +21,7 @@ case "$1" in
 	scripts/applyPatches.sh $upstream $downstream $upstream_branch
         cd $downstream
         # build commands here
-        ./gradlew clean && ./gradlew assembleRelease        
+        ./gradlew clean && ./gradlew assembleDebug
         cd ..) || exit 1
     ;;
     *)

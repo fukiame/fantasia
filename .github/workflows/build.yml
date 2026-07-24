@@ -28,4 +28,4 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 name: idk lbruh
-                path: florentiboard/app/build/outputs/apk/debug/app-debug.apk
+                path: fantasia/app/build/outputs/apk/debug/app-debug.apk
