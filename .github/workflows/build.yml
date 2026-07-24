@@ -19,7 +19,6 @@ jobs:
               uses: subosito/flutter-action@v2
               with:
                 channel: stable
-                flutter-version-file: fantasia/pubspec.yaml
             - name: build
               run: |
                   ./patchwork b
