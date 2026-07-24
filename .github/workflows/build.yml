@@ -5,7 +5,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                java: [11]
+                java: [17]
             fail-fast: true
         steps:
             - name: Checkout
@@ -15,16 +15,17 @@ jobs:
               with:
                   distribution: 'temurin'
                   java-version: ${{ matrix.java }}
-                  cache: gradle
+            - name: Set up CMake and Ninja
+              uses: lukka/get-cmake@latest
             - name: Configure git
               run: |
                   git config --global user.email "no-reply@github.com"
                   git config --global user.name "Github Actions"
             - name: Patch and build
               run: |
-                  ./sus build --jar
+                  ./patchwork build
             - name: Upload a build artifact
               uses: actions/upload-artifact@v3
               with:
-                name: {{ github.sha }}
-                path: build/app/build/outputs/apk/release/app-release.apk
+                name: idk lbruh
+                path: florentiboard/app/build/outputs/apk/debug/app-debug.apk
