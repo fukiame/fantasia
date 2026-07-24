@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 01:36:48 +0700
+Subject: [PATCH] [DNM] android: app: sign release with debug
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
+index e51cca5..44a5ca1 100644
+--- a/android/app/build.gradle.kts
++++ b/android/app/build.gradle.kts
+@@ -32,6 +32,7 @@ android {
+         compose = true
+     }
+ 
++    /*
+     signingConfigs {
+         create("release") {
+             storeFile = keystoreProperties.getProperty("storeFile")?.let { rootProject.file(it) }
+@@ -42,6 +43,7 @@ android {
+             enableV2Signing = true
+         }
+     }
++    */
+ 
+     defaultConfig {
+         applicationId = "me.fukia.fantasia"
+@@ -76,7 +78,10 @@ android {
+ 
+     buildTypes {
+         release {
++		/* fixme
+             signingConfig = signingConfigs.getByName("release")
++	    */ 
++		signingConfig = signingConfigs.debug
+         }
+     }
+ }
+-- 
+2.55.0
+
