@@ -22,6 +22,9 @@ jobs:
             - name: build
               run: |
                   ./patchwork b
+            - name: catch them all
+              run: |
+                  find . -iname '*.apk'
             - name: Upload a build artifact
               uses: actions/upload-artifact@v7
               with:
