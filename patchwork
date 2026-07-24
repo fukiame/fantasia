@@ -21,7 +21,9 @@ case "$1" in
 	scripts/applyPatches.sh $upstream $downstream $upstream_branch
         cd $downstream
         # build commands here
-        flutter build apk --release
+        flutter pub get
+        cd rust && cargo fetch && cd ..
+        flutter build apk --debug
         cd ..) || exit 1
     ;;
     *)
