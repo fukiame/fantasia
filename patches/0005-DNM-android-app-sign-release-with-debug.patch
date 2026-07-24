@@ -6,7 +6,7 @@ Subject: [PATCH] [DNM] android: app: sign release with debug
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index e51cca5..44a5ca1 100644
+index e51cca5..2f6e96e 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -32,6 +32,7 @@ android {
@@ -32,7 +32,7 @@ index e51cca5..44a5ca1 100644
 +		/* fixme
              signingConfig = signingConfigs.getByName("release")
 +	    */ 
-+		signingConfig = signingConfigs.debug
++            signingConfig = signingConfigs.getByName("debug")
          }
      }
  }
