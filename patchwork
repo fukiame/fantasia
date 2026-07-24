@@ -21,7 +21,7 @@ case "$1" in
 	scripts/applyPatches.sh $upstream $downstream $upstream_branch
         cd $downstream
         # build commands here
-        ./gradlew clean && ./gradlew assembleDebug
+        flutter build apk --release
         cd ..) || exit 1
     ;;
     *)
