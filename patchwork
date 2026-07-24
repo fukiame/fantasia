@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Original build script provided by WaterfallMC.
+
+upstream=Flick
+upstream_branch=main
+downstream=fantasia
+
+case "$1" in
+    "rb" | "rbp" | "rebuild")
+        scripts/rebuildPatches.sh $upstream $downstream || exit 1
+    ;;
+    "p" | "patch")
+        (git submodule update --init
+	scripts/applyPatches.sh $upstream $downstream $upstream_branch) || exit 1
+    ;;
+    "m" | "up" | "merge")
+        scripts/mergeUpstream.sh $upstream || exit 1
+    ;;
+    "b" | "build")
+        (git submodule update --init
+	scripts/applyPatches.sh $upstream $downstream $upstream_branch
+        cd $downstream
+        # build commands here
+        ./gradlew clean && ./gradlew assembleRelease        
+        cd ..) || exit 1
+    ;;
+    *)
+        echo "Commands:"
+        echo "  * rb, rbp, rebuild | Rebuilds the patches"
+        echo "  * p, patch         | Applies all the patches to Velocity"
+        echo "  * m, up, merge     | Utility to aid in merging upstream"
+        echo "  * b, build         | Builds the project"
+    ;;
+esac
