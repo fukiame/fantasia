@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 00:21:26 +0700
+Subject: [PATCH] visperm
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index 75fdc700..0dcffa49 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -18,8 +18,6 @@
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
+-    <!-- Visualizer API requires RECORD_AUDIO to read the output mix -->
+-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+     <!-- System-level floating mini-player overlay -->
+     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+     <!-- Bluetooth: connected-device / codec awareness (runtime-granted on Android 12+) -->
+-- 
+2.55.0
+
