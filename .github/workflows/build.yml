@@ -14,14 +14,14 @@ jobs:
                   sudo apt install libc6-dev build-essential gcc-multilib
             - name: patch
               run: |
-                  ./patchwork p
+                  ./pw p
             - name: Set up Flutter
               uses: subosito/flutter-action@v2
               with:
                 channel: stable
             - name: build
               run: |
-                  ./patchwork b
+                  ./pw b
             - uses: actions/upload-artifact@v7
               with:
                 path: fantasia/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
