@@ -6,37 +6,91 @@ Subject: [PATCH] fixup! lib: settings: library: icons
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 3d0dccd4..87f7d637 100644
+index 3d0dccd4..c90e2e83 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -994,11 +994,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
-                   color: AppColors.glassBackgroundStrong,
-                   borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-                 ),
+@@ -987,20 +987,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
+-              Container(
+-                width: context.scaleSize(AppConstants.containerSizeSm),
+-                height: context.scaleSize(AppConstants.containerSizeSm),
+-                decoration: BoxDecoration(
+-                  color: AppColors.glassBackgroundStrong,
+-                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-                ),
 -                child: Icon(
 -                  LucideIcons.music,
 -                  color: AppColors.textSecondary,
 -                  size: context.responsiveIcon(AppConstants.iconSizeMd),
 -                ),
-               ),
-               const SizedBox(width: AppConstants.spacingMd),
+-              ),
+-              const SizedBox(width: AppConstants.spacingMd),
                Expanded(
-@@ -1176,11 +1171,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
-                         AppConstants.radiusSm,
-                       ),
-                     ),
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+@@ -1079,20 +1065,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+         ),
+         child: Row(
+           children: [
+-            Container(
+-              width: context.scaleSize(AppConstants.containerSizeSm),
+-              height: context.scaleSize(AppConstants.containerSizeSm),
+-              decoration: BoxDecoration(
+-                color: AppColors.glassBackgroundStrong,
+-                borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-              ),
+-              child: Icon(
+-                LucideIcons.folder,
+-                color: context.adaptiveTextSecondary,
+-                size: context.responsiveIcon(AppConstants.iconSizeMd),
+-              ),
+-            ),
+-            const SizedBox(width: AppConstants.spacingMd),
+             Expanded(
+               child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+@@ -1167,22 +1139,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+               padding: const EdgeInsets.all(AppConstants.spacingMd),
+               child: Row(
+                 children: [
+-                  Container(
+-                    width: context.scaleSize(AppConstants.containerSizeSm),
+-                    height: context.scaleSize(AppConstants.containerSizeSm),
+-                    decoration: BoxDecoration(
+-                      color: AppColors.glassBackgroundStrong,
+-                      borderRadius: BorderRadius.circular(
+-                        AppConstants.radiusSm,
+-                      ),
+-                    ),
 -                    child: Icon(
 -                      LucideIcons.settings2,
 -                      color: context.adaptiveTextSecondary,
 -                      size: context.responsiveIcon(AppConstants.iconSizeMd),
 -                    ),
-                   ),
-                   const SizedBox(width: AppConstants.spacingMd),
+-                  ),
+-                  const SizedBox(width: AppConstants.spacingMd),
                    Expanded(
-@@ -1354,13 +1344,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
-                                 AppConstants.radiusSm,
-                               ),
-                             ),
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+@@ -1341,28 +1297,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                       padding: const EdgeInsets.all(AppConstants.spacingMd),
+                       child: Row(
+                         children: [
+-                          Container(
+-                            width: context.scaleSize(
+-                              AppConstants.containerSizeSm,
+-                            ),
+-                            height: context.scaleSize(
+-                              AppConstants.containerSizeSm,
+-                            ),
+-                            decoration: BoxDecoration(
+-                              color: AppColors.glassBackgroundStrong,
+-                              borderRadius: BorderRadius.circular(
+-                                AppConstants.radiusSm,
+-                              ),
+-                            ),
 -                            child: Icon(
 -                              LucideIcons.batteryWarning,
 -                              color: context.adaptiveTextSecondary,
@@ -44,9 +98,11 @@ index 3d0dccd4..87f7d637 100644
 -                                AppConstants.iconSizeMd,
 -                              ),
 -                            ),
-                           ),
-                           const SizedBox(width: AppConstants.spacingMd),
+-                          ),
+-                          const SizedBox(width: AppConstants.spacingMd),
                            Expanded(
+                             child: Column(
+                               crossAxisAlignment: CrossAxisAlignment.start,
 -- 
 2.55.0
 
