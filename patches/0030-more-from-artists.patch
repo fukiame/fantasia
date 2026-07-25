@@ -6,10 +6,10 @@ Subject: [PATCH] more(from)artists
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 5ba93432..d8cd5852 100644
+index 5ba93432..9d857f09 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -493,72 +493,12 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -493,72 +493,11 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
                      }, childCount: widget.songs.length),
                    ),
                  ),
@@ -75,7 +75,7 @@ index 5ba93432..d8cd5852 100644
 -                      ),
 -                    ),
 -                  ),
-                 ],
+-                ],
 +		/*
                  const SliverToBoxAdapter(
                    child: SizedBox(height: AppConstants.navBarHeight + 120),
@@ -153,6 +153,29 @@ index 4474700e..8b64dbae 100644
                ToggleSetting(
                  icon: LucideIcons.sparkles,
                  title: 'Animated Album Art',
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index a32a1b0f..ec03a65a 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -499,18 +499,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setAutoFocusSearch(value);
+   }
+ 
+-  Future<void> setShowMoreFromArtist(bool value) async {
+-    if (state.showMoreFromArtist == value) return;
+-    state = state.copyWith(showMoreFromArtist: value);
+-    await ref.read(appPreferencesServiceProvider).setShowMoreFromArtist(value);
+-  }
+-
+-  Future<void> setShowMoreArtists(bool value) async {
+-    if (state.showMoreArtists == value) return;
+-    state = state.copyWith(showMoreArtists: value);
+-    await ref.read(appPreferencesServiceProvider).setShowMoreArtists(value);
+-  }
+-
+   Future<void> setDetailHeaderArtExpanded(bool value) async {
+     if (state.detailHeaderArtExpanded == value) return;
+     state = state.copyWith(detailHeaderArtExpanded: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
 index 8bc645df..2f829796 100644
 --- a/lib/services/app_preferences_service.dart

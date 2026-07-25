@@ -217,11 +217,11 @@ index 55245d3e..4474700e 100644
                  icon: LucideIcons.listMusic,
                  title: 'Your Playlists',
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 5934be8e..f1f0d085 100644
+index 4eac293d..a32a1b0f 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -45,12 +45,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
-     await ref.read(appPreferencesServiceProvider).setShowSmartMixes(value);
+@@ -39,12 +39,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setHapticsEnabled(value);
    }
  
 -  Future<void> setShowRecentTracks(bool value) async {

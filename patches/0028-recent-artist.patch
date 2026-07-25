@@ -172,11 +172,11 @@ index 2564c991..55245d3e 100644
                  icon: LucideIcons.clock3,
                  title: 'Recently Played',
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 0c0ef644..5934be8e 100644
+index 3a67b544..4eac293d 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -45,12 +45,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
-     await ref.read(appPreferencesServiceProvider).setShowSmartMixes(value);
+@@ -39,12 +39,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setHapticsEnabled(value);
    }
  
 -  Future<void> setShowRecentArtists(bool value) async {
