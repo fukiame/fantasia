@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 10:08:17 +0700
+Subject: [PATCH] android: drop i686
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
+index 2f6e96e..c19b743 100644
+--- a/android/app/build.gradle.kts
++++ b/android/app/build.gradle.kts
+@@ -53,7 +53,7 @@ android {
+         versionName = flutter.versionName
+ 
+         ndk {
+-            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64", "x86")
++            abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
+         }
+ 
+         externalNativeBuild {
+@@ -144,7 +144,6 @@ tasks.register("copyNdkLibs") {
+             "arm64-v8a" to "aarch64-linux-android",
+             "armeabi-v7a" to "arm-linux-androideabi",
+             "x86_64" to "x86_64-linux-android",
+-            "x86" to "i686-linux-android",
+         )
+ 
+         val jniLibsDir = project.file("src/main/jniLibs")
+-- 
+2.55.0
+
