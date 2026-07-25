@@ -210,7 +210,7 @@ index cc158c04..41472c1b 100644
  
              ],
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
-index 18257ca4..39eca519 100644
+index bc9bc60b..529dfebc 100644
 --- a/lib/features/player/screens/full_player_screen.dart
 +++ b/lib/features/player/screens/full_player_screen.dart
 @@ -81,7 +81,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>

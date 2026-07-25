@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 21:38:46 +0700
+Subject: [PATCH] lib: fps: triple vertical dist
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index 529dfebc..e60fced3 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -339,7 +339,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                 onVerticalDragStart: (details) {
+                   if (_isVinylRotationActive) return;
+                   final screenHeight = MediaQuery.sizeOf(context).height;
+-                  if (details.globalPosition.dy >= screenHeight - _backGestureEdgeWidth) {
++                  if (details.globalPosition.dy >= screenHeight - (_backGestureEdgeWidth * 3)) {
+                     _dragOffset = 0.0;
+                     return;
+                   }
+-- 
+2.55.0
+
