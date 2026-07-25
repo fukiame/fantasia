@@ -1399,10 +1399,18 @@ index e6400d73..614ebdb7 100644
                FilledButton(
                  onPressed: canApply ? _apply : null,
 diff --git a/lib/services/autoeq_catalog_service.dart b/lib/services/autoeq_catalog_service.dart
-index 327e5fbc..ae0b1762 100644
+index 327e5fbc..557e53e3 100644
 --- a/lib/services/autoeq_catalog_service.dart
 +++ b/lib/services/autoeq_catalog_service.dart
-@@ -92,11 +92,6 @@ class AutoEqCatalogService {
+@@ -2,7 +2,6 @@ import 'dart:async';
+ import 'dart:convert';
+ 
+ import 'package:flutter/services.dart' show rootBundle;
+-import 'package:http/http.dart' as http;
+ 
+ import 'package:flick/providers/equalizer_provider.dart';
+ import 'package:flick/services/eq_preset_file_service.dart';
+@@ -92,11 +91,6 @@ class AutoEqCatalogService {
    List<AutoEqEntry>? _entriesCache;
    List<String>? _brandsCache;
  
@@ -1414,7 +1422,7 @@ index 327e5fbc..ae0b1762 100644
    Future<List<AutoEqEntry>> loadBundled() async {
      final cached = _entriesCache;
      if (cached != null) return cached;
-@@ -174,83 +169,4 @@ class AutoEqCatalogService {
+@@ -174,83 +168,4 @@ class AutoEqCatalogService {
      });
      return results.take(limit).toList(growable: false);
    }
