@@ -460,7 +460,7 @@ index 2de9aaf6..6bcf6b0e 100644
              }
          }
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
-index 9c129dc5..0f1985de 100644
+index 9c129dc5..40ec2c30 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
 @@ -58,8 +58,6 @@ class MusicNotificationService : Service() {
@@ -493,6 +493,32 @@ index 9c129dc5..0f1985de 100644
          }
  
          syncAudioFocusState()
+@@ -247,7 +231,6 @@ class MusicNotificationService : Service() {
+         }
+         mediaSession.release()
+         isForegroundServiceStarted = false
+-        hideFloatingOverlay()
+     }
+ 
+     private fun shutdownForTaskRemoval() {
+@@ -567,17 +550,6 @@ class MusicNotificationService : Service() {
+         notificationManager.notify(NOTIFICATION_ID, notification)
+     }
+ 
+-    private fun showFloatingOverlay() {
+-        if (floatingOverlay == null) {
+-            floatingOverlay = FloatingPlayerOverlay(applicationContext)
+-        }
+-        floatingOverlay?.show(currentTitle, currentArtist, getAlbumArtBitmap(), isPlaying, currentDuration, currentPosition)
+-    }
+-
+-    private fun hideFloatingOverlay() {
+-        floatingOverlay?.hide()
+-    }
+-
+     private fun sendCommandToFlutter(command: String, args: Map<String, Any>? = null) {
+         android.os.Handler(mainLooper).post {
+             try {
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
 index d7ca6767..5ba93432 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
