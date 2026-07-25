@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 23:54:46 +0700
+Subject: [PATCH] tmp
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
+index cb402a61..7d5841e2 100644
+--- a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
++++ b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
+@@ -274,7 +274,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+                   ),
+                   if (selectedCandidate != null)
+                     OutlinedButton.icon(
+-                      onPressed: _isWorking ? null : _applySelectedCandidate,
++                      onPressed: _isWorking ? null : null,
+                       icon: const Icon(LucideIcons.check, size: 18),
+                       label: const Text('Apply Selected'),
+                     ),
+diff --git a/lib/services/album_art_import_service.dart b/lib/services/album_art_import_service.dart
+index 6dea9c5b..35f5fc0f 100644
+--- a/lib/services/album_art_import_service.dart
++++ b/lib/services/album_art_import_service.dart
+@@ -53,7 +53,7 @@ class AlbumArtUpdateResult {
+ 
+ class AlbumArtImportService {
+   AlbumArtImportService._({SongRepository? songRepository})
+-    : _songRepository = songRepository ?? SongRepository(;
++    : _songRepository = songRepository ?? SongRepository();
+ 
+   static final AlbumArtImportService instance = AlbumArtImportService._();
+   static const String _customArtworkDirectoryName = 'album_art_overrides';
+-- 
+2.55.0
+
