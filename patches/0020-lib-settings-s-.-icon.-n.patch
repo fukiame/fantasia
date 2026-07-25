@@ -1,0 +1,169 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 14:16:27 +0700
+Subject: [PATCH] lib: settings: :%s/.*icon.*\n
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
+index 17268a7e..f896608e 100644
+--- a/lib/features/settings/screens/settings_screen.dart
++++ b/lib/features/settings/screens/settings_screen.dart
+@@ -1,5 +1,4 @@
+ import 'package:flutter/material.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/features/settings/screens/app_info_settings_screen.dart';
+@@ -59,9 +58,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                     SettingsCard(
+                       children: [
+                         _CategoryTile(
+-                          icon: LucideIcons.library,
+-                          iconBg: const Color(0xFF2D4A6F),
+-                          iconFg: const Color(0xFF8BB8FF),
+                           title: 'Library',
+                           subtitle: 'Folders, scanning, and duplicates',
+                           onTap: () =>
+@@ -69,9 +65,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.play,
+-                          iconBg: const Color(0xFF4A2D6F),
+-                          iconFg: const Color(0xFFD19FFF),
+                           title: 'Playback & Display',
+                           subtitle: 'Gapless, view mode, and appearance',
+                           onTap: () => _navigate(
+@@ -81,9 +74,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.listOrdered,
+-                          iconBg: const Color(0xFF2D6F4A),
+-                          iconFg: const Color(0xFF8BFFC4),
+                           title: 'Queue',
+                           subtitle: 'Wrap-around and queue behavior',
+                           onTap: () =>
+@@ -91,9 +81,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.layoutPanelTop,
+-                          iconBg: const Color(0xFF4A2D6F),
+-                          iconFg: const Color(0xFFC4A3FF),
+                           title: 'Player Layout',
+                           subtitle: 'Layout mode, sizing, and quick actions',
+                           onTap: () => _navigate(
+@@ -103,9 +90,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.headphones,
+-                          iconBg: const Color(0xFF6F4A2D),
+-                          iconFg: const Color(0xFFFFC48B),
+                           title: 'Audio',
+                           subtitle: 'UAC2 and equalizer',
+                           onTap: () =>
+@@ -113,9 +97,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.bluetooth,
+-                          iconBg: const Color(0xFF2D4A6F),
+-                          iconFg: const Color(0xFF8BB8FF),
+                           title: 'Bluetooth',
+                           subtitle: 'Disconnect behavior and codec info',
+                           onTap: () => _navigate(
+@@ -125,9 +106,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.fileText,
+-                          iconBg: const Color(0xFF4A6F2D),
+-                          iconFg: const Color(0xFFC4FF8B),
+                           title: 'Lyrics',
+                           subtitle: 'Lyrics saving behavior',
+                           onTap: () =>
+@@ -140,9 +118,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                     SettingsCard(
+                       children: [
+                         _CategoryTile(
+-                          icon: LucideIcons.layoutDashboard,
+-                          iconBg: const Color(0xFF2D6F4A),
+-                          iconFg: const Color(0xFF8BFFC4),
+                           title: 'Interface',
+                           subtitle: 'Animations and haptic feedback',
+                           onTap: () => _navigate(
+@@ -152,9 +127,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.palette,
+-                          iconBg: const Color(0xFF2D4A6F),
+-                          iconFg: const Color(0xFF8BB8FF),
+                           title: 'UI Customization',
+                           subtitle: 'Show or hide home screen sections',
+                           onTap: () => _navigate(
+@@ -164,9 +136,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                         ),
+                         const SettingsDivider(),
+                         _CategoryTile(
+-                          icon: LucideIcons.layoutGrid,
+-                          iconBg: const Color(0xFF2D4A6F),
+-                          iconFg: const Color(0xFF8BB8FF),
+                           title: 'Widgets',
+                           subtitle: 'Customize home screen widgets',
+                           onTap: () =>
+@@ -179,9 +148,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                     SettingsCard(
+                       children: [
+                         _CategoryTile(
+-                          icon: LucideIcons.info,
+-                          iconBg: const Color(0xFF3A3A3A),
+-                          iconFg: const Color(0xFFB0B0B0),
+                           title: 'App Info',
+                           subtitle: 'Updates, about, and support',
+                           onTap: () =>
+@@ -244,7 +210,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                 ),
+               );
+             },
+-            icon: _PulsingHeartIcon(),
+             visualDensity: VisualDensity.compact,
+           ),
+         ],
+@@ -274,20 +239,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
+   }
+ }
+ 
+-/// A single category row in the main settings menu with a colored icon.
+ class _CategoryTile extends StatelessWidget {
+   const _CategoryTile({
+-    required this.icon,
+-    required this.iconBg,
+-    required this.iconFg,
+     required this.title,
+     required this.subtitle,
+     required this.onTap,
+   });
+ 
+-  final IconData icon;
+-  final Color iconBg;
+-  final Color iconFg;
+   final String title;
+   final String subtitle;
+   final VoidCallback onTap;
+@@ -303,9 +261,6 @@ class _CategoryTile extends StatelessWidget {
+           child: Row(
+             children: [
+               ColoredSettingsIcon(
+-                icon: icon,
+-                backgroundColor: iconBg,
+-                iconColor: iconFg,
+               ),
+               const SizedBox(width: AppConstants.spacingMd),
+               Expanded(
+-- 
+2.55.0
+

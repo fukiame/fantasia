@@ -1,0 +1,752 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 13:55:57 +0700
+Subject: [PATCH] lib: drop refresh rate
+
+holy heck invasive
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
+index 0a31d796..f72e79aa 100644
+--- a/lib/features/albums/screens/albums_screen.dart
++++ b/lib/features/albums/screens/albums_screen.dart
+@@ -13,7 +13,6 @@ import 'package:flick/features/albums/screens/album_detail_screen.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/widgets/common/blurred_song_background.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+ import 'package:flick/providers/app_preferences_provider.dart';
+ 
+@@ -163,8 +162,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+         }
+       });
+     }
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: BlurredSongBackground(
+           child: SafeArea(
+@@ -184,7 +182,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+             ),
+           ),
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
+index b6815df5..0241a90e 100644
+--- a/lib/features/artists/screens/artist_detail_screen.dart
++++ b/lib/features/artists/screens/artist_detail_screen.dart
+@@ -20,7 +20,6 @@ import 'package:flick/services/player_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/animated_album_art.dart';
+ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+ import 'package:flick/providers/app_preferences_provider.dart';
+ 
+@@ -343,8 +342,7 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+   Widget build(BuildContext context) {
+     final bgColor = _tintBackground(_backgroundBlend);
+ 
+-    return DisplayModeWrapper(
+-      child: TweenAnimationBuilder<Color?>(
++    return TweenAnimationBuilder<Color?>(
+         tween: ColorTween(begin: AppColors.background, end: bgColor),
+         duration: AppConstants.animationSlow,
+         curve: Curves.easeOut,
+@@ -636,7 +634,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+             ],
+           );
+         },
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
+index ffbf1ff4..433520aa 100644
+--- a/lib/features/artists/screens/artists_screen.dart
++++ b/lib/features/artists/screens/artists_screen.dart
+@@ -15,7 +15,6 @@ import 'package:flick/widgets/common/blurred_song_background.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+ import 'package:flick/providers/app_preferences_provider.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/glass_search_bar.dart';
+ 
+ enum ArtistSortOption { name, songs, albums }
+diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
+index 03063a63..9037d2ec 100644
+--- a/lib/features/favorites/screens/favorites_screen.dart
++++ b/lib/features/favorites/screens/favorites_screen.dart
+@@ -11,7 +11,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/services/favorites_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/providers/providers.dart';
+ 
+ class FavoritesScreen extends ConsumerStatefulWidget {
+@@ -197,8 +196,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+     final removalMode =
+         ref.watch(appPreferencesProvider).favoriteRemovalMode;
+ 
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: BlurredSongBackground(
+           child: SafeArea(
+@@ -221,7 +219,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+             ),
+           ),
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
+index 5cef3e41..d6fc9bc4 100644
+--- a/lib/features/folders/screens/folders_screen.dart
++++ b/lib/features/folders/screens/folders_screen.dart
+@@ -16,7 +16,6 @@ import 'package:flick/providers/providers.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/blurred_song_background.dart';
+ import 'package:flick/widgets/common/floating_mini_player.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ 
+ /// Groups songs by immediate subfolder relative to [prefix] within [folderUri].
+ ({List<FolderGroup> subfolders, List<Song> songs}) groupByImmediateFolder({
+@@ -213,8 +212,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: BlurredSongBackground(
+           child: SafeArea(
+@@ -240,7 +238,6 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
+             ),
+           ),
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index d9396f67..55309ab7 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -31,7 +31,6 @@ import 'package:flick/services/color_extraction_service.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/services/uac2_preferences_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/engine_restart_notice.dart';
+ import 'package:flick/widgets/common/glass_bottom_sheet.dart';
+ 
+@@ -604,8 +603,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+             playlistsAsync.isLoading ||
+             _isHistoryLoading);
+ 
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: Stack(
+           children: [
+@@ -1010,7 +1008,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+             ),
+           ],
+         ),
+-      ),
+     );
+   }
+ 
+@@ -2917,8 +2914,7 @@ class _SmartMixDetailScreen extends StatelessWidget {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: AppColors.background,
+         body: CustomScrollView(
+           slivers: [
+@@ -3173,7 +3169,6 @@ class _SmartMixDetailScreen extends StatelessWidget {
+             ),
+           ],
+         ),
+-      ),
+     );
+   }
+ }
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index c65090bc..bc9bc60b 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -25,7 +25,6 @@ import 'package:flick/services/lyrics_service.dart';
+ import 'package:flick/services/player_screen_mode_preference_service.dart';
+ 
+ 
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/uac2/iso_volume_popup.dart';
+ import 'package:flick/providers/providers.dart';
+ 
+@@ -341,8 +340,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+         if (didPop) return;
+         _close(context);
+       },
+-      child: DisplayModeWrapper(
+-        child: Scaffold(
++      child: Scaffold(
+           backgroundColor: AppColors.background,
+           body: ValueListenableBuilder<Song?>(
+             valueListenable: _playerService.currentSongNotifier,
+@@ -543,7 +541,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+               );
+             },
+           ),
+-        ),
+       ),
+     );
+   }
+diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
+index f242ce4b..47f80285 100644
+--- a/lib/features/recap/screens/listening_recap_screen.dart
++++ b/lib/features/recap/screens/listening_recap_screen.dart
+@@ -13,7 +13,6 @@ import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/services/csv_export_service.dart';
+ import 'package:flick/services/gallery_save_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:image_picker/image_picker.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:permission_handler/permission_handler.dart';
+@@ -331,8 +330,7 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+   Widget build(BuildContext context) {
+     final recap = _currentRecap();
+ 
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: AppColors.background,
+         body: Stack(
+           clipBehavior: Clip.none,
+@@ -544,7 +542,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+             ),
+           ],
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/recently_added/screens/recently_added_screen.dart b/lib/features/recently_added/screens/recently_added_screen.dart
+index ac3362a4..0980a8ae 100644
+--- a/lib/features/recently_added/screens/recently_added_screen.dart
++++ b/lib/features/recently_added/screens/recently_added_screen.dart
+@@ -12,7 +12,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ 
+ /// Number of songs fetched per page.
+ const int _kPageSize = 50;
+@@ -191,8 +190,7 @@ class _RecentlyAddedScreenState extends State<RecentlyAddedScreen> {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: BlurredSongBackground(
+           child: SafeArea(
+@@ -212,7 +210,6 @@ class _RecentlyAddedScreenState extends State<RecentlyAddedScreen> {
+             ),
+           ),
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/recently_played/screens/recently_played_screen.dart b/lib/features/recently_played/screens/recently_played_screen.dart
+index 1451c2ed..78dbda9b 100644
+--- a/lib/features/recently_played/screens/recently_played_screen.dart
++++ b/lib/features/recently_played/screens/recently_played_screen.dart
+@@ -12,7 +12,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/glass_dialog.dart';
+ 
+ /// Number of history entries fetched per page.
+@@ -222,8 +221,7 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: BlurredSongBackground(
+           child: SafeArea(
+@@ -243,7 +241,6 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
+             ),
+           ),
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/settings/screens/interface_settings_screen.dart b/lib/features/settings/screens/interface_settings_screen.dart
+index ac874b30..2c288445 100644
+--- a/lib/features/settings/screens/interface_settings_screen.dart
++++ b/lib/features/settings/screens/interface_settings_screen.dart
+@@ -113,47 +113,6 @@ class InterfaceSettingsScreen extends ConsumerWidget {
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Refresh Rate'),
+-          SettingsCard(
+-            children: [
+-              SelectionSetting(
+-                icon: LucideIcons.smartphone,
+-                title: 'Adaptive',
+-                subtitle: 'Let the system decide — best battery life',
+-                selected: appPreferences.refreshRateMode == 'adaptive',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setRefreshRateMode('adaptive');
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.gauge,
+-                title: 'Standard (60Hz)',
+-                subtitle: 'Cap at 60Hz — balanced smoothness and battery',
+-                selected: appPreferences.refreshRateMode == 'standard',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setRefreshRateMode('standard');
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.zap,
+-                title: 'High (120Hz)',
+-                subtitle: 'Maximum smoothness — uses more battery',
+-                selected: appPreferences.refreshRateMode == 'high',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setRefreshRateMode('high');
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Search Playback'),
+           SettingsCard(
+             children: [
+diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
+index f5b922b4..fe469ab1 100644
+--- a/lib/features/settings/screens/logs_screen.dart
++++ b/lib/features/settings/screens/logs_screen.dart
+@@ -8,7 +8,6 @@ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/utils/app_haptics.dart';
+ import 'package:flick/core/utils/app_log.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ 
+ class LogsScreen extends ConsumerStatefulWidget {
+   const LogsScreen({super.key});
+@@ -114,8 +113,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: AppColors.background,
+         body: SafeArea(
+           bottom: false,
+@@ -128,7 +126,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+             ],
+           ),
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
+index 1ad81b66..97091856 100644
+--- a/lib/features/settings/screens/uac2_preferences_screen.dart
++++ b/lib/features/settings/screens/uac2_preferences_screen.dart
+@@ -13,7 +13,6 @@ import 'package:flick/services/uac2_service.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/src/rust/api/audio_api.dart' as rust_audio;
+ import 'package:flick/src/rust/audio/engine.dart' show AudioApiPreference;
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/engine_restart_notice.dart';
+ import 'package:flick/widgets/uac2/uac2_volume_control.dart';
+ import 'package:flick/features/settings/screens/logs_screen.dart';
+@@ -47,8 +46,7 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+                     final dsdOutputModeAsync = ref.watch(dsdOutputModeProvider);
+                     final currentSong = ref.watch(currentSongProvider);
+ 
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: Stack(
+           children: [
+@@ -133,7 +131,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+             ),
+           ],
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/settings/screens/uac2_settings_screen.dart b/lib/features/settings/screens/uac2_settings_screen.dart
+index 326939d5..27295a8a 100644
+--- a/lib/features/settings/screens/uac2_settings_screen.dart
++++ b/lib/features/settings/screens/uac2_settings_screen.dart
+@@ -8,7 +8,6 @@ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/models/audio_output_diagnostics.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/services/uac2_service.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/features/settings/screens/uac2_preferences_screen.dart';
+ import 'package:flick/widgets/uac2/uac2_volume_control.dart';
+ import 'package:flick/widgets/uac2/uac2_hotplug_monitor.dart';
+@@ -31,8 +30,7 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+     final deviceStatus = ref.watch(uac2DeviceStatusProvider);
+     final currentSong = ref.watch(currentSongProvider);
+ 
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: Stack(
+           children: [
+@@ -105,7 +103,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             ),
+           ],
+         ),
+-      ),
+     );
+   }
+ 
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index be39725a..c97fa707 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -25,7 +25,6 @@ import 'package:flick/services/music_folder_service.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/models/nav_bar_config.dart';
+ import 'package:flick/widgets/common/glass_search_bar.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/glass_bottom_sheet.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+@@ -132,8 +131,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+         songsAsync.value?.sortOption ?? SongSortOption.albumArtist;
+     final isAlbumMode = sortOption == SongSortOption.album;
+ 
+-    return DisplayModeWrapper(
+-      child: Stack(
++    return Stack(
+         clipBehavior: Clip.none,
+         children: [
+           SafeArea(
+@@ -289,7 +287,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+             ),
+           ),
+         ],
+-      ),
+     );
+   }
+ 
+diff --git a/lib/main.dart b/lib/main.dart
+index 6cb27d58..5646caa4 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -77,14 +77,6 @@ Future<void> _bootstrapAppAfterFirstFrame() async {
+   );
+ }
+ 
+-Future<void> _setOptimalDisplayMode() async {
+-  try {
+-    await FlutterDisplayMode.setHighRefreshRate();
+-  } catch (e) {
+-    devLog('Display mode not supported: $e');
+-  }
+-}
+-
+ Future<void> _requestNotificationPermission() async {
+   final permissionService = PermissionService();
+   final hasPermission = await permissionService.hasNotificationPermission();
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index d5da479b..82021a7b 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -571,12 +571,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setAutoFocusSearch(value);
+   }
+ 
+-  Future<void> setRefreshRateMode(String value) async {
+-    if (state.refreshRateMode == value) return;
+-    state = state.copyWith(refreshRateMode: value);
+-    await ref.read(appPreferencesServiceProvider).setRefreshRateMode(value);
+-  }
+-
+   Future<void> setVisualizerEnabled(bool value) async {
+     if (state.visualizerEnabled == value) return;
+     state = state.copyWith(visualizerEnabled: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 1864b9ca..a9680cea 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -78,7 +78,6 @@ class AppPreferences {
+   final bool floatingIslandEnabled;
+   final bool autoFocusSearch;
+   final String searchPlaybackMode; // 'results', 'library', or 'queue'
+-  final String refreshRateMode; // 'high', 'standard', 'adaptive'
+   final bool visualizerEnabled;
+   final bool showMoreFromArtist;
+   final bool showMoreArtists;
+@@ -163,7 +162,6 @@ class AppPreferences {
+     this.floatingIslandEnabled = true,
+     this.autoFocusSearch = false,
+     this.searchPlaybackMode = 'results',
+-    this.refreshRateMode = 'high',
+     this.visualizerEnabled = true,
+     this.showMoreFromArtist = true,
+     this.showMoreArtists = true,
+@@ -249,7 +247,6 @@ class AppPreferences {
+     bool? floatingIslandEnabled,
+     bool? autoFocusSearch,
+     String? searchPlaybackMode,
+-    String? refreshRateMode,
+     bool? visualizerEnabled,
+     bool? showMoreFromArtist,
+     bool? showMoreArtists,
+@@ -371,7 +368,6 @@ class AppPreferences {
+       autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
+       searchPlaybackMode:
+           searchPlaybackMode ?? this.searchPlaybackMode,
+-      refreshRateMode: refreshRateMode ?? this.refreshRateMode,
+       visualizerEnabled: visualizerEnabled ?? this.visualizerEnabled,
+       showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
+       showMoreArtists: showMoreArtists ?? this.showMoreArtists,
+@@ -466,7 +462,6 @@ class AppPreferencesService {
+   static const _floatingIslandEnabledKey = 'app_floating_island_enabled';
+   static const _autoFocusSearchKey = 'app_auto_focus_search';
+   static const _searchPlaybackModeKey = 'app_search_playback_mode';
+-  static const _refreshRateModeKey = 'app_refresh_rate_mode';
+   static const _visualizerEnabledKey = 'visualizer_enabled';
+   static const _showMoreFromArtistKey = 'album_show_more_from_artist';
+   static const _showMoreArtistsKey = 'album_show_more_artists';
+@@ -591,7 +586,6 @@ class AppPreferencesService {
+       autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
+       searchPlaybackMode:
+           prefs.getString(_searchPlaybackModeKey) ?? 'results',
+-      refreshRateMode: prefs.getString(_refreshRateModeKey) ?? 'high',
+       visualizerEnabled: prefs.getBool(_visualizerEnabledKey) ?? true,
+       showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
+       showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
+@@ -1351,16 +1345,6 @@ class AppPreferencesService {
+     await prefs.setString(_searchPlaybackModeKey, value);
+   }
+ 
+-  Future<String> getRefreshRateMode() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getString(_refreshRateModeKey) ?? 'high';
+-  }
+-
+-  Future<void> setRefreshRateMode(String value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setString(_refreshRateModeKey, value);
+-  }
+-
+   Future<bool> getVisualizerEnabled() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_visualizerEnabledKey) ?? true;
+diff --git a/lib/services/display_mode_service.dart b/lib/services/display_mode_service.dart
+deleted file mode 100644
+index f7818ea5..00000000
+--- a/lib/services/display_mode_service.dart
++++ /dev/null
+@@ -1,86 +0,0 @@
+-import 'package:flutter/foundation.dart';
+-import 'package:flutter_displaymode/flutter_displaymode.dart';
+-import 'package:flick/core/utils/dev_log.dart';
+-
+-class DisplayModeService {
+-  static final DisplayModeService _instance = DisplayModeService._internal();
+-  factory DisplayModeService() => _instance;
+-  DisplayModeService._internal();
+-
+-  List<DisplayMode> _availableModes = [];
+-  DisplayMode? _currentMode;
+-  DisplayMode? _preferredMode;
+-
+-  List<DisplayMode> get availableModes => _availableModes;
+-  DisplayMode? get currentMode => _currentMode;
+-  DisplayMode? get preferredMode => _preferredMode;
+-
+-  bool get isSupported => defaultTargetPlatform == TargetPlatform.android;
+-
+-  Future<void> initialize() async {
+-    if (!isSupported) return;
+-    try {
+-      _availableModes = await FlutterDisplayMode.supported;
+-      _currentMode = await FlutterDisplayMode.active;
+-      _preferredMode = await FlutterDisplayMode.preferred;
+-    } catch (e) {
+-      devLog('Failed to initialize display modes: $e');
+-    }
+-  }
+-
+-  Future<void> setHighRefreshRate() async {
+-    if (!isSupported) return;
+-    try {
+-      await FlutterDisplayMode.setHighRefreshRate();
+-      _currentMode = await FlutterDisplayMode.active;
+-    } catch (e) {
+-      devLog('Failed to set high refresh rate: $e');
+-    }
+-  }
+-
+-  Future<void> setLowRefreshRate() async {
+-    if (!isSupported) return;
+-    try {
+-      await FlutterDisplayMode.setLowRefreshRate();
+-      _currentMode = await FlutterDisplayMode.active;
+-    } catch (e) {
+-      devLog('Failed to set low refresh rate: $e');
+-    }
+-  }
+-
+-  Future<void> setPreferredMode(DisplayMode mode) async {
+-    if (!isSupported) return;
+-    try {
+-      await FlutterDisplayMode.setPreferredMode(mode);
+-      _currentMode = await FlutterDisplayMode.active;
+-      _preferredMode = mode;
+-    } catch (e) {
+-      devLog('Failed to set preferred mode: $e');
+-    }
+-  }
+-
+-  DisplayMode? get highestRefreshRateMode {
+-    if (_availableModes.isEmpty) return null;
+-    return _availableModes.reduce(
+-      (a, b) => a.refreshRate > b.refreshRate ? a : b,
+-    );
+-  }
+-
+-  DisplayMode? get highestResolutionMode {
+-    if (_availableModes.isEmpty) return null;
+-    return _availableModes.reduce((a, b) {
+-      final aPixels = (a.width * a.height);
+-      final bPixels = (b.width * b.height);
+-      return aPixels > bPixels ? a : b;
+-    });
+-  }
+-
+-  DisplayMode? get optimalMode {
+-    if (_availableModes.isEmpty) return null;
+-    return _availableModes.reduce((a, b) {
+-      final aScore = a.refreshRate * (a.width * a.height);
+-      final bScore = b.refreshRate * (b.width * b.height);
+-      return aScore > bScore ? a : b;
+-    });
+-  }
+-}
+diff --git a/lib/widgets/common/display_mode_wrapper.dart b/lib/widgets/common/display_mode_wrapper.dart
+deleted file mode 100644
+index 7800159b..00000000
+--- a/lib/widgets/common/display_mode_wrapper.dart
++++ /dev/null
+@@ -1,65 +0,0 @@
+-import 'package:flutter/widgets.dart';
+-import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:flick/providers/app_preferences_provider.dart';
+-import 'package:flick/services/display_mode_service.dart';
+-
+-class DisplayModeWrapper extends ConsumerStatefulWidget {
+-  final Widget child;
+-  final bool enableOnMount;
+-
+-  const DisplayModeWrapper({
+-    super.key,
+-    required this.child,
+-    this.enableOnMount = true,
+-  });
+-
+-  @override
+-  ConsumerState<DisplayModeWrapper> createState() =>
+-      _DisplayModeWrapperState();
+-}
+-
+-class _DisplayModeWrapperState extends ConsumerState<DisplayModeWrapper>
+-    with WidgetsBindingObserver {
+-  final DisplayModeService _displayModeService = DisplayModeService();
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    WidgetsBinding.instance.addObserver(this);
+-    ref.listenManual(appPreferencesProvider.select((p) => p.refreshRateMode),
+-        (_, __) => _applyRefreshRate());
+-    if (widget.enableOnMount) {
+-      _applyRefreshRate();
+-    }
+-  }
+-
+-  @override
+-  void dispose() {
+-    WidgetsBinding.instance.removeObserver(this);
+-    super.dispose();
+-  }
+-
+-  @override
+-  void didChangeAppLifecycleState(AppLifecycleState state) {
+-    if (state == AppLifecycleState.resumed) {
+-      _applyRefreshRate();
+-    }
+-  }
+-
+-  Future<void> _applyRefreshRate() async {
+-    final mode = ref.read(appPreferencesProvider).refreshRateMode;
+-    switch (mode) {
+-      case 'standard':
+-        await _displayModeService.setLowRefreshRate();
+-      case 'adaptive':
+-        break;
+-      default:
+-        await _displayModeService.setHighRefreshRate();
+-    }
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return widget.child;
+-  }
+-}
+-- 
+2.55.0
+
