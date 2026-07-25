@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: widget: kill icons
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 1ec6d309..95b34b10 100644
+index 1ec6d309..206944d8 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -123,7 +123,6 @@ class ToggleSetting extends StatelessWidget {
@@ -17,7 +17,23 @@ index 1ec6d309..95b34b10 100644
                const SizedBox(width: AppConstants.spacingMd),
                Expanded(
                  child: Column(
-@@ -316,13 +315,6 @@ class ActionButton extends StatelessWidget {
+@@ -182,7 +181,6 @@ class NavigationSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingLg),
+           child: Row(
+             children: [
+-              _SettingsIcon(icon: icon),
+               const SizedBox(width: AppConstants.spacingMd),
+               Expanded(
+                 child: Column(
+@@ -247,7 +245,6 @@ class SelectionSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingLg),
+           child: Row(
+             children: [
+-              _SettingsIcon(icon: icon),
+               const SizedBox(width: AppConstants.spacingMd),
+               Expanded(
+                 child: Column(
+@@ -316,13 +313,6 @@ class ActionButton extends StatelessWidget {
            padding: const EdgeInsets.all(AppConstants.spacingLg),
            child: Row(
              children: [
@@ -31,7 +47,7 @@ index 1ec6d309..95b34b10 100644
                const SizedBox(width: AppConstants.spacingMd),
                Expanded(
                  child: Column(
-@@ -452,7 +444,6 @@ class SliderSetting extends StatelessWidget {
+@@ -452,7 +442,6 @@ class SliderSetting extends StatelessWidget {
          children: [
            Row(
              children: [
