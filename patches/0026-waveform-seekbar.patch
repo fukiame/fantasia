@@ -6,7 +6,7 @@ Subject: [PATCH] waveform seekbar
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
-index 24ff080d..5a5b6f78 100644
+index 24ff080d..57079d90 100644
 --- a/lib/features/player/widgets/waveform_layer.dart
 +++ b/lib/features/player/widgets/waveform_layer.dart
 @@ -104,8 +104,7 @@ class _WaveformLayerState extends State<WaveformLayer>
@@ -15,7 +15,7 @@ index 24ff080d..5a5b6f78 100644
                    builder: (context, position, _) {
 -                    final seekBar = switch (style) {
 -                      ProgressBarStyle.line => LineSeekBar(
-+                    final seekBar = ProgressBarStyle.line => LineSeekBar(
++                    final seekBar = LineSeekBar(
                          position: position,
                          duration: duration,
                          appearProgress: t,
