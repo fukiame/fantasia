@@ -6,10 +6,18 @@ Subject: [PATCH] lib: fps: account for vertical dist during horizontal drag
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
-index e60fced3..bf000632 100644
+index e60fced3..d6cf91cb 100644
 --- a/lib/features/player/screens/full_player_screen.dart
 +++ b/lib/features/player/screens/full_player_screen.dart
-@@ -379,16 +379,19 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -71,6 +71,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+   // ponytail: edge zone wide enough to let Android's predictive back/home gestures win
+   static const double _backGestureEdgeWidth = 32.0;
+   double _horizontalDragStartX = double.infinity;
++  double _horizontalDragStartY = double.infinity;
+ 
+   // Notifier for throttled position – only _WaveformLayer listens, so no setState needed.
+   late final ValueNotifier<Duration> _throttledPositionNotifier;
+@@ -379,16 +380,19 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                  },
                  onHorizontalDragStart: (details) {
                    _horizontalDragStartX = details.globalPosition.dx;
