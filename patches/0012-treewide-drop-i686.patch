@@ -8,7 +8,7 @@ as if anyone uses that?
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 4e18366..8a235d6 100644
+index 4e18366f..8a235d66 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -140,7 +140,6 @@ tasks.register("copyNdkLibs") {
@@ -20,7 +20,7 @@ index 4e18366..8a235d6 100644
  
          val jniLibsDir = project.file("src/main/jniLibs")
 diff --git a/android/copy_ndk_libs.sh b/android/copy_ndk_libs.sh
-index 34c0e96..0b6e426 100755
+index 34c0e963..0b6e4262 100755
 --- a/android/copy_ndk_libs.sh
 +++ b/android/copy_ndk_libs.sh
 @@ -64,10 +64,9 @@ declare -A ABI_MAP
@@ -36,7 +36,7 @@ index 34c0e96..0b6e426 100755
      
      ARCH="${ABI_MAP[$ABI]}"
 diff --git a/rust/build_android.sh b/rust/build_android.sh
-index dfc0b8c..a13337d 100755
+index dfc0b8c5..a13337db 100755
 --- a/rust/build_android.sh
 +++ b/rust/build_android.sh
 @@ -16,7 +16,6 @@ TARGETS=(

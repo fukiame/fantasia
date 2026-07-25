@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 21:59:11 +0700
+Subject: [PATCH] lib: fps: account for vertical dist during horizontal drag
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index e60fced3..bf000632 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -379,16 +379,19 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                 },
+                 onHorizontalDragStart: (details) {
+                   _horizontalDragStartX = details.globalPosition.dx;
++                  _horizontalDragStartY = details.globalPosition.dy;
+                 },
+                 onHorizontalDragEnd: (details) {
+                   if (_isVinylRotationActive) return;
+                   // Skip song navigation if drag started at screen edge so the
+                   // native Android back gesture takes priority.
+                   final screenWidth = MediaQuery.sizeOf(context).width;
++                  final screenHeight = MediaQuery.sizeOf(context).height;
++                  final nearBottomEdge = _horizontalDragStartY >= (_backGestureEdgeWidth * 2);
+                   final nearLeftEdge = _horizontalDragStartX <= _backGestureEdgeWidth;
+                   final nearRightEdge =
+                       _horizontalDragStartX >= screenWidth - _backGestureEdgeWidth;
+-                  if (nearLeftEdge || nearRightEdge) return;
++                  if (nearLeftEdge || nearRightEdge || nearBottomEdge) return;
+ 
+                   if (details.primaryVelocity! < -500) {
+                     // Swipe Left -> Next
+-- 
+2.55.0
+

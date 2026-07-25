@@ -6,7 +6,7 @@ Subject: [PATCH] updates,patchnotes
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index a2ad1ae..cc158c0 100644
+index a2ad1ae7..cc158c04 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -110,7 +110,6 @@ class _MainShellState extends ConsumerState<MainShell>
@@ -34,7 +34,7 @@ index a2ad1ae..cc158c0 100644
      }
    }
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 8b16431..d9396f6 100644
+index 8b164313..d9396f67 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -56,16 +56,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
@@ -280,10 +280,30 @@ index 8b16431..d9396f6 100644
      BuildContext context, {
      required Song? currentSong,
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index e35477e..aab2ce0 100644
+index e35477e3..ef4bdc4f 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
-@@ -66,349 +66,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
+@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:flutter_markdown/flutter_markdown.dart';
+ import 'package:flutter_svg/flutter_svg.dart';
+-import 'package:http/http.dart' as http;
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:url_launcher/url_launcher.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+@@ -27,11 +26,6 @@ class AppInfoSettingsScreen extends ConsumerStatefulWidget {
+ 
+ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
+     with SingleTickerProviderStateMixin {
+-  static final Uri _releaseNotesApiUri = Uri.parse(
+-    'https://api.github.com/repos/moss-apps/Flick/releases/tags/0.18.0-beta.1',
+-  );
+-  static const String _releaseNotesUrl =
+-      'https://github.com/moss-apps/Flick/releases/tag/0.18.0-beta.1';
+ 
+   late final AnimationController _donationPulseController;
+   late final Animation<double> _donationPulseAnimation;
+@@ -66,349 +60,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
      );
    }
  
@@ -633,7 +653,7 @@ index e35477e..aab2ce0 100644
    void _showAboutBottomSheet() {
      GlassBottomSheet.show(
        context: context,
-@@ -579,58 +236,11 @@ SOFTWARE.
+@@ -579,58 +230,11 @@ SOFTWARE.
  
    @override
    Widget build(BuildContext context) {
@@ -692,7 +712,7 @@ index e35477e..aab2ce0 100644
            const SettingsSectionHeader('About'),
            SettingsCard(
              children: [
-@@ -698,15 +308,3 @@ SOFTWARE.
+@@ -698,15 +302,3 @@ SOFTWARE.
      );
    }
  }
@@ -709,7 +729,7 @@ index e35477e..aab2ce0 100644
 -  final String url;
 -}
 diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
-index 6ff4325..fd7835f 100644
+index 6ff4325d..fd7835fe 100644
 --- a/lib/providers/providers.dart
 +++ b/lib/providers/providers.dart
 @@ -20,5 +20,4 @@ export 'progress_bar_style_provider.dart';
@@ -720,7 +740,7 @@ index 6ff4325..fd7835f 100644
  export 'whats_new_provider.dart';
 diff --git a/lib/providers/update_check_provider.dart b/lib/providers/update_check_provider.dart
 deleted file mode 100644
-index 821cd0c..0000000
+index 821cd0c2..00000000
 --- a/lib/providers/update_check_provider.dart
 +++ /dev/null
 @@ -1,232 +0,0 @@
