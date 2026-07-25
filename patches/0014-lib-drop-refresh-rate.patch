@@ -68,7 +68,7 @@ index b6815df5..0241a90e 100644
    }
  
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index ffbf1ff4..433520aa 100644
+index ffbf1ff4..9dde0ed2 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
 @@ -15,7 +15,6 @@ import 'package:flick/widgets/common/blurred_song_background.dart';
@@ -79,6 +79,24 @@ index ffbf1ff4..433520aa 100644
  import 'package:flick/widgets/common/glass_search_bar.dart';
  
  enum ArtistSortOption { name, songs, albums }
+@@ -192,8 +191,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+         }
+       });
+     }
+-    return DisplayModeWrapper(
+-      child: Scaffold(
++    return Scaffold(
+         backgroundColor: Colors.transparent,
+         body: BlurredSongBackground(
+           child: SafeArea(
+@@ -213,7 +211,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+             ),
+           ),
+         ),
+-      ),
+     );
+   }
+ 
 diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
 index 03063a63..9037d2ec 100644
 --- a/lib/features/favorites/screens/favorites_screen.dart
@@ -480,10 +498,26 @@ index be39725a..c97fa707 100644
    }
  
 diff --git a/lib/main.dart b/lib/main.dart
-index 6cb27d58..5646caa4 100644
+index 6cb27d58..1cff36bf 100644
 --- a/lib/main.dart
 +++ b/lib/main.dart
-@@ -77,14 +77,6 @@ Future<void> _bootstrapAppAfterFirstFrame() async {
+@@ -3,7 +3,6 @@ import 'dart:async';
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+-import 'package:flutter_displaymode/flutter_displaymode.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:flick/src/rust/frb_generated.dart';
+ import 'package:flick/app/app.dart';
+@@ -64,7 +63,6 @@ void _subscribeRustLogs() {
+ }
+ 
+ Future<void> _bootstrapAppAfterFirstFrame() async {
+-  unawaited(_setOptimalDisplayMode());
+   unawaited(
+     _requestNotificationPermission().catchError(
+       (Object e) => devLog('Notification permission request failed: $e'),
+@@ -77,14 +75,6 @@ Future<void> _bootstrapAppAfterFirstFrame() async {
    );
  }
  
@@ -747,6 +781,37 @@ index 7800159b..00000000
 -    return widget.child;
 -  }
 -}
+diff --git a/pubspec.lock b/pubspec.lock
+index 23bb02ac..ad9ddcdc 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -390,14 +390,6 @@ packages:
+       url: "https://pub.dev"
+     source: hosted
+     version: "3.4.1"
+-  flutter_displaymode:
+-    dependency: "direct main"
+-    description:
+-      name: flutter_displaymode
+-      sha256: ecd44b1e902b0073b42ff5b55bf283f38e088270724cdbb7f7065ccf54aa60a8
+-      url: "https://pub.dev"
+-    source: hosted
+-    version: "0.7.0"
+   flutter_driver:
+     dependency: transitive
+     description: flutter
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 2e7eac91..a844c140 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -38,7 +38,6 @@ dependencies:
+   flutter:
+     sdk: flutter
+   flutter_cache_manager: ^3.4.1
+-  flutter_displaymode: ^0.7.0
+   flutter_markdown: ^0.7.7
+   flutter_riverpod: ^3.0.3
+   flutter_rust_bridge: ^2.12.0
 -- 
 2.55.0
 

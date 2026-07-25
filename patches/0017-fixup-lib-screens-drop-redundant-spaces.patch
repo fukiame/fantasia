@@ -20,10 +20,10 @@ index d12ed93b..b6b7b62a 100644
        ),
      );
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 608d02c2..33dd2b66 100644
+index eb782599..5aef15b3 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -313,7 +313,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -311,7 +311,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
                },
              ),
            ),

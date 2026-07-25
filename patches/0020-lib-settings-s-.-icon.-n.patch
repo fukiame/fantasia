@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: :%s/.*icon.*\n
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 17268a7e..f896608e 100644
+index 17268a7e..bbbbbfa5 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -1,5 +1,4 @@
@@ -125,6 +125,15 @@ index 17268a7e..f896608e 100644
                            title: 'App Info',
                            subtitle: 'Updates, about, and support',
                            onTap: () =>
+@@ -236,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+               ],
+             ),
+           ),
+-          IconButton(
++          Button(
+             onPressed: () {
+               Navigator.of(context).push(
+                 MaterialPageRoute<void>(
 @@ -244,7 +210,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                  ),
                );
@@ -154,16 +163,67 @@ index 17268a7e..f896608e 100644
    final String title;
    final String subtitle;
    final VoidCallback onTap;
-@@ -303,9 +261,6 @@ class _CategoryTile extends StatelessWidget {
+@@ -302,11 +260,6 @@ class _CategoryTile extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
            child: Row(
              children: [
-               ColoredSettingsIcon(
+-              ColoredSettingsIcon(
 -                icon: icon,
 -                backgroundColor: iconBg,
 -                iconColor: iconFg,
-               ),
+-              ),
                const SizedBox(width: AppConstants.spacingMd),
                Expanded(
+                 child: Column(
+@@ -340,48 +293,3 @@ class _CategoryTile extends StatelessWidget {
+     );
+   }
+ }
+-
+-class _PulsingHeartIcon extends StatefulWidget {
+-  const _PulsingHeartIcon();
+-
+-  @override
+-  State<_PulsingHeartIcon> createState() => _PulsingHeartIconState();
+-}
+-
+-class _PulsingHeartIconState extends State<_PulsingHeartIcon>
+-    with SingleTickerProviderStateMixin {
+-  late final AnimationController _controller;
+-  late final Animation<double> _scale;
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    _controller = AnimationController(
+-      duration: const Duration(milliseconds: 1500),
+-      vsync: this,
+-    );
+-    _scale = TweenSequence<double>([
+-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.15), weight: 30),
+-      TweenSequenceItem(tween: Tween(begin: 1.15, end: 1.0), weight: 70),
+-    ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+-    _controller.repeat(reverse: false);
+-  }
+-
+-  @override
+-  void dispose() {
+-    _controller.dispose();
+-    super.dispose();
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return ScaleTransition(
+-      scale: _scale,
+-      child: Icon(
+-        LucideIcons.heart,
+-        color: context.adaptiveTextTertiary,
+-        size: 22,
+-      ),
+-    );
+-  }
+-}
 -- 
 2.55.0
 

@@ -130,10 +130,10 @@ index f72e79aa..d12ed93b 100644
    }
  
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 433520aa..608d02c2 100644
+index 9dde0ed2..eb782599 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -314,125 +314,8 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -312,125 +312,8 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
              ),
            ),
            const SizedBox(height: AppConstants.spacingMd),
