@@ -7,7 +7,7 @@ Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/orbit_settings_screen.dart b/lib/features/settings/screens/orbit_settings_screen.dart
 deleted file mode 100644
-index 6050242..0000000
+index 6050242b..00000000
 --- a/lib/features/settings/screens/orbit_settings_screen.dart
 +++ /dev/null
 @@ -1,251 +0,0 @@
@@ -263,7 +263,7 @@ index 6050242..0000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
-index 8eb4a2f..4363359 100644
+index 8eb4a2f1..4363359f 100644
 --- a/lib/features/settings/screens/playback_display_settings_screen.dart
 +++ b/lib/features/settings/screens/playback_display_settings_screen.dart
 @@ -6,7 +6,6 @@ import 'package:flick/models/song_view_mode.dart';
@@ -321,7 +321,7 @@ index 8eb4a2f..4363359 100644
                  icon: LucideIcons.panelBottom,
                  title: 'Bottom Bar Always Visible',
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 6d9b732..02c0b75 100644
+index 6d9b7324..17e953ad 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -15,7 +15,6 @@ import 'package:flick/core/utils/responsive.dart';
@@ -367,7 +367,7 @@ index 6d9b732..02c0b75 100644
 -    final content = viewMode == SongViewMode.list
 -        ? _buildListView(songs, swipeActionsEnabled, overlayRailVisible)
 -        : _buildOrbitView(songs, swipeActionsEnabled);
-+    final content = viewMode == _buildListView(songs, swipeActionsEnabled, overlayRailVisible)
++    final content = _buildListView(songs, swipeActionsEnabled, overlayRailVisible)
  
      if (tokenToIndexMap.isEmpty) {
        return content;
@@ -455,7 +455,7 @@ index 6d9b732..02c0b75 100644
  
 diff --git a/lib/features/songs/widgets/orbit_scroll.dart b/lib/features/songs/widgets/orbit_scroll.dart
 deleted file mode 100644
-index fcbd8d2..0000000
+index fcbd8d20..00000000
 --- a/lib/features/songs/widgets/orbit_scroll.dart
 +++ /dev/null
 @@ -1,634 +0,0 @@
@@ -1094,7 +1094,7 @@ index fcbd8d2..0000000
 -  }
 -}
 diff --git a/lib/models/song_view_mode.dart b/lib/models/song_view_mode.dart
-index c2f2dae..0a7b55a 100644
+index c2f2dae6..0a7b55ab 100644
 --- a/lib/models/song_view_mode.dart
 +++ b/lib/models/song_view_mode.dart
 @@ -1,11 +1,9 @@
@@ -1132,7 +1132,7 @@ index c2f2dae..0a7b55a 100644
    }
  }
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index edf9ed3..d5da479 100644
+index edf9ed34..d5da479b 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
 @@ -583,84 +583,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
@@ -1246,7 +1246,7 @@ index edf9ed3..d5da479 100644
  
  final appPreferencesProvider =
 diff --git a/lib/providers/songs_view_mode_provider.dart b/lib/providers/songs_view_mode_provider.dart
-index bd08fb1..1caa9da 100644
+index bd08fb19..1caa9da9 100644
 --- a/lib/providers/songs_view_mode_provider.dart
 +++ b/lib/providers/songs_view_mode_provider.dart
 @@ -18,7 +18,7 @@ class SongsViewModeNotifier extends Notifier<SongViewMode> {
@@ -1259,7 +1259,7 @@ index bd08fb1..1caa9da 100644
  
    Future<void> _loadFromPreferences() async {
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 35532c5..1864b9c 100644
+index 35532c58..1864b9ca 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
 @@ -80,18 +80,6 @@ class AppPreferences {
