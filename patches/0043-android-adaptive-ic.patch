@@ -1,0 +1,89 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 09:08:01 +0700
+Subject: [PATCH] android: adaptive ic
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/res/drawable/ic_launcher_fg.xml b/android/app/src/main/res/drawable/ic_launcher_fg.xml
+new file mode 100644
+index 00000000..d0acf782
+--- /dev/null
++++ b/android/app/src/main/res/drawable/ic_launcher_fg.xml
+@@ -0,0 +1,61 @@
++<?xml version="1.0" encoding="utf-8"?>
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="108dp"
++    android:height="108dp"
++    android:viewportWidth="108"
++    android:viewportHeight="108">
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M78 73a2.6 2.6 90 0 0-2.6 1.8 2.6 2.6 90 0 0 1.7 3.3 2.6 2.6 90 0 0 3.3-1.6 2.6 2.6 90 0 0-1.7-3.3 2.6 2.6 90 0 0-0.67-0.13z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M70 70a2.6 2.6 90 0 0-2.6 1.8 2.6 2.6 90 0 0 1.7 3.3 2.6 2.6 90 0 0 3.3-1.6 2.6 2.6 90 0 0-1.7-3.3 2.6 2.6 90 0 0-0.67-0.13z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M61 67a2.6 2.6 90 0 0-2.6 1.8 2.6 2.6 90 0 0 1.7 3.3 2.6 2.6 90 0 0 3.3-1.6 2.6 2.6 90 0 0-1.7-3.3 2.6 2.6 90 0 0-0.67-0.13z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M61 42a2.6 2.6 0 0 0-2.6 2.6 2.6 2.6 0 0 0 2.6 2.6 2.6 2.6 0 0 0 2.6-2.6A2.6 2.6 0 0 0 61 42z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M61 50a2.6 2.6 0 0 0-2.6 2.6 2.6 2.6 0 0 0 2.6 2.6 2.6 2.6 0 0 0 2.6-2.6A2.6 2.6 0 0 0 61 50z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M61 59a2.6 2.6 0 0 0-2.6 2.6 2.6 2.6 0 0 0 2.6 2.6 2.6 2.6 0 0 0 2.6-2.6A2.6 2.6 0 0 0 61 59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M45 27a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M53 31a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M61 34a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M37 32a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M45 35a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M53 39a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M53 47a2.6 2.6 0 0 0-2.6 2.6 2.6 2.6 0 0 0 2.6 2.6 2.6 2.6 0 0 0 2.6-2.6A2.6 2.6 0 0 0 53 47z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M38 25a2.6 2.6 0 0 0-2.4 1.6 2.6 2.6 0 0 0 1.5 3.3 2.6 2.6 0 0 0 3.4-1.5 2.6 2.6 0 0 0-1.5-3.3 2.6 2.6 0 0 0-1-0.18z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M30 22a2.6 2.6 0 0 0-2.6 2.6 2.6 2.6 0 0 0 2.6 2.6 2.6 2.6 0 0 0 2.6-2.6A2.6 2.6 0 0 0 30 22z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M78 81a2.6 2.6 90 0 0-2.6 1.8 2.6 2.6 90 0 0 1.7 3.3 2.6 2.6 90 0 0 3.3-1.6 2.6 2.6 90 0 0-1.7-3.3 2.6 2.6 90 0 0-0.67-0.13z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M70 78a2.6 2.6 90 0 0-2.6 1.8 2.6 2.6 90 0 0 1.7 3.3 2.6 2.6 90 0 0 3.3-1.6 2.6 2.6 90 0 0-1.7-3.3 2.6 2.6 90 0 0-0.67-0.13z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M61 75a2.6 2.6 90 0 0-2.6 1.8 2.6 2.6 90 0 0 1.7 3.3 2.6 2.6 90 0 0 3.3-1.6 2.6 2.6 90 0 0-1.7-3.3 2.6 2.6 90 0 0-0.67-0.13z"/>
++</vector>
+diff --git a/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml b/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
+new file mode 100644
+index 00000000..dd4da123
+--- /dev/null
++++ b/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
++    <background android:drawable="@color/ic_launcher_background"/>
++    <foreground android:drawable="@drawable/ic_launcher_fg"/>
++    <monochrome android:drawable="@drawable/ic_launcher_fg"/>
++</adaptive-icon>
+-- 
+2.55.0
+
