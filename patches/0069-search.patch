@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 18:54:28 +0700
+Subject: [PATCH] search
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/search/screens/search_screen.dart b/lib/features/search/screens/search_screen.dart
+index d84fab03..e158389a 100644
+--- a/lib/features/search/screens/search_screen.dart
++++ b/lib/features/search/screens/search_screen.dart
+@@ -90,7 +90,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
+                   color: context.adaptiveTextPrimary,
+                 ),
+                 decoration: InputDecoration(
+-                  hintText: 'Search songs, artists, albums...',
++                  hintText: 'search songs, artists, albums...',
+                   hintStyle: TextStyle(
+                     color: context.adaptiveTextTertiary,
+                     fontFamily: 'ProductSans',
+@@ -158,24 +158,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
+             size: 48,
+             color: context.adaptiveTextTertiary.withValues(alpha: 0.4),
+           ),
+-          const SizedBox(height: 16),
+-          Text(
+-            'Search your library',
+-            style: TextStyle(
+-              fontFamily: 'ProductSans',
+-              fontSize: 15,
+-              color: context.adaptiveTextTertiary,
+-            ),
+-          ),
+-          const SizedBox(height: 4),
+-          Text(
+-            'Find songs by title, artist, or album',
+-            style: TextStyle(
+-              fontFamily: 'ProductSans',
+-              fontSize: 13,
+-              color: context.adaptiveTextTertiary.withValues(alpha: 0.6),
+-            ),
+-          ),
+         ],
+       ),
+     );
+-- 
+2.55.0
+
