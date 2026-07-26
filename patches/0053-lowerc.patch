@@ -174,6 +174,28 @@ index fc2fb6c5..fde75742 100644
                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                      fontWeight: FontWeight.w600,
                      color: context.adaptiveTextPrimary,
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index d86aebfb..ce18828e 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -3115,7 +3115,7 @@ class _ContentStateWidget extends StatelessWidget {
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+           Text(
+-            title,
++            title.toLowerCase(),
+             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+               color: context.adaptiveTextSecondary,
+               fontWeight: FontWeight.w600,
+@@ -3123,7 +3123,7 @@ class _ContentStateWidget extends StatelessWidget {
+           ),
+           const SizedBox(height: AppConstants.spacingSm),
+           Text(
+-            subtitle,
++            subtitle.toLowerCase(),
+             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+               color: context.adaptiveTextTertiary,
+             ),
 -- 
 2.55.0
 

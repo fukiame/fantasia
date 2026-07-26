@@ -1,20 +1,24 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
-Date: Sun, 26 Jul 2026 19:53:16 +0700
-Subject: [PATCH] preventze
+Date: Sun, 26 Jul 2026 19:00:53 +0700
+Subject: [PATCH] lib: navbar: kill overflow completely
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/models/nav_bar_config.dart b/lib/models/nav_bar_config.dart
-index 49136c6f..c717cc7f 100644
+index 39df00ab..c717cc7f 100644
 --- a/lib/models/nav_bar_config.dart
 +++ b/lib/models/nav_bar_config.dart
-@@ -43,12 +43,6 @@ class NavBarConfig {
+@@ -43,16 +43,6 @@ class NavBarConfig {
  
    List<NavBarButton> get orderedButtons => enabledButtons;
  
+-  bool get hasAllEssential =>
+-      enabledButtons.contains(NavBarButton.songs) &&
+-      enabledButtons.contains(NavBarButton.settings);
+-
 -  List<NavBarButton> get missingEssentials {
--    const essential = {NavBarButton.songs};
+-    const essential = {NavBarButton.songs, NavBarButton.settings};
 -    return essential.where((b) => !enabledButtons.contains(b)).toList()
 -      ..sort((a, b) => a.pageIndex.compareTo(b.pageIndex));
 -  }
@@ -23,7 +27,7 @@ index 49136c6f..c717cc7f 100644
      final list = List<NavBarButton>.from(enabledButtons);
      if (oldIndex < newIndex) newIndex -= 1;
 diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
-index 3cf21712..2b100cbd 100644
+index 3cf21712..ee93e6b6 100644
 --- a/lib/widgets/navigation/flick_nav_bar.dart
 +++ b/lib/widgets/navigation/flick_nav_bar.dart
 @@ -121,9 +121,6 @@ class _FlickNavBarState extends State<FlickNavBar> {
@@ -36,15 +40,7 @@ index 3cf21712..2b100cbd 100644
      return GestureDetector(
        onLongPress: widget.onBottomBarSettings,
        child: Padding(
-@@ -134,6 +131,7 @@ class _FlickNavBarState extends State<FlickNavBar> {
-         child: Row(
-           mainAxisAlignment: MainAxisAlignment.spaceAround,
-           children: [
-+	if (buttons.length != 0) ...[
-             ...List.generate(
-               buttons.length,
-               (index) {
-@@ -151,328 +149,12 @@ class _FlickNavBarState extends State<FlickNavBar> {
+@@ -151,328 +148,11 @@ class _FlickNavBarState extends State<FlickNavBar> {
                  );
                },
              ),
@@ -135,7 +131,6 @@ index 3cf21712..2b100cbd 100644
 -                  ),
 -                ),
 -              ),
-+	],
            ],
          ),
        ),

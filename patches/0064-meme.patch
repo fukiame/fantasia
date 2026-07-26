@@ -6,7 +6,7 @@ Subject: [PATCH] meme
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index b7b5abda..762f7632 100644
+index b7b5abda..a421b948 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -221,15 +221,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
@@ -196,7 +196,7 @@ index b7b5abda..762f7632 100644
          artPath: homeData.playlistPreviews.firstOrNull?.coverArtPath,
          onTap: () => _navigateTo(context, const PlaylistsScreen()),
        ),
-@@ -885,7 +856,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -885,21 +856,23 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
                        Text(
@@ -205,8 +205,10 @@ index b7b5abda..762f7632 100644
                          style: Theme.of(context).textTheme.headlineSmall
                              ?.copyWith(
                                fontWeight: FontWeight.w700,
-@@ -894,7 +865,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                               color: context.adaptiveTextPrimary,
+                             ),
                        ),
++		      if ("" != subtitle) ...[
                        const SizedBox(height: AppConstants.spacingXxs),
                        Text(
 -                        subtitle,
@@ -214,7 +216,13 @@ index b7b5abda..762f7632 100644
                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
                            color: context.adaptiveTextTertiary,
                            height: 1.45,
-@@ -1065,32 +1036,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                         ),
+                       ),
++		      ],
+                     ],
+                   ),
+                 ),
+@@ -1065,32 +1038,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    }
  }
  
@@ -247,7 +255,7 @@ index b7b5abda..762f7632 100644
  class _MenuLoadingState extends StatelessWidget {
    const _MenuLoadingState();
  
-@@ -1297,7 +1242,6 @@ class _QuickAccessItem {
+@@ -1297,7 +1244,6 @@ class _QuickAccessItem {
    final String title;
    final String subtitle;
    final IconData icon;
@@ -255,7 +263,7 @@ index b7b5abda..762f7632 100644
    final String? artPath;
    final VoidCallback onTap;
  
-@@ -1305,7 +1249,6 @@ class _QuickAccessItem {
+@@ -1305,7 +1251,6 @@ class _QuickAccessItem {
      required this.title,
      required this.subtitle,
      required this.icon,
@@ -263,7 +271,7 @@ index b7b5abda..762f7632 100644
      required this.artPath,
      required this.onTap,
    });
-@@ -1330,16 +1273,12 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1330,16 +1275,12 @@ class _QuickAccessCard extends StatelessWidget {
              gradient: LinearGradient(
                begin: Alignment.topLeft,
                end: Alignment.bottomRight,
@@ -284,7 +292,7 @@ index b7b5abda..762f7632 100644
            ),
            child: Stack(
              children: [
-@@ -1378,7 +1317,7 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1378,7 +1319,7 @@ class _QuickAccessCard extends StatelessWidget {
                      ),
                      const Spacer(),
                      Text(
@@ -293,7 +301,7 @@ index b7b5abda..762f7632 100644
                        maxLines: 1,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-@@ -1388,7 +1327,7 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1388,7 +1329,7 @@ class _QuickAccessCard extends StatelessWidget {
                      ),
                      const SizedBox(height: AppConstants.spacingXxs),
                      Text(
@@ -302,7 +310,7 @@ index b7b5abda..762f7632 100644
                        maxLines: 2,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-@@ -1705,7 +1644,7 @@ class _EmptyShelfCard extends StatelessWidget {
+@@ -1705,7 +1646,7 @@ class _EmptyShelfCard extends StatelessWidget {
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(
@@ -311,7 +319,7 @@ index b7b5abda..762f7632 100644
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                          color: context.adaptiveTextPrimary,
                          fontWeight: FontWeight.w700,
-@@ -1713,7 +1652,7 @@ class _EmptyShelfCard extends StatelessWidget {
+@@ -1713,7 +1654,7 @@ class _EmptyShelfCard extends StatelessWidget {
                      ),
                      const SizedBox(height: AppConstants.spacingXxs),
                      Text(
@@ -320,7 +328,7 @@ index b7b5abda..762f7632 100644
                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                          color: context.adaptiveTextTertiary,
                          height: 1.45,
-@@ -1781,7 +1720,7 @@ class _BrowseChip extends StatelessWidget {
+@@ -1781,7 +1722,7 @@ class _BrowseChip extends StatelessWidget {
                ),
                const SizedBox(width: AppConstants.spacingXs),
                Text(
