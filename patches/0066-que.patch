@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 18:02:32 +0700
+Subject: [PATCH] que
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index a47fa8cd..8c7ca657 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -539,7 +539,7 @@ class AnimatedSongScene extends StatelessWidget {
+           ),
+           SizedBox(width: context.responsive(4.0, 5.0, 6.0)),
+           Text(
+-            count > 0 ? 'Queue $count' : 'Queue',
++            count > 0 ? 'queue $count' : 'queue',
+             style: TextStyle(
+               fontFamily: 'ProductSans',
+               fontSize: context.responsive(10.0, 11.0, 12.0),
+diff --git a/lib/features/songs/widgets/song_actions_bottom_sheet.dart b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
+index 3d401709..020d643e 100644
+--- a/lib/features/songs/widgets/song_actions_bottom_sheet.dart
++++ b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
+@@ -332,7 +332,7 @@ class SongActionsBottomSheet extends ConsumerWidget {
+               const SizedBox(width: 12),
+               Expanded(
+                 child: Text(
+-                  label,
++                  label.toLowerCase(),
+                   style: TextStyle(
+                     fontFamily: 'ProductSans',
+                     fontSize: 15,
+-- 
+2.55.0
+

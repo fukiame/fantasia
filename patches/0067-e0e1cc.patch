@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 18:06:35 +0700
+Subject: [PATCH] e0e1cc
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
+index b8fddffd..2fd27878 100644
+--- a/lib/features/player/widgets/bit_perfect_indicator.dart
++++ b/lib/features/player/widgets/bit_perfect_indicator.dart
+@@ -854,9 +854,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+     final bytes = _seededBytes(song.filePath ?? song.id, 16);
+ 
+     const stageColors = [
+-      Color(0xFF1F1E33), // File
+-      Color(0xFF1F1E33), // Decode
+-      Color(0xFF1F1E33), // Format
++      Color(0xFFE0E1CC), // File
++      Color(0xFFE0E1CC), // Decode
++      Color(0xFFE0E1CC), // Format
+     ];
+ 
+     final stages = <_FlowStageData>[
+-- 
+2.55.0
+

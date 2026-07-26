@@ -5,6 +5,28 @@ Subject: [PATCH] lib: settings: widgets: lowercase all
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/lib/features/settings/screens/widget_settings_screen.dart b/lib/features/settings/screens/widget_settings_screen.dart
+index 68752b98..6aa411fb 100644
+--- a/lib/features/settings/screens/widget_settings_screen.dart
++++ b/lib/features/settings/screens/widget_settings_screen.dart
+@@ -658,7 +658,7 @@ class _OpacityOption extends StatelessWidget {
+             children: [
+               Expanded(
+                 child: Text(
+-                  label,
++                  label.toLowerCase(),
+                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                         color: context.adaptiveTextPrimary,
+                       ),
+@@ -874,7 +874,7 @@ class _AccentOption extends StatelessWidget {
+               const SizedBox(width: AppConstants.spacingMd),
+               Expanded(
+                 child: Text(
+-                  label,
++                  label.toLowerCase(),
+                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                         color: context.adaptiveTextPrimary,
+                       ),
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
 index 94e56c17..32fe1de6 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart

@@ -1205,7 +1205,7 @@ index 77e86cfc..00000000
 -  bool shouldRepaint(_VisualizerBarPainter oldDelegate) => true;
 -}
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index f0527fdc..21dff963 100644
+index f0527fdc..b2e362c4 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -10,7 +10,6 @@ import 'package:flick/providers/providers.dart';
@@ -1225,6 +1225,15 @@ index f0527fdc..21dff963 100644
      return Container(
        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
        decoration: BoxDecoration(
+@@ -790,7 +789,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+   }
+ 
+   Widget _buildPageDots(BuildContext context) {
+-    const pageCount = 4;
++    const pageCount = 3;
+     return Row(
+       mainAxisAlignment: MainAxisAlignment.center,
+       children: List.generate(pageCount, (i) {
 @@ -817,21 +816,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      required AppPreferences prefs,
      required bool expanded,
