@@ -23,7 +23,7 @@ case "$1" in
         # build commands here
         flutter pub get
         cd rust && cargo fetch && cd ..
-        flutter build apk --release --split-per-abi
+        flutter build apk --release --split-per-abi --analyze-size
         cd ..) || exit 1
     ;;
     *)
