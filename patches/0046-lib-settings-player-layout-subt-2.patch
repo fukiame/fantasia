@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 11:39:53 +0700
+Subject: [PATCH] lib: settings: player layout: subt 2
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 52362383..825c2000 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -122,13 +122,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+           ),
+ 	  if (playerScreenMode == PlayerScreenMode.immersive) ...[
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Immersive'),
+           SettingsCard(
+             children: [
+               SliderSetting(
+                 icon: LucideIcons.type,
+                 title: 'Text Size',
+-                subtitle: 'Adjust metadata text size in immersive mode',
++                subtitle: 'Adjust metadata text size',
+                 value: appPrefs.immersiveTextScale,
+                 displayValue: _percentLabel(appPrefs.immersiveTextScale),
+                 min: 0.82,
+@@ -231,7 +230,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+ 	  ],
+ 	  if (playerScreenMode == PlayerScreenMode.artworkCard) ...[
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Artwork Card'),
+           SettingsCard(
+             children: [
+               SliderSetting(
+@@ -253,7 +251,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+               SliderSetting(
+                 icon: LucideIcons.type,
+                 title: 'Text Size',
+-                subtitle: 'Adjust metadata text size in artwork card mode',
++                subtitle: 'Adjust metadata text size',
+                 value: appPrefs.artworkCardTextScale,
+                 displayValue: _percentLabel(appPrefs.artworkCardTextScale),
+                 min: 0.82,
+-- 
+2.55.0
+
