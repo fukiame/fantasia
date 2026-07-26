@@ -6,7 +6,7 @@ Subject: [PATCH] meme
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index b7b5abda..38c5ad51 100644
+index b7b5abda..76ded62e 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -221,15 +221,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
@@ -191,7 +191,7 @@ index b7b5abda..38c5ad51 100644
                      const Spacer(),
                      Text(
 -                      item.title,
-+                      item.title.toLowerCase,
++                      item.title.toLowerCase(),
                        maxLines: 1,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
