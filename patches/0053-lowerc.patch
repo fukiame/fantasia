@@ -5,6 +5,19 @@ Subject: [PATCH] lowerc
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
+index b6aadd1c..661a772f 100644
+--- a/lib/features/albums/screens/albums_screen.dart
++++ b/lib/features/albums/screens/albums_screen.dart
+@@ -221,7 +221,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      'Albums',
++                      'albums',
+                       style: Theme.of(context).textTheme.headlineSmall
+                           ?.copyWith(
+                             fontWeight: FontWeight.w700,
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
 index faec3e3d..47244630 100644
 --- a/lib/features/artists/screens/artists_screen.dart

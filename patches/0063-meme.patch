@@ -1,0 +1,249 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 15:06:40 +0700
+Subject: [PATCH] meme
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index b7b5abda..9afce0ea 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -221,15 +221,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+   }) {
+     final (title, icon) = switch (engine) {
+       AudioEnginePreference.exoPlayer => (
+-        'Standard Engine',
++        'standard engine',
+         LucideIcons.smartphone,
+       ),
+       AudioEnginePreference.rustOboe => (
+-        'High Quality Engine',
++        'rust Oboe Engine',
+         LucideIcons.audioLines,
+       ),
+       AudioEnginePreference.isochronousUsb => (
+-        'Bit-perfect (USB DAC)',
++        'bit-perfect (USB DAC)',
+         LucideIcons.usb,
+       ),
+     };
+@@ -271,7 +271,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                 const SizedBox(width: AppConstants.spacingMd),
+                 Expanded(
+                   child: Text(
+-                    title,
++                    title.toLowerCase(),
+                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                       color: Colors.white,
+                       fontWeight: FontWeight.w700,
+@@ -299,24 +299,16 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+     await GlassBottomSheet.show<void>(
+       context: context,
+-      title: 'Choose Audio Engine',
++      title: 'choose audio engine',
+       content: Column(
+         mainAxisSize: MainAxisSize.min,
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+-          Text(
+-            'The audio engine determines how your music is played back. Each option balances reliability, quality, and compatibility differently.',
+-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-              color: context.adaptiveTextTertiary,
+-              height: 1.45,
+-            ),
+-          ),
+           const SizedBox(height: AppConstants.spacingMd),
+           _buildEngineOption(
+             context,
+-            title: 'Standard',
+-            subtitle:
+-                'Default Android player — plays everything reliably. The safest choice for most listeners.',
++            title: 'standard',
++            subtitle: '',
+             icon: LucideIcons.smartphone,
+             selected: current == AudioEnginePreference.exoPlayer,
+             onTap: () => _selectEngine(
+@@ -329,9 +321,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+           const SizedBox(height: AppConstants.spacingSm),
+           _buildEngineOption(
+             context,
+-            title: 'High Quality',
+-            subtitle:
+-                'Our Rust-powered engine. Cleaner sound and smoother playback — recommended for daily listening.',
++            title: 'rust Oboe',
++            subtitle: '',
+             icon: LucideIcons.audioLines,
+             selected: current == AudioEnginePreference.rustOboe,
+             onTap: () => _selectEngine(
+@@ -344,9 +335,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+           const SizedBox(height: AppConstants.spacingSm),
+           _buildEngineOption(
+             context,
+-            title: 'Bit-perfect (USB DAC)',
+-            subtitle:
+-                'Studio-grade output for external DACs and headphone amps. Bypasses Android\'s audio processing for pure sound.',
++            title: 'bit-perfect (USB DAC)',
++            subtitle: '',
+             icon: LucideIcons.usb,
+             selected: current == AudioEnginePreference.isochronousUsb,
+             onTap: () => _selectEngine(
+@@ -363,8 +353,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+   Widget _buildEngineOption(
+     BuildContext context, {
+-    required String title,
+-    required String subtitle,
++    required String title.toLowerCase(),
++    required String subtitle.toLowerCase(),
+     required IconData icon,
+     required bool selected,
+     required VoidCallback onTap,
+@@ -390,13 +380,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                       : AppColors.glassBackgroundStrong,
+                   borderRadius: BorderRadius.circular(10),
+                 ),
+-                child: Icon(
+-                  icon,
+-                  size: 17,
+-                  color: selected
+-                      ? AppColors.accent
+-                      : context.adaptiveTextSecondary,
+-                ),
+               ),
+               const SizedBox(width: AppConstants.spacingMd),
+               Expanded(
+@@ -404,20 +387,22 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      title,
++                      title.toLowerCase(),
+                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                         color: context.adaptiveTextPrimary,
+                         fontWeight: FontWeight.w700,
+                       ),
+                     ),
++		    if ("" != subtitle) ...[
+                     const SizedBox(height: AppConstants.spacingXxs),
+                     Text(
+-                      subtitle,
++                      subtitle.toLowerCase(),
+                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                         color: context.adaptiveTextTertiary,
+                         height: 1.35,
+                       ),
+                     ),
++		    ],
+                   ],
+                 ),
+               ),
+@@ -615,7 +600,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                                       child: _EmptyShelfCard(
+                                         title: 'No playlists yet',
+                                         subtitle:
+-                                            'Create a playlist, import an M3U, or let the mixes above carry the session.',
++                                            'Create a playlist or import an M3U.',
+                                         icon: LucideIcons.listMusic,
+                                         onTap: () => _navigateTo(
+                                           context,
+@@ -820,7 +805,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+             ? 'Liked songs live here'
+             : '$favoritesCount tracks ready to revisit',
+         icon: LucideIcons.heart,
+-        gradient: const [Color(0xFF4B153D), Color(0xFF862A62)],
++        gradient: const [Color(0xCC4B153D), Color(0xCC862A62)],
+         artPath: homeData.favoriteArtPath,
+         onTap: () => _navigateTo(context, const FavoritesScreen()),
+       ),
+@@ -830,7 +815,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+             ? 'Create a collection'
+             : '$playlistCount saved collections',
+         icon: LucideIcons.listMusic,
+-        gradient: const [Color(0xFF533116), Color(0xFF875214)],
++        gradient: const [Color(0xCC533116), Color(0xCC875214)],
+         artPath: homeData.playlistPreviews.firstOrNull?.coverArtPath,
+         onTap: () => _navigateTo(context, const PlaylistsScreen()),
+       ),
+@@ -860,8 +845,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+   Widget _buildSection(
+     BuildContext context, {
+-    required String title,
+-    required String subtitle,
++    required String title.toLowerCase(),
++    required String subtitle.toLowerCase(),
+     required Widget child,
+     Widget? trailing,
+   }) {
+@@ -885,7 +870,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: [
+                       Text(
+-                        title,
++                        title.toLowerCase(),
+                         style: Theme.of(context).textTheme.headlineSmall
+                             ?.copyWith(
+                               fontWeight: FontWeight.w700,
+@@ -894,7 +879,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                       ),
+                       const SizedBox(height: AppConstants.spacingXxs),
+                       Text(
+-                        subtitle,
++                        subtitle.toLowerCase(),
+                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                           color: context.adaptiveTextTertiary,
+                           height: 1.45,
+@@ -1066,9 +1051,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ }
+ 
+ const List<Color> _heroGradientFallback = [
+-  Color(0xFF194B68),
+-  Color(0xFF0C1624),
+-  Color(0xFF1D2A19),
++  Color(0xCC194B68),
++  Color(0xCC0C1624),
++  Color(0xCC1D2A19),
+ ];
+ 
+ List<Color> _heroGradientColors(Color? dominant) {
+@@ -1378,7 +1363,7 @@ class _QuickAccessCard extends StatelessWidget {
+                     ),
+                     const Spacer(),
+                     Text(
+-                      item.title,
++                      item.title.toLowerCase,
+                       maxLines: 1,
+                       overflow: TextOverflow.ellipsis,
+                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
+@@ -1388,7 +1373,7 @@ class _QuickAccessCard extends StatelessWidget {
+                     ),
+                     const SizedBox(height: AppConstants.spacingXxs),
+                     Text(
+-                      item.subtitle,
++                      item.subtitle.toLowerCase(),
+                       maxLines: 2,
+                       overflow: TextOverflow.ellipsis,
+                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+@@ -1705,7 +1690,7 @@ class _EmptyShelfCard extends StatelessWidget {
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      title,
++                      title.toLowerCase(),
+                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                         color: context.adaptiveTextPrimary,
+                         fontWeight: FontWeight.w700,
+@@ -1713,7 +1698,7 @@ class _EmptyShelfCard extends StatelessWidget {
+                     ),
+                     const SizedBox(height: AppConstants.spacingXxs),
+                     Text(
+-                      subtitle,
++                      subtitle.toLowerCase(),
+                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                         color: context.adaptiveTextTertiary,
+                         height: 1.45,
+-- 
+2.55.0
+
