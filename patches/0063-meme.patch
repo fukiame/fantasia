@@ -6,7 +6,7 @@ Subject: [PATCH] meme
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index b7b5abda..9afce0ea 100644
+index b7b5abda..38c5ad51 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -221,15 +221,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
@@ -89,17 +89,6 @@ index b7b5abda..9afce0ea 100644
              icon: LucideIcons.usb,
              selected: current == AudioEnginePreference.isochronousUsb,
              onTap: () => _selectEngine(
-@@ -363,8 +353,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
- 
-   Widget _buildEngineOption(
-     BuildContext context, {
--    required String title,
--    required String subtitle,
-+    required String title.toLowerCase(),
-+    required String subtitle.toLowerCase(),
-     required IconData icon,
-     required bool selected,
-     required VoidCallback onTap,
 @@ -390,13 +380,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                        : AppColors.glassBackgroundStrong,
                    borderRadius: BorderRadius.circular(10),
@@ -166,17 +155,6 @@ index b7b5abda..9afce0ea 100644
          artPath: homeData.playlistPreviews.firstOrNull?.coverArtPath,
          onTap: () => _navigateTo(context, const PlaylistsScreen()),
        ),
-@@ -860,8 +845,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
- 
-   Widget _buildSection(
-     BuildContext context, {
--    required String title,
--    required String subtitle,
-+    required String title.toLowerCase(),
-+    required String subtitle.toLowerCase(),
-     required Widget child,
-     Widget? trailing,
-   }) {
 @@ -885,7 +870,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
