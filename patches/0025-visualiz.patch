@@ -5,6 +5,19 @@ Subject: [PATCH] visualiz
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index fbb4b214..5fb7f9cb 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -18,8 +18,6 @@
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
+-    <!-- Visualizer API requires RECORD_AUDIO to read the output mix -->
+-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+     <!-- Bluetooth: connected-device / codec awareness (runtime-granted on Android 12+) -->
+     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+     <application
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 index 6bcf6b0e..fb09c33c 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt

@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
 Date: Sat, 25 Jul 2026 21:59:11 +0700
-Subject: [PATCH] lib: fps: account for vertical dist during horizontal drag
+Subject: [PATCH] lib: fsp: account for vertical dist during horizontal drag
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
-index e60fced3..d6cf91cb 100644
+index 529dfebc..4b51a602 100644
 --- a/lib/features/player/screens/full_player_screen.dart
 +++ b/lib/features/player/screens/full_player_screen.dart
 @@ -71,6 +71,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
@@ -17,7 +17,7 @@ index e60fced3..d6cf91cb 100644
  
    // Notifier for throttled position – only _WaveformLayer listens, so no setState needed.
    late final ValueNotifier<Duration> _throttledPositionNotifier;
-@@ -379,16 +380,19 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -379,16 +380,20 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                  },
                  onHorizontalDragStart: (details) {
                    _horizontalDragStartX = details.globalPosition.dx;
@@ -29,7 +29,8 @@ index e60fced3..d6cf91cb 100644
                    // native Android back gesture takes priority.
                    final screenWidth = MediaQuery.sizeOf(context).width;
 +                  final screenHeight = MediaQuery.sizeOf(context).height;
-+                  final nearBottomEdge = _horizontalDragStartY >= (_backGestureEdgeWidth * 2);
++                  final nearBottomEdge =
++                      _horizontalDragStartY >= screenHeight - _backGestureEdgeWidth;
                    final nearLeftEdge = _horizontalDragStartX <= _backGestureEdgeWidth;
                    final nearRightEdge =
                        _horizontalDragStartX >= screenWidth - _backGestureEdgeWidth;

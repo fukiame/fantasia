@@ -6,7 +6,7 @@ Subject: [PATCH] ab
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
-index 2d4ed9d7..cb402a61 100644
+index 2d4ed9d7..7d5841e2 100644
 --- a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
 +++ b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
 @@ -67,7 +67,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
@@ -108,6 +108,15 @@ index 2d4ed9d7..cb402a61 100644
                  ],
                ),
                const SizedBox(height: AppConstants.spacingSm),
+@@ -345,7 +274,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+                   ),
+                   if (selectedCandidate != null)
+                     OutlinedButton.icon(
+-                      onPressed: _isWorking ? null : _applySelectedCandidate,
++                      onPressed: _isWorking ? null : null,
+                       icon: const Icon(LucideIcons.check, size: 18),
+                       label: const Text('Apply Selected'),
+                     ),
 @@ -357,30 +286,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
                      ),
                  ],
@@ -276,7 +285,7 @@ index 2d4ed9d7..cb402a61 100644
      BuildContext context, {
      required String? imagePath,
 diff --git a/lib/services/album_art_import_service.dart b/lib/services/album_art_import_service.dart
-index 8fd233df..6dea9c5b 100644
+index 8fd233df..35f5fc0f 100644
 --- a/lib/services/album_art_import_service.dart
 +++ b/lib/services/album_art_import_service.dart
 @@ -3,7 +3,6 @@ import 'dart:io';
@@ -295,7 +304,7 @@ index 8fd233df..6dea9c5b 100644
 -    : _songRepository = songRepository ?? SongRepository(),
 -      _client = client ?? http.Client();
 +  AlbumArtImportService._({SongRepository? songRepository})
-+    : _songRepository = songRepository ?? SongRepository(;
++    : _songRepository = songRepository ?? SongRepository();
  
    static final AlbumArtImportService instance = AlbumArtImportService._();
    static const String _customArtworkDirectoryName = 'album_art_overrides';

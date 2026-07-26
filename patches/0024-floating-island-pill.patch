@@ -5,6 +5,19 @@ Subject: [PATCH] floating{island,pill}
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index 75fdc700..fbb4b214 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -20,8 +20,6 @@
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
+     <!-- Visualizer API requires RECORD_AUDIO to read the output mix -->
+     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+-    <!-- System-level floating mini-player overlay -->
+-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+     <!-- Bluetooth: connected-device / codec awareness (runtime-granted on Android 12+) -->
+     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+     <application
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/FloatingPlayerOverlay.kt b/android/app/src/main/kotlin/com/mossapps/flick/FloatingPlayerOverlay.kt
 deleted file mode 100644
 index 0584c5ba..00000000
