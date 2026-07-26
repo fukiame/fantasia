@@ -67,6 +67,19 @@ index e288f94d..fc7d1151 100644
                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                      color: context.adaptiveTextTertiary,
                    ),
+diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
+index fc2fb6c5..fde75742 100644
+--- a/lib/features/settings/screens/settings_screen.dart
++++ b/lib/features/settings/screens/settings_screen.dart
+@@ -184,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Settings',
++                  'settings',
+                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                     fontWeight: FontWeight.w600,
+                     color: context.adaptiveTextPrimary,
 -- 
 2.55.0
 
