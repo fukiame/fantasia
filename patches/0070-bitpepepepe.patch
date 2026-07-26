@@ -6,7 +6,7 @@ Subject: [PATCH] bitpepepepe
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index 2fd27878..c99afa6c 100644
+index 2fd27878..1e50ded5 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -460,7 +460,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
@@ -45,16 +45,7 @@ index 2fd27878..c99afa6c 100644
                    style: TextStyle(
                      fontFamily: 'ProductSans',
                      fontSize: 12,
-@@ -508,7 +508,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
-         ),
-         if (widget.isVerified)
-           Container(
--            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-             decoration: BoxDecoration(
-               color: Colors.green.withValues(alpha: 0.15),
-               borderRadius: BorderRadius.circular(6),
-@@ -517,11 +517,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -517,12 +517,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
              child: Row(
                mainAxisSize: MainAxisSize.min,
                children: [
@@ -63,9 +54,10 @@ index 2fd27878..c99afa6c 100644
 -                  size: 12,
 -                  color: Colors.green.shade400,
 -                ),
-                 const SizedBox(width: 4),
+-                const SizedBox(width: 4),
                  Text(
                    'BP',
+                   style: TextStyle(
 -- 
 2.55.0
 
