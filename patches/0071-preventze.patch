@@ -23,7 +23,7 @@ index 49136c6f..c717cc7f 100644
      final list = List<NavBarButton>.from(enabledButtons);
      if (oldIndex < newIndex) newIndex -= 1;
 diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
-index 3cf21712..7f359f09 100644
+index 3cf21712..2b100cbd 100644
 --- a/lib/widgets/navigation/flick_nav_bar.dart
 +++ b/lib/widgets/navigation/flick_nav_bar.dart
 @@ -121,9 +121,6 @@ class _FlickNavBarState extends State<FlickNavBar> {
@@ -36,15 +36,15 @@ index 3cf21712..7f359f09 100644
      return GestureDetector(
        onLongPress: widget.onBottomBarSettings,
        child: Padding(
-@@ -131,6 +128,7 @@ class _FlickNavBarState extends State<FlickNavBar> {
-           horizontal: itemPadding,
-           vertical: context.scaleSize(AppConstants.spacingXs) * widget.config.barSizeFactor,
-         ),
-+	if (buttons.length != 0) ...[
+@@ -134,6 +131,7 @@ class _FlickNavBarState extends State<FlickNavBar> {
          child: Row(
            mainAxisAlignment: MainAxisAlignment.spaceAround,
            children: [
-@@ -151,325 +149,9 @@ class _FlickNavBarState extends State<FlickNavBar> {
++	if (buttons.length != 0) ...[
+             ...List.generate(
+               buttons.length,
+               (index) {
+@@ -151,328 +149,12 @@ class _FlickNavBarState extends State<FlickNavBar> {
                  );
                },
              ),
@@ -135,11 +135,12 @@ index 3cf21712..7f359f09 100644
 -                  ),
 -                ),
 -              ),
++	],
            ],
          ),
--      ),
--    );
--  }
+       ),
+     );
+   }
 -
 -  void _showOverflowMenu(BuildContext context) {
 -    final overlay = Overlay.of(context);
@@ -367,10 +368,12 @@ index 3cf21712..7f359f09 100644
 -            ),
 -          ),
 -        ],
-+	],
-       ),
-     );
-   }
+-      ),
+-    );
+-  }
+ }
+ 
+ class _FlickNavItem extends StatefulWidget {
 -- 
 2.55.0
 
