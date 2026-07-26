@@ -1,0 +1,99 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 09:08:01 +0700
+Subject: [PATCH] android: adaptive ic
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/res/drawable/ic_launcher_fg.xml b/android/app/src/main/res/drawable/ic_launcher_fg.xml
+new file mode 100755
+index 00000000..e099a322
+--- /dev/null
++++ b/android/app/src/main/res/drawable/ic_launcher_fg.xml
+@@ -0,0 +1,61 @@
++<?xml version="1.0" encoding="utf-8"?>
++<vector xmlns:android="http://schemas.android.com/apk/res/android"
++    android:width="960dp"
++    android:height="960dp"
++    android:viewportWidth="960"
++    android:viewportHeight="960">
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M777.6 729.93a29.5 29.5 0 1 1-56-18.59 29.5 29.5 0 1 1 56 18.59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M684.27 698.95a29.5 29.5 0 1 1-56-18.58 29.5 29.5 0 1 1 56 18.58z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M590.95 667.98a29.5 29.5 0 1 1-56-18.58 29.5 29.5 0 1 1 56 18.58z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M563.4 341.48a29.5 29.5 0 1 1 0 59 29.5 29.5 0 1 1 0-59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M563.4 439.81a29.5 29.5 0 1 1 0 59 29.5 29.5 0 1 1 0-59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M563.4 538.14a29.5 29.5 0 1 1 0 59 29.5 29.5 0 1 1 0-59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M352.67 196.12a29.5 29.5 0 1 1 54.94 21.51 29.5 29.5 0 1 1-54.94-21.51z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M444.23 231.97a29.5 29.5 0 1 1 54.94 21.52 29.5 29.5 0 1 1-54.94-21.52z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M535.79 267.83a29.5 29.5 0 1 1 54.94 21.52 29.5 29.5 0 1 1-54.94-21.52z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M260.75 251.27a29.5 29.5 0 1 1 54.93 21.52 29.5 29.5 0 1 1-54.93-21.52z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M352.3 287.13a29.5 29.5 0 1 1 54.94 21.52 29.5 29.5 0 1 1-54.94-21.52z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M443.86 322.99a29.5 29.5 0 1 1 54.94 21.51A29.5 29.5 0 1 1 443.86 323z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M471.48 461.76a29.5 29.5 0 1 1 0-59 29.5 29.5 0 1 1 0 59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M267.36 164.87a29.5 29.5 0 1 1 54.94 21.52 29.5 29.5 0 1 1-54.94-21.52z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M210.4 176.17a29.5 29.5 0 1 1 0-59 29.5 29.5 0 1 1 0 59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M777.27 822.62a29.5 29.5 0 1 1-56-18.58 29.5 29.5 0 1 1 56 18.58z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M683.95 791.65a29.5 29.5 0 1 1-56-18.59 29.5 29.5 0 1 1 56 18.59z"/>
++    <path
++        android:fillColor="#FF000000"
++        android:pathData="M590.62 760.67a29.5 29.5 0 1 1-56-18.58 29.5 29.5 0 1 1 56 18.58z"/>
++</vector>
+diff --git a/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml b/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
+new file mode 100644
+index 00000000..ffe8e05a
+--- /dev/null
++++ b/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="utf-8"?>
++<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
++    <background android:drawable="@color/ic_launcher_bg"/>
++    <foreground android:drawable="@drawable/ic_launcher_fg"/>
++    <monochrome android:drawable="@drawable/ic_launcher_fg"/>
++</adaptive-icon>
+diff --git a/android/app/src/main/res/values/ic_launcher_bg.xml b/android/app/src/main/res/values/ic_launcher_bg.xml
+new file mode 100644
+index 00000000..5b309592
+--- /dev/null
++++ b/android/app/src/main/res/values/ic_launcher_bg.xml
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <color name="ic_launcher_background">#ffffff</color>
++</resources>
+-- 
+2.55.0
+
