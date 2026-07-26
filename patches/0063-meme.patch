@@ -6,7 +6,7 @@ Subject: [PATCH] meme
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index b7b5abda..1457a47e 100644
+index b7b5abda..35ace855 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -221,15 +221,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
@@ -221,7 +221,7 @@ index b7b5abda..1457a47e 100644
      required this.artPath,
      required this.onTap,
    });
-@@ -1330,7 +1303,10 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1330,16 +1303,12 @@ class _QuickAccessCard extends StatelessWidget {
              gradient: LinearGradient(
                begin: Alignment.topLeft,
                end: Alignment.bottomRight,
@@ -232,8 +232,17 @@ index b7b5abda..1457a47e 100644
 +              ],
              ),
              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-             boxShadow: [
-@@ -1378,7 +1354,7 @@ class _QuickAccessCard extends StatelessWidget {
+-            boxShadow: [
+-              BoxShadow(
+-                color: item.gradient.last.withValues(alpha: 0.18),
+-                blurRadius: 18,
+-                offset: const Offset(0, 10),
+-              ),
+-            ],
+           ),
+           child: Stack(
+             children: [
+@@ -1378,7 +1347,7 @@ class _QuickAccessCard extends StatelessWidget {
                      ),
                      const Spacer(),
                      Text(
@@ -242,7 +251,7 @@ index b7b5abda..1457a47e 100644
                        maxLines: 1,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-@@ -1388,7 +1364,7 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1388,7 +1357,7 @@ class _QuickAccessCard extends StatelessWidget {
                      ),
                      const SizedBox(height: AppConstants.spacingXxs),
                      Text(
@@ -251,7 +260,7 @@ index b7b5abda..1457a47e 100644
                        maxLines: 2,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-@@ -1705,7 +1681,7 @@ class _EmptyShelfCard extends StatelessWidget {
+@@ -1705,7 +1674,7 @@ class _EmptyShelfCard extends StatelessWidget {
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(
@@ -260,7 +269,7 @@ index b7b5abda..1457a47e 100644
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                          color: context.adaptiveTextPrimary,
                          fontWeight: FontWeight.w700,
-@@ -1713,7 +1689,7 @@ class _EmptyShelfCard extends StatelessWidget {
+@@ -1713,7 +1682,7 @@ class _EmptyShelfCard extends StatelessWidget {
                      ),
                      const SizedBox(height: AppConstants.spacingXxs),
                      Text(
@@ -269,7 +278,7 @@ index b7b5abda..1457a47e 100644
                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                          color: context.adaptiveTextTertiary,
                          height: 1.45,
-@@ -1781,7 +1757,7 @@ class _BrowseChip extends StatelessWidget {
+@@ -1781,7 +1750,7 @@ class _BrowseChip extends StatelessWidget {
                ),
                const SizedBox(width: AppConstants.spacingXs),
                Text(

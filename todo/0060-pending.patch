@@ -1,0 +1,187 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 14:26:09 +0700
+Subject: [PATCH] pending
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+index 40ec2c30..d171b88d 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+@@ -35,7 +35,7 @@ class MusicNotificationService : Service() {
+         const val ACTION_PREVIOUS = "com.mossapps.flick.PREVIOUS"
+         const val ACTION_STOP = "com.mossapps.flick.STOP"
+         const val ACTION_SHUFFLE = "com.mossapps.flick.SHUFFLE"
+-        const val ACTION_FAVORITE = "com.mossapps.flick.FAVORITE"
++        const val ACTION_LOOP = "com.mossapps.flick.LOOP"
+ 
+         private const val PLAYER_CHANNEL = "com.mossapps.flick/player"
+     }
+@@ -52,7 +52,7 @@ class MusicNotificationService : Service() {
+     private var currentDuration: Long = 0
+     private var currentPosition: Long = 0
+     private var isShuffleMode: Boolean = false
+-    private var isFavorite: Boolean = false
++    private var loopMode: Int = 0
+     private var currentColor: Int? = null
+ 
+     private var cachedAlbumArt: Bitmap? = null
+@@ -91,10 +91,10 @@ class MusicNotificationService : Service() {
+                     val notification = buildNotification()
+                     notificationManager.notify(NOTIFICATION_ID, notification)
+                 }
+-                ACTION_FAVORITE -> {
+-                    android.util.Log.d("MusicNotification", "Favorite action triggered")
+-                    isFavorite = !isFavorite
+-                    sendCommandToFlutter("toggleFavorite")
++                ACTION_LOOP -> {
++                    android.util.Log.d("MusicNotification", "Loop action triggered")
++                    loopMode = !loopMode
++                    sendCommandToFlutter("toggleLoopMode")
+                     val notification = buildNotification()
+                     notificationManager.notify(NOTIFICATION_ID, notification)
+                 }
+@@ -133,7 +133,7 @@ class MusicNotificationService : Service() {
+             addAction(ACTION_PREVIOUS)
+             addAction(ACTION_STOP)
+             addAction(ACTION_SHUFFLE)
+-            addAction(ACTION_FAVORITE)
++            addAction(ACTION_LOOP)
+         }
+ 
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+@@ -169,7 +169,7 @@ class MusicNotificationService : Service() {
+                     ?: it.getIntExtra("position", 0).toLong()
+             }
+             if (it.hasExtra("isShuffle")) isShuffleMode = it.getBooleanExtra("isShuffle", false)
+-            if (it.hasExtra("isFavorite")) isFavorite = it.getBooleanExtra("isFavorite", false)
++            if (it.hasExtra("loopMode")) loopMode = it.getIntExtra("loopMode", false)
+             if (it.hasExtra("color")) currentColor = it.getIntExtra("color", 0)
+         }
+ 
+@@ -344,9 +344,9 @@ class MusicNotificationService : Service() {
+                             val notification = buildNotification()
+                             notificationManager.notify(NOTIFICATION_ID, notification)
+                         }
+-                        ACTION_FAVORITE -> {
+-                            isFavorite = !isFavorite
+-                            sendCommandToFlutter("toggleFavorite")
++                        ACTION_LOOP -> {
++                            loopMode = !loopMode
++                            sendCommandToFlutter("toggleLoopMode")
+                             updatePlaybackState()
+                             val notification = buildNotification()
+                             notificationManager.notify(NOTIFICATION_ID, notification)
+@@ -410,8 +410,8 @@ class MusicNotificationService : Service() {
+                 ).build()
+             )
+ 
+-            val favoriteIcon = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+-            val favoriteTitle = if (isFavorite) "Unfavorite" else "Favorite"
++            val loopIcon = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
++            val loopTitle = if (isFavorite) "Unfavorite" else "Favorite"
+             
+             stateBuilder.addCustomAction(
+                 PlaybackStateCompat.CustomAction.Builder(
+diff --git a/lib/services/notification_service.dart b/lib/services/notification_service.dart
+index 91a5c557..6b243420 100644
+--- a/lib/services/notification_service.dart
++++ b/lib/services/notification_service.dart
+@@ -25,7 +25,7 @@ class NotificationService {
+     required VoidCallback onStop,
+     required Function(Duration) onSeek,
+     required VoidCallback onToggleShuffle,
+-    required VoidCallback onToggleFavorite,
++    required VoidCallback onToggleLoop,
+   }) {
+     _channel.setMethodCallHandler((call) async {
+       switch (call.method) {
+@@ -56,8 +56,8 @@ class NotificationService {
+         case 'toggleShuffle':
+           onToggleShuffle();
+           break;
+-        case 'toggleFavorite':
+-          onToggleFavorite();
++        case 'toggleLoopMode':
++          onToggleLoop();
+           break;
+       }
+     });
+@@ -70,7 +70,7 @@ class NotificationService {
+     Duration? duration,
+     Duration? position,
+     bool isShuffle = false,
+-    bool isFavorite = false,
++    int loopMode = 0,
+     int? color,
+   }) async {
+     try {
+@@ -82,7 +82,7 @@ class NotificationService {
+         'duration': duration?.inMilliseconds ?? 0,
+         'position': position?.inMilliseconds ?? 0,
+         'isShuffle': isShuffle,
+-        'isFavorite': isFavorite,
++        'loopMode': loopMode,
+       };
+       if (color != null) args['color'] = color;
+       await _channel.invokeMethod('showNotification', args);
+@@ -117,7 +117,7 @@ class NotificationService {
+     Duration? duration,
+     Duration? position,
+     bool? isShuffle,
+-    bool? isFavorite,
++    int? loopMode,
+     int? color,
+   }) async {
+     try {
+@@ -131,7 +131,7 @@ class NotificationService {
+       };
+ 
+       if (isShuffle != null) args['isShuffle'] = isShuffle;
+-      if (isFavorite != null) args['isFavorite'] = isFavorite;
++      if (loopMode != null) args['loopMode'] = loopMode;
+       if (color != null) args['color'] = color;
+ 
+       await _channel.invokeMethod('updateNotification', args);
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 4fe9fddd..a54d01b1 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -494,7 +494,7 @@ class PlayerService {
+       onStop: _stopPlayback,
+       onSeek: seek,
+       onToggleShuffle: toggleShuffle,
+-      onToggleFavorite: _toggleFavoriteFromNotification,
++      onToggleLoop: toggleLoopMode,
+     );
+     _sessionManager.selectedModeNotifier.addListener(() {
+       unawaited(
+@@ -2337,15 +2337,6 @@ class PlayerService {
+     final song = currentSongNotifier.value;
+     if (song == null) return;
+ 
+-    var isFav = false;
+-    if (_allowsFavoriteActions(song)) {
+-      try {
+-        isFav = await _favoritesService.isFavorite(song.id);
+-      } catch (e) {
+-        _debugLog('Failed to load favorite state: $e');
+-      }
+-    }
+-
+     int? notificationColor;
+     try {
+       final colorMode = await _albumColorModePreferenceService.getMode();
+@@ -2377,7 +2368,7 @@ class PlayerService {
+       duration: durationNotifier.value,
+       position: positionNotifier.value,
+       isShuffle: isShuffleNotifier.value,
+-      isFavorite: isFav,
++      loopMode: loopModeNotifier.value,
+       color: notificationColor,
+     );
+   }
+-- 
+2.55.0
+
