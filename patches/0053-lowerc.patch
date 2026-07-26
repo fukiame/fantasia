@@ -80,6 +80,87 @@ index e288f94d..fc7d1151 100644
                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                      color: context.adaptiveTextTertiary,
                    ),
+diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
+index e1b0b04a..f5c30836 100644
+--- a/lib/features/queue/screens/queue_screen.dart
++++ b/lib/features/queue/screens/queue_screen.dart
+@@ -346,7 +346,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Queue',
++                  'queue',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                         fontWeight: FontWeight.w600,
+                         color: context.adaptiveTextPrimary,
+@@ -365,7 +365,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+             TextButton(
+               onPressed: _selectAll,
+               child: Text(
+-                'Select All',
++                'select all',
+                 style: TextStyle(color: context.adaptiveTextSecondary),
+               ),
+             ),
+@@ -425,7 +425,7 @@ class _Header extends StatelessWidget {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Queue',
++                  'queue',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                         fontWeight: FontWeight.w600,
+                         color: context.adaptiveTextPrimary,
+@@ -482,7 +482,7 @@ class _EmptyQueue extends StatelessWidget {
+             ),
+             const SizedBox(height: AppConstants.spacingLg),
+             Text(
+-              'Queue is empty',
++              'queue is empty',
+               style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                     color: context.adaptiveTextSecondary,
+                     fontWeight: FontWeight.w600,
+@@ -490,7 +490,7 @@ class _EmptyQueue extends StatelessWidget {
+             ),
+             const SizedBox(height: AppConstants.spacingSm),
+             Text(
+-              'Add songs from the player or song actions menu.',
++              'add songs from the player or song actions menu.',
+               textAlign: TextAlign.center,
+               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                     color: context.adaptiveTextTertiary,
+@@ -530,7 +530,7 @@ class _EmptyUpcomingState extends StatelessWidget {
+             const SizedBox(width: AppConstants.spacingSm),
+             Expanded(
+               child: Text(
+-                'No upcoming queue items yet.',
++                'no upcoming queue items yet.',
+                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                       color: context.adaptiveTextSecondary,
+                     ),
+@@ -573,7 +573,7 @@ class _NowPlayingCard extends StatelessWidget {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Now playing',
++                  'now playing',
+                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                         color: AppColors.accent,
+                         fontWeight: FontWeight.w700,
+@@ -866,11 +866,11 @@ class _QueueTile extends StatelessWidget {
+                       if (onMoveToNext != null)
+                         const PopupMenuItem(
+                           value: _QueueAction.playNext,
+-                          child: Text('Play next'),
++                          child: Text('play next'),
+                         ),
+                       const PopupMenuItem(
+                         value: _QueueAction.remove,
+-                        child: Text('Remove'),
++                        child: Text('remove'),
+                       ),
+                     ],
+                     icon: Icon(
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
 index fc2fb6c5..fde75742 100644
 --- a/lib/features/settings/screens/settings_screen.dart
