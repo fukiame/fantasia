@@ -6,7 +6,7 @@ Subject: [PATCH] lib: artist: hide "all artist" label
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 47244630..004ff732 100644
+index 47244630..49572b5c 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
 @@ -390,6 +390,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
@@ -24,7 +24,7 @@ index 47244630..004ff732 100644
 -            _searchQuery.isNotEmpty
 -                ? 'Results (${filtered.length})'
 -                : 'All Artists',
-+            'Results (${filtered.length})'
++            'Results (${filtered.length})',
              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                color: context.adaptiveTextSecondary,
                fontWeight: FontWeight.w700,
