@@ -6,7 +6,7 @@ Subject: [PATCH] fixup! lib: settings: library: icons
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 8a19c4f8..ac3bdd67 100644
+index 8a19c4f8..883a624a 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
 @@ -987,20 +987,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
@@ -51,24 +51,30 @@ index 8a19c4f8..ac3bdd67 100644
              Expanded(
                child: Column(
                  crossAxisAlignment: CrossAxisAlignment.start,
-@@ -1167,6 +1139,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1167,22 +1139,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                padding: const EdgeInsets.all(AppConstants.spacingMd),
                child: Row(
                  children: [
-+<<<<<<< HEAD
-                   Container(
-                     width: context.scaleSize(AppConstants.containerSizeMd),
-                     height: context.scaleSize(AppConstants.containerSizeMd),
-@@ -1183,6 +1156,8 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
-                     ),
-                   ),
-                   const SizedBox(width: AppConstants.spacingMd),
-+=======
-+>>>>>>> fixup! lib: settings: library: icons
+-                  Container(
+-                    width: context.scaleSize(AppConstants.containerSizeMd),
+-                    height: context.scaleSize(AppConstants.containerSizeMd),
+-                    decoration: BoxDecoration(
+-                      color: AppColors.glassBackgroundStrong,
+-                      borderRadius: BorderRadius.circular(
+-                        AppConstants.radiusSm,
+-                      ),
+-                    ),
+-                    child: Icon(
+-                      LucideIcons.settings2,
+-                      color: context.adaptiveTextSecondary,
+-                      size: context.responsiveIcon(AppConstants.iconSizeMd),
+-                    ),
+-                  ),
+-                  const SizedBox(width: AppConstants.spacingMd),
                    Expanded(
                      child: Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
-@@ -1341,28 +1316,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1341,28 +1297,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                        padding: const EdgeInsets.all(AppConstants.spacingMd),
                        child: Row(
                          children: [
