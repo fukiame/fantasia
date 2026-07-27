@@ -1,0 +1,140 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 27 Jul 2026 11:24:49 +0700
+Subject: [PATCH] trysail
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/bottom_bar_settings_screen.dart b/lib/features/settings/screens/bottom_bar_settings_screen.dart
+index 277527b8..9ac88fa3 100644
+--- a/lib/features/settings/screens/bottom_bar_settings_screen.dart
++++ b/lib/features/settings/screens/bottom_bar_settings_screen.dart
+@@ -130,6 +130,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+                                         .read(navBarConfigProvider.notifier)
+                                         .toggleButton(button);
+                                   },
++                            ic: true,
+                           ),
+                         ),
+                       ],
+@@ -176,38 +177,6 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+               ],
+             ),
+           ],
+-          if (enabledCount > 4) ...[
+-            const SizedBox(height: AppConstants.spacingLg),
+-            Container(
+-              width: double.infinity,
+-              padding: const EdgeInsets.all(AppConstants.spacingMd),
+-              decoration: BoxDecoration(
+-                color: Colors.amber.withValues(alpha: 0.12),
+-                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-                border: Border.all(color: Colors.amber.withValues(alpha: 0.28)),
+-              ),
+-              child: Row(
+-                crossAxisAlignment: CrossAxisAlignment.start,
+-                children: [
+-                  Icon(
+-                    Icons.info_outline,
+-                    color: Colors.amber.shade400,
+-                    size: 18,
+-                  ),
+-                  const SizedBox(width: AppConstants.spacingSm),
+-                  Expanded(
+-                    child: Text(
+-                      'Having more than 4 buttons may cause text labels to compress. Consider reducing the button spacing below.',
+-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                        color: context.adaptiveTextSecondary,
+-                        height: 1.35,
+-                      ),
+-                    ),
+-                  ),
+-                ],
+-              ),
+-            ),
+-          ],
+           const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Appearance'),
+           SettingsCard(
+@@ -319,12 +288,12 @@ class _DisabledNavItem extends StatelessWidget {
+           onEnable();
+         },
+         child: Padding(
+-          padding: const EdgeInsets.all(AppConstants.spacingLg),
++          padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
+               Container(
+-                width: 40,
+-                height: 40,
++                width: 32,
++                height: 32,
+                 decoration: BoxDecoration(
+                   color: AppColors.glassBackgroundStrong,
+                   borderRadius: BorderRadius.circular(8),
+@@ -332,7 +301,7 @@ class _DisabledNavItem extends StatelessWidget {
+                 child: Icon(
+                   button.icon,
+                   color: context.adaptiveTextSecondary,
+-                  size: 20,
++                  size: 16,
+                 ),
+               ),
+               const SizedBox(width: AppConstants.spacingMd),
+@@ -341,20 +310,11 @@ class _DisabledNavItem extends StatelessWidget {
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      button.label,
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
++                      button.label.toLowerCase(),
++                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                         color: context.adaptiveTextPrimary,
+                       ),
+                     ),
+-                    const SizedBox(height: 2),
+-                    Text(
+-                      isHidden
+-                          ? 'Completely hidden from the bottom bar'
+-                          : 'Appears in the overflow menu',
+-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                    ),
+                   ],
+                 ),
+               ),
+diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
+index ee753e11..6c677910 100644
+--- a/lib/features/settings/widgets/settings_widgets.dart
++++ b/lib/features/settings/widgets/settings_widgets.dart
+@@ -102,6 +102,7 @@ class ToggleSetting extends StatelessWidget {
+     required this.subtitle,
+     required this.value,
+     required this.onChanged,
++    this.ic = false,
+   });
+ 
+   final IconData icon;
+@@ -109,6 +110,7 @@ class ToggleSetting extends StatelessWidget {
+   final String subtitle;
+   final bool value;
+   final ValueChanged<bool> onChanged;
++  final bool ic;
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -123,6 +125,10 @@ class ToggleSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
++              if (ic) ...[
++                _SettingsIcon(icon: icon),
++                const SizedBox(width: AppConstants.spacingMd),
++              ],
+               Expanded(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+-- 
+2.55.0
+

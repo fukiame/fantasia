@@ -1,0 +1,77 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 27 Jul 2026 11:14:19 +0700
+Subject: [PATCH] lib: bring small back
+
+since everything else is small
+this partially reverts c967336b50b65d7987f266484aaed0db43c9b31c
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index d71bbdc1..3ad686e6 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -993,14 +993,14 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                   children: [
+                       Text(
+                         'library',
+-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
++                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                           color: context.adaptiveTextPrimary,
+                         ),
+                       ),
+                     const SizedBox(height: 2),
+                      Text(
+                        '$_songCount songs in ${_folders.length} ${_folders.length == 1 ? 'folder' : 'folders'}',
+-                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: context.adaptiveTextTertiary,
+                        ),
+                      ),
+@@ -1071,7 +1071,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                 children: [
+                   Text(
+                     folder.displayName,
+-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                       color: context.adaptiveTextPrimary,
+                     ),
+                     overflow: TextOverflow.ellipsis,
+@@ -1145,13 +1145,13 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                       children: [
+                         Text(
+                           'scanning settings',
+-                          style: Theme.of(context).textTheme.titleMedium
++                          style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(color: context.adaptiveTextPrimary),
+                         ),
+                         const SizedBox(height: 2),
+                         Text(
+                           'filters, playlist import, deep scan, etc',
+-                          style: Theme.of(context).textTheme.bodyMedium
++                          style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: context.adaptiveTextTertiary),
+                         ),
+                       ],
+@@ -1303,7 +1303,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                                    _isXiaomiDevice
+                                       ? 'disable battery optimization (recommended)'
+                                       : 'disable battery optimization',
+-                                   style: Theme.of(context).textTheme.titleMedium
++                                   style: Theme.of(context).textTheme.titleSmall
+                                        ?.copyWith(
+                                          color: context.adaptiveTextPrimary,
+                                        ),
+@@ -1311,7 +1311,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                                  const SizedBox(height: 2),
+                                  Text(
+                                   'for background features to work',
+-                                   style: Theme.of(context).textTheme.bodyMedium
++                                   style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: context.adaptiveTextTertiary,
+                                        ),
+-- 
+2.55.0
+
