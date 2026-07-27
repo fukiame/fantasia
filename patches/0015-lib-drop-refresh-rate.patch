@@ -468,7 +468,7 @@ index 326939d5..27295a8a 100644
    }
  
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index be39725a..c97fa707 100644
+index 51b305d4..74986901 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -25,7 +25,6 @@ import 'package:flick/services/music_folder_service.dart';
@@ -489,7 +489,7 @@ index be39725a..c97fa707 100644
          clipBehavior: Clip.none,
          children: [
            SafeArea(
-@@ -289,7 +287,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -328,7 +326,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
              ),
            ),
          ],
@@ -801,7 +801,7 @@ index 23bb02ac..ad9ddcdc 100644
      dependency: transitive
      description: flutter
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 7debdff5..126464ac 100644
+index 605bb383..8458806d 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -38,7 +38,6 @@ dependencies:

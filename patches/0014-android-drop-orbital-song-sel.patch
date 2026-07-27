@@ -321,7 +321,7 @@ index 8eb4a2f1..4363359f 100644
                  icon: LucideIcons.panelBottom,
                  title: 'Bottom Bar Always Visible',
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 6d9b7324..be39725a 100644
+index 9ad9f707..51b305d4 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -15,7 +15,6 @@ import 'package:flick/core/utils/responsive.dart';
@@ -349,7 +349,7 @@ index 6d9b7324..be39725a 100644
  
      return DisplayModeWrapper(
        child: Stack(
-@@ -287,9 +283,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -326,9 +322,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                  AnimatedContainer(
                    duration: AppConstants.animationNormal,
                    curve: Curves.easeOutCubic,
@@ -360,7 +360,7 @@ index 6d9b7324..be39725a 100644
                  ),
                ],
              ),
-@@ -308,9 +302,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -347,9 +341,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
      bool fastIndexEnabled,
    ) {
      final overlayRailVisible = fastIndexEnabled && _fastIndexVisible;
@@ -371,7 +371,7 @@ index 6d9b7324..be39725a 100644
  
      if (tokenToIndexMap.isEmpty) {
        return content;
-@@ -379,63 +371,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -418,63 +410,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
      );
    }
  
@@ -435,7 +435,7 @@ index 6d9b7324..be39725a 100644
    Widget _buildListView(
      List<Song> songs,
      bool swipeActionsEnabled,
-@@ -916,8 +851,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -955,8 +890,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
        _jumpInList(targetIndex, animate);
        return;
      }
@@ -444,7 +444,7 @@ index 6d9b7324..be39725a 100644
    }
  
    void _jumpInList(int targetIndex, bool animate) {
-@@ -978,8 +911,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1017,8 +950,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
          _jumpInList(targetIndex, animate);
          return;
        }
