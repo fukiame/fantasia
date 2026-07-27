@@ -1,0 +1,90 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 17:15:59 +0700
+Subject: [PATCH] lib lib
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index 430a04e5..68077cca 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -991,11 +991,18 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
++<<<<<<< HEAD
+                       Text(
+                         'Library',
+                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                           color: context.adaptiveTextPrimary,
+                         ),
++=======
++                    Text(
++                      'library',
++                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
++                        color: context.adaptiveTextPrimary,
++>>>>>>> lib lib
+                       ),
+                     const SizedBox(height: 2),
+                      Text(
+@@ -1163,6 +1170,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Text(
++<<<<<<< HEAD
+                           'Scanning Settings',
+                           style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: context.adaptiveTextPrimary),
+@@ -1172,6 +1180,17 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                           'Filter files, size limits, and playlist import options',
+                           style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: context.adaptiveTextTertiary),
++=======
++                          'scanning settings',
++                          style: Theme.of(context).textTheme.titleSmall
++                              ?.copyWith(color: context.adaptiveTextPrimary),
++                        ),
++                        const SizedBox(height: 2),
++                        Text(
++                          'filters, playlist import, deep scan, etc',
++                          style: Theme.of(context).textTheme.bodySmall
++                              ?.copyWith(color: context.adaptiveTextTertiary),
++>>>>>>> lib lib
+                         ),
+                       ],
+                     ),
+@@ -1320,8 +1339,8 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                               children: [
+                                  Text(
+                                    _isXiaomiDevice
+-                                       ? 'Disable Battery Optimization (Recommended)'
+-                                       : 'Disable Battery Optimization',
++                                      ? 'disable battery optimization (recommended)'
++                                      : 'disable battery optimization',
+                                    style: Theme.of(context).textTheme.titleMedium
+                                        ?.copyWith(
+                                          color: context.adaptiveTextPrimary,
+@@ -1329,9 +1348,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+-                                   _isXiaomiDevice
+-                                       ? 'Required on many Xiaomi, Redmi, and POCO devices so rescans and background features keep working'
+-                                       : 'Allow Flick to run without aggressive background limits so rescans and background features keep working',
++                                  'for background features to work',
+                                    style: Theme.of(context).textTheme.bodyMedium
+                                        ?.copyWith(
+                                          color: context.adaptiveTextTertiary,
+@@ -1349,7 +1366,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                               ),
+                               color: context.adaptiveTextTertiary,
+                             ),
+-                            tooltip: 'Dismiss',
++                            tooltip: 'dismiss',
+                             onPressed: _dismissBatteryNotice,
+                             visualDensity: VisualDensity.compact,
+                             padding: EdgeInsets.zero,
+-- 
+2.55.0
+

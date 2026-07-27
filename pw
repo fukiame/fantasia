@@ -7,18 +7,18 @@ downstream=fantasia
 
 case "$1" in
     "rb" | "rbp" | "rebuild")
-        scripts/rebuildPatches.sh $upstream $downstream || exit 1
+        scripts/rebuildPatches.sh "$upstream" "$downstream" || exit 1
     ;;
     "p" | "patch")
         (git submodule update --init
-	scripts/applyPatches.sh $upstream $downstream $upstream_branch) || exit 1
+	scripts/applyPatches.sh "$upstream" "$downstream" "$upstream_branch") || exit 1
     ;;
     "m" | "up" | "merge")
-        scripts/mergeUpstream.sh $upstream || exit 1
+        scripts/mergeUpstream.sh "$upstream" "$upstream_branch" || exit 1
     ;;
     "b" | "build")
         (git submodule update --init
-	scripts/applyPatches.sh $upstream $downstream $upstream_branch
+	scripts/applyPatches.sh "$upstream" "$downstream" "$upstream_branch"
         cd $downstream
         # build commands here
         flutter pub get

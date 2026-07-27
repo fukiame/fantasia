@@ -6,10 +6,10 @@ Subject: [PATCH] android: navbar: menu is not essential
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/models/nav_bar_config.dart b/lib/models/nav_bar_config.dart
-index 86c5238f..39df00ab 100644
+index 06a1b3c5..6d96f8e3 100644
 --- a/lib/models/nav_bar_config.dart
 +++ b/lib/models/nav_bar_config.dart
-@@ -27,7 +27,6 @@ class NavBarConfig {
+@@ -28,7 +28,6 @@ class NavBarConfig {
    final bool showLabels;
  
    static const allButtons = [
@@ -17,7 +17,7 @@ index 86c5238f..39df00ab 100644
      NavBarButton.songs,
      NavBarButton.settings,
    ];
-@@ -45,12 +44,11 @@ class NavBarConfig {
+@@ -47,12 +46,11 @@ class NavBarConfig {
    List<NavBarButton> get orderedButtons => enabledButtons;
  
    bool get hasAllEssential =>
@@ -28,9 +28,9 @@ index 86c5238f..39df00ab 100644
    List<NavBarButton> get missingEssentials {
 -    const essential = {NavBarButton.menu, NavBarButton.songs, NavBarButton.settings};
 +    const essential = {NavBarButton.songs, NavBarButton.settings};
-     return essential.where((b) => !enabledButtons.contains(b)).toList()
-       ..sort((a, b) => a.pageIndex.compareTo(b.pageIndex));
-   }
+     return essential
+         .where((b) => !enabledButtons.contains(b) && !hidden.contains(b))
+         .toList()
 -- 
 2.55.0
 

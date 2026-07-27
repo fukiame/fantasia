@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: bottom bar: kill subtitle for some
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/bottom_bar_settings_screen.dart b/lib/features/settings/screens/bottom_bar_settings_screen.dart
-index d09ab4f3..5e799650 100644
+index 69a617a2..277527b8 100644
 --- a/lib/features/settings/screens/bottom_bar_settings_screen.dart
 +++ b/lib/features/settings/screens/bottom_bar_settings_screen.dart
-@@ -118,7 +118,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+@@ -121,7 +121,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
                            child: ToggleSetting(
                              icon: button.icon,
                              title: button.label,
@@ -18,16 +18,6 @@ index d09ab4f3..5e799650 100644
                              value: true,
                              onChanged: isOnly
                                  ? (_) {}
-@@ -146,8 +146,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
-                   ToggleSetting(
-                     icon: disabled[i].icon,
-                     title: disabled[i].label,
--                    subtitle:
--                    'Enable to show the ${disabled[i].label} tab in the bottom bar',
-+                    subtitle: '',
-                     value: false,
-                     onChanged: (_) {
-                       ref
 -- 
 2.55.0
 

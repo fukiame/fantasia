@@ -6,7 +6,7 @@ Subject: [PATCH] listenbrainz,lastfm
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 4307409..a2ad1ae 100644
+index 4307409c..a2ad1ae7 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -489,38 +489,12 @@ class _MainShellState extends ConsumerState<MainShell>
@@ -49,7 +49,7 @@ index 4307409..a2ad1ae 100644
      }
    }
 diff --git a/lib/features/manual/data/manual_data.dart b/lib/features/manual/data/manual_data.dart
-index 1fbe25e..6ae7670 100644
+index 1fbe25ec..6ae76701 100644
 --- a/lib/features/manual/data/manual_data.dart
 +++ b/lib/features/manual/data/manual_data.dart
 @@ -368,10 +368,6 @@ const List<ManualSection> kManualSections = [
@@ -65,7 +65,7 @@ index 1fbe25e..6ae7670 100644
          body: 'Customize the home screen widget appearance.',
 diff --git a/lib/features/settings/screens/integrations_settings_screen.dart b/lib/features/settings/screens/integrations_settings_screen.dart
 deleted file mode 100644
-index 1102f7a..0000000
+index 1102f7a6..00000000
 --- a/lib/features/settings/screens/integrations_settings_screen.dart
 +++ /dev/null
 @@ -1,27 +0,0 @@
@@ -97,7 +97,7 @@ index 1102f7a..0000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index fae110d..a3078a8 100644
+index fae110d0..a3078a80 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -10,7 +10,6 @@ import 'package:flick/features/settings/screens/library_settings_screen.dart';
@@ -129,7 +129,7 @@ index fae110d..a3078a8 100644
                            iconBg: const Color(0xFF2D4A6F),
 diff --git a/lib/features/settings/widgets/lastfm_settings_tile.dart b/lib/features/settings/widgets/lastfm_settings_tile.dart
 deleted file mode 100644
-index 94f1189..0000000
+index 6a6833d4..00000000
 --- a/lib/features/settings/widgets/lastfm_settings_tile.dart
 +++ /dev/null
 @@ -1,1069 +0,0 @@
@@ -861,14 +861,14 @@ index 94f1189..0000000
 -              children: [
 -                Text(
 -                  'Last.fm',
--                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
 -                    color: context.adaptiveTextPrimary,
 -                  ),
 -                ),
 -                const SizedBox(height: 2),
 -                Text(
 -                  'Loading session...',
--                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
 -                    color: context.adaptiveTextTertiary,
 -                  ),
 -                ),
@@ -1157,14 +1157,14 @@ index 94f1189..0000000
 -                  children: [
 -                    Text(
 -                      title,
--                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
 -                        color: context.adaptiveTextPrimary,
 -                      ),
 -                    ),
 -                    const SizedBox(height: 2),
 -                    Text(
 -                      subtitle,
--                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
 -                        color: context.adaptiveTextTertiary,
 -                      ),
 -                    ),
@@ -1188,8 +1188,8 @@ index 94f1189..0000000
 -
 -  Widget _buildLeadingIcon(BuildContext context, IconData icon) {
 -    return Container(
--      width: context.scaleSize(AppConstants.containerSizeSm),
--      height: context.scaleSize(AppConstants.containerSizeSm),
+-      width: context.scaleSize(AppConstants.containerSizeMd),
+-      height: context.scaleSize(AppConstants.containerSizeMd),
 -      decoration: BoxDecoration(
 -        color: AppColors.glassBackgroundStrong,
 -        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
@@ -1204,7 +1204,7 @@ index 94f1189..0000000
 -}
 diff --git a/lib/features/settings/widgets/listenbrainz_settings_tile.dart b/lib/features/settings/widgets/listenbrainz_settings_tile.dart
 deleted file mode 100644
-index 8784e79..0000000
+index d28df38e..00000000
 --- a/lib/features/settings/widgets/listenbrainz_settings_tile.dart
 +++ /dev/null
 @@ -1,793 +0,0 @@
@@ -1631,14 +1631,14 @@ index 8784e79..0000000
 -              children: [
 -                Text(
 -                  'ListenBrainz',
--                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
 -                    color: context.adaptiveTextPrimary,
 -                  ),
 -                ),
 -                const SizedBox(height: 2),
 -                Text(
 -                  'Loading session...',
--                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
 -                    color: context.adaptiveTextTertiary,
 -                  ),
 -                ),
@@ -1719,14 +1719,14 @@ index 8784e79..0000000
 -                  children: [
 -                    Text(
 -                      title,
--                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
 -                        color: context.adaptiveTextPrimary,
 -                      ),
 -                    ),
 -                    const SizedBox(height: 2),
 -                    Text(
 -                      subtitle,
--                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
 -                        color: context.adaptiveTextTertiary,
 -                      ),
 -                    ),
@@ -1750,8 +1750,8 @@ index 8784e79..0000000
 -
 -  Widget _buildLeadingIcon(BuildContext context, IconData icon) {
 -    return Container(
--      width: context.scaleSize(AppConstants.containerSizeSm),
--      height: context.scaleSize(AppConstants.containerSizeSm),
+-      width: context.scaleSize(AppConstants.containerSizeMd),
+-      height: context.scaleSize(AppConstants.containerSizeMd),
 -      decoration: BoxDecoration(
 -        color: AppColors.glassBackgroundStrong,
 -        borderRadius: BorderRadius.circular(AppConstants.radiusSm),
@@ -2003,7 +2003,7 @@ index 8784e79..0000000
 -}
 diff --git a/lib/providers/lastfm_provider.dart b/lib/providers/lastfm_provider.dart
 deleted file mode 100644
-index 4d0a887..0000000
+index 4d0a887c..00000000
 --- a/lib/providers/lastfm_provider.dart
 +++ /dev/null
 @@ -1,231 +0,0 @@
@@ -2240,7 +2240,7 @@ index 4d0a887..0000000
 -}
 diff --git a/lib/providers/lastfm_provider.g.dart b/lib/providers/lastfm_provider.g.dart
 deleted file mode 100644
-index a38bfc1..0000000
+index a38bfc18..00000000
 --- a/lib/providers/lastfm_provider.g.dart
 +++ /dev/null
 @@ -1,345 +0,0 @@
@@ -2591,7 +2591,7 @@ index a38bfc1..0000000
 -}
 diff --git a/lib/providers/listenbrainz_provider.dart b/lib/providers/listenbrainz_provider.dart
 deleted file mode 100644
-index 48edc7d..0000000
+index 48edc7d1..00000000
 --- a/lib/providers/listenbrainz_provider.dart
 +++ /dev/null
 @@ -1,229 +0,0 @@
@@ -2826,7 +2826,7 @@ index 48edc7d..0000000
 -}
 diff --git a/lib/providers/listenbrainz_provider.g.dart b/lib/providers/listenbrainz_provider.g.dart
 deleted file mode 100644
-index abf0eff..0000000
+index abf0eff6..00000000
 --- a/lib/providers/listenbrainz_provider.g.dart
 +++ /dev/null
 @@ -1,357 +0,0 @@
@@ -3188,7 +3188,7 @@ index abf0eff..0000000
 -  }
 -}
 diff --git a/lib/providers/player_provider.dart b/lib/providers/player_provider.dart
-index 5ab0421..5b20e9f 100644
+index 5ab0421c..5b20e9fc 100644
 --- a/lib/providers/player_provider.dart
 +++ b/lib/providers/player_provider.dart
 @@ -3,8 +3,6 @@ import 'dart:async';
@@ -3289,7 +3289,7 @@ index 5ab0421..5b20e9f 100644
  
    /// Play a song, optionally with a playlist context.
 diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
-index 74b551b..6ff4325 100644
+index 74b551ba..6ff4325d 100644
 --- a/lib/providers/providers.dart
 +++ b/lib/providers/providers.dart
 @@ -8,8 +8,6 @@ export 'songs_provider.dart';
@@ -3303,7 +3303,7 @@ index 74b551b..6ff4325 100644
  export 'songs_view_mode_provider.dart';
 diff --git a/lib/services/lastfm/lastfm_api_client.dart b/lib/services/lastfm/lastfm_api_client.dart
 deleted file mode 100644
-index f3f303f..0000000
+index f3f303f2..00000000
 --- a/lib/services/lastfm/lastfm_api_client.dart
 +++ /dev/null
 @@ -1,127 +0,0 @@
@@ -3436,7 +3436,7 @@ index f3f303f..0000000
 -}
 diff --git a/lib/services/lastfm/lastfm_auth_service.dart b/lib/services/lastfm/lastfm_auth_service.dart
 deleted file mode 100644
-index 07b3d23..0000000
+index 07b3d235..00000000
 --- a/lib/services/lastfm/lastfm_auth_service.dart
 +++ /dev/null
 @@ -1,174 +0,0 @@
@@ -3616,7 +3616,7 @@ index 07b3d23..0000000
 -}
 diff --git a/lib/services/lastfm/lastfm_credentials.dart b/lib/services/lastfm/lastfm_credentials.dart
 deleted file mode 100644
-index 6ca37b1..0000000
+index 6ca37b12..00000000
 --- a/lib/services/lastfm/lastfm_credentials.dart
 +++ /dev/null
 @@ -1,83 +0,0 @@
@@ -3705,7 +3705,7 @@ index 6ca37b1..0000000
 -}
 diff --git a/lib/services/lastfm/lastfm_models.dart b/lib/services/lastfm/lastfm_models.dart
 deleted file mode 100644
-index 5552a4b..0000000
+index 5552a4bf..00000000
 --- a/lib/services/lastfm/lastfm_models.dart
 +++ /dev/null
 @@ -1,33 +0,0 @@
@@ -3744,7 +3744,7 @@ index 5552a4b..0000000
 -}
 diff --git a/lib/services/lastfm/lastfm_models.freezed.dart b/lib/services/lastfm/lastfm_models.freezed.dart
 deleted file mode 100644
-index 06c7ee8..0000000
+index 06c7ee88..00000000
 --- a/lib/services/lastfm/lastfm_models.freezed.dart
 +++ /dev/null
 @@ -1,558 +0,0 @@
@@ -4308,7 +4308,7 @@ index 06c7ee8..0000000
 -// dart format on
 diff --git a/lib/services/lastfm/lastfm_models.g.dart b/lib/services/lastfm/lastfm_models.g.dart
 deleted file mode 100644
-index a6756fd..0000000
+index a6756fd1..00000000
 --- a/lib/services/lastfm/lastfm_models.g.dart
 +++ /dev/null
 @@ -1,39 +0,0 @@
@@ -4353,7 +4353,7 @@ index a6756fd..0000000
 -    };
 diff --git a/lib/services/lastfm/lastfm_scrobble_queue.dart b/lib/services/lastfm/lastfm_scrobble_queue.dart
 deleted file mode 100644
-index c6322d6..0000000
+index c6322d67..00000000
 --- a/lib/services/lastfm/lastfm_scrobble_queue.dart
 +++ /dev/null
 @@ -1,105 +0,0 @@
@@ -4464,7 +4464,7 @@ index c6322d6..0000000
 -}
 diff --git a/lib/services/lastfm/lastfm_scrobble_service.dart b/lib/services/lastfm/lastfm_scrobble_service.dart
 deleted file mode 100644
-index 0965708..0000000
+index 09657081..00000000
 --- a/lib/services/lastfm/lastfm_scrobble_service.dart
 +++ /dev/null
 @@ -1,107 +0,0 @@
@@ -4577,7 +4577,7 @@ index 0965708..0000000
 -}
 diff --git a/lib/services/listenbrainz/listenbrainz_api_client.dart b/lib/services/listenbrainz/listenbrainz_api_client.dart
 deleted file mode 100644
-index c9d7e0a..0000000
+index c9d7e0a1..00000000
 --- a/lib/services/listenbrainz/listenbrainz_api_client.dart
 +++ /dev/null
 @@ -1,164 +0,0 @@
@@ -4747,7 +4747,7 @@ index c9d7e0a..0000000
 -}
 diff --git a/lib/services/listenbrainz/listenbrainz_auth_service.dart b/lib/services/listenbrainz/listenbrainz_auth_service.dart
 deleted file mode 100644
-index 5580700..0000000
+index 55807002..00000000
 --- a/lib/services/listenbrainz/listenbrainz_auth_service.dart
 +++ /dev/null
 @@ -1,74 +0,0 @@
@@ -4827,7 +4827,7 @@ index 5580700..0000000
 -}
 diff --git a/lib/services/listenbrainz/listenbrainz_credentials.dart b/lib/services/listenbrainz/listenbrainz_credentials.dart
 deleted file mode 100644
-index a5ffd46..0000000
+index a5ffd46c..00000000
 --- a/lib/services/listenbrainz/listenbrainz_credentials.dart
 +++ /dev/null
 @@ -1,42 +0,0 @@
@@ -4875,7 +4875,7 @@ index a5ffd46..0000000
 -}
 diff --git a/lib/services/listenbrainz/listenbrainz_models.dart b/lib/services/listenbrainz/listenbrainz_models.dart
 deleted file mode 100644
-index ee14549..0000000
+index ee145499..00000000
 --- a/lib/services/listenbrainz/listenbrainz_models.dart
 +++ /dev/null
 @@ -1,33 +0,0 @@
@@ -4914,7 +4914,7 @@ index ee14549..0000000
 -}
 diff --git a/lib/services/listenbrainz/listenbrainz_models.freezed.dart b/lib/services/listenbrainz/listenbrainz_models.freezed.dart
 deleted file mode 100644
-index 558e980..0000000
+index 558e980b..00000000
 --- a/lib/services/listenbrainz/listenbrainz_models.freezed.dart
 +++ /dev/null
 @@ -1,555 +0,0 @@
@@ -5475,7 +5475,7 @@ index 558e980..0000000
 -// dart format on
 diff --git a/lib/services/listenbrainz/listenbrainz_models.g.dart b/lib/services/listenbrainz/listenbrainz_models.g.dart
 deleted file mode 100644
-index a92da16..0000000
+index a92da16d..00000000
 --- a/lib/services/listenbrainz/listenbrainz_models.g.dart
 +++ /dev/null
 @@ -1,37 +0,0 @@
@@ -5518,7 +5518,7 @@ index a92da16..0000000
 -};
 diff --git a/lib/services/listenbrainz/listenbrainz_scrobble_queue.dart b/lib/services/listenbrainz/listenbrainz_scrobble_queue.dart
 deleted file mode 100644
-index f1b007d..0000000
+index f1b007dd..00000000
 --- a/lib/services/listenbrainz/listenbrainz_scrobble_queue.dart
 +++ /dev/null
 @@ -1,106 +0,0 @@
@@ -5630,7 +5630,7 @@ index f1b007d..0000000
 -}
 diff --git a/lib/services/listenbrainz/listenbrainz_scrobble_service.dart b/lib/services/listenbrainz/listenbrainz_scrobble_service.dart
 deleted file mode 100644
-index 4dd81bd..0000000
+index 4dd81bd3..00000000
 --- a/lib/services/listenbrainz/listenbrainz_scrobble_service.dart
 +++ /dev/null
 @@ -1,126 +0,0 @@

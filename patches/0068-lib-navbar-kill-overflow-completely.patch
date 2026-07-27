@@ -6,10 +6,10 @@ Subject: [PATCH] lib: navbar: kill overflow completely
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/models/nav_bar_config.dart b/lib/models/nav_bar_config.dart
-index 39df00ab..c717cc7f 100644
+index 6d96f8e3..975f1ef6 100644
 --- a/lib/models/nav_bar_config.dart
 +++ b/lib/models/nav_bar_config.dart
-@@ -43,16 +43,6 @@ class NavBarConfig {
+@@ -45,18 +45,6 @@ class NavBarConfig {
  
    List<NavBarButton> get orderedButtons => enabledButtons;
  
@@ -19,7 +19,9 @@ index 39df00ab..c717cc7f 100644
 -
 -  List<NavBarButton> get missingEssentials {
 -    const essential = {NavBarButton.songs, NavBarButton.settings};
--    return essential.where((b) => !enabledButtons.contains(b)).toList()
+-    return essential
+-        .where((b) => !enabledButtons.contains(b) && !hidden.contains(b))
+-        .toList()
 -      ..sort((a, b) => a.pageIndex.compareTo(b.pageIndex));
 -  }
 -

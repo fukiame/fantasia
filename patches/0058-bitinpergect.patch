@@ -28,7 +28,7 @@ index a7361370..a47fa8cd 100644
                              fontFamily: 'ProductSans',
                              fontSize: context.responsive(10.0, 10.5, 11.0),
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index 21dff963..ea66f5ce 100644
+index b2e362c4..b8fddffd 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -546,7 +546,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {

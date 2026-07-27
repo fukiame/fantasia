@@ -206,7 +206,7 @@ index d9396f67..55309ab7 100644
    }
  }
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
-index c65090bc..bc9bc60b 100644
+index 58720dae..e9528af7 100644
 --- a/lib/features/player/screens/full_player_screen.dart
 +++ b/lib/features/player/screens/full_player_screen.dart
 @@ -25,7 +25,6 @@ import 'package:flick/services/lyrics_service.dart';
@@ -217,7 +217,7 @@ index c65090bc..bc9bc60b 100644
  import 'package:flick/widgets/uac2/iso_volume_popup.dart';
  import 'package:flick/providers/providers.dart';
  
-@@ -341,8 +340,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -342,8 +341,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
          if (didPop) return;
          _close(context);
        },
@@ -227,7 +227,7 @@ index c65090bc..bc9bc60b 100644
            backgroundColor: AppColors.background,
            body: ValueListenableBuilder<Song?>(
              valueListenable: _playerService.currentSongNotifier,
-@@ -543,7 +541,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -548,7 +546,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                );
              },
            ),

@@ -223,10 +223,10 @@ index cc158c04..41472c1b 100644
  
              ],
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
-index bc9bc60b..529dfebc 100644
+index e9528af7..4b51a602 100644
 --- a/lib/features/player/screens/full_player_screen.dart
 +++ b/lib/features/player/screens/full_player_screen.dart
-@@ -81,7 +81,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -82,7 +82,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
    bool _isLyricsMode = false;
    bool _isVinylRotationActive = false;
    bool _isVinylMode = false;
@@ -234,7 +234,7 @@ index bc9bc60b..529dfebc 100644
    bool _isImmersiveFullView = false;
    int _songTransitionDirection = 1;
    PlayerScreenMode _playerScreenMode = PlayerScreenMode.immersive;
-@@ -228,35 +227,19 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -229,35 +228,19 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
    }
  
    void _setLyricsMode(bool value) {
@@ -270,7 +270,7 @@ index bc9bc60b..529dfebc 100644
    void _handleImmersiveSceneTap() {
      if (_playerScreenMode != PlayerScreenMode.immersive) return;
      if (_isLyricsMode) return;
-@@ -323,9 +306,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -324,9 +307,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
      });
  
      final appPrefs = ref.watch(appPreferencesProvider);
@@ -280,7 +280,7 @@ index bc9bc60b..529dfebc 100644
  
      final colorMode = ref.watch(albumColorModeProvider);
      final dominantColor = ref.watch(albumDominantColorSyncProvider);
-@@ -432,8 +412,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -437,8 +417,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                    child: AnimatedSongScene(
                      song: song,
                      lyricsMode: _isLyricsMode,
@@ -289,7 +289,7 @@ index bc9bc60b..529dfebc 100644
                      immersiveFullView: _isImmersiveFullView,
                      playerScreenMode: _playerScreenMode,
                      albumColorMode: colorMode,
-@@ -461,9 +439,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -466,9 +444,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                        context,
                        playerService: _playerService,
                        song: song,
@@ -299,7 +299,7 @@ index bc9bc60b..529dfebc 100644
                        onShowPlayerLayout: (ctx) => PlayerLayoutSheet.show(
                          ctx,
                          playerService: _playerService,
-@@ -483,7 +459,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -488,7 +464,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                          PlayerActionButtonRow(
                        song: song,
                        lyricsMode: lyricsMode,
@@ -307,7 +307,7 @@ index bc9bc60b..529dfebc 100644
                        playerScreenMode: mode,
                        albumColor: albumColor,
                        albumColorMode: colorMode,
-@@ -497,14 +472,10 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -502,14 +477,10 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                        favoritesService: _favoritesService,
                        onToggleLyrics: () =>
                            setState(() => _isLyricsMode = !lyricsMode),
@@ -1562,10 +1562,10 @@ index a5c5fe31..00000000
 -}
 -
 diff --git a/lib/features/settings/screens/bottom_bar_settings_screen.dart b/lib/features/settings/screens/bottom_bar_settings_screen.dart
-index 0b1ea0a8..d09ab4f3 100644
+index e884ca76..69a617a2 100644
 --- a/lib/features/settings/screens/bottom_bar_settings_screen.dart
 +++ b/lib/features/settings/screens/bottom_bar_settings_screen.dart
-@@ -25,35 +25,6 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+@@ -28,35 +28,6 @@ class BottomBarSettingsScreen extends ConsumerWidget {
        body: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
@@ -1601,10 +1601,10 @@ index 0b1ea0a8..d09ab4f3 100644
            const SettingsSectionHeader('Auto Collapse'),
            SettingsCard(
              children: [
-@@ -307,4 +278,4 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+@@ -402,4 +373,4 @@ class _DisabledNavItem extends StatelessWidget {
+       ),
      );
    }
- 
 -}
 \ No newline at end of file
 +}
