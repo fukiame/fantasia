@@ -714,10 +714,10 @@ index 4363359f..30e3b922 100644
 -  }
 -}
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 80f1a09d..dca9ff62 100644
+index ac197960..d68d4ffa 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -535,22 +535,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -551,22 +551,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
          .setBtLdacBitsPerSample(value);
    }
  
@@ -741,10 +741,10 @@ index 80f1a09d..dca9ff62 100644
      if (state.autoFocusSearch == value) return;
      state = state.copyWith(autoFocusSearch: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 9229c9eb..d52d2752 100644
+index e17af96e..3bfcdd8a 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
-@@ -72,8 +72,6 @@ class AppPreferences {
+@@ -74,8 +74,6 @@ class AppPreferences {
    final bool btEnableCodecControl;
    final int btSampleRate;
    final int btLdacBitsPerSample;
@@ -753,7 +753,7 @@ index 9229c9eb..d52d2752 100644
    final bool autoFocusSearch;
    final String searchPlaybackMode; // 'results', 'library', or 'queue'
    final bool visualizerEnabled;
-@@ -154,8 +152,6 @@ class AppPreferences {
+@@ -158,8 +156,6 @@ class AppPreferences {
      this.btEnableCodecControl = false,
      this.btSampleRate = 0,
      this.btLdacBitsPerSample = 0,
@@ -762,7 +762,7 @@ index 9229c9eb..d52d2752 100644
      this.autoFocusSearch = false,
      this.searchPlaybackMode = 'results',
      this.visualizerEnabled = true,
-@@ -237,8 +233,6 @@ class AppPreferences {
+@@ -243,8 +239,6 @@ class AppPreferences {
      bool? btEnableCodecControl,
      int? btSampleRate,
      int? btLdacBitsPerSample,
@@ -771,7 +771,7 @@ index 9229c9eb..d52d2752 100644
      bool? autoFocusSearch,
      String? searchPlaybackMode,
      bool? visualizerEnabled,
-@@ -353,10 +347,6 @@ class AppPreferences {
+@@ -363,10 +357,6 @@ class AppPreferences {
        btSampleRate: btSampleRate ?? this.btSampleRate,
        btLdacBitsPerSample:
            btLdacBitsPerSample ?? this.btLdacBitsPerSample,
@@ -782,7 +782,7 @@ index 9229c9eb..d52d2752 100644
        autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
        searchPlaybackMode:
            searchPlaybackMode ?? this.searchPlaybackMode,
-@@ -448,8 +438,6 @@ class AppPreferencesService {
+@@ -460,8 +450,6 @@ class AppPreferencesService {
    static const _btEnableCodecControlKey = 'app_bt_enable_codec_control';
    static const _btSampleRateKey = 'app_bt_sample_rate';
    static const _btLdacBitsPerSampleKey = 'app_bt_ldac_bits_per_sample';
@@ -791,7 +791,7 @@ index 9229c9eb..d52d2752 100644
    static const _autoFocusSearchKey = 'app_auto_focus_search';
    static const _searchPlaybackModeKey = 'app_search_playback_mode';
    static const _visualizerEnabledKey = 'visualizer_enabled';
-@@ -567,10 +555,6 @@ class AppPreferencesService {
+@@ -583,10 +571,6 @@ class AppPreferencesService {
            prefs.getBool(_btEnableCodecControlKey) ?? false,
        btSampleRate: prefs.getInt(_btSampleRateKey) ?? 0,
        btLdacBitsPerSample: prefs.getInt(_btLdacBitsPerSampleKey) ?? 0,
@@ -802,7 +802,7 @@ index 9229c9eb..d52d2752 100644
        autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
        searchPlaybackMode:
            prefs.getString(_searchPlaybackModeKey) ?? 'results',
-@@ -1273,26 +1257,6 @@ class AppPreferencesService {
+@@ -1309,26 +1293,6 @@ class AppPreferencesService {
      await prefs.setInt(_btLdacBitsPerSampleKey, value);
    }
  
@@ -905,7 +905,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 21e7e28f..758cfcf6 100644
+index 84f8a17a..0ebc864e 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -925,15 +925,15 @@ index 21e7e28f..758cfcf6 100644
    bool _appInForeground = true;
    final LastPlayedService _lastPlayedService = LastPlayedService();
    final FavoritesService _favoritesService = FavoritesService();
-@@ -544,7 +541,6 @@ class PlayerService {
+@@ -545,7 +542,6 @@ class PlayerService {
      _notifyQueueChanged();
      unawaited(_loadGaplessPlaybackPreference());
      unawaited(_loadCrossfadePreferences());
 -    unawaited(_loadFloatingPlayerPreference());
      _initBluetoothReconnectHandling();
      _initUsbDacDisconnectHandling();
-     unawaited(_applyBluetoothCodecPrefs());
-@@ -783,74 +779,22 @@ class PlayerService {
+     _initUsbDacAttachHandling();
+@@ -807,74 +803,22 @@ class PlayerService {
      }
    }
  
@@ -1012,7 +1012,7 @@ index 21e7e28f..758cfcf6 100644
    }
  
    bool get _isGaplessActive =>
-@@ -2437,8 +2381,6 @@ class PlayerService {
+@@ -2461,8 +2405,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -1021,8 +1021,8 @@ index 21e7e28f..758cfcf6 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -4795,7 +4737,6 @@ class PlayerService {
-     unawaited(_usbDacDetachSubscription?.cancel());
+@@ -4838,7 +4780,6 @@ class PlayerService {
+     unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();
 -    _floatingPlayerService.hide();

@@ -283,7 +283,7 @@ index 2c288445..a148672b 100644
                  icon: LucideIcons.navigation,
                  title: 'Bottom Bar',
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 82021a7b..80f1a09d 100644
+index 9bac5990..ac197960 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
 @@ -397,20 +397,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
@@ -308,7 +308,7 @@ index 82021a7b..80f1a09d 100644
      if (state.replaceAlbumWithBitPerfectCapsule == value) return;
      state = state.copyWith(replaceAlbumWithBitPerfectCapsule: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index a9680cea..9229c9eb 100644
+index 058d18ce..e17af96e 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
 @@ -53,8 +53,6 @@ class AppPreferences {
@@ -320,7 +320,7 @@ index a9680cea..9229c9eb 100644
    final bool replaceAlbumWithBitPerfectCapsule;
    final bool albumsStretchArtwork;
    final bool animatedAlbumArt;
-@@ -137,8 +135,6 @@ class AppPreferences {
+@@ -139,8 +137,6 @@ class AppPreferences {
      this.leftActionButton = 'lyrics',
      this.rightActionButton = 'favorites',
      this.welcomeCardDismissed = false,
@@ -329,7 +329,7 @@ index a9680cea..9229c9eb 100644
      this.replaceAlbumWithBitPerfectCapsule = false,
      this.albumsStretchArtwork = false,
      this.animatedAlbumArt = true,
-@@ -222,8 +218,6 @@ class AppPreferences {
+@@ -226,8 +222,6 @@ class AppPreferences {
      String? leftActionButton,
      String? rightActionButton,
      bool? welcomeCardDismissed,
@@ -338,7 +338,7 @@ index a9680cea..9229c9eb 100644
      bool? replaceAlbumWithBitPerfectCapsule,
      bool? albumsStretchArtwork,
      bool? animatedAlbumArt,
-@@ -326,8 +320,6 @@ class AppPreferences {
+@@ -332,8 +326,6 @@ class AppPreferences {
        leftActionButton: leftActionButton ?? this.leftActionButton,
        rightActionButton: rightActionButton ?? this.rightActionButton,
        welcomeCardDismissed: welcomeCardDismissed ?? this.welcomeCardDismissed,
@@ -347,7 +347,7 @@ index a9680cea..9229c9eb 100644
        replaceAlbumWithBitPerfectCapsule:
            replaceAlbumWithBitPerfectCapsule ??
            this.replaceAlbumWithBitPerfectCapsule,
-@@ -432,8 +424,6 @@ class AppPreferencesService {
+@@ -442,8 +434,6 @@ class AppPreferencesService {
    static const _leftActionButtonKey = 'left_action_button';
    static const _rightActionButtonKey = 'right_action_button';
    static const _welcomeCardDismissedKey = 'welcome_card_dismissed';
@@ -356,7 +356,7 @@ index a9680cea..9229c9eb 100644
    static const _replaceAlbumWithBitPerfectCapsuleKey =
        'replace_album_with_bit_perfect_capsule';
    static const _albumsStretchArtworkKey = 'albums_stretch_artwork';
-@@ -547,8 +537,6 @@ class AppPreferencesService {
+@@ -559,8 +549,6 @@ class AppPreferencesService {
        leftActionButton: prefs.getString(_leftActionButtonKey) ?? 'lyrics',
        rightActionButton: prefs.getString(_rightActionButtonKey) ?? 'favorites',
        welcomeCardDismissed: prefs.getBool(_welcomeCardDismissedKey) ?? false,
@@ -365,7 +365,7 @@ index a9680cea..9229c9eb 100644
        replaceAlbumWithBitPerfectCapsule:
            prefs.getBool(_replaceAlbumWithBitPerfectCapsuleKey) ?? false,
        albumsStretchArtwork:
-@@ -1051,26 +1039,6 @@ class AppPreferencesService {
+@@ -1067,26 +1055,6 @@ class AppPreferencesService {
      await prefs.setBool(_welcomeCardDismissedKey, value);
    }
  

@@ -6,7 +6,7 @@ Subject: [PATCH] treewide: drop streaks and milestones
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 478a054..7944a01 100644
+index 478a054b..7944a017 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -35,12 +35,9 @@ import 'package:flick/models/song.dart';
@@ -130,7 +130,7 @@ index 478a054..7944a01 100644
      _navBarAlwaysVisibleSubscription.close();
 diff --git a/lib/features/milestone/screens/milestones_screen.dart b/lib/features/milestone/screens/milestones_screen.dart
 deleted file mode 100644
-index 8aadc68..0000000
+index d21a4b5c..00000000
 --- a/lib/features/milestone/screens/milestones_screen.dart
 +++ /dev/null
 @@ -1,886 +0,0 @@
@@ -245,7 +245,7 @@ index 8aadc68..0000000
 -        children: [
 -          IconButton(
 -            onPressed: () => Navigator.of(context).pop(),
--            icon: const Icon(LucideIcons.arrowLeft),
+-            icon: const Icon(LucideIcons.chevronLeft),
 -            visualDensity: VisualDensity.compact,
 -          ),
 -          const SizedBox(width: AppConstants.spacingXs),
@@ -1022,7 +1022,7 @@ index 8aadc68..0000000
 -}
 diff --git a/lib/features/milestone/widgets/milestone_card.dart b/lib/features/milestone/widgets/milestone_card.dart
 deleted file mode 100644
-index 220f02c..0000000
+index 220f02c0..00000000
 --- a/lib/features/milestone/widgets/milestone_card.dart
 +++ /dev/null
 @@ -1,290 +0,0 @@
@@ -1318,7 +1318,7 @@ index 220f02c..0000000
 -
 diff --git a/lib/features/milestone/widgets/streak_popup.dart b/lib/features/milestone/widgets/streak_popup.dart
 deleted file mode 100644
-index 5f974d1..0000000
+index 5f974d15..00000000
 --- a/lib/features/milestone/widgets/streak_popup.dart
 +++ /dev/null
 @@ -1,452 +0,0 @@
@@ -1775,7 +1775,7 @@ index 5f974d1..0000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/interface_settings_screen.dart b/lib/features/settings/screens/interface_settings_screen.dart
-index b709787..ac874b3 100644
+index b7097871..ac874b30 100644
 --- a/lib/features/settings/screens/interface_settings_screen.dart
 +++ b/lib/features/settings/screens/interface_settings_screen.dart
 @@ -4,7 +4,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -1845,7 +1845,7 @@ index b709787..ac874b3 100644
                  icon: LucideIcons.navigation,
                  title: 'Bottom Bar',
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 4bc0c58..fae110d 100644
+index 4bc0c58a..fae110d0 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -16,9 +16,7 @@ import 'package:flick/features/settings/screens/player_layout_settings_screen.da
@@ -1907,10 +1907,10 @@ index 4bc0c58..fae110d 100644
                            icon: LucideIcons.info,
                            iconBg: const Color(0xFF3A3A3A),
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 2870899..edf9ed3 100644
+index b5668fdc..54e6eff5 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -661,12 +661,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -677,12 +677,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
      await ref.read(appPreferencesServiceProvider).setOrbitShowGlow(value);
    }
  
@@ -1925,7 +1925,7 @@ index 2870899..edf9ed3 100644
      state = state.copyWith(showMoreFromArtist: value);
 diff --git a/lib/providers/milestone_provider.dart b/lib/providers/milestone_provider.dart
 deleted file mode 100644
-index 122ed94..0000000
+index 122ed94a..00000000
 --- a/lib/providers/milestone_provider.dart
 +++ /dev/null
 @@ -1,7 +0,0 @@
@@ -1937,7 +1937,7 @@ index 122ed94..0000000
 -  return MilestoneService();
 -});
 diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
-index 9f8a1c7..c669205 100644
+index 9f8a1c7e..c6692057 100644
 --- a/lib/providers/providers.dart
 +++ b/lib/providers/providers.dart
 @@ -24,6 +24,5 @@ export 'album_color_provider.dart';
@@ -1948,10 +1948,10 @@ index 9f8a1c7..c669205 100644
  export 'tutorial_provider.dart';
  export 'whats_new_provider.dart';
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index a67e945..35532c5 100644
+index e8367a88..edd6ca50 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
-@@ -92,7 +92,6 @@ class AppPreferences {
+@@ -94,7 +94,6 @@ class AppPreferences {
    final double orbitArtResolutionMultiplier;
    final bool orbitShowPath;
    final bool orbitShowGlow;
@@ -1959,7 +1959,7 @@ index a67e945..35532c5 100644
    final bool showMoreFromArtist;
    final bool showMoreArtists;
    final bool detailHeaderArtExpanded;
-@@ -190,7 +189,6 @@ class AppPreferences {
+@@ -194,7 +193,6 @@ class AppPreferences {
      this.orbitArtResolutionMultiplier = 2.0,
      this.orbitShowPath = true,
      this.orbitShowGlow = true,
@@ -1967,7 +1967,7 @@ index a67e945..35532c5 100644
      this.showMoreFromArtist = true,
      this.showMoreArtists = true,
      this.detailHeaderArtExpanded = true,
-@@ -289,7 +287,6 @@ class AppPreferences {
+@@ -295,7 +293,6 @@ class AppPreferences {
      double? orbitArtResolutionMultiplier,
      bool? orbitShowPath,
      bool? orbitShowGlow,
@@ -1975,7 +1975,7 @@ index a67e945..35532c5 100644
      bool? showMoreFromArtist,
      bool? showMoreArtists,
      bool? detailHeaderArtExpanded,
-@@ -426,7 +423,6 @@ class AppPreferences {
+@@ -436,7 +433,6 @@ class AppPreferences {
            orbitArtResolutionMultiplier ?? this.orbitArtResolutionMultiplier,
        orbitShowPath: orbitShowPath ?? this.orbitShowPath,
        orbitShowGlow: orbitShowGlow ?? this.orbitShowGlow,
@@ -1983,7 +1983,7 @@ index a67e945..35532c5 100644
        showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
        showMoreArtists: showMoreArtists ?? this.showMoreArtists,
        detailHeaderArtExpanded:
-@@ -535,7 +531,6 @@ class AppPreferencesService {
+@@ -547,7 +543,6 @@ class AppPreferencesService {
        'orbit_art_resolution_multiplier';
    static const _orbitShowPathKey = 'orbit_show_path';
    static const _orbitShowGlowKey = 'orbit_show_glow';
@@ -1991,7 +1991,7 @@ index a67e945..35532c5 100644
    static const _showMoreFromArtistKey = 'album_show_more_from_artist';
    static const _showMoreArtistsKey = 'album_show_more_artists';
    static const _detailHeaderArtExpandedKey = 'detail_header_art_expanded';
-@@ -675,7 +670,6 @@ class AppPreferencesService {
+@@ -691,7 +686,6 @@ class AppPreferencesService {
            prefs.getDouble(_orbitArtResolutionMultiplierKey) ?? 2.0,
        orbitShowPath: prefs.getBool(_orbitShowPathKey) ?? true,
        orbitShowGlow: prefs.getBool(_orbitShowGlowKey) ?? true,
@@ -1999,7 +1999,7 @@ index a67e945..35532c5 100644
        showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
        showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
        detailHeaderArtExpanded:
-@@ -1514,16 +1508,6 @@ class AppPreferencesService {
+@@ -1550,16 +1544,6 @@ class AppPreferencesService {
      await prefs.setBool(_orbitShowGlowKey, value);
    }
  
@@ -2018,7 +2018,7 @@ index a67e945..35532c5 100644
      return prefs.getBool(_showMoreFromArtistKey) ?? true;
 diff --git a/lib/services/milestone_service.dart b/lib/services/milestone_service.dart
 deleted file mode 100644
-index 496f3c6..0000000
+index 496f3c63..00000000
 --- a/lib/services/milestone_service.dart
 +++ /dev/null
 @@ -1,494 +0,0 @@
@@ -2518,7 +2518,7 @@ index 496f3c6..0000000
 -}
 \ No newline at end of file
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 2ef224e..21e7e28 100644
+index d3d49230..84f8a17a 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -26,7 +26,6 @@ import 'package:flick/data/repositories/recently_played_repository.dart';
@@ -2543,7 +2543,7 @@ index 2ef224e..21e7e28 100644
    bool get _usingRustBackend => usingRustBackendNotifier.value;
    set _usingRustBackend(bool value) => usingRustBackendNotifier.value = value;
    bool _rustBackendAvailable = false;
-@@ -2142,35 +2134,6 @@ class PlayerService {
+@@ -2166,35 +2158,6 @@ class PlayerService {
      _replayPlayTracker.clear();
    }
  
@@ -2579,7 +2579,7 @@ index 2ef224e..21e7e28 100644
    void _trackReplayProgress(Duration position) {
      final song = currentSongNotifier.value;
      if (song == null) {
-@@ -2189,7 +2152,6 @@ class PlayerService {
+@@ -2213,7 +2176,6 @@ class PlayerService {
      );
      if (counted && _shouldPersistSong(song)) {
        unawaited(_recentlyPlayedRepository.recordPlay(song.id));
@@ -2589,7 +2589,7 @@ index 2ef224e..21e7e28 100644
  
 diff --git a/test/services/milestone_service_test.dart b/test/services/milestone_service_test.dart
 deleted file mode 100644
-index 3874c33..0000000
+index 3874c33d..00000000
 --- a/test/services/milestone_service_test.dart
 +++ /dev/null
 @@ -1,261 +0,0 @@

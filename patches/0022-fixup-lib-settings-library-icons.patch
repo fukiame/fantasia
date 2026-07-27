@@ -6,10 +6,10 @@ Subject: [PATCH] fixup! lib: settings: library: icons
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 8a19c4f8..883a624a 100644
+index 5bc4ed2d..5f52c494 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -987,20 +987,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -988,20 +988,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
            padding: const EdgeInsets.all(AppConstants.spacingMd),
            child: Row(
              children: [
@@ -30,7 +30,7 @@ index 8a19c4f8..883a624a 100644
                Expanded(
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
-@@ -1079,20 +1065,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1080,20 +1066,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
          ),
          child: Row(
            children: [
@@ -51,7 +51,7 @@ index 8a19c4f8..883a624a 100644
              Expanded(
                child: Column(
                  crossAxisAlignment: CrossAxisAlignment.start,
-@@ -1167,22 +1139,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1168,22 +1140,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                padding: const EdgeInsets.all(AppConstants.spacingMd),
                child: Row(
                  children: [
@@ -74,7 +74,7 @@ index 8a19c4f8..883a624a 100644
                    Expanded(
                      child: Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
-@@ -1341,28 +1297,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1342,28 +1298,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                        padding: const EdgeInsets.all(AppConstants.spacingMd),
                        child: Row(
                          children: [

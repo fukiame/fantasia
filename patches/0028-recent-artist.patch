@@ -172,7 +172,7 @@ index 2564c991..55245d3e 100644
                  icon: LucideIcons.clock3,
                  title: 'Recently Played',
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 3a67b544..4eac293d 100644
+index 4b75c706..481b0cb0 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
 @@ -39,12 +39,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
@@ -189,7 +189,7 @@ index 3a67b544..4eac293d 100644
      if (state.showRecentTracks == value) return;
      state = state.copyWith(showRecentTracks: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 1f144a5c..19a38130 100644
+index c49da868..9a968661 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
 @@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
@@ -200,7 +200,7 @@ index 1f144a5c..19a38130 100644
    final bool showRecentTracks;
    final bool showPlaylistPreviews;
    final bool showBrowseMore;
-@@ -78,7 +77,6 @@ class AppPreferences {
+@@ -80,7 +79,6 @@ class AppPreferences {
    const AppPreferences({
      this.animationsEnabled = true,
      this.hapticsEnabled = true,
@@ -208,7 +208,7 @@ index 1f144a5c..19a38130 100644
      this.showRecentTracks = true,
      this.showPlaylistPreviews = true,
      this.showBrowseMore = true,
-@@ -154,7 +152,6 @@ class AppPreferences {
+@@ -158,7 +156,6 @@ class AppPreferences {
    AppPreferences copyWith({
      bool? animationsEnabled,
      bool? hapticsEnabled,
@@ -216,7 +216,7 @@ index 1f144a5c..19a38130 100644
      bool? showRecentTracks,
      bool? showPlaylistPreviews,
      bool? showBrowseMore,
-@@ -229,7 +226,6 @@ class AppPreferences {
+@@ -235,7 +232,6 @@ class AppPreferences {
      return AppPreferences(
        animationsEnabled: animationsEnabled ?? this.animationsEnabled,
        hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
@@ -224,7 +224,7 @@ index 1f144a5c..19a38130 100644
        showRecentTracks: showRecentTracks ?? this.showRecentTracks,
        showPlaylistPreviews: showPlaylistPreviews ?? this.showPlaylistPreviews,
        showBrowseMore: showBrowseMore ?? this.showBrowseMore,
-@@ -341,7 +337,6 @@ class AppPreferences {
+@@ -351,7 +347,6 @@ class AppPreferences {
  class AppPreferencesService {
    static const _animationsKey = 'app_animations_enabled';
    static const _hapticsKey = 'app_haptics_enabled';
@@ -232,7 +232,7 @@ index 1f144a5c..19a38130 100644
    static const _showRecentTracksKey = 'menu_show_recent_tracks';
    static const _showPlaylistPreviewsKey = 'menu_show_playlist_previews';
    static const _showBrowseMoreKey = 'menu_show_browse_more';
-@@ -427,7 +422,6 @@ class AppPreferencesService {
+@@ -439,7 +434,6 @@ class AppPreferencesService {
      return AppPreferences(
        animationsEnabled: prefs.getBool(_animationsKey) ?? true,
        hapticsEnabled: prefs.getBool(_hapticsKey) ?? true,
@@ -240,7 +240,7 @@ index 1f144a5c..19a38130 100644
        showRecentTracks: prefs.getBool(_showRecentTracksKey) ?? true,
        showPlaylistPreviews: prefs.getBool(_showPlaylistPreviewsKey) ?? true,
        showBrowseMore: prefs.getBool(_showBrowseMoreKey) ?? true,
-@@ -552,16 +546,6 @@ class AppPreferencesService {
+@@ -568,16 +562,6 @@ class AppPreferencesService {
      await prefs.setBool(_hapticsKey, value);
    }
  

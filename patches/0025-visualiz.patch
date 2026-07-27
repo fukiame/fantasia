@@ -1861,7 +1861,7 @@ index 5b864dc3..19be6212 100644
 \ No newline at end of file
 +}
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index dca9ff62..0c0ef644 100644
+index d68d4ffa..b0a7d64e 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
 @@ -143,30 +143,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
@@ -1895,7 +1895,7 @@ index dca9ff62..0c0ef644 100644
    Future<void> setArtworkCardArtworkScale(double value) async {
      if (state.artworkCardArtworkScale == value) return;
      state = state.copyWith(artworkCardArtworkScale: value);
-@@ -541,12 +517,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -557,12 +533,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
      await ref.read(appPreferencesServiceProvider).setAutoFocusSearch(value);
    }
  
@@ -1909,7 +1909,7 @@ index dca9ff62..0c0ef644 100644
      if (state.showMoreFromArtist == value) return;
      state = state.copyWith(showMoreFromArtist: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index d52d2752..9c01a52c 100644
+index 3bfcdd8a..8974d793 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
 @@ -18,9 +18,6 @@ class AppPreferences {
@@ -1922,7 +1922,7 @@ index d52d2752..9c01a52c 100644
    final double artworkCardArtworkScale;
    final double artworkCardTextScale;
    final double artworkCardVerticalOffset;
-@@ -74,7 +71,6 @@ class AppPreferences {
+@@ -76,7 +73,6 @@ class AppPreferences {
    final int btLdacBitsPerSample;
    final bool autoFocusSearch;
    final String searchPlaybackMode; // 'results', 'library', or 'queue'
@@ -1930,7 +1930,7 @@ index d52d2752..9c01a52c 100644
    final bool showMoreFromArtist;
    final bool showMoreArtists;
    final bool detailHeaderArtExpanded;
-@@ -98,9 +94,6 @@ class AppPreferences {
+@@ -100,9 +96,6 @@ class AppPreferences {
      this.fastIndexEnabled = true,
      this.fastIndexTimeoutSeconds = 3,
      this.immersiveAutoFullViewSeconds = 0,
@@ -1940,7 +1940,7 @@ index d52d2752..9c01a52c 100644
      this.artworkCardArtworkScale = 1.0,
      this.artworkCardTextScale = 1.0,
      this.artworkCardVerticalOffset = 0.0,
-@@ -140,7 +133,7 @@ class AppPreferences {
+@@ -142,7 +135,7 @@ class AppPreferences {
      this.lastSeenChangelogVersion,
      this.bottomBarAutoCollapseEnabled = false,
      this.bottomBarAutoCollapseSeconds = 5,
@@ -1949,7 +1949,7 @@ index d52d2752..9c01a52c 100644
      this.keepPlayingOnQuit = false,
      this.pauseOnBluetoothDisconnect = true,
      this.resumeOnBluetoothReconnect = false,
-@@ -154,7 +147,6 @@ class AppPreferences {
+@@ -158,7 +151,6 @@ class AppPreferences {
      this.btLdacBitsPerSample = 0,
      this.autoFocusSearch = false,
      this.searchPlaybackMode = 'results',
@@ -1957,7 +1957,7 @@ index d52d2752..9c01a52c 100644
      this.showMoreFromArtist = true,
      this.showMoreArtists = true,
      this.detailHeaderArtExpanded = true,
-@@ -179,9 +171,6 @@ class AppPreferences {
+@@ -183,9 +175,6 @@ class AppPreferences {
      bool? fastIndexEnabled,
      int? fastIndexTimeoutSeconds,
      int? immersiveAutoFullViewSeconds,
@@ -1967,7 +1967,7 @@ index d52d2752..9c01a52c 100644
      double? artworkCardArtworkScale,
      double? artworkCardTextScale,
      double? artworkCardVerticalOffset,
-@@ -235,7 +224,6 @@ class AppPreferences {
+@@ -241,7 +230,6 @@ class AppPreferences {
      int? btLdacBitsPerSample,
      bool? autoFocusSearch,
      String? searchPlaybackMode,
@@ -1975,7 +1975,7 @@ index d52d2752..9c01a52c 100644
      bool? showMoreFromArtist,
      bool? showMoreArtists,
      bool? detailHeaderArtExpanded,
-@@ -262,12 +250,6 @@ class AppPreferences {
+@@ -268,12 +256,6 @@ class AppPreferences {
            fastIndexTimeoutSeconds ?? this.fastIndexTimeoutSeconds,
        immersiveAutoFullViewSeconds:
            immersiveAutoFullViewSeconds ?? this.immersiveAutoFullViewSeconds,
@@ -1988,7 +1988,7 @@ index d52d2752..9c01a52c 100644
        artworkCardArtworkScale:
            artworkCardArtworkScale ?? this.artworkCardArtworkScale,
        artworkCardTextScale: artworkCardTextScale ?? this.artworkCardTextScale,
-@@ -350,7 +332,6 @@ class AppPreferences {
+@@ -360,7 +342,6 @@ class AppPreferences {
        autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
        searchPlaybackMode:
            searchPlaybackMode ?? this.searchPlaybackMode,
@@ -1996,7 +1996,7 @@ index d52d2752..9c01a52c 100644
        showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
        showMoreArtists: showMoreArtists ?? this.showMoreArtists,
        detailHeaderArtExpanded:
-@@ -379,9 +360,6 @@ class AppPreferencesService {
+@@ -389,9 +370,6 @@ class AppPreferencesService {
    static const _fastIndexEnabledKey = 'fast_index_enabled';
    static const _fastIndexTimeoutKey = 'fast_index_timeout_seconds';
    static const _immersiveAutoFullViewKey = 'immersive_auto_full_view_seconds';
@@ -2006,7 +2006,7 @@ index d52d2752..9c01a52c 100644
    static const _artworkCardArtworkScaleKey = 'artwork_card_artwork_scale';
    static const _artworkCardTextScaleKey = 'artwork_card_text_scale';
    static const _artworkCardVerticalOffsetKey = 'artwork_card_vertical_offset';
-@@ -440,7 +418,6 @@ class AppPreferencesService {
+@@ -452,7 +430,6 @@ class AppPreferencesService {
    static const _btLdacBitsPerSampleKey = 'app_bt_ldac_bits_per_sample';
    static const _autoFocusSearchKey = 'app_auto_focus_search';
    static const _searchPlaybackModeKey = 'app_search_playback_mode';
@@ -2014,7 +2014,7 @@ index d52d2752..9c01a52c 100644
    static const _showMoreFromArtistKey = 'album_show_more_from_artist';
    static const _showMoreArtistsKey = 'album_show_more_artists';
    static const _detailHeaderArtExpandedKey = 'detail_header_art_expanded';
-@@ -472,12 +449,6 @@ class AppPreferencesService {
+@@ -484,12 +461,6 @@ class AppPreferencesService {
        fastIndexTimeoutSeconds: prefs.getInt(_fastIndexTimeoutKey) ?? 3,
        immersiveAutoFullViewSeconds:
            prefs.getInt(_immersiveAutoFullViewKey) ?? 0,
@@ -2027,7 +2027,7 @@ index d52d2752..9c01a52c 100644
        artworkCardArtworkScale:
            prefs.getDouble(_artworkCardArtworkScaleKey) ?? 1.0,
        artworkCardTextScale: prefs.getDouble(_artworkCardTextScaleKey) ?? 1.0,
-@@ -537,7 +508,7 @@ class AppPreferencesService {
+@@ -549,7 +520,7 @@ class AppPreferencesService {
        bottomBarAutoCollapseSeconds:
            prefs.getInt(_bottomBarAutoCollapseSecondsKey) ?? 5,
        miniPlayerSwipeAction:
@@ -2036,7 +2036,7 @@ index d52d2752..9c01a52c 100644
        keepPlayingOnQuit: prefs.getBool(_keepPlayingOnQuitKey) ?? false,
        pauseOnBluetoothDisconnect:
            prefs.getBool(_pauseOnBluetoothDisconnectKey) ?? true,
-@@ -558,7 +529,6 @@ class AppPreferencesService {
+@@ -574,7 +545,6 @@ class AppPreferencesService {
        autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
        searchPlaybackMode:
            prefs.getString(_searchPlaybackModeKey) ?? 'results',
@@ -2044,7 +2044,7 @@ index d52d2752..9c01a52c 100644
        showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
        showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
        detailHeaderArtExpanded:
-@@ -738,36 +708,6 @@ class AppPreferencesService {
+@@ -754,36 +724,6 @@ class AppPreferencesService {
      await prefs.setInt(_immersiveAutoFullViewKey, value);
    }
  
@@ -2081,7 +2081,7 @@ index d52d2752..9c01a52c 100644
    Future<void> setArtworkCardArtworkScale(double value) async {
      final prefs = await SharedPreferences.getInstance();
      await prefs.setDouble(_artworkCardArtworkScaleKey, value);
-@@ -1099,7 +1039,7 @@ class AppPreferencesService {
+@@ -1115,7 +1055,7 @@ class AppPreferencesService {
  
    Future<String> getMiniPlayerSwipeAction() async {
      final prefs = await SharedPreferences.getInstance();
@@ -2090,7 +2090,7 @@ index d52d2752..9c01a52c 100644
    }
  
    Future<void> setMiniPlayerSwipeAction(String value) async {
-@@ -1277,16 +1217,6 @@ class AppPreferencesService {
+@@ -1313,16 +1253,6 @@ class AppPreferencesService {
      await prefs.setString(_searchPlaybackModeKey, value);
    }
  

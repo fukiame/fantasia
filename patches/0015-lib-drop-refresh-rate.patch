@@ -533,10 +533,10 @@ index 6cb27d58..1cff36bf 100644
    final permissionService = PermissionService();
    final hasPermission = await permissionService.hasNotificationPermission();
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index d5da479b..82021a7b 100644
+index cb5f8619..9bac5990 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -571,12 +571,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -587,12 +587,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
      await ref.read(appPreferencesServiceProvider).setAutoFocusSearch(value);
    }
  
@@ -550,10 +550,10 @@ index d5da479b..82021a7b 100644
      if (state.visualizerEnabled == value) return;
      state = state.copyWith(visualizerEnabled: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 1864b9ca..a9680cea 100644
+index c02c9003..058d18ce 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
-@@ -78,7 +78,6 @@ class AppPreferences {
+@@ -80,7 +80,6 @@ class AppPreferences {
    final bool floatingIslandEnabled;
    final bool autoFocusSearch;
    final String searchPlaybackMode; // 'results', 'library', or 'queue'
@@ -561,7 +561,7 @@ index 1864b9ca..a9680cea 100644
    final bool visualizerEnabled;
    final bool showMoreFromArtist;
    final bool showMoreArtists;
-@@ -163,7 +162,6 @@ class AppPreferences {
+@@ -167,7 +166,6 @@ class AppPreferences {
      this.floatingIslandEnabled = true,
      this.autoFocusSearch = false,
      this.searchPlaybackMode = 'results',
@@ -569,7 +569,7 @@ index 1864b9ca..a9680cea 100644
      this.visualizerEnabled = true,
      this.showMoreFromArtist = true,
      this.showMoreArtists = true,
-@@ -249,7 +247,6 @@ class AppPreferences {
+@@ -255,7 +253,6 @@ class AppPreferences {
      bool? floatingIslandEnabled,
      bool? autoFocusSearch,
      String? searchPlaybackMode,
@@ -577,7 +577,7 @@ index 1864b9ca..a9680cea 100644
      bool? visualizerEnabled,
      bool? showMoreFromArtist,
      bool? showMoreArtists,
-@@ -371,7 +368,6 @@ class AppPreferences {
+@@ -381,7 +378,6 @@ class AppPreferences {
        autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
        searchPlaybackMode:
            searchPlaybackMode ?? this.searchPlaybackMode,
@@ -585,7 +585,7 @@ index 1864b9ca..a9680cea 100644
        visualizerEnabled: visualizerEnabled ?? this.visualizerEnabled,
        showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
        showMoreArtists: showMoreArtists ?? this.showMoreArtists,
-@@ -466,7 +462,6 @@ class AppPreferencesService {
+@@ -478,7 +474,6 @@ class AppPreferencesService {
    static const _floatingIslandEnabledKey = 'app_floating_island_enabled';
    static const _autoFocusSearchKey = 'app_auto_focus_search';
    static const _searchPlaybackModeKey = 'app_search_playback_mode';
@@ -593,7 +593,7 @@ index 1864b9ca..a9680cea 100644
    static const _visualizerEnabledKey = 'visualizer_enabled';
    static const _showMoreFromArtistKey = 'album_show_more_from_artist';
    static const _showMoreArtistsKey = 'album_show_more_artists';
-@@ -591,7 +586,6 @@ class AppPreferencesService {
+@@ -607,7 +602,6 @@ class AppPreferencesService {
        autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
        searchPlaybackMode:
            prefs.getString(_searchPlaybackModeKey) ?? 'results',
@@ -601,7 +601,7 @@ index 1864b9ca..a9680cea 100644
        visualizerEnabled: prefs.getBool(_visualizerEnabledKey) ?? true,
        showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
        showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
-@@ -1351,16 +1345,6 @@ class AppPreferencesService {
+@@ -1387,16 +1381,6 @@ class AppPreferencesService {
      await prefs.setString(_searchPlaybackModeKey, value);
    }
  
@@ -801,7 +801,7 @@ index 23bb02ac..ad9ddcdc 100644
      dependency: transitive
      description: flutter
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 2e7eac91..a844c140 100644
+index 7debdff5..126464ac 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -38,7 +38,6 @@ dependencies:

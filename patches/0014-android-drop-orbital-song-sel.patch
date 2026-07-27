@@ -1132,10 +1132,10 @@ index c2f2dae6..0a7b55ab 100644
    }
  }
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index edf9ed34..d5da479b 100644
+index 54e6eff5..cb5f8619 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -583,84 +583,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -599,84 +599,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
      await ref.read(appPreferencesServiceProvider).setVisualizerEnabled(value);
    }
  
@@ -1220,7 +1220,7 @@ index edf9ed34..d5da479b 100644
    Future<void> setShowMoreFromArtist(bool value) async {
      if (state.showMoreFromArtist == value) return;
      state = state.copyWith(showMoreFromArtist: value);
-@@ -688,24 +610,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -704,24 +626,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
          .read(appPreferencesServiceProvider)
          .setDetailHeaderCenteredTitle(value);
    }
@@ -1259,10 +1259,10 @@ index bd08fb19..1caa9da9 100644
  
    Future<void> _loadFromPreferences() async {
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 35532c58..1864b9ca 100644
+index edd6ca50..c02c9003 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
-@@ -80,18 +80,6 @@ class AppPreferences {
+@@ -82,18 +82,6 @@ class AppPreferences {
    final String searchPlaybackMode; // 'results', 'library', or 'queue'
    final String refreshRateMode; // 'high', 'standard', 'adaptive'
    final bool visualizerEnabled;
@@ -1281,7 +1281,7 @@ index 35532c58..1864b9ca 100644
    final bool showMoreFromArtist;
    final bool showMoreArtists;
    final bool detailHeaderArtExpanded;
-@@ -177,18 +165,6 @@ class AppPreferences {
+@@ -181,18 +169,6 @@ class AppPreferences {
      this.searchPlaybackMode = 'results',
      this.refreshRateMode = 'high',
      this.visualizerEnabled = true,
@@ -1300,7 +1300,7 @@ index 35532c58..1864b9ca 100644
      this.showMoreFromArtist = true,
      this.showMoreArtists = true,
      this.detailHeaderArtExpanded = true,
-@@ -275,18 +251,6 @@ class AppPreferences {
+@@ -281,18 +257,6 @@ class AppPreferences {
      String? searchPlaybackMode,
      String? refreshRateMode,
      bool? visualizerEnabled,
@@ -1319,7 +1319,7 @@ index 35532c58..1864b9ca 100644
      bool? showMoreFromArtist,
      bool? showMoreArtists,
      bool? detailHeaderArtExpanded,
-@@ -409,20 +373,6 @@ class AppPreferences {
+@@ -419,20 +383,6 @@ class AppPreferences {
            searchPlaybackMode ?? this.searchPlaybackMode,
        refreshRateMode: refreshRateMode ?? this.refreshRateMode,
        visualizerEnabled: visualizerEnabled ?? this.visualizerEnabled,
@@ -1340,7 +1340,7 @@ index 35532c58..1864b9ca 100644
        showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
        showMoreArtists: showMoreArtists ?? this.showMoreArtists,
        detailHeaderArtExpanded:
-@@ -518,19 +468,6 @@ class AppPreferencesService {
+@@ -530,19 +480,6 @@ class AppPreferencesService {
    static const _searchPlaybackModeKey = 'app_search_playback_mode';
    static const _refreshRateModeKey = 'app_refresh_rate_mode';
    static const _visualizerEnabledKey = 'visualizer_enabled';
@@ -1360,7 +1360,7 @@ index 35532c58..1864b9ca 100644
    static const _showMoreFromArtistKey = 'album_show_more_from_artist';
    static const _showMoreArtistsKey = 'album_show_more_artists';
    static const _detailHeaderArtExpandedKey = 'detail_header_art_expanded';
-@@ -656,20 +593,6 @@ class AppPreferencesService {
+@@ -672,20 +609,6 @@ class AppPreferencesService {
            prefs.getString(_searchPlaybackModeKey) ?? 'results',
        refreshRateMode: prefs.getString(_refreshRateModeKey) ?? 'high',
        visualizerEnabled: prefs.getBool(_visualizerEnabledKey) ?? true,
@@ -1381,7 +1381,7 @@ index 35532c58..1864b9ca 100644
        showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
        showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
        detailHeaderArtExpanded:
-@@ -1448,66 +1371,6 @@ class AppPreferencesService {
+@@ -1484,66 +1407,6 @@ class AppPreferencesService {
      await prefs.setBool(_visualizerEnabledKey, value);
    }
  
@@ -1448,7 +1448,7 @@ index 35532c58..1864b9ca 100644
    Future<bool> getShowMoreFromArtist() async {
      final prefs = await SharedPreferences.getInstance();
      return prefs.getBool(_showMoreFromArtistKey) ?? true;
-@@ -1547,20 +1410,4 @@ class AppPreferencesService {
+@@ -1583,20 +1446,4 @@ class AppPreferencesService {
      final prefs = await SharedPreferences.getInstance();
      await prefs.setBool(_detailHeaderCenteredTitleKey, value);
    }

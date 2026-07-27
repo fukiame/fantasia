@@ -154,10 +154,10 @@ index 4474700e..8b64dbae 100644
                  icon: LucideIcons.sparkles,
                  title: 'Animated Album Art',
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index a32a1b0f..ec03a65a 100644
+index 89bb5eeb..87c887d8 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
-@@ -499,18 +499,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+@@ -515,18 +515,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
      await ref.read(appPreferencesServiceProvider).setAutoFocusSearch(value);
    }
  
@@ -177,10 +177,10 @@ index a32a1b0f..ec03a65a 100644
      if (state.detailHeaderArtExpanded == value) return;
      state = state.copyWith(detailHeaderArtExpanded: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 8bc645df..2f829796 100644
+index 1fc1df4c..b079ac45 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
-@@ -68,8 +68,6 @@ class AppPreferences {
+@@ -70,8 +70,6 @@ class AppPreferences {
    final int btLdacBitsPerSample;
    final bool autoFocusSearch;
    final String searchPlaybackMode; // 'results', 'library', or 'queue'
@@ -189,7 +189,7 @@ index 8bc645df..2f829796 100644
    final bool detailHeaderArtExpanded;
    final bool detailHeaderCenteredTitle;
  
-@@ -141,8 +139,6 @@ class AppPreferences {
+@@ -145,8 +143,6 @@ class AppPreferences {
      this.btLdacBitsPerSample = 0,
      this.autoFocusSearch = false,
      this.searchPlaybackMode = 'results',
@@ -198,7 +198,7 @@ index 8bc645df..2f829796 100644
      this.detailHeaderArtExpanded = true,
      this.detailHeaderCenteredTitle = false,
    });
-@@ -215,8 +211,6 @@ class AppPreferences {
+@@ -221,8 +217,6 @@ class AppPreferences {
      int? btLdacBitsPerSample,
      bool? autoFocusSearch,
      String? searchPlaybackMode,
@@ -207,7 +207,7 @@ index 8bc645df..2f829796 100644
      bool? detailHeaderArtExpanded,
      bool? detailHeaderCenteredTitle,
    }) {
-@@ -320,8 +314,6 @@ class AppPreferences {
+@@ -330,8 +324,6 @@ class AppPreferences {
        autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
        searchPlaybackMode:
            searchPlaybackMode ?? this.searchPlaybackMode,
@@ -216,7 +216,7 @@ index 8bc645df..2f829796 100644
        detailHeaderArtExpanded:
            detailHeaderArtExpanded ?? this.detailHeaderArtExpanded,
        detailHeaderCenteredTitle:
-@@ -403,8 +395,6 @@ class AppPreferencesService {
+@@ -415,8 +407,6 @@ class AppPreferencesService {
    static const _btLdacBitsPerSampleKey = 'app_bt_ldac_bits_per_sample';
    static const _autoFocusSearchKey = 'app_auto_focus_search';
    static const _searchPlaybackModeKey = 'app_search_playback_mode';
@@ -225,7 +225,7 @@ index 8bc645df..2f829796 100644
    static const _detailHeaderArtExpandedKey = 'detail_header_art_expanded';
    static const _detailHeaderCenteredTitleKey = 'detail_header_centered_title';
    static const _shuffleModeKey = 'playback_shuffle_mode';
-@@ -511,8 +501,6 @@ class AppPreferencesService {
+@@ -527,8 +517,6 @@ class AppPreferencesService {
        autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
        searchPlaybackMode:
            prefs.getString(_searchPlaybackModeKey) ?? 'results',
@@ -234,7 +234,7 @@ index 8bc645df..2f829796 100644
        detailHeaderArtExpanded:
            prefs.getBool(_detailHeaderArtExpandedKey) ?? true,
        detailHeaderCenteredTitle:
-@@ -1169,26 +1157,6 @@ class AppPreferencesService {
+@@ -1205,26 +1193,6 @@ class AppPreferencesService {
      await prefs.setString(_searchPlaybackModeKey, value);
    }
  

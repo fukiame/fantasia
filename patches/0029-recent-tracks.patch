@@ -217,7 +217,7 @@ index 55245d3e..4474700e 100644
                  icon: LucideIcons.listMusic,
                  title: 'Your Playlists',
 diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
-index 4eac293d..a32a1b0f 100644
+index 481b0cb0..89bb5eeb 100644
 --- a/lib/providers/app_preferences_provider.dart
 +++ b/lib/providers/app_preferences_provider.dart
 @@ -39,12 +39,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
@@ -234,7 +234,7 @@ index 4eac293d..a32a1b0f 100644
      if (state.showPlaylistPreviews == value) return;
      state = state.copyWith(showPlaylistPreviews: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 19a38130..8bc645df 100644
+index 9a968661..1fc1df4c 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
 @@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
@@ -245,7 +245,7 @@ index 19a38130..8bc645df 100644
    final bool showPlaylistPreviews;
    final bool showBrowseMore;
    final bool showQuickAccess;
-@@ -77,7 +76,6 @@ class AppPreferences {
+@@ -79,7 +78,6 @@ class AppPreferences {
    const AppPreferences({
      this.animationsEnabled = true,
      this.hapticsEnabled = true,
@@ -253,7 +253,7 @@ index 19a38130..8bc645df 100644
      this.showPlaylistPreviews = true,
      this.showBrowseMore = true,
      this.showQuickAccess = true,
-@@ -152,7 +150,6 @@ class AppPreferences {
+@@ -156,7 +154,6 @@ class AppPreferences {
    AppPreferences copyWith({
      bool? animationsEnabled,
      bool? hapticsEnabled,
@@ -261,7 +261,7 @@ index 19a38130..8bc645df 100644
      bool? showPlaylistPreviews,
      bool? showBrowseMore,
      bool? showQuickAccess,
-@@ -226,7 +223,6 @@ class AppPreferences {
+@@ -232,7 +229,6 @@ class AppPreferences {
      return AppPreferences(
        animationsEnabled: animationsEnabled ?? this.animationsEnabled,
        hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
@@ -269,7 +269,7 @@ index 19a38130..8bc645df 100644
        showPlaylistPreviews: showPlaylistPreviews ?? this.showPlaylistPreviews,
        showBrowseMore: showBrowseMore ?? this.showBrowseMore,
        showQuickAccess: showQuickAccess ?? this.showQuickAccess,
-@@ -337,7 +333,6 @@ class AppPreferences {
+@@ -347,7 +343,6 @@ class AppPreferences {
  class AppPreferencesService {
    static const _animationsKey = 'app_animations_enabled';
    static const _hapticsKey = 'app_haptics_enabled';
@@ -277,7 +277,7 @@ index 19a38130..8bc645df 100644
    static const _showPlaylistPreviewsKey = 'menu_show_playlist_previews';
    static const _showBrowseMoreKey = 'menu_show_browse_more';
    static const _showQuickAccessKey = 'menu_show_quick_access';
-@@ -422,7 +417,6 @@ class AppPreferencesService {
+@@ -434,7 +429,6 @@ class AppPreferencesService {
      return AppPreferences(
        animationsEnabled: prefs.getBool(_animationsKey) ?? true,
        hapticsEnabled: prefs.getBool(_hapticsKey) ?? true,
@@ -285,7 +285,7 @@ index 19a38130..8bc645df 100644
        showPlaylistPreviews: prefs.getBool(_showPlaylistPreviewsKey) ?? true,
        showBrowseMore: prefs.getBool(_showBrowseMoreKey) ?? true,
        showQuickAccess: prefs.getBool(_showQuickAccessKey) ?? true,
-@@ -546,16 +540,6 @@ class AppPreferencesService {
+@@ -562,16 +556,6 @@ class AppPreferencesService {
      await prefs.setBool(_hapticsKey, value);
    }
  
