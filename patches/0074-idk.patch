@@ -6,7 +6,7 @@ Subject: [PATCH] idk
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index eba60d3f..8df79897 100644
+index eba60d3f..f367abce 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -410,9 +410,11 @@ class AnimatedSongScene extends StatelessWidget {
@@ -18,8 +18,8 @@ index eba60d3f..8df79897 100644
 -                      vertical: context.responsive(6.0, 7.0, 8.0),
 +                    padding: EdgeInsets.fromLTRB(
 +                      context.responsive(12.0, 14.0, 16.0),
-+                      (!fromLocker && !hideQueueBadge) ? 0 : context.responsive(6.0, 7.0, 8.0),
-+                      context.responsive(12.0, 14.0, 16.0),
++                      context.responsive(6.0, 7.0, 8.0),
++                      (!fromLocker && !hideQueueBadge) ? 0 : context.responsive(12.0, 14.0, 16.0),
 +                      context.responsive(6.0, 7.0, 8.0),
                      ),
                      decoration: BoxDecoration(
