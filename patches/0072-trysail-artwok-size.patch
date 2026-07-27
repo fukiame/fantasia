@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 01:51:37 +0700
+Subject: [PATCH] trysail artwok size
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 825c2000..6164e1c7 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -238,8 +238,8 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+                 subtitle: 'Scale the album art card',
+                 value: appPrefs.artworkCardArtworkScale,
+                 displayValue: _percentLabel(appPrefs.artworkCardArtworkScale),
+-                min: 0.8,
+-                max: 1.36,
++                min: 0.9,
++                max: 1.46,
+                 divisions: 28,
+                 onChanged: (value) {
+                   ref
+-- 
+2.55.0
+

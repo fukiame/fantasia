@@ -6,17 +6,19 @@ Subject: [PATCH] squ
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/album_art_box.dart b/lib/features/player/widgets/album_art_box.dart
-index 63ba6a3d..a31da08b 100644
+index 63ba6a3d..2d853168 100644
 --- a/lib/features/player/widgets/album_art_box.dart
 +++ b/lib/features/player/widgets/album_art_box.dart
-@@ -327,8 +327,8 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -326,9 +326,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+     _rotationRecognizer.discCenter = () =>
          Offset(resolvedSize / 2, resolvedSize / 2);
  
-     final framePadding = resolvedSize < 220 ? 5.0 : 7.0;
+-    final framePadding = resolvedSize < 220 ? 5.0 : 7.0;
 -    final outerRadius = resolvedSize < 220 ? 28.0 : 34.0;
 -    final innerRadius = math.max(outerRadius - 7.0, 20.0);
-+    final outerRadius = resolvedSize < 220 ? 16.0 : 24.0;
-+    final innerRadius = math.max(outerRadius - 7.0, 8.0);
++    final framePadding = resolvedSize < 220 ? 3.0 : 5.0;
++    final outerRadius = resolvedSize < 220 ? 12.0 : 20.0;
++    final innerRadius = math.max(outerRadius - 7.0, 4.0);
      final iconSize = math.max(52.0, resolvedSize * 0.24);
      final shadowBlur = resolvedSize < 220 ? 28.0 : 36.0;
      final shadowOffsetY = resolvedSize < 220 ? 14.0 : 20.0;

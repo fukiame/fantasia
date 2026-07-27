@@ -6,7 +6,7 @@ Subject: [PATCH] 1f1e33
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index c201610e..37a19fd2 100644
+index c201610e..da81e671 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -174,11 +174,10 @@ class _IndicatorState {
@@ -18,9 +18,9 @@ index c201610e..37a19fd2 100644
 -    borderColor: Colors.green.withValues(alpha: 0.5),
 -    glowColor: Colors.green.withValues(alpha: 0.12),
 -    icon: Icons.verified_rounded,
-+    bgColor: Color(0x331F1E33),
-+    textColor: Color(0xEE1F1E33),
-+    borderColor: Colors.purple.withValues(alpha: 0.5),
++    bgColor: Color(0x3F1F1E33),
++    textColor: Colors.purple.withValues(alpha: 0.55),
++    borderColor: Colors.purple.withValues(alpha: 0.45),
 +    glowColor: Colors.purple.withValues(alpha: 0.12),
    );
  
