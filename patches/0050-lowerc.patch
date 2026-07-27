@@ -175,7 +175,7 @@ index fc2fb6c5..fde75742 100644
                      fontWeight: FontWeight.w600,
                      color: context.adaptiveTextPrimary,
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index a39ea80a..0b9d35e3 100644
+index c934c0ae..ebbfa500 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -3183,7 +3183,7 @@ class _ContentStateWidget extends StatelessWidget {
@@ -196,6 +196,19 @@ index a39ea80a..0b9d35e3 100644
              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                color: context.adaptiveTextTertiary,
              ),
+diff --git a/lib/widgets/common/glass_search_bar.dart b/lib/widgets/common/glass_search_bar.dart
+index 14f63bff..adfd001a 100644
+--- a/lib/widgets/common/glass_search_bar.dart
++++ b/lib/widgets/common/glass_search_bar.dart
+@@ -87,7 +87,7 @@ class _GlassSearchBarState extends State<GlassSearchBar> {
+                 fontSize: 16,
+               ),
+               decoration: InputDecoration(
+-                hintText: widget.hintText,
++                hintText: widget.hintText.toLowerCase(),
+                 hintStyle: TextStyle(color: context.adaptiveTextTertiary),
+                 border: InputBorder.none,
+                 isDense: true,
 -- 
 2.55.0
 

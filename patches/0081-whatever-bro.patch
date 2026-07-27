@@ -1,0 +1,139 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 04:35:17 +0700
+Subject: [PATCH] whatever bro
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index 726d1d21..0ae05311 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -518,7 +518,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+       return _buildAlbumListView(sortedAlbums);
+     }
+ 
+-    final visibleCount = min(_visibleAlbumCount, sortedAlbums.length);
++    final visibleCount = sortedAlbums.length;
+     final visibleAlbums = sortedAlbums
+         .take(visibleCount)
+         .toList(growable: false);
+@@ -732,7 +732,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+ 
+     if (_albumPaginationSignature != signature) {
+       _albumPaginationSignature = signature;
+-      _visibleAlbumCount = min(_getAlbumPageSize(), albums.length);
++      _visibleAlbumCount = albums.length;
+ 
+       if (_albumGridScrollController.hasClients) {
+         WidgetsBinding.instance.addPostFrameCallback((_) {
+@@ -2004,7 +2004,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+           onSortChanged: (option) {
+             _setAlbumSortOption(option);
+             setState(() {
+-              _visibleAlbumCount = min(_getAlbumPageSize(), _totalAlbumCount);
++              _visibleAlbumCount = _totalAlbumCount;
+               _albumPaginationSignature = '';
+             });
+           },
+@@ -2020,7 +2020,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+                 .read(appPreferencesProvider.notifier)
+                 .setFolderGridPageSize(value);
+             setState(() {
+-              _visibleAlbumCount = min(value, _totalAlbumCount);
++              _visibleAlbumCount = _totalAlbumCount;
+               _albumPaginationSignature = '';
+             });
+           },
+@@ -2794,7 +2794,6 @@ class _AlbumFilterSheet extends StatefulWidget {
+ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+   late _AlbumGridSortOption _selectedSort;
+   late SongFileTypeFilter _selectedFilter;
+-  late double _pageSize;
+ 
+   static const double _minPageSize = 1;
+   static const double _maxPageSize = 30;
+@@ -2804,7 +2803,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+     super.initState();
+     _selectedSort = widget.currentSort;
+     _selectedFilter = widget.currentFilter;
+-    _pageSize = widget.albumGridPageSize.toDouble();
+   }
+ 
+   @override
+@@ -2901,72 +2899,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+             ),
+             const SizedBox(height: AppConstants.spacingLg),
+             const Divider(color: AppColors.glassBorder, height: 1),
+-            const SizedBox(height: AppConstants.spacingMd),
+-            Row(
+-              children: [
+-                Expanded(
+-                  child: Column(
+-                    crossAxisAlignment: CrossAxisAlignment.start,
+-                    children: [
+-                      Text(
+-                        'ALBUM LIMIT',
+-                        style: TextStyle(
+-                          fontSize: 11,
+-                          fontWeight: FontWeight.w600,
+-                          color: context.adaptiveTextTertiary,
+-                          letterSpacing: 1.2,
+-                        ),
+-                      ),
+-                      const SizedBox(height: 4),
+-                      Text(
+-                        'Albums shown per page',
+-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                          color: context.adaptiveTextTertiary,
+-                        ),
+-                      ),
+-                    ],
+-                  ),
+-                ),
+-                Container(
+-                  padding: const EdgeInsets.symmetric(
+-                    horizontal: 8,
+-                    vertical: 4,
+-                  ),
+-                  decoration: BoxDecoration(
+-                    color: AppColors.glassBackgroundStrong,
+-                    borderRadius: BorderRadius.circular(6),
+-                  ),
+-                  child: Text(
+-                    '${_pageSize.round()}',
+-                    style: TextStyle(
+-                      fontSize: 13,
+-                      fontWeight: FontWeight.w600,
+-                      color: context.adaptiveTextSecondary,
+-                    ),
+-                  ),
+-                ),
+-              ],
+-            ),
+-            SliderTheme(
+-              data: SliderThemeData(
+-                activeTrackColor: AppColors.textPrimary.withValues(alpha: 0.9),
+-                inactiveTrackColor: AppColors.glassBackgroundStrong,
+-                thumbColor: AppColors.textPrimary,
+-                overlayColor: AppColors.textPrimary.withValues(alpha: 0.15),
+-                trackHeight: 4,
+-                thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+-              ),
+-              child: Slider(
+-                value: _pageSize,
+-                min: _minPageSize,
+-                max: _maxPageSize,
+-                divisions: (_maxPageSize - _minPageSize).round(),
+-                onChanged: (value) {
+-                  setState(() => _pageSize = value);
+-                  widget.onPageSizeChanged(value.round());
+-                },
+-              ),
+-            ),
+           ],
+         ),
+       ),
+-- 
+2.55.0
+

@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 04:14:35 +0700
+Subject: [PATCH] lib: songs: button: assimilate with others
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index ebbfa500..b4cc5a74 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -1963,24 +1963,9 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+     final isCompact = context.isCompact;
+     return Container(
+       decoration: BoxDecoration(
+-        gradient: LinearGradient(
+-          begin: Alignment.topLeft,
+-          end: Alignment.bottomRight,
+-          colors: [
+-            AppColors.surfaceLight.withValues(alpha: 0.75),
+-            AppColors.surface.withValues(alpha: 0.85),
+-          ],
+-        ),
++        color: AppColors.glassBackground,
+         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-        border: Border.all(color: AppColors.glassBorder, width: 1),
+-        boxShadow: [
+-          BoxShadow(
+-            color: Colors.black.withValues(alpha: 0.2),
+-            blurRadius: 12,
+-            spreadRadius: 1,
+-            offset: const Offset(0, 2),
+-          ),
+-        ],
++        border: Border.all(color: AppColors.glassBorder),
+       ),
+       child: IconButton(
+         onPressed: onTap,
+@@ -1995,7 +1980,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+             : const EdgeInsets.all(8),
+         icon: Icon(
+           icon,
+-          color: context.adaptiveTextSecondary,
++          color: context.adaptiveTextPrimary,
+           size: context.responsiveIcon(AppConstants.iconSizeMd),
+         ),
+       ),
+-- 
+2.55.0
+

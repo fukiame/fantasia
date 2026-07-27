@@ -1252,7 +1252,7 @@ index 44b49277..e35477e3 100644
            ),
            const SizedBox(height: AppConstants.spacingLg),
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 26d57627..9ad9f707 100644
+index 26d57627..fe053852 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -19,7 +19,6 @@ import 'package:flick/features/songs/widgets/orbit_scroll.dart';
@@ -1263,15 +1263,17 @@ index 26d57627..9ad9f707 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/features/albums/screens/album_detail_screen.dart';
  import 'package:flick/providers/providers.dart';
-@@ -169,8 +168,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -169,9 +168,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                      padding: const EdgeInsets.symmetric(
                        horizontal: AppConstants.spacingLg,
                      ),
 -                    child: TutorialTargetAnchor(
 -                      target: TutorialTarget.songsSearchBar,
-                       child: Container(
+-                      child: Container(
++                      Container(
                          decoration: BoxDecoration(
                            gradient: LinearGradient(
+                             begin: Alignment.topLeft,
 @@ -210,7 +207,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                            },
                          ),
@@ -1280,15 +1282,17 @@ index 26d57627..9ad9f707 100644
                    ),
                    const SizedBox(height: AppConstants.spacingMd),
                  ],
-@@ -1932,8 +1928,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1932,9 +1928,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                  onTap: () => _shufflePlayFromLibrary(songsAsync),
                ),
                SizedBox(width: buttonGap),
 -              TutorialTargetAnchor(
 -                target: TutorialTarget.songsSortButton,
-                 child: _buildHeaderIconButton(
+-                child: _buildHeaderIconButton(
++                _buildHeaderIconButton(
                    context: context,
                    icon: Icons.sort_rounded,
+                   onTap: () {
 @@ -1963,7 +1957,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                      );
                    },
