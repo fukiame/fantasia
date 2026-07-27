@@ -6,10 +6,10 @@ Subject: [PATCH] e0e1cc
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index b8fddffd..2fd27878 100644
+index 90e94b05..c201610e 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
-@@ -854,9 +854,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -848,9 +848,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      final bytes = _seededBytes(song.filePath ?? song.id, 16);
  
      const stageColors = [
@@ -19,6 +19,23 @@ index b8fddffd..2fd27878 100644
 +      Color(0xFFE0E1CC), // File
 +      Color(0xFFE0E1CC), // Decode
 +      Color(0xFFE0E1CC), // Format
+     ];
+ 
+     final stages = <_FlowStageData>[
+@@ -924,11 +924,11 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+         .toInt();
+ 
+     const stageColors = [
+-      Color(0xFF69F0AE), // PCM Frames — vibrant mint
+-      Color(0xFF40C4FF), // Endpoint — vibrant sky blue
+-      Color(0xFF7C4DFF), // URB Packet — vibrant violet
+-      Color(0xFFFFD740), // Buffer — vibrant amber
+-      Color(0xFF64FFDA), // Stream — vibrant teal
++      Color(0xFFE0E1CC), // PCM Frames
++      Color(0xFFE0E1CC), // Endpoint
++      Color(0xFFE0E1CC), // URB Packet
++      Color(0xFFE0E1CC), // Buffer
++      Color(0xFFE0E1CC), // Stream
      ];
  
      final stages = <_FlowStageData>[

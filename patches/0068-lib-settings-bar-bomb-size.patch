@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: bar: bomb size
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/core/constants/app_constants.dart b/lib/core/constants/app_constants.dart
-index 093a479b..2535e622 100644
+index 5739e169..1bcefca6 100644
 --- a/lib/core/constants/app_constants.dart
 +++ b/lib/core/constants/app_constants.dart
 @@ -88,6 +88,7 @@ class AppConstants {

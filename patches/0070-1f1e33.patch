@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 27 Jul 2026 20:39:30 +0700
+Subject: [PATCH] 1f1e33
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
+index c201610e..37a19fd2 100644
+--- a/lib/features/player/widgets/bit_perfect_indicator.dart
++++ b/lib/features/player/widgets/bit_perfect_indicator.dart
+@@ -174,11 +174,10 @@ class _IndicatorState {
+   });
+ 
+   factory _IndicatorState.verified() => _IndicatorState(
+-    bgColor: Colors.green.withValues(alpha: 0.22),
+-    textColor: Colors.green.shade400,
+-    borderColor: Colors.green.withValues(alpha: 0.5),
+-    glowColor: Colors.green.withValues(alpha: 0.12),
+-    icon: Icons.verified_rounded,
++    bgColor: Color(0x331F1E33),
++    textColor: Color(0xEE1F1E33),
++    borderColor: Colors.purple.withValues(alpha: 0.5),
++    glowColor: Colors.purple.withValues(alpha: 0.12),
+   );
+ 
+   factory _IndicatorState.locked() => _IndicatorState(
+-- 
+2.55.0
+
