@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 06:03:18 +0700
+Subject: [PATCH] comb2
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
+index b2626ec3..25493931 100644
+--- a/lib/widgets/navigation/flick_nav_bar.dart
++++ b/lib/widgets/navigation/flick_nav_bar.dart
+@@ -40,6 +40,11 @@ class _FlickNavBarState extends State<FlickNavBar> {
+ 
+     final borderRadius = BorderRadius.circular(context.scaleSize(20));
+ 
++    bool sw = widget.showMiniPlayer && widget.miniPlayerWidget != null;
++    bool bl = buttons.length > 1;
++
++    if (!sw && !bl) return const SizedBox.shrink();
++
+     return AnimatedContainer(
+       duration: AppConstants.animationNormal,
+       curve: Curves.easeOutCubic,
+@@ -49,6 +54,7 @@ class _FlickNavBarState extends State<FlickNavBar> {
+         horizontalPadding,
+         bottomPadding + verticalPadding,
+       ),
++      padding: EdgeInsets.only(bottom: (sw && !bl) ? 2 : 0),
+       decoration: BoxDecoration(
+         gradient: LinearGradient(
+           begin: Alignment.topLeft,
+@@ -98,8 +104,8 @@ class _FlickNavBarState extends State<FlickNavBar> {
+       child: Column(
+         mainAxisSize: MainAxisSize.min,
+         children: [
+-          if (widget.showMiniPlayer && widget.miniPlayerWidget != null) widget.miniPlayerWidget!,
+-	  if (buttons.length > 1)
++          if (sw) widget.miniPlayerWidget!,
++	  if (bl)
+           AnimatedCrossFade(
+             firstChild: _buildNavigationRow(context, buttons),
+             secondChild: const SizedBox.shrink(),
+-- 
+2.55.0
+
