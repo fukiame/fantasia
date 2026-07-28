@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 11:25:41 +0700
+Subject: [PATCH] zz
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/app/app.dart b/lib/app/app.dart
+index 41472c1b..7f400459 100644
+--- a/lib/app/app.dart
++++ b/lib/app/app.dart
+@@ -762,6 +762,7 @@ class _MainShellState extends ConsumerState<MainShell>
+ /// Embedded mini player widget that uses Riverpod for state.
+ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
+   final bool collapsed;
++  bool songIsNull = false;
+ 
+   const _EmbeddedMiniPlayer({this.collapsed = false});
+ 
+@@ -937,6 +938,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+     final currentSong = ref.watch(currentSongProvider);
+ 
+     if (currentSong == null) {
++      songIsNull = true;
+       return const SizedBox.shrink();
+     }
+ 
+diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
+index b1215690..41652f63 100644
+--- a/lib/widgets/navigation/flick_nav_bar.dart
++++ b/lib/widgets/navigation/flick_nav_bar.dart
+@@ -40,9 +40,12 @@ class _FlickNavBarState extends State<FlickNavBar> {
+ 
+     final borderRadius = BorderRadius.circular(context.scaleSize(20));
+ 
+-    bool sw = widget.showMiniPlayer && widget.miniPlayerWidget != null;
++    bool sw = (widget.showMiniPlayer && widget.miniPlayerWidget != null)
++                && !widget.miniPlayerWidget.songIsNull;
+     bool bl = buttons.length > 1;
+ 
++    if (!sw && !bl) return const SizedBox.shrink();
++
+     return AnimatedContainer(
+       duration: AppConstants.animationNormal,
+       curve: Curves.easeOutCubic,
+-- 
+2.55.0
+

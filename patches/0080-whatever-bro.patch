@@ -6,7 +6,7 @@ Subject: [PATCH] whatever bro
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 726d1d21..0ae05311 100644
+index 1f4d3704..dd57ff69 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -518,7 +518,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>

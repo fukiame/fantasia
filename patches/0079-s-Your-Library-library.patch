@@ -18,7 +18,7 @@ index 637458ff..16745312 100644
    });
  }
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index e019a59b..726d1d21 100644
+index 47f9ece8..1f4d3704 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -1810,7 +1810,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
