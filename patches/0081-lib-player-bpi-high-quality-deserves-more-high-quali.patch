@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 15:27:34 +0700
+Subject: [PATCH] lib: player: bpi: high quality deserves more high quality
+ high quality
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
+index 3f095754..ef3a41db 100644
+--- a/lib/features/player/widgets/bit_perfect_indicator.dart
++++ b/lib/features/player/widgets/bit_perfect_indicator.dart
+@@ -90,16 +90,13 @@ class BitPerfectIndicator extends ConsumerWidget {
+   }
+ 
+   static String _getSongQuality(Song song) {
+-    if (song.isDsd) return 'HQ';
++    if (song.isDsd) return 'DSD';
+     final fileType = song.fileType.toUpperCase();
+     const lossless = {'FLAC', 'WAV', 'ALAC', 'AIFF', 'APE', 'WV'};
+-    if (lossless.contains(fileType)) return 'HQ';
++    if (!lossless.contains(fileType)) return '';
+     if ((song.bitDepth ?? 0) >= 24) return 'HQ';
+     if ((song.sampleRate ?? 0) >= 88200) return 'HQ';
+-    final res = song.resolution?.toLowerCase() ?? '';
+-    final m = RegExp(r'(\d+)\s*kbps').firstMatch(res);
+-    if (m != null && (int.tryParse(m.group(1)!) ?? 0) >= 320) return 'HQ';
+-    return 'SD';
++    return 'SQ';
+   }
+ 
+   static _IndicatorState _resolveState(
+-- 
+2.55.0
+

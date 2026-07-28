@@ -6,7 +6,7 @@ Subject: [PATCH] lib: songs: button: assimilate with others
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 4e11489a..47cf000f 100644
+index 914b3fc6..47f9ece8 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -1963,24 +1963,9 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
