@@ -6,15 +6,16 @@ Subject: [PATCH] dbg
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
-index b1215690..43e9205f 100644
+index b1215690..277dfa20 100644
 --- a/lib/widgets/navigation/flick_nav_bar.dart
 +++ b/lib/widgets/navigation/flick_nav_bar.dart
-@@ -103,6 +103,28 @@ class _FlickNavBarState extends State<FlickNavBar> {
+@@ -103,6 +103,30 @@ class _FlickNavBarState extends State<FlickNavBar> {
          mainAxisSize: MainAxisSize.min,
          children: [
            if (sw) widget.miniPlayerWidget!,
 +                        Text(
 +                          widget.miniPlayerWidget.toStringShort(),
++			  maxLines: 1,
 +                          overflow: TextOverflow.ellipsis,
 +                          style: TextStyle(
 +                            fontFamily: 'ProductSans',
@@ -25,7 +26,8 @@ index b1215690..43e9205f 100644
 +                          ),
 +                        ),
 +                        Text(
-+                          ( widget.miniPlayerWidget == const Offstage(offstage: true)) ).toString(),
++                          ( widget.miniPlayerWidget == const Offstage(offstage: true) ).toString(),
++			  maxLines: 1,
 +                          overflow: TextOverflow.ellipsis,
 +                          style: TextStyle(
 +                            fontFamily: 'ProductSans',
