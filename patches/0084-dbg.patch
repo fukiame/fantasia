@@ -6,7 +6,7 @@ Subject: [PATCH] dbg
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
-index d0394c38..d6f9e91d 100644
+index d0394c38..5c9e7d08 100644
 --- a/lib/widgets/navigation/flick_nav_bar.dart
 +++ b/lib/widgets/navigation/flick_nav_bar.dart
 @@ -104,6 +104,20 @@ class _FlickNavBarState extends State<FlickNavBar> {
@@ -14,7 +14,7 @@ index d0394c38..d6f9e91d 100644
          children: [
            if (sw) widget.miniPlayerWidget!,
 +                        Text(
-+                          widget.miniPlayerWidget.runtimeType,
++                          widget.miniPlayerWidget.runtimeType.toString(),
 +                          maxLines: 1,
 +                          overflow: TextOverflow.ellipsis,
 +                          style: TextStyle(
