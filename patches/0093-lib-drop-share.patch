@@ -1166,6 +1166,54 @@ index 020d643e..ec442278 100644
            const SizedBox(height: AppConstants.spacingSm),
            Divider(height: 1, color: AppColors.glassBorderStrong),
            const SizedBox(height: AppConstants.spacingSm),
+diff --git a/lib/models/player_action_button.dart b/lib/models/player_action_button.dart
+index 19be6212..fe449c38 100644
+--- a/lib/models/player_action_button.dart
++++ b/lib/models/player_action_button.dart
+@@ -7,7 +7,6 @@ enum PlayerActionButton {
+   ratings,
+   queue,
+   sleepTimer,
+-  share,
+   usbVolume,
+   equalizer,
+   volume,
+@@ -26,8 +25,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+         return 'queue';
+       case PlayerActionButton.sleepTimer:
+         return 'sleep_timer';
+-      case PlayerActionButton.share:
+-        return 'share';
+       case PlayerActionButton.usbVolume:
+         return 'usb_volume';
+       case PlayerActionButton.equalizer:
+@@ -49,8 +46,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+         return 'Queue';
+       case PlayerActionButton.sleepTimer:
+         return 'Sleep Timer';
+-      case PlayerActionButton.share:
+-        return 'Share';
+       case PlayerActionButton.usbVolume:
+         return 'USB Volume';
+       case PlayerActionButton.equalizer:
+@@ -72,8 +67,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+         return LucideIcons.listMusic;
+       case PlayerActionButton.sleepTimer:
+         return LucideIcons.moonStar;
+-      case PlayerActionButton.share:
+-        return LucideIcons.share2;
+       case PlayerActionButton.usbVolume:
+         return LucideIcons.volume2;
+       case PlayerActionButton.equalizer:
+@@ -93,8 +86,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+         return PlayerActionButton.queue;
+       case 'sleep_timer':
+         return PlayerActionButton.sleepTimer;
+-      case 'share':
+-        return PlayerActionButton.share;
+       case 'usb_volume':
+         return PlayerActionButton.usbVolume;
+       case 'equalizer':
 -- 
 2.55.0
 
