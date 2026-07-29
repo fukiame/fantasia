@@ -6,10 +6,10 @@ Subject: [PATCH] subsetting leftovers
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 32fe1de6..ee753e11 100644
+index 6f19e0af..ce7194a2 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
-@@ -603,7 +603,6 @@ class SettingsScaffold extends ConsumerWidget {
+@@ -621,7 +621,6 @@ class SettingsScaffold extends ConsumerWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  _SettingsBackHeader(title: title),

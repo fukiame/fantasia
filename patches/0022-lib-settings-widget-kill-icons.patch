@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: widget: kill icons
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 1ec6d309..d3d8faf8 100644
+index 40ebf32b..417c35fb 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -123,8 +123,6 @@ class ToggleSetting extends StatelessWidget {
@@ -51,7 +51,7 @@ index 1ec6d309..d3d8faf8 100644
                Expanded(
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
-@@ -452,8 +438,6 @@ class SliderSetting extends StatelessWidget {
+@@ -454,8 +440,6 @@ class SliderSetting extends StatelessWidget {
          children: [
            Row(
              children: [

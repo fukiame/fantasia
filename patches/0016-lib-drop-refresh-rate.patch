@@ -8,7 +8,7 @@ holy heck invasive
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index 0a31d796..f72e79aa 100644
+index 2aa13c71..ac33428b 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
 @@ -13,7 +13,6 @@ import 'package:flick/features/albums/screens/album_detail_screen.dart';
@@ -38,7 +38,7 @@ index 0a31d796..f72e79aa 100644
    }
  
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index b6815df5..0241a90e 100644
+index 0004a882..769f47f2 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
 @@ -20,7 +20,6 @@ import 'package:flick/services/player_service.dart';
@@ -59,7 +59,7 @@ index b6815df5..0241a90e 100644
          tween: ColorTween(begin: AppColors.background, end: bgColor),
          duration: AppConstants.animationSlow,
          curve: Curves.easeOut,
-@@ -636,7 +634,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -547,7 +545,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
              ],
            );
          },

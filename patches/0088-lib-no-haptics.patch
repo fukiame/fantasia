@@ -222,7 +222,7 @@ index dfde8a81..8204eff3 100644
        _outlineController.reverse();
      } else {
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 75440147..dc40d48f 100644
+index 0bbfb930..fe889410 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -7,7 +7,6 @@ import 'package:flick/widgets/uac2/uac2_error_notification.dart';
@@ -432,7 +432,7 @@ index 658e6bbd..6ddcc807 100644
                              context,
                              const InterfaceSettingsScreen(),
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 8703b981..a522308b 100644
+index 1ee37948..6488b8f4 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -4,7 +4,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -483,7 +483,7 @@ index 8703b981..a522308b 100644
          onChanged(!value);
        },
        child: AnimatedContainer(
-@@ -649,7 +643,6 @@ class _SettingsBackHeader extends StatelessWidget {
+@@ -667,7 +661,6 @@ class _SettingsBackHeader extends StatelessWidget {
          children: [
            IconButton(
              onPressed: () {

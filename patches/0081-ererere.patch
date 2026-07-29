@@ -6,7 +6,7 @@ Subject: [PATCH] ererere
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 123d8142..75440147 100644
+index 6489457f..0bbfb930 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -354,7 +354,9 @@ class AnimatedSongScene extends StatelessWidget {

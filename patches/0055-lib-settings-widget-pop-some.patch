@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: widget: pop some
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/widget_settings_screen.dart b/lib/features/settings/screens/widget_settings_screen.dart
-index 8681da23..68752b98 100644
+index d0aa5962..46cd9b06 100644
 --- a/lib/features/settings/screens/widget_settings_screen.dart
 +++ b/lib/features/settings/screens/widget_settings_screen.dart
-@@ -653,29 +653,13 @@ class _OpacityOption extends StatelessWidget {
+@@ -674,29 +674,13 @@ class _OpacityOption extends StatelessWidget {
        child: InkWell(
          onTap: () => onChanged(value),
          child: Padding(
@@ -41,7 +41,7 @@ index 8681da23..68752b98 100644
                          color: context.adaptiveTextPrimary,
                        ),
                  ),
-@@ -871,7 +855,7 @@ class _AccentOption extends StatelessWidget {
+@@ -986,7 +970,7 @@ class _AccentOption extends StatelessWidget {
        child: InkWell(
          onTap: () => onChanged(value),
          child: Padding(
@@ -50,7 +50,7 @@ index 8681da23..68752b98 100644
            child: Row(
              children: [
                Container(
-@@ -891,7 +875,7 @@ class _AccentOption extends StatelessWidget {
+@@ -1006,7 +990,7 @@ class _AccentOption extends StatelessWidget {
                Expanded(
                  child: Text(
                    label,
@@ -59,7 +59,7 @@ index 8681da23..68752b98 100644
                          color: context.adaptiveTextPrimary,
                        ),
                  ),
-@@ -911,4 +895,4 @@ class _AccentOption extends StatelessWidget {
+@@ -1026,4 +1010,4 @@ class _AccentOption extends StatelessWidget {
        ),
      );
    }

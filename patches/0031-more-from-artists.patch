@@ -6,10 +6,10 @@ Subject: [PATCH] more(from)artists
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 5ba93432..9d857f09 100644
+index 909f231a..b6926dc5 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -493,72 +493,11 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -406,72 +406,11 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
                      }, childCount: widget.songs.length),
                    ),
                  ),

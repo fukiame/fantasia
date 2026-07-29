@@ -6,10 +6,10 @@ Subject: [PATCH] soft widget kill
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 0f35e80f..dbdf105a 100644
+index c91b1122..a1d72ccc 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
-@@ -69,44 +69,6 @@
+@@ -72,44 +72,6 @@
              android:name=".MusicNotificationService"
              android:exported="false"
              android:foregroundServiceType="mediaPlayback" />
@@ -82,10 +82,10 @@ index fde75742..658e6bbd 100644
                      const SizedBox(height: AppConstants.spacingLg),
 diff --git a/lib/features/settings/screens/widget_settings_screen.dart b/lib/features/settings/screens/widget_settings_screen.dart
 deleted file mode 100644
-index 6aa411fb..00000000
+index c50c79a4..00000000
 --- a/lib/features/settings/screens/widget_settings_screen.dart
 +++ /dev/null
-@@ -1,898 +0,0 @@
+@@ -1,1013 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -324,9 +324,16 @@ index 6aa411fb..00000000
 -              value: prefs.widgetTextScale,
 -              displayValue: '${(prefs.widgetTextScale * 100).round()}%',
 -              min: 0.8,
--              max: 1.5,
--              divisions: 14,
+-              max: 2.5,
+-              divisions: 34,
 -              onChanged: (v) => _updateTextScale(ref, v),
+-              onDisplayTap: () => _showManualScaleDialog(
+-                context,
+-                value: prefs.widgetTextScale,
+-                min: 0.8,
+-                max: 2.5,
+-                onChanged: (v) => _updateTextScale(ref, v),
+-              ),
 -            ),
 -          ],
 -        ),
@@ -453,9 +460,16 @@ index 6aa411fb..00000000
 -              displayValue:
 -                  '${(prefs.widgetFlagshipTextScale * 100).round()}%',
 -              min: 0.8,
--              max: 1.5,
--              divisions: 14,
+-              max: 2.5,
+-              divisions: 34,
 -              onChanged: (v) => _updateFlagshipTextScale(ref, v),
+-              onDisplayTap: () => _showManualScaleDialog(
+-                context,
+-                value: prefs.widgetFlagshipTextScale,
+-                min: 0.8,
+-                max: 2.5,
+-                onChanged: (v) => _updateFlagshipTextScale(ref, v),
+-              ),
 -            ),
 -          ],
 -        ),
@@ -629,9 +643,16 @@ index 6aa411fb..00000000
 -              displayValue:
 -                  '${(prefs.widgetCompactTextScale * 100).round()}%',
 -              min: 0.8,
--              max: 1.5,
--              divisions: 14,
+-              max: 2.5,
+-              divisions: 34,
 -              onChanged: (v) => _updateCompactTextScale(ref, v),
+-              onDisplayTap: () => _showManualScaleDialog(
+-                context,
+-                value: prefs.widgetCompactTextScale,
+-                min: 0.8,
+-                max: 2.5,
+-                onChanged: (v) => _updateCompactTextScale(ref, v),
+-              ),
 -            ),
 -          ],
 -        ),
@@ -779,6 +800,100 @@ index 6aa411fb..00000000
 -  };
 -}
 -
+-Future<void> _showManualScaleDialog(
+-  BuildContext context, {
+-  required double value,
+-  required double min,
+-  required double max,
+-  required ValueChanged<double> onChanged,
+-}) async {
+-  final controller = TextEditingController(
+-    text: (value * 100).round().toString(),
+-  );
+-  final submitted = await showDialog<bool>(
+-    context: context,
+-    builder: (dialogContext) => AlertDialog(
+-      backgroundColor: AppColors.surface,
+-      shape: RoundedRectangleBorder(
+-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-      ),
+-      title: Text(
+-        'Font Scale',
+-        style: TextStyle(color: context.adaptiveTextPrimary),
+-      ),
+-      content: Column(
+-        mainAxisSize: MainAxisSize.min,
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          Text(
+-            'Enter a value from ${(min * 100).round()}% to ${(max * 100).round()}%',
+-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  color: context.adaptiveTextTertiary,
+-                ),
+-          ),
+-          const SizedBox(height: AppConstants.spacingMd),
+-          TextField(
+-            controller: controller,
+-            autofocus: true,
+-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+-            textInputAction: TextInputAction.done,
+-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                  color: context.adaptiveTextPrimary,
+-                  fontFamily: 'ProductSans',
+-                ),
+-            decoration: InputDecoration(
+-              isDense: true,
+-              suffixText: '%',
+-              suffixStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+-                    color: context.adaptiveTextTertiary,
+-                  ),
+-              border: OutlineInputBorder(
+-                borderRadius:
+-                    BorderRadius.circular(AppConstants.radiusSm),
+-                borderSide: BorderSide(color: AppColors.glassBorder),
+-              ),
+-              enabledBorder: OutlineInputBorder(
+-                borderRadius:
+-                    BorderRadius.circular(AppConstants.radiusSm),
+-                borderSide: BorderSide(color: AppColors.glassBorder),
+-              ),
+-              focusedBorder: OutlineInputBorder(
+-                borderRadius:
+-                    BorderRadius.circular(AppConstants.radiusSm),
+-                borderSide: BorderSide(color: context.adaptiveTextPrimary),
+-              ),
+-            ),
+-            onSubmitted: (_) => Navigator.of(dialogContext).pop(true),
+-          ),
+-        ],
+-      ),
+-      actions: [
+-        TextButton(
+-          onPressed: () => Navigator.of(dialogContext).pop(false),
+-          child: Text(
+-            'Cancel',
+-            style: TextStyle(color: context.adaptiveTextSecondary),
+-          ),
+-        ),
+-        TextButton(
+-          onPressed: () => Navigator.of(dialogContext).pop(true),
+-          child: Text(
+-            'Apply',
+-            style: TextStyle(color: context.adaptiveTextPrimary),
+-          ),
+-        ),
+-      ],
+-    ),
+-  );
+-  final parsed = submitted == true
+-      ? double.tryParse(controller.text.trim())
+-      : null;
+-  controller.dispose();
+-  if (parsed != null) {
+-    onChanged((parsed / 100).clamp(min, max).toDouble());
+-  }
+-}
+-
 -class _WidgetTextPreview extends StatefulWidget {
 -  const _WidgetTextPreview({
 -    required this.titleBaseSp,
@@ -810,7 +925,7 @@ index 6aa411fb..00000000
 -  Widget build(BuildContext context) {
 -    final auto = _autoFactors[_sizeIndex];
 -    double clampSp(int base) =>
--        (base * auto * widget.manualScale).round().clamp(9, 22).toDouble();
+-        (base * auto * widget.manualScale).round().clamp(9, 30).toDouble();
 -    final titleSp = clampSp(widget.titleBaseSp);
 -    final artistSp = clampSp(widget.artistBaseSp);
 -    final cross = widget.centered

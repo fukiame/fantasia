@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: widgets: empty check subtitle
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 510e1acc..94e56c17 100644
+index 0f3e1ad7..272dd9f2 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -133,6 +133,7 @@ class ToggleSetting extends StatelessWidget {
@@ -73,7 +73,7 @@ index 510e1acc..94e56c17 100644
                    ],
                  ),
                ),
-@@ -448,6 +456,7 @@ class SliderSetting extends StatelessWidget {
+@@ -450,6 +458,7 @@ class SliderSetting extends StatelessWidget {
                          color: context.adaptiveTextPrimary,
                        ),
                      ),
@@ -81,7 +81,7 @@ index 510e1acc..94e56c17 100644
                      const SizedBox(height: 2),
                      Text(
                        subtitle,
-@@ -455,6 +464,7 @@ class SliderSetting extends StatelessWidget {
+@@ -457,6 +466,7 @@ class SliderSetting extends StatelessWidget {
                          color: context.adaptiveTextTertiary,
                        ),
                      ),

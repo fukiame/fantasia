@@ -129,7 +129,7 @@ index 277527b8..d4e15358 100644
                  ),
                ),
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index ee753e11..0e890ef6 100644
+index ce7194a2..b9b8d0c2 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -102,6 +102,7 @@ class ToggleSetting extends StatelessWidget {
@@ -159,7 +159,7 @@ index ee753e11..0e890ef6 100644
                Expanded(
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
-@@ -522,8 +528,8 @@ class _SettingsIcon extends StatelessWidget {
+@@ -540,8 +546,8 @@ class _SettingsIcon extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
      return Container(
@@ -170,7 +170,7 @@ index ee753e11..0e890ef6 100644
        decoration: BoxDecoration(
          color: AppColors.glassBackgroundStrong,
          borderRadius: BorderRadius.circular(AppConstants.radiusSm),
-@@ -531,7 +537,7 @@ class _SettingsIcon extends StatelessWidget {
+@@ -549,7 +555,7 @@ class _SettingsIcon extends StatelessWidget {
        child: Icon(
          icon,
          color: color ?? context.adaptiveTextSecondary,

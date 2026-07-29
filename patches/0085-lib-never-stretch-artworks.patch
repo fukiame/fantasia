@@ -6,10 +6,10 @@ Subject: [PATCH] lib: never stretch artworks
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index 661a772f..40e60ac6 100644
+index 2ee95d92..03f71cb5 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -359,9 +359,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -373,9 +373,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
                    songs: album.songs,
                    albumArt: _getAlbumArt(album.songs),
                    albumArtSourcePath: _getArtworkSourcePath(album.songs),
@@ -19,7 +19,7 @@ index 661a772f..40e60ac6 100644
                    onTap: () => _openAlbumDetail(album),
                  );
                },
-@@ -379,7 +376,6 @@ class _AlbumCard extends StatefulWidget {
+@@ -393,7 +390,6 @@ class _AlbumCard extends StatefulWidget {
    final List<Song> songs;
    final String? albumArt;
    final String? albumArtSourcePath;
@@ -27,7 +27,7 @@ index 661a772f..40e60ac6 100644
    final VoidCallback onTap;
  
    const _AlbumCard({
-@@ -388,7 +384,6 @@ class _AlbumCard extends StatefulWidget {
+@@ -402,7 +398,6 @@ class _AlbumCard extends StatefulWidget {
      required this.songs,
      required this.albumArt,
      required this.albumArtSourcePath,
@@ -35,7 +35,7 @@ index 661a772f..40e60ac6 100644
      required this.onTap,
    });
  
-@@ -434,9 +429,7 @@ class _AlbumCardState extends State<_AlbumCard>
+@@ -448,9 +443,7 @@ class _AlbumCardState extends State<_AlbumCard>
      // cacheWidth+cacheHeight forces the decoder to a square bitmap, which
      // distorts non-square art. Null height lets aspect ratio survive so
      // BoxFit.cover can crop.

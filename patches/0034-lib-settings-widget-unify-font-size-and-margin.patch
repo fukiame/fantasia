@@ -8,7 +8,7 @@ sync with library
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 1c514ee0..510e1acc 100644
+index f55a7e3a..0f3e1ad7 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -120,7 +120,7 @@ class ToggleSetting extends StatelessWidget {
@@ -116,7 +116,7 @@ index 1c514ee0..510e1acc 100644
                          color: context.adaptiveTextTertiary,
                        ),
                      ),
-@@ -428,7 +428,7 @@ class SliderSetting extends StatelessWidget {
+@@ -430,7 +430,7 @@ class SliderSetting extends StatelessWidget {
    Widget build(BuildContext context) {
      return Padding(
        padding: const EdgeInsets.fromLTRB(
@@ -125,7 +125,7 @@ index 1c514ee0..510e1acc 100644
          AppConstants.spacingMd,
          AppConstants.spacingMd,
          AppConstants.spacingSm,
-@@ -444,14 +444,14 @@ class SliderSetting extends StatelessWidget {
+@@ -446,14 +446,14 @@ class SliderSetting extends StatelessWidget {
                    children: [
                      Text(
                        title,

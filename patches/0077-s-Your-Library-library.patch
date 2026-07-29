@@ -30,19 +30,6 @@ index 47f9ece8..1f4d3704 100644
                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                      fontWeight: FontWeight.w600,
                      color: context.adaptiveTextPrimary,
-diff --git a/test/widget_test.dart b/test/widget_test.dart
-index ce7f5f9d..f3becd8f 100644
---- a/test/widget_test.dart
-+++ b/test/widget_test.dart
-@@ -8,7 +8,7 @@ void main() {
-     await tester.pumpWidget(const ProviderScope(child: FlickPlayerApp()));
- 
-     // Verify that the Songs screen is displayed initially
--    expect(find.text('Your Library'), findsOneWidget);
-+    expect(find.text('library'), findsOneWidget);
-     expect(find.text('Songs'), findsOneWidget);
-   });
- }
 -- 
 2.55.0
 

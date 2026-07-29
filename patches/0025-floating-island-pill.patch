@@ -533,7 +533,7 @@ index 9c129dc5..40ec2c30 100644
          android.os.Handler(mainLooper).post {
              try {
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index d7ca6767..5ba93432 100644
+index a3f072c3..909f231a 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
 @@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
@@ -544,16 +544,16 @@ index d7ca6767..5ba93432 100644
  import 'package:flick/core/utils/responsive.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/data/repositories/song_repository.dart';
-@@ -565,7 +564,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
-               ),
+@@ -479,7 +478,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
              ),
              ),
+             _buildOverlayTopBar(context, resolvedBg),
 -            const FloatingMiniPlayer(),
            ],
          );
        },
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 0241a90e..8b5f049c 100644
+index 769f47f2..e3d3e7fd 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
 @@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
@@ -564,10 +564,10 @@ index 0241a90e..8b5f049c 100644
  import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/core/utils/responsive.dart';
  import 'package:flick/data/repositories/artist_repository.dart';
-@@ -630,7 +629,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
-                   ),
+@@ -541,7 +540,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
                  ),
                ),
+               _buildOverlayTopBar(context, resolvedBg),
 -              const FloatingMiniPlayer(),
              ],
            );
@@ -593,7 +593,7 @@ index d6fc9bc4..2886bb85 100644
      );
    }
 diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index 9f120806..52259fb2 100644
+index 0c1918cd..7a742c06 100644
 --- a/lib/features/playlists/screens/playlist_detail_screen.dart
 +++ b/lib/features/playlists/screens/playlist_detail_screen.dart
 @@ -8,7 +8,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -604,10 +604,10 @@ index 9f120806..52259fb2 100644
  import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/models/playback_context.dart';
  import 'package:flick/models/song.dart';
-@@ -598,7 +597,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
-               ),
+@@ -512,7 +511,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
              ),
              ),
+             _buildOverlayTopBar(context, resolvedBg),
 -            const FloatingMiniPlayer(),
            ],
          );
@@ -905,7 +905,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 84f8a17a..0ebc864e 100644
+index 18efd9df..1b0fea9b 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -1012,7 +1012,7 @@ index 84f8a17a..0ebc864e 100644
    }
  
    bool get _isGaplessActive =>
-@@ -2461,8 +2405,6 @@ class PlayerService {
+@@ -2466,8 +2410,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -1021,7 +1021,7 @@ index 84f8a17a..0ebc864e 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -4838,7 +4780,6 @@ class PlayerService {
+@@ -4847,7 +4789,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();

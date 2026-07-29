@@ -323,7 +323,7 @@ index e9528af7..4b51a602 100644
                      artworkCardTextScale: appPrefs.artworkCardTextScale,
                      artworkCardVerticalOffset:
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 11108d0c..a7361370 100644
+index e5351e32..9bbf5b89 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -16,11 +16,9 @@ import 'package:flick/services/player_service.dart';
@@ -444,7 +444,7 @@ index 11108d0c..a7361370 100644
      if (playerScreenMode == PlayerScreenMode.artworkCard) {
        return Stack(
          children: [
-@@ -1091,20 +1034,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -1095,20 +1038,7 @@ class AnimatedSongScene extends StatelessWidget {
                                      child: OverflowBox(
                                        maxWidth: artworkSize,
                                        maxHeight: artworkSize,
