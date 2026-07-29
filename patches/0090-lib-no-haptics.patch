@@ -222,7 +222,7 @@ index dfde8a81..8204eff3 100644
        _outlineController.reverse();
      } else {
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 75440147..2a0c4512 100644
+index 75440147..dc40d48f 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -7,7 +7,6 @@ import 'package:flick/widgets/uac2/uac2_error_notification.dart';
@@ -233,11 +233,12 @@ index 75440147..2a0c4512 100644
  import 'package:flick/core/utils/responsive.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/models/album_color_mode.dart';
-@@ -574,7 +573,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -574,7 +573,7 @@ class AnimatedSongScene extends StatelessWidget {
          shape: BoxShape.circle,
        ),
        child: IconButton(
 -        onPressed: AppHaptics.wrap(onTap),
++        onPressed: onTap,
          padding: EdgeInsets.all(context.responsive(8.0, 10.0, 12.0)),
          constraints: const BoxConstraints(),
          icon: Icon(
