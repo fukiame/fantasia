@@ -13,7 +13,6 @@ jobs:
                   git config --global user.name "Github Actions"
                   sudo apt update
                   sudo apt install libc6-dev gcc-multilib
-            - run: ./pw p
             - uses: subosito/flutter-action@v2
               with:
                 channel: stable
