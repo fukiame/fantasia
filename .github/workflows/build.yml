@@ -11,17 +11,13 @@ jobs:
               run: |
                   git config --global user.email "no-reply@github.com"
                   git config --global user.name "Github Actions"
-                  sudo apt install libc6-dev build-essential gcc-multilib
-            - name: patch
-              run: |
-                  ./pw p
-            - name: Set up Flutter
-              uses: subosito/flutter-action@v2
+                  sudo apt update
+                  sudo apt install libc6-dev gcc-multilib
+            - run: ./pw p
+            - uses: subosito/flutter-action@v2
               with:
                 channel: stable
-            - name: build
-              run: |
-                  ./pw b
+            - run: ./pw b
             - uses: actions/upload-artifact@v7
               with:
                 path: fantasia/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
