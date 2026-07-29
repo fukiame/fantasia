@@ -6,7 +6,7 @@ Subject: [PATCH] tutorial,onboarding
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 7944a017..4307409c 100644
+index b3a83fb1..edb6c6a8 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -27,9 +27,6 @@ import 'package:flick/features/player/widgets/audio_visualizer.dart';
@@ -19,29 +19,20 @@ index 7944a017..4307409c 100644
  import 'package:flick/widgets/common/cached_image_widget.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/services/library_scanner_service.dart';
-@@ -287,11 +284,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -285,12 +282,6 @@ class _MainShellState extends ConsumerState<MainShell>
+       _refreshLibraryDeletions();
        ref.read(updateCheckProvider.notifier).refreshIfOnline();
        ref.read(autoLibrarySyncServiceProvider);
- 
+-
 -      final tutorialState = ref.read(tutorialProvider);
 -      if (tutorialState.autoStartPending && !tutorialState.active) {
 -        ref.read(tutorialProvider.notifier).start();
 -      }
 -
-       _maybeShowWhatsNew();
      });
  
-@@ -333,9 +325,6 @@ class _MainShellState extends ConsumerState<MainShell>
- 
-   void _maybeShowWhatsNew() {
-     if (!mounted) return;
--    if (!ref.read(onboardingCompletedProvider)) {
--      return;
--    }
- 
-     // Wait for the AppPreferencesNotifier to publish its loaded state. The
-     // listener fires when the real SharedPreferences values replace the
-@@ -716,9 +705,6 @@ class _MainShellState extends ConsumerState<MainShell>
+     _playerService.playbackDesyncedNotifier.addListener(
+@@ -684,9 +675,6 @@ class _MainShellState extends ConsumerState<MainShell>
                      ),
                    ),
                  ),
@@ -51,7 +42,7 @@ index 7944a017..4307409c 100644
                ],
              ),
            ),
-@@ -779,9 +765,7 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -747,9 +735,7 @@ class _MainShellState extends ConsumerState<MainShell>
      final currentIndex = ref.watch(navigationIndexProvider);
      final navBarConfig = ref.watch(navBarConfigProvider);
  
@@ -62,7 +53,7 @@ index 7944a017..4307409c 100644
          currentIndex: currentIndex,
          config: navBarConfig,
          collapsed: _isBottomBarCollapsed,
-@@ -798,13 +782,9 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -766,13 +752,9 @@ class _MainShellState extends ConsumerState<MainShell>
            );
          },
          showMiniPlayer: true,
@@ -77,7 +68,7 @@ index 7944a017..4307409c 100644
      );
    }
  }
-@@ -1124,16 +1104,13 @@ class _RootRouter extends ConsumerWidget {
+@@ -1092,16 +1074,13 @@ class _RootRouter extends ConsumerWidget {
  
    @override
    Widget build(BuildContext context, WidgetRef ref) {
@@ -1349,10 +1340,10 @@ index 573b03d4..00000000
 -      OnboardingCompletedNotifier.new,
 -    );
 diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
-index c6692057..74b551ba 100644
+index 2e73c68e..a0f6249b 100644
 --- a/lib/providers/providers.dart
 +++ b/lib/providers/providers.dart
-@@ -17,12 +17,10 @@ export 'uac2_provider.dart';
+@@ -17,11 +17,9 @@ export 'uac2_provider.dart';
  export 'auto_sync_provider.dart';
  export 'library_warmup_provider.dart';
  export 'duplicate_cleaner_provider.dart';
@@ -1364,7 +1355,6 @@ index c6692057..74b551ba 100644
  export 'player_screen_mode_provider.dart';
  export 'update_check_provider.dart';
 -export 'tutorial_provider.dart';
- export 'whats_new_provider.dart';
 diff --git a/lib/providers/tutorial_provider.dart b/lib/providers/tutorial_provider.dart
 deleted file mode 100644
 index f3bfbd00..00000000

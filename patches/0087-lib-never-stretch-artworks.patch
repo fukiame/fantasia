@@ -1,0 +1,238 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 29 Jul 2026 14:00:37 +0700
+Subject: [PATCH] lib: never stretch artworks
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
+index 661a772f..40e60ac6 100644
+--- a/lib/features/albums/screens/albums_screen.dart
++++ b/lib/features/albums/screens/albums_screen.dart
+@@ -359,9 +359,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+                   songs: album.songs,
+                   albumArt: _getAlbumArt(album.songs),
+                   albumArtSourcePath: _getArtworkSourcePath(album.songs),
+-                  stretchArtwork: ref
+-                      .watch(appPreferencesProvider)
+-                      .albumsStretchArtwork,
+                   onTap: () => _openAlbumDetail(album),
+                 );
+               },
+@@ -379,7 +376,6 @@ class _AlbumCard extends StatefulWidget {
+   final List<Song> songs;
+   final String? albumArt;
+   final String? albumArtSourcePath;
+-  final bool stretchArtwork;
+   final VoidCallback onTap;
+ 
+   const _AlbumCard({
+@@ -388,7 +384,6 @@ class _AlbumCard extends StatefulWidget {
+     required this.songs,
+     required this.albumArt,
+     required this.albumArtSourcePath,
+-    required this.stretchArtwork,
+     required this.onTap,
+   });
+ 
+@@ -434,9 +429,7 @@ class _AlbumCardState extends State<_AlbumCard>
+     // cacheWidth+cacheHeight forces the decoder to a square bitmap, which
+     // distorts non-square art. Null height lets aspect ratio survive so
+     // BoxFit.cover can crop.
+-    final artworkTargetHeight = widget.stretchArtwork
+-        ? artworkTargetWidth
+-        : null;
++    final artworkTargetHeight = null;
+ 
+     return GestureDetector(
+       onTapDown: (_) => _controller.forward(),
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index dd0c75b3..10e28314 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -1415,24 +1415,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Album Artwork'),
+-          SettingsCard(
+-            children: [
+-              ToggleSetting(
+-                icon: LucideIcons.crop,
+-                title: 'Stretch Non-Square Art',
+-                subtitle:
+-                    'Off crops to fill the square; on stretches the artwork edge-to-edge',
+-                value: appPreferences.albumsStretchArtwork,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setAlbumsStretchArtwork(value);
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SizedBox(height: AppConstants.navBarHeight + 40),
+         ],
+       ),
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index b9acdd74..ede25261 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -594,9 +594,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+                             scale: 1.0 + pinchDelta * 0.04,
+                             child: _AlbumCard(
+                               album: album,
+-                              stretchArtwork: ref
+-                                  .watch(appPreferencesProvider)
+-                                  .albumsStretchArtwork,
+                               onTap: () => _openAlbumDetail(album),
+                             ),
+                           ),
+@@ -670,9 +667,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+           padding: const EdgeInsets.only(bottom: AppConstants.spacingSm),
+           child: _AlbumListTile(
+             album: album,
+-            stretchArtwork: ref
+-                .watch(appPreferencesProvider)
+-                .albumsStretchArtwork,
+             onTap: () => _openAlbumDetail(album),
+           ),
+         );
+@@ -2392,12 +2386,10 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+ 
+ class _AlbumCard extends StatefulWidget {
+   final AlbumGroup album;
+-  final bool stretchArtwork;
+   final VoidCallback onTap;
+ 
+   const _AlbumCard({
+     required this.album,
+-    required this.stretchArtwork,
+     required this.onTap,
+   });
+ 
+@@ -2514,9 +2506,7 @@ class _AlbumCardState extends State<_AlbumCard>
+                                     fit: BoxFit.cover,
+                                     useThumbnail: true,
+                                     thumbnailWidth: artworkTargetWidth,
+-                                    thumbnailHeight: widget.stretchArtwork
+-                                        ? artworkTargetWidth
+-                                        : null,
++                                    thumbnailHeight: null,
+                                     placeholder: _buildPlaceholder(context),
+                                     errorWidget: _buildPlaceholder(context),
+                                   ),
+@@ -2631,12 +2621,10 @@ class _AlbumCardState extends State<_AlbumCard>
+ 
+ class _AlbumListTile extends StatelessWidget {
+   final AlbumGroup album;
+-  final bool stretchArtwork;
+   final VoidCallback onTap;
+ 
+   const _AlbumListTile({
+     required this.album,
+-    required this.stretchArtwork,
+     required this.onTap,
+   });
+ 
+@@ -2698,7 +2686,7 @@ class _AlbumListTile extends StatelessWidget {
+                     fit: BoxFit.cover,
+                     useThumbnail: true,
+                     thumbnailWidth: 104,
+-                    thumbnailHeight: stretchArtwork ? 104 : null,
++                    thumbnailHeight: null,
+                     placeholder: const ColoredBox(
+                       color: AppColors.surface,
+                       child: Icon(
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index 87c887d8..8f926541 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -363,12 +363,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setReplaceAlbumWithBitPerfectCapsule(value);
+   }
+ 
+-  Future<void> setAlbumsStretchArtwork(bool value) async {
+-    if (state.albumsStretchArtwork == value) return;
+-    state = state.copyWith(albumsStretchArtwork: value);
+-    await ref.read(appPreferencesServiceProvider).setAlbumsStretchArtwork(value);
+-  }
+-
+   Future<void> setAnimatedAlbumArt(bool value) async {
+     if (state.animatedAlbumArt == value) return;
+     state = state.copyWith(animatedAlbumArt: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index b079ac45..34581e01 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -48,7 +48,6 @@ class AppPreferences {
+   final String rightActionButton;
+   final bool welcomeCardDismissed;
+   final bool replaceAlbumWithBitPerfectCapsule;
+-  final bool albumsStretchArtwork;
+   final bool animatedAlbumArt;
+   final int folderGridPageSize;
+   final String? lastSeenChangelogVersion;
+@@ -121,7 +120,6 @@ class AppPreferences {
+     this.rightActionButton = 'favorites',
+     this.welcomeCardDismissed = false,
+     this.replaceAlbumWithBitPerfectCapsule = false,
+-    this.albumsStretchArtwork = false,
+     this.animatedAlbumArt = true,
+     this.folderGridPageSize = 8,
+     this.lastSeenChangelogVersion,
+@@ -195,7 +193,6 @@ class AppPreferences {
+     String? rightActionButton,
+     bool? welcomeCardDismissed,
+     bool? replaceAlbumWithBitPerfectCapsule,
+-    bool? albumsStretchArtwork,
+     bool? animatedAlbumArt,
+     int? folderGridPageSize,
+     String? lastSeenChangelogVersion,
+@@ -287,8 +284,6 @@ class AppPreferences {
+       replaceAlbumWithBitPerfectCapsule:
+           replaceAlbumWithBitPerfectCapsule ??
+           this.replaceAlbumWithBitPerfectCapsule,
+-      albumsStretchArtwork:
+-          albumsStretchArtwork ?? this.albumsStretchArtwork,
+       animatedAlbumArt: animatedAlbumArt ?? this.animatedAlbumArt,
+       folderGridPageSize: folderGridPageSize ?? this.folderGridPageSize,
+       lastSeenChangelogVersion:
+@@ -381,7 +376,6 @@ class AppPreferencesService {
+   static const _welcomeCardDismissedKey = 'welcome_card_dismissed';
+   static const _replaceAlbumWithBitPerfectCapsuleKey =
+       'replace_album_with_bit_perfect_capsule';
+-  static const _albumsStretchArtworkKey = 'albums_stretch_artwork';
+   static const _animatedAlbumArtKey = 'album_animated_art';
+   static const _folderGridPageSizeKey = 'folder_grid_page_size';
+   static const _lastSeenChangelogVersionKey = 'last_seen_changelog_version';
+@@ -482,8 +476,6 @@ class AppPreferencesService {
+       welcomeCardDismissed: prefs.getBool(_welcomeCardDismissedKey) ?? false,
+       replaceAlbumWithBitPerfectCapsule:
+           prefs.getBool(_replaceAlbumWithBitPerfectCapsuleKey) ?? false,
+-      albumsStretchArtwork:
+-          prefs.getBool(_albumsStretchArtworkKey) ?? false,
+       animatedAlbumArt: prefs.getBool(_animatedAlbumArtKey) ?? true,
+       folderGridPageSize: prefs.getInt(_folderGridPageSizeKey) ?? 8,
+       lastSeenChangelogVersion: prefs.getString(_lastSeenChangelogVersionKey),
+@@ -929,16 +921,6 @@ class AppPreferencesService {
+     await prefs.setBool(_replaceAlbumWithBitPerfectCapsuleKey, value);
+   }
+ 
+-  Future<bool> getAlbumsStretchArtwork() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_albumsStretchArtworkKey) ?? false;
+-  }
+-
+-  Future<void> setAlbumsStretchArtwork(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_albumsStretchArtworkKey, value);
+-  }
+-
+   Future<bool> getAnimatedAlbumArt() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_animatedAlbumArtKey) ?? true;
+-- 
+2.55.0
+

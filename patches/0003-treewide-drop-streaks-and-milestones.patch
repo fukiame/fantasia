@@ -6,7 +6,7 @@ Subject: [PATCH] treewide: drop streaks and milestones
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 478a054b..7944a017 100644
+index 03cf9b3e..b3a83fb1 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -35,12 +35,9 @@ import 'package:flick/models/song.dart';
@@ -19,10 +19,10 @@ index 478a054b..7944a017 100644
  import 'package:flick/models/nav_bar_config.dart';
 -import 'package:flick/features/milestone/widgets/milestone_card.dart';
 -import 'package:flick/features/milestone/widgets/streak_popup.dart';
- import 'package:flick/features/whats_new/widgets/whats_new_bottom_sheet.dart';
  import 'package:flick/core/utils/dev_log.dart';
  
-@@ -201,9 +198,6 @@ class _MainShellState extends ConsumerState<MainShell>
+ /// Main application widget for Flick Player.
+@@ -200,9 +197,6 @@ class _MainShellState extends ConsumerState<MainShell>
        _previousSong = nextSong;
      });
  
@@ -32,15 +32,15 @@ index 478a054b..7944a017 100644
      ref.listenManual<NavBarConfig>(navBarConfigProvider, (previous, next) {
        if (previous == null || !mounted) return;
        final currentPageIndex = ref.read(navigationIndexProvider);
-@@ -299,7 +293,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -297,7 +291,6 @@ class _MainShellState extends ConsumerState<MainShell>
+         ref.read(tutorialProvider.notifier).start();
        }
  
-       _maybeShowWhatsNew();
 -      unawaited(_playerService.recordActivityDayAndCheckMilestones());
      });
  
      _playerService.playbackDesyncedNotifier.addListener(
-@@ -338,78 +331,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -336,78 +329,6 @@ class _MainShellState extends ConsumerState<MainShell>
      }
    }
  
@@ -116,10 +116,10 @@ index 478a054b..7944a017 100644
 -    );
 -  }
 -
-   void _maybeShowWhatsNew() {
+   void _onPlaybackDesyncChanged() {
      if (!mounted) return;
-     if (!ref.read(onboardingCompletedProvider)) {
-@@ -501,8 +422,6 @@ class _MainShellState extends ConsumerState<MainShell>
+     final desynced = _playerService.playbackDesyncedNotifier.value;
+@@ -469,8 +390,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _playerService.playbackDesyncedNotifier.removeListener(
        _onPlaybackDesyncChanged,
      );
@@ -1937,16 +1937,15 @@ index 122ed94a..00000000
 -  return MilestoneService();
 -});
 diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
-index 9f8a1c7e..c6692057 100644
+index fe8467fa..2e73c68e 100644
 --- a/lib/providers/providers.dart
 +++ b/lib/providers/providers.dart
-@@ -24,6 +24,5 @@ export 'album_color_provider.dart';
+@@ -24,5 +24,4 @@ export 'album_color_provider.dart';
  export 'nav_bar_config_provider.dart';
  export 'player_screen_mode_provider.dart';
  export 'update_check_provider.dart';
 -export 'milestone_provider.dart';
  export 'tutorial_provider.dart';
- export 'whats_new_provider.dart';
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
 index e8367a88..edd6ca50 100644
 --- a/lib/services/app_preferences_service.dart

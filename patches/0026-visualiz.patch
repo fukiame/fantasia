@@ -144,7 +144,7 @@ index 6bcf6b0e..fb09c33c 100644
          usbPermissionReceiver = null
          try {
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index cc158c04..41472c1b 100644
+index e64eb518..fd85331a 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -23,7 +23,6 @@ import 'package:flick/core/utils/navigation_helper.dart';
@@ -155,7 +155,7 @@ index cc158c04..41472c1b 100644
  import 'package:flick/widgets/navigation/flick_nav_bar.dart';
  import 'package:flick/providers/equalizer_provider.dart';
  import 'package:flick/providers/providers.dart';
-@@ -772,7 +771,6 @@ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
+@@ -742,7 +741,6 @@ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
  }
  
  class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
@@ -163,7 +163,7 @@ index cc158c04..41472c1b 100644
    int _songChangeDirection = 0; // 1=next, -1=previous, 0=none
    String? _currentSongId;
  
-@@ -789,10 +787,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -759,10 +757,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
          _songChangeDirection = 1;
          ref.read(playerProvider.notifier).previous();
        }
@@ -174,7 +174,7 @@ index cc158c04..41472c1b 100644
      }
    }
  
-@@ -938,24 +932,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -908,24 +902,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
        );
    }
  
@@ -199,7 +199,7 @@ index cc158c04..41472c1b 100644
    @override
    Widget build(BuildContext context) {
      final currentSong = ref.watch(currentSongProvider);
-@@ -1039,10 +1015,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1009,10 +985,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
                  switchInCurve: Curves.easeOutCubic,
                  switchOutCurve: Curves.easeOutCubic,
                  transitionBuilder: (child, animation) {
@@ -211,7 +211,7 @@ index cc158c04..41472c1b 100644
                    return SlideTransition(
                      position: Tween<Offset>(
                        begin: offset,
-@@ -1057,9 +1030,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1027,9 +1000,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
                      ),
                    );
                  },

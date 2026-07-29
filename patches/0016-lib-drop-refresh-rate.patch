@@ -468,7 +468,7 @@ index 326939d5..27295a8a 100644
    }
  
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 51b305d4..74986901 100644
+index 1ea2d669..ca96f5a2 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -25,7 +25,6 @@ import 'package:flick/services/music_folder_service.dart';

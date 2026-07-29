@@ -6,10 +6,10 @@ Subject: [PATCH] updates,patchnotes
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index a2ad1ae7..cc158c04 100644
+index cffcf975..e64eb518 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -110,7 +110,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -109,7 +109,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _previousSong = ref.read(currentSongProvider);
      _playerService = ref.read(playerServiceProvider);
      ref.read(equalizerProvider);
@@ -17,15 +17,15 @@ index a2ad1ae7..cc158c04 100644
      final initialConfig = ref.read(navBarConfigProvider);
      final defaultPage =
          initialConfig.orderedButtons.contains(NavBarButton.songs)
-@@ -281,7 +280,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -280,7 +279,6 @@ class _MainShellState extends ConsumerState<MainShell>
        }
        _maybeOpenExternalPlayer(ref.read(currentSongProvider));
        _refreshLibraryDeletions();
 -      ref.read(updateCheckProvider.notifier).refreshIfOnline();
        ref.read(autoLibrarySyncServiceProvider);
+     });
  
-       _maybeShowWhatsNew();
-@@ -494,7 +492,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -464,7 +462,6 @@ class _MainShellState extends ConsumerState<MainShell>
      if (state == AppLifecycleState.resumed) {
        _startIdleTimer();
        unawaited(ref.read(playerServiceProvider).onAppResumed());
@@ -729,15 +729,14 @@ index e35477e3..ef4bdc4f 100644
 -  final String url;
 -}
 diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
-index 6ff4325d..fd7835fe 100644
+index f7a185ec..96757b0f 100644
 --- a/lib/providers/providers.dart
 +++ b/lib/providers/providers.dart
-@@ -20,5 +20,4 @@ export 'progress_bar_style_provider.dart';
+@@ -20,4 +20,3 @@ export 'progress_bar_style_provider.dart';
  export 'album_color_provider.dart';
  export 'nav_bar_config_provider.dart';
  export 'player_screen_mode_provider.dart';
 -export 'update_check_provider.dart';
- export 'whats_new_provider.dart';
 diff --git a/lib/providers/update_check_provider.dart b/lib/providers/update_check_provider.dart
 deleted file mode 100644
 index 821cd0c2..00000000

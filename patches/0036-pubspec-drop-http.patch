@@ -6,7 +6,7 @@ Subject: [PATCH] pubspec: drop http
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index a844c140..dcb04206 100644
+index 8458806d..9c9c2a00 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -45,7 +45,6 @@ dependencies:

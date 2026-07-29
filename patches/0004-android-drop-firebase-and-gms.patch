@@ -6,7 +6,7 @@ Subject: [PATCH] android: drop firebase and gms
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 905bec2..9685acb 100644
+index 905bec2e..9685acb7 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -3,7 +3,6 @@ plugins {
@@ -26,7 +26,7 @@ index 905bec2..9685acb 100644
      implementation("androidx.documentfile:documentfile:1.1.0")
      implementation("androidx.media:media:1.7.0")
 diff --git a/android/settings.gradle.kts b/android/settings.gradle.kts
-index 447a5f5..dca18ef 100644
+index 447a5f59..dca18efa 100644
 --- a/android/settings.gradle.kts
 +++ b/android/settings.gradle.kts
 @@ -30,7 +30,6 @@ plugins {

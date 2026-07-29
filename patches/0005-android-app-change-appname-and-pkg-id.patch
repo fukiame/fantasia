@@ -6,7 +6,7 @@ Subject: [PATCH] android: app: change appname and pkg id
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 9685acb..e51cca5 100644
+index 9685acb7..e51cca5d 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -44,7 +44,7 @@ android {
@@ -19,7 +19,7 @@ index 9685acb..e51cca5 100644
          targetSdk = flutter.targetSdkVersion
          versionCode = flutter.versionCode
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 842e032..88f5aac 100644
+index 842e0323..88f5aac8 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -27,7 +27,7 @@
