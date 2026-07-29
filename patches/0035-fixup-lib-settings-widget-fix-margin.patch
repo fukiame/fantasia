@@ -8,7 +8,7 @@ icons are no more
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index d3d8faf8..1c514ee0 100644
+index 417c35fb..f55a7e3a 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -87,7 +87,7 @@ class SettingsDivider extends StatelessWidget {

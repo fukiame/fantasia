@@ -18,7 +18,7 @@ index 0dccc1ae..e6fdb8ee 100644
                  );
                  return list;
 diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
-index 0e890ef6..8703b981 100644
+index b9b8d0c2..1ee37948 100644
 --- a/lib/features/settings/widgets/settings_widgets.dart
 +++ b/lib/features/settings/widgets/settings_widgets.dart
 @@ -232,6 +232,7 @@ class SelectionSetting extends StatelessWidget {

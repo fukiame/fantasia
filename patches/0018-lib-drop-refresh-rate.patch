@@ -801,7 +801,7 @@ index 23bb02ac..ad9ddcdc 100644
      dependency: transitive
      description: flutter
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 605bb383..8458806d 100644
+index d3e65159..acf0a87d 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -38,7 +38,6 @@ dependencies:

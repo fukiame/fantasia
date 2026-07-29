@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 29 Jul 2026 22:40:47 +0700
+Subject: [PATCH] pubspec: drop riverpod_lint
+
+i am no dev
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 605bb383..0aca5dd5 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -81,7 +81,6 @@ dev_dependencies:
+   isar_community_generator: ^3.3.2
+   json_serializable: 6.11.2
+   riverpod_generator: 4.0.0+1
+-  riverpod_lint: ^3.0.3
+ 
+ flutter_launcher_icons:
+   image_path: "assets/icons/reverse_flick_logo.png"
+-- 
+2.55.0
+

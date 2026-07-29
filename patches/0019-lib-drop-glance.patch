@@ -6,7 +6,7 @@ Subject: [PATCH] lib: drop glance
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index f72e79aa..d12ed93b 100644
+index ac33428b..63441472 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
 @@ -255,119 +255,8 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {

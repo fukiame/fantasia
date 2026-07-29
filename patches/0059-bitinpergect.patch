@@ -6,7 +6,7 @@ Subject: [PATCH] bitinpergect
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index a7361370..a47fa8cd 100644
+index 9bbf5b89..4133b0a7 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -385,7 +385,7 @@ class AnimatedSongScene extends StatelessWidget {

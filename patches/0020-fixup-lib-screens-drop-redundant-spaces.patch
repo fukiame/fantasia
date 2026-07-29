@@ -8,7 +8,7 @@ after dropping lance
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index d12ed93b..b6b7b62a 100644
+index 63441472..174c88d6 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
 @@ -254,7 +254,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
