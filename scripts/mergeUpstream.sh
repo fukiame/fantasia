@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 PS1="$"
-basedir=`pwd`
+basedir="$(pwd)"
 
 function update {
-    cd "$basedir/$1"
+    cd "$basedir/$1" || exit 1
     git fetch && git reset --hard "origin/$2"
-    cd "$basedir/$1/.."
+    cd "$basedir/$1/.." || exit 1
     git add "$1"
 }
 

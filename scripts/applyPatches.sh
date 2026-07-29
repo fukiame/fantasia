@@ -2,7 +2,6 @@
 
 PS1="$"
 basedir="$(pwd -P)"
-workdir="$basedir/work"
 gpgsign="$(git config commit.gpgsign || echo "false")"
 echo "Rebuilding Forked projects.... "
 
@@ -21,20 +20,20 @@ function applyPatch {
     branch=$3
     ubranch=$4
 
-    cd "$basedir/$what"
+    cd "$basedir/$what" || exit
     git fetch
     git branch -f upstream "$branch" >/dev/null
 
-    cd "$basedir"
+    cd "$basedir" || exit
     if [ ! -d  "$basedir/$target" ]; then
         git clone "$what" "$target"
     fi
-    cd "$basedir/$target"
+    cd "$basedir/$target" || exit
 
     echo "Resetting $target to $what_name..."
     git remote rm upstream > /dev/null 2>&1
     git remote add upstream "$basedir/$what" >/dev/null 2>&1
-    git checkout $ubranch 2>/dev/null || git checkout -b ubranch
+    git checkout "$ubranch" 2>/dev/null || git checkout -b ubranch
     git fetch upstream >/dev/null 2>&1
     git reset --hard upstream/upstream
 
@@ -63,6 +62,6 @@ fi
 
 
 # Apply patches
-applyPatch $1 $2 HEAD $3
+applyPatch "$1" "$2" HEAD "$3"
 
 enableCommitSigningIfNeeded
