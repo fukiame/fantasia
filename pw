@@ -22,7 +22,11 @@ case "$1" in
         cd $downstream
         # build commands here
         flutter pub get
-        cd rust && cargo fetch && cd ..
+        cd rust && cargo fetch \
+		--target "aarch64-linux-android" \
+		--target "armv7-linux-androideabi" \
+		--target "x86_64-linux-android" \
+		&& cd ..
         flutter build apk --release --split-per-abi --target-platform=android-arm64
         cd ..) || exit 1
     ;;
