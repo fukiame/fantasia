@@ -25,3 +25,4 @@ jobs:
               run: |
                   cd fantasia
                   flutter analyze || :
+                  flutter pub outdated || :
