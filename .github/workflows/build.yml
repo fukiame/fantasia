@@ -21,6 +21,7 @@ jobs:
               with:
                 path: fantasia/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
                 archive: false
+                if-no-files-found: error
             - name: analyze
               run: |
                   cd fantasia
