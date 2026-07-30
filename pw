@@ -22,6 +22,7 @@ case "$1" in
         cd $downstream
         # build commands here
         flutter pub get
+        flutter pub upgrade --major-versions
         cd rust && cargo fetch \
 		--target "aarch64-linux-android" \
 		--target "armv7-linux-androideabi" \
