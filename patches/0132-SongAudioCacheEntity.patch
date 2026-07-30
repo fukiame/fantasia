@@ -6,18 +6,51 @@ Subject: [PATCH] SongAudioCacheEntity
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
-index 8ca6b2ba..74a739a3 100644
+index 8ca6b2ba..d5c6ed82 100644
 --- a/lib/services/audio_preload_service.dart
 +++ b/lib/services/audio_preload_service.dart
-@@ -3,7 +3,6 @@ import 'dart:async';
+@@ -1,9 +1,7 @@
+ import 'dart:async';
+ 
  import '../data/entities/song_entity.dart';
- import '../data/entities/song_audio_cache_entity.dart';
+-import '../data/entities/song_audio_cache_entity.dart';
  import '../data/repositories/song_repository.dart';
 -import '../src/rust/api/audio_analysis.dart';
  import 'album_art_service.dart';
  
  class PreloadProgress {
-@@ -133,24 +132,6 @@ class AudioPreloadService {
+@@ -60,17 +58,13 @@ class AudioPreloadService {
+       return;
+     }
+ 
+-    final songIds = songs.map((s) => s.id).toList();
+-    final cacheMap = await _songRepository.getAudioCacheMap(songIds);
+-
+     final toProcess = <SongEntity>[];
+     var skipped = 0;
+ 
+     for (final song in songs) {
+       if (_isCancelled) break;
+ 
+-      final cache = cacheMap[song.id];
+-      if (!forceAll && cache != null && _isCacheFresh(cache, song)) {
++      if (!forceAll) {
+         skipped++;
+         continue;
+       }
+@@ -121,38 +115,12 @@ class AudioPreloadService {
+     );
+   }
+ 
+-  bool _isCacheFresh(SongAudioCacheEntity cache, SongEntity song) {
+-    if (cache.version != _currentVersion) return false;
+-    final songModified = song.lastModified?.millisecondsSinceEpoch ?? 0;
+-    return cache.computedAt >= songModified;
+-  }
+-
+   Future<void> _processSong(SongEntity song) async {
+     if (_isCancelled) return;
+ 
      final path = song.filePath;
      if (path.startsWith('content://')) return;
  
@@ -39,9 +72,11 @@ index 8ca6b2ba..74a739a3 100644
 -      ..version = _currentVersion
 -      ..computedAt = DateTime.now().millisecondsSinceEpoch;
 -
-     await _songRepository.upsertAudioCache(entity);
- 
+-    await _songRepository.upsertAudioCache(entity);
+-
      // Resolve cover art (reuses AlbumArtService's full caching pipeline).
+     if (song.albumArtPath == null || song.albumArtPath!.isEmpty) {
+       await _albumArtService.resolveArtworkPath(
 -- 
 2.55.0
 
