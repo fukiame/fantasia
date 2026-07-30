@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 18:06:22 +0700
+Subject: [PATCH] Revert "Add soundtouch-sys dependency"
+
+This reverts commit f39421e4c0b457315f8659df86160f08adf15f77.
+
+diff --git a/rust/Cargo.lock b/rust/Cargo.lock
+index 8ce27cc2..178e0d73 100644
+--- a/rust/Cargo.lock
++++ b/rust/Cargo.lock
+@@ -1476,7 +1476,6 @@ dependencies = [
+  "rusb",
+  "serde",
+  "serde_json",
+- "soundtouch-sys",
+  "symphonia",
+  "thiserror",
+  "tokio",
+@@ -1621,13 +1620,6 @@ version = "1.15.1"
+ source = "registry+https://github.com/rust-lang/crates.io-index"
+ checksum = "67b1b7a3b5fe4f1376887184045fcf45c69e92af734b7aaddc05fb777b6fbd03"
+ 
+-[[package]]
+-name = "soundtouch-sys"
+-version = "0.1.0"
+-dependencies = [
+- "cc",
+-]
+-
+ [[package]]
+ name = "strength_reduce"
+ version = "0.2.4"
+-- 
+2.55.0
+

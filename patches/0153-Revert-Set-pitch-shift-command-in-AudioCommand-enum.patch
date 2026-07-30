@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 18:06:22 +0700
+Subject: [PATCH] Revert "Set pitch shift command in AudioCommand enum"
+
+This reverts commit 74cf1749dfb30694ad1a5ce222862d63154fe83b.
+
+diff --git a/rust/src/audio/commands.rs b/rust/src/audio/commands.rs
+index 8892a51e..c1d1298c 100644
+--- a/rust/src/audio/commands.rs
++++ b/rust/src/audio/commands.rs
+@@ -43,8 +43,6 @@ pub enum AudioCommand {
+     SetPlaybackSpeed { speed: f32 },
+     /// Set graphic EQ: enabled and 10 band gains in dB.
+     SetEqualizer { enabled: bool, gains_db: [f32; 10] },
+-    /// Set pitch shift in semitones (tempo preserved). 0 = bypass.
+-    SetPitchShift { semitones: f32 },
+     /// Configure compressor settings.
+     SetCompressor {
+         enabled: bool,
+-- 
+2.55.0
+

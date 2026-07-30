@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 18:06:22 +0700
+Subject: [PATCH] Revert "Add pitch semitones notifier and setter method"
+
+This reverts commit 8c9496d58b966f561722ac4ca9112b589e4b2dea.
+
+diff --git a/lib/services/rust_audio_service.dart b/lib/services/rust_audio_service.dart
+index 2a61277a..30677c32 100644
+--- a/lib/services/rust_audio_service.dart
++++ b/lib/services/rust_audio_service.dart
+@@ -37,7 +37,6 @@ class RustAudioService {
+   final ValueNotifier<bool> crossfadeEnabledNotifier = ValueNotifier(false);
+   final ValueNotifier<double> crossfadeDurationNotifier = ValueNotifier(3.0);
+   final ValueNotifier<double> playbackSpeedNotifier = ValueNotifier(1.0);
+-  final ValueNotifier<double> pitchSemitonesNotifier = ValueNotifier(0.0);
+ 
+   // Throttled notifier for text labels (updates slower than progress bar)
+   // Prevents unnecessary rebuilds of time labels while still providing smooth progress bar
+@@ -367,14 +366,6 @@ class RustAudioService {
+     await rust_audio.audioSetPlaybackSpeed(speed: clampedSpeed);
+   }
+ 
+-  /// Set pitch shift in semitones (tempo preserved). 0 = bypass.
+-  Future<void> setPitchShiftSemitones(double semitones) async {
+-    if (!_initialized) return;
+-    final clamped = semitones.clamp(-12.0, 12.0);
+-    pitchSemitonesNotifier.value = clamped;
+-    await rust_audio.audioSetPitchShiftSemitones(semitones: clamped);
+-  }
+-
+   /// Get the current playback speed.
+   double getPlaybackSpeed() {
+     if (!_initialized) return 1.0;
+-- 
+2.55.0
+
