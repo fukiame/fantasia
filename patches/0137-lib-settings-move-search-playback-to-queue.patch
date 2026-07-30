@@ -59,10 +59,18 @@ index 6c9f998a..a6226e85 100644
            SettingsCard(
              children: [
 diff --git a/lib/features/settings/screens/queue_settings_screen.dart b/lib/features/settings/screens/queue_settings_screen.dart
-index eb98eb03..16eff8f8 100644
+index eb98eb03..df63128d 100644
 --- a/lib/features/settings/screens/queue_settings_screen.dart
 +++ b/lib/features/settings/screens/queue_settings_screen.dart
-@@ -24,6 +24,48 @@ class QueueSettingsScreen extends ConsumerWidget {
+@@ -12,6 +12,7 @@ class QueueSettingsScreen extends ConsumerWidget {
+   @override
+   Widget build(BuildContext context, WidgetRef ref) {
+     final playerService = ref.read(playerServiceProvider);
++    final appPrefs = ref.watch(appPreferencesProvider);
+ 
+     return SettingsScaffold(
+       title: 'Queue',
+@@ -24,6 +25,48 @@ class QueueSettingsScreen extends ConsumerWidget {
                _WrapAroundQueueTile(playerService: playerService),
              ],
            ),
@@ -74,7 +82,7 @@ index eb98eb03..16eff8f8 100644
 +                icon: LucideIcons.listMusic,
 +                title: 'Search Results',
 +                subtitle: 'Continue through the search results',
-+                selected: appPreferences.searchPlaybackMode == 'results',
++                selected: appPrefs.searchPlaybackMode == 'results',
 +                onTap: () {
 +                  ref
 +                      .read(appPreferencesProvider.notifier)
@@ -86,7 +94,7 @@ index eb98eb03..16eff8f8 100644
 +                icon: LucideIcons.library,
 +                title: 'Full Library',
 +                subtitle: 'Continue through your entire library',
-+                selected: appPreferences.searchPlaybackMode == 'library',
++                selected: appPrefs.searchPlaybackMode == 'library',
 +                onTap: () {
 +                  ref
 +                      .read(appPreferencesProvider.notifier)
@@ -99,7 +107,7 @@ index eb98eb03..16eff8f8 100644
 +                title: 'Active Queue',
 +                subtitle:
 +                    'Insert into the current queue, fall back to results',
-+                selected: appPreferences.searchPlaybackMode == 'queue',
++                selected: appPrefs.searchPlaybackMode == 'queue',
 +                onTap: () {
 +                  ref
 +                      .read(appPreferencesProvider.notifier)

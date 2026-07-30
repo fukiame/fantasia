@@ -6,10 +6,18 @@ Subject: [PATCH] lib: settings: move botttom bar always visible to bottom bar
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/bottom_bar_settings_screen.dart b/lib/features/settings/screens/bottom_bar_settings_screen.dart
-index 783119ae..f75b6c8a 100644
+index 783119ae..5efce7a9 100644
 --- a/lib/features/settings/screens/bottom_bar_settings_screen.dart
 +++ b/lib/features/settings/screens/bottom_bar_settings_screen.dart
-@@ -30,6 +30,18 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+@@ -16,6 +16,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+   Widget build(BuildContext context, WidgetRef ref) {
+     final config = ref.watch(navBarConfigProvider);
+     final appPreferences = ref.watch(appPreferencesProvider);
++    final navBarAlwaysVisible = ref.watch(navBarAlwaysVisibleProvider);
+     final enabled = config.enabledButtons;
+     final enabledCount = enabled.length;
+     final hidden = config.hidden;
+@@ -30,6 +31,18 @@ class BottomBarSettingsScreen extends ConsumerWidget {
            const SettingsSectionHeader('Auto Collapse'),
            SettingsCard(
              children: [

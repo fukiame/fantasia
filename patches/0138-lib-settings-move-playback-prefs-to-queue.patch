@@ -37,10 +37,10 @@ index da4c9116..44ba223b 100644
            const SettingsSectionHeader('Fast Index Scrolling'),
            SettingsCard(
 diff --git a/lib/features/settings/screens/queue_settings_screen.dart b/lib/features/settings/screens/queue_settings_screen.dart
-index 16eff8f8..d846bfb1 100644
+index df63128d..9b56425b 100644
 --- a/lib/features/settings/screens/queue_settings_screen.dart
 +++ b/lib/features/settings/screens/queue_settings_screen.dart
-@@ -25,6 +25,27 @@ class QueueSettingsScreen extends ConsumerWidget {
+@@ -26,6 +26,27 @@ class QueueSettingsScreen extends ConsumerWidget {
              ],
            ),
            const SizedBox(height: AppConstants.spacingLg),
@@ -68,6 +68,39 @@ index 16eff8f8..d846bfb1 100644
            const SettingsSectionHeader('Search Playback'),
            SettingsCard(
              children: [
+@@ -98,3 +119,32 @@ class _WrapAroundQueueTile extends StatelessWidget {
+     );
+   }
+ }
++
++class _GaplessPlaybackTile extends StatelessWidget {
++  const _GaplessPlaybackTile({required this.playerService});
++
++  final PlayerService playerService;
++
++  @override
++  Widget build(BuildContext context) {
++    return ListenableBuilder(
++      listenable: Listenable.merge([
++        playerService.gaplessPlaybackEnabledNotifier,
++        playerService.bitPerfectProcessingLockedNotifier,
++      ]),
++      builder: (context, _) {
++        final enabled = playerService.gaplessPlaybackEnabledNotifier.value;
++        final isBitPerfect = playerService.isBitPerfectModeEnabled;
++        return ToggleSetting(
++          icon: LucideIcons.repeat,
++          title: 'Gapless Playback',
++          subtitle: isBitPerfect
++              ? 'Disabled in bit-perfect mode'
++              : 'Seamless transition between tracks',
++          value: enabled,
++          onChanged: (value) => playerService.setGaplessPlaybackEnabled(value),
++        );
++      },
++    );
++  }
++}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
 index 6ddcc807..b8589e57 100644
 --- a/lib/features/settings/screens/settings_screen.dart
