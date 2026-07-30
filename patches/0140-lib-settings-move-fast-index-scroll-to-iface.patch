@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: move fast index scroll to iface
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/interface_settings_screen.dart b/lib/features/settings/screens/interface_settings_screen.dart
-index a6226e85..0041e1b1 100644
+index a6226e85..488e6d82 100644
 --- a/lib/features/settings/screens/interface_settings_screen.dart
 +++ b/lib/features/settings/screens/interface_settings_screen.dart
 @@ -102,6 +102,41 @@ class InterfaceSettingsScreen extends ConsumerWidget {
@@ -20,21 +20,21 @@ index a6226e85..0041e1b1 100644
 +                icon: LucideIcons.arrowUpDown,
 +                title: 'Fast Index Scrolling',
 +                subtitle: 'Alphabetical index rail on the songs screen',
-+                value: appPrefs.fastIndexEnabled,
++                value: appPreferences.fastIndexEnabled,
 +                onChanged: (value) {
 +                  ref
 +                      .read(appPreferencesProvider.notifier)
 +                      .setFastIndexEnabled(value);
 +                },
 +              ),
-+              if (appPrefs.fastIndexEnabled) ...[
++              if (appPreferences.fastIndexEnabled) ...[
 +                const SettingsDivider(),
 +                SliderSetting(
 +                  icon: LucideIcons.clock,
 +                  title: 'Auto-hide Timeout',
 +                  subtitle: 'Hide the index rail after inactivity',
-+                  value: appPrefs.fastIndexTimeoutSeconds.toDouble(),
-+                  displayValue: '${appPrefs.fastIndexTimeoutSeconds}s',
++                  value: appPreferences.fastIndexTimeoutSeconds.toDouble(),
++                  displayValue: '${appPreferences.fastIndexTimeoutSeconds}s',
 +                  min: 2,
 +                  max: 10,
 +                  divisions: 8,

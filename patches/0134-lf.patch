@@ -1,24 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
-Date: Thu, 30 Jul 2026 15:19:01 +0700
-Subject: [PATCH] whateverbro2
+Date: Thu, 30 Jul 2026 16:53:00 +0700
+Subject: [PATCH] lf
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
-index b5d6e5c0..560022a8 100644
+index b5d6e5c0..357c8aeb 100644
 --- a/lib/services/audio_preload_service.dart
 +++ b/lib/services/audio_preload_service.dart
-@@ -54,7 +54,7 @@ class AudioPreloadService {
-   }) async* {
-     _isCancelled = false;
- 
--    if (songs.isEmpty) {
-+    if (songs.isEmpty || !forceAll) {
-       yield const PreloadProgress(isComplete: true);
-       return;
-     }
-@@ -66,20 +66,6 @@ class AudioPreloadService {
+@@ -66,22 +66,11 @@ class AudioPreloadService {
      // so a concurrent fling gate won't clobber this on its settle timer.
      pauseArtworkExtraction(true);
      try {
@@ -35,11 +26,15 @@ index b5d6e5c0..560022a8 100644
 -        toProcess.add(song);
 -      }
 -
--      var completed = skipped;
++      var skipped = forceAll ? 0 : songs.length;
+       var completed = skipped;
        var failed = 0;
  
++      if (forceAll) {
        yield PreloadProgress(
-@@ -92,11 +78,11 @@ class AudioPreloadService {
+         completed: completed,
+         total: songs.length,
+@@ -92,11 +81,11 @@ class AudioPreloadService {
        // ponytail: chunked concurrency — simple, correct, good enough for v1.
        // Uneven decode times leave a worker idle at chunk boundaries; upgrade
        // a shared-queue worker pool if that matters.
@@ -54,6 +49,14 @@ index b5d6e5c0..560022a8 100644
  
          final results = await Future.wait(
            chunk.map((s) => _processSong(s).then((_) => true).catchError((_) => false)),
+@@ -113,6 +102,7 @@ class AudioPreloadService {
+           currentFile: chunk.last.title,
+         );
+       }
++      }
+ 
+       yield PreloadProgress(
+         completed: songs.length,
 -- 
 2.55.0
 

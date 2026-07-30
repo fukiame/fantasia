@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: move lyrics save pref to library
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 10e28314..f5797897 100644
+index 10e28314..00dbda30 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
 @@ -1415,6 +1415,24 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
@@ -21,7 +21,7 @@ index 10e28314..f5797897 100644
 +                title: 'Match Audio Filename',
 +                subtitle:
 +                    'Use the current audio file\'s name when saving lyrics internally',
-+                value: appPrefs.lyricsMatchAudioFilename,
++                value: appPreferences.lyricsMatchAudioFilename,
 +                onChanged: (value) {
 +                  ref
 +                      .read(appPreferencesProvider.notifier)

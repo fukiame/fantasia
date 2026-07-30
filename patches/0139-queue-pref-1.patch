@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 16:46:59 +0700
+Subject: [PATCH] queue pref 1
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/queue_settings_screen.dart b/lib/features/settings/screens/queue_settings_screen.dart
+index d846bfb1..d581150f 100644
+--- a/lib/features/settings/screens/queue_settings_screen.dart
++++ b/lib/features/settings/screens/queue_settings_screen.dart
+@@ -53,7 +53,7 @@ class QueueSettingsScreen extends ConsumerWidget {
+                 icon: LucideIcons.listMusic,
+                 title: 'Search Results',
+                 subtitle: 'Continue through the search results',
+-                selected: appPreferences.searchPlaybackMode == 'results',
++                selected: appPrefs.searchPlaybackMode == 'results',
+                 onTap: () {
+                   ref
+                       .read(appPreferencesProvider.notifier)
+@@ -65,7 +65,7 @@ class QueueSettingsScreen extends ConsumerWidget {
+                 icon: LucideIcons.library,
+                 title: 'Full Library',
+                 subtitle: 'Continue through your entire library',
+-                selected: appPreferences.searchPlaybackMode == 'library',
++                selected: appPrefs.searchPlaybackMode == 'library',
+                 onTap: () {
+                   ref
+                       .read(appPreferencesProvider.notifier)
+@@ -78,7 +78,7 @@ class QueueSettingsScreen extends ConsumerWidget {
+                 title: 'Active Queue',
+                 subtitle:
+                     'Insert into the current queue, fall back to results',
+-                selected: appPreferences.searchPlaybackMode == 'queue',
++                selected: appPrefs.searchPlaybackMode == 'queue',
+                 onTap: () {
+                   ref
+                       .read(appPreferencesProvider.notifier)
+-- 
+2.55.0
+
