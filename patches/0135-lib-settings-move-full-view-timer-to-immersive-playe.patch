@@ -1,0 +1,71 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 15:27:05 +0700
+Subject: [PATCH] lib: settings: move full view timer to immersive player
+ layout
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
+index 30e3b922..5c7bc76a 100644
+--- a/lib/features/settings/screens/playback_display_settings_screen.dart
++++ b/lib/features/settings/screens/playback_display_settings_screen.dart
+@@ -57,25 +57,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+                       .setAlwaysVisible(value);
+                 },
+               ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.maximize,
+-                title: 'Immersive Full View Timer',
+-                subtitle:
+-                    'Auto-show the Spotify-style immersive full view after inactivity',
+-                value: appPrefs.immersiveAutoFullViewSeconds.toDouble(),
+-                displayValue: appPrefs.immersiveAutoFullViewSeconds == 0
+-                    ? 'Off'
+-                    : '${appPrefs.immersiveAutoFullViewSeconds}s',
+-                min: 0,
+-                max: 15,
+-                divisions: 15,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveAutoFullViewSeconds(value.round());
+-                },
+-              ),
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index fc5da37d..152f961e 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -112,6 +112,25 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+                 },
+               ),
+               const SettingsDivider(),
++              SliderSetting(
++                icon: LucideIcons.maximize,
++                title: 'Immersive Full View Timer',
++                subtitle:
++                    'Auto-show the Spotify-style immersive full view after inactivity',
++                value: appPrefs.immersiveAutoFullViewSeconds.toDouble(),
++                displayValue: appPrefs.immersiveAutoFullViewSeconds == 0
++                    ? 'Off'
++                    : '${appPrefs.immersiveAutoFullViewSeconds}s',
++                min: 0,
++                max: 15,
++                divisions: 15,
++                onChanged: (value) {
++                  ref
++                      .read(appPreferencesProvider.notifier)
++                      .setImmersiveAutoFullViewSeconds(value.round());
++                },
++              ),
++              const SettingsDivider(),
+               ToggleSetting(
+                 icon: LucideIcons.fileText,
+                 title: 'Show Title',
+-- 
+2.55.0
+

@@ -1,0 +1,59 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 15:19:01 +0700
+Subject: [PATCH] whateverbro2
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
+index b5d6e5c0..560022a8 100644
+--- a/lib/services/audio_preload_service.dart
++++ b/lib/services/audio_preload_service.dart
+@@ -54,7 +54,7 @@ class AudioPreloadService {
+   }) async* {
+     _isCancelled = false;
+ 
+-    if (songs.isEmpty) {
++    if (songs.isEmpty || !forceAll) {
+       yield const PreloadProgress(isComplete: true);
+       return;
+     }
+@@ -66,20 +66,6 @@ class AudioPreloadService {
+     // so a concurrent fling gate won't clobber this on its settle timer.
+     pauseArtworkExtraction(true);
+     try {
+-      final toProcess = <SongEntity>[];
+-      var skipped = 0;
+-
+-      for (final song in songs) {
+-        if (_isCancelled) break;
+-
+-        if (!forceAll) {
+-          skipped++;
+-          continue;
+-        }
+-        toProcess.add(song);
+-      }
+-
+-      var completed = skipped;
+       var failed = 0;
+ 
+       yield PreloadProgress(
+@@ -92,11 +78,11 @@ class AudioPreloadService {
+       // ponytail: chunked concurrency — simple, correct, good enough for v1.
+       // Uneven decode times leave a worker idle at chunk boundaries; upgrade
+       // a shared-queue worker pool if that matters.
+-      for (var i = 0; i < toProcess.length; i += _concurrency) {
++      for (var i = 0; i < songs.length; i += _concurrency) {
+         if (_isCancelled) break;
+ 
+-        final end = (i + _concurrency).clamp(0, toProcess.length);
+-        final chunk = toProcess.sublist(i, end);
++        final end = (i + _concurrency).clamp(0, songs.length);
++        final chunk = songs.sublist(i, end);
+ 
+         final results = await Future.wait(
+           chunk.map((s) => _processSong(s).then((_) => true).catchError((_) => false)),
+-- 
+2.55.0
+
