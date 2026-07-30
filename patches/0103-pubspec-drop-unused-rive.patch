@@ -6,7 +6,7 @@ Subject: [PATCH] pubspec: drop unused rive
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 3e770a78..94076469 100644
+index 871720a9..f354f9a2 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -50,7 +50,6 @@ dependencies:
@@ -14,9 +14,9 @@ index 3e770a78..94076469 100644
    path_provider: ^2.1.1
    permission_handler: ^12.0.1
 -  rive: ^0.14.0
-   riverpod_annotation: ^4.0.0
    restart_app: ^1.2.1
    rust_lib_flick_player:
+     path: rust_builder
 -- 
 2.55.0
 

@@ -8,7 +8,7 @@ lastfm
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index fd925cea..3e770a78 100644
+index a5ff1758..871720a9 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -37,7 +37,6 @@ dependencies:

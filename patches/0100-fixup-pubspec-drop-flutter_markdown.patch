@@ -18,7 +18,7 @@ index ef4bdc4f..7277eed6 100644
  import 'package:lucide_icons_flutter/lucide_icons.dart';
  import 'package:url_launcher/url_launcher.dart';
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 7a5039f0..fedf5438 100644
+index 4a809e2a..30af244a 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -36,7 +36,6 @@ dependencies:

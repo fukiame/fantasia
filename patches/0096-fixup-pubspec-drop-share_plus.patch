@@ -1,22 +1,22 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
-Date: Wed, 29 Jul 2026 23:02:17 +0700
-Subject: [PATCH] pubspec: drop skeletonizer
+Date: Wed, 29 Jul 2026 22:52:32 +0700
+Subject: [PATCH] fixup! pubspec: drop share_plus
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index da3f909a..7a5039f0 100644
+index c0235698..6c5ea961 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -59,7 +59,6 @@ dependencies:
+@@ -60,7 +60,6 @@ dependencies:
    rust_lib_flick_player:
      path: rust_builder
    shared_preferences: ^2.2.2
--  skeletonizer: ^2.1.2
+-  share_plus: ^10.1.4
+   skeletonizer: ^2.1.2
    url_launcher: ^6.3.2
  
- dev_dependencies:
 -- 
 2.55.0
 

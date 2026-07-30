@@ -1,21 +1,19 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
-Date: Wed, 29 Jul 2026 22:55:22 +0700
-Subject: [PATCH] fixup! pubspec: drop connectivity_plus
-
-update checker is gone
+Date: Wed, 29 Jul 2026 22:53:35 +0700
+Subject: [PATCH] pubspec: drop unused cupertino_icons
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 44b8e38f..da3f909a 100644
+index 6c5ea961..ed82a749 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -30,7 +30,6 @@ environment:
- dependencies:
+@@ -31,7 +31,6 @@ dependencies:
    audio_session: ^0.2.2
    crypto: ^3.0.3
--  connectivity_plus: ^7.0.0
+   connectivity_plus: ^7.0.0
+-  cupertino_icons: ^1.0.8
    fading_marquee_widget: ^1.2.0
    file_picker: ^11.0.2
    fl_chart: ^1.1.1

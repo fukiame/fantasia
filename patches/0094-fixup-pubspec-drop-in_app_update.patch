@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 29 Jul 2026 22:45:21 +0700
+Subject: [PATCH] fixup! pubspec: drop in_app_update
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 4c53ae2c..c0235698 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -60,7 +60,6 @@ dependencies:
+   rust_lib_flick_player:
+     path: rust_builder
+   shared_preferences: ^2.2.2
+-  in_app_update: ^4.2.0
+   share_plus: ^10.1.4
+   skeletonizer: ^2.1.2
+   url_launcher: ^6.3.2
+-- 
+2.55.0
+
