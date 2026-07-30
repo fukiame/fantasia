@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 14:13:32 +0700
+Subject: [PATCH] Revert "Add SongAudioCacheEntity to database schema and
+ collections"
+
+This reverts commit b4eee6cf692929fbf4f3619f2a1edf43d8f65629.
+
+diff --git a/lib/data/database.dart b/lib/data/database.dart
+index 5dd09172..1d036226 100644
+--- a/lib/data/database.dart
++++ b/lib/data/database.dart
+@@ -6,13 +6,11 @@ import 'package:path_provider/path_provider.dart';
+ import 'entities/artist_entity.dart';
+ import 'entities/folder_entity.dart';
+ import 'entities/recently_played_entity.dart';
+-import 'entities/song_audio_cache_entity.dart';
+ import 'entities/song_entity.dart';
+ 
+ export 'entities/artist_entity.dart';
+ export 'entities/folder_entity.dart';
+ export 'entities/recently_played_entity.dart';
+-export 'entities/song_audio_cache_entity.dart';
+ export 'entities/song_entity.dart';
+ 
+ /// Database singleton for Isar operations.
+@@ -38,7 +36,6 @@ class Database {
+       FolderEntitySchema,
+       RecentlyPlayedEntitySchema,
+       ArtistEntitySchema,
+-      SongAudioCacheEntitySchema,
+     ];
+ 
+     try {
+@@ -110,8 +107,4 @@ class Database {
+ 
+   /// Get the artists collection.
+   static IsarCollection<ArtistEntity> get artists => _instance!.artistEntitys;
+-
+-  /// Get the song audio cache collection.
+-  static IsarCollection<SongAudioCacheEntity> get songAudioCache =>
+-      _instance!.songAudioCacheEntitys;
+ }
+-- 
+2.55.0
+
