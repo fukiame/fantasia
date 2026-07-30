@@ -6,7 +6,7 @@ Subject: [PATCH] lib: drop home screen widget
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 4dba0147..c60ffed1 100644
+index 4dba0147..017f14a5 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -30,8 +30,6 @@ import 'package:flick/models/song.dart';
@@ -54,6 +54,127 @@ index 4dba0147..c60ffed1 100644
      _pageController.removeListener(_onPageScroll);
      _pageController.dispose();
      _navBarAnimationController.dispose();
+@@ -430,13 +415,11 @@ class _MainShellState extends ConsumerState<MainShell>
+     if (state == AppLifecycleState.detached) {
+       _cancelIdleTimer();
+       unawaited(ref.read(playerServiceProvider).persistLastPlayed());
+-      unawaited(WidgetSyncService.instance.pushKilled());
+       unawaited(ref.read(playerServiceProvider).onAppResumed());
+     } else if (state == AppLifecycleState.inactive ||
+         state == AppLifecycleState.paused) {
+       _cancelIdleTimer();
+       unawaited(ref.read(playerServiceProvider).persistLastPlayed());
+-      unawaited(WidgetSyncService.instance.pushPaused());
+       unawaited(ref.read(playerServiceProvider).onAppPaused());
+ 
+       // Attempt to scrobble the current track before the app suspends.
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index bac056fd..9c87700a 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -219,102 +219,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setImmersiveShowFileInfo(value);
+   }
+ 
+-  Future<void> setWidgetBgOpacity(int value) async {
+-    if (state.widgetBgOpacity == value) return;
+-    state = state.copyWith(widgetBgOpacity: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetBgOpacity(value);
+-  }
+-
+-  Future<void> setWidgetShowAlbumArt(bool value) async {
+-    if (state.widgetShowAlbumArt == value) return;
+-    state = state.copyWith(widgetShowAlbumArt: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetShowAlbumArt(value);
+-  }
+-
+-  Future<void> setWidgetShowArtist(bool value) async {
+-    if (state.widgetShowArtist == value) return;
+-    state = state.copyWith(widgetShowArtist: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetShowArtist(value);
+-  }
+-
+-  Future<void> setWidgetAccentColor(String value) async {
+-    if (state.widgetAccentColor == value) return;
+-    state = state.copyWith(widgetAccentColor: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetAccentColor(value);
+-  }
+-
+-  Future<void> setWidgetFlagshipTheme(String value) async {
+-    if (state.widgetFlagshipTheme == value) return;
+-    state = state.copyWith(widgetFlagshipTheme: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetFlagshipTheme(value);
+-  }
+-
+-  Future<void> setWidgetFlagshipAccent(String value) async {
+-    if (state.widgetFlagshipAccent == value) return;
+-    state = state.copyWith(widgetFlagshipAccent: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setWidgetFlagshipAccent(value);
+-  }
+-
+-  Future<void> setWidgetFlagshipShowArtist(bool value) async {
+-    if (state.widgetFlagshipShowArtist == value) return;
+-    state = state.copyWith(widgetFlagshipShowArtist: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setWidgetFlagshipShowArtist(value);
+-  }
+-
+-  Future<void> setWidgetCompactBgOpacity(int value) async {
+-    if (state.widgetCompactBgOpacity == value) return;
+-    state = state.copyWith(widgetCompactBgOpacity: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetCompactBgOpacity(value);
+-  }
+-
+-  Future<void> setWidgetCompactShowAlbumArt(bool value) async {
+-    if (state.widgetCompactShowAlbumArt == value) return;
+-    state = state.copyWith(widgetCompactShowAlbumArt: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setWidgetCompactShowAlbumArt(value);
+-  }
+-
+-  Future<void> setWidgetCompactShowArtist(bool value) async {
+-    if (state.widgetCompactShowArtist == value) return;
+-    state = state.copyWith(widgetCompactShowArtist: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setWidgetCompactShowArtist(value);
+-  }
+-
+-  Future<void> setWidgetCompactAccent(String value) async {
+-    if (state.widgetCompactAccent == value) return;
+-    state = state.copyWith(widgetCompactAccent: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetCompactAccent(value);
+-  }
+-
+-  Future<void> setWidgetTextScale(double value) async {
+-    if (state.widgetTextScale == value) return;
+-    state = state.copyWith(widgetTextScale: value);
+-    await ref.read(appPreferencesServiceProvider).setWidgetTextScale(value);
+-  }
+-
+-  Future<void> setWidgetFlagshipTextScale(double value) async {
+-    if (state.widgetFlagshipTextScale == value) return;
+-    state = state.copyWith(widgetFlagshipTextScale: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setWidgetFlagshipTextScale(value);
+-  }
+-
+-  Future<void> setWidgetCompactTextScale(double value) async {
+-    if (state.widgetCompactTextScale == value) return;
+-    state = state.copyWith(widgetCompactTextScale: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setWidgetCompactTextScale(value);
+-  }
+-
+   Future<void> setLyricsMatchAudioFilename(bool value) async {
+     if (state.lyricsMatchAudioFilename == value) return;
+     state = state.copyWith(lyricsMatchAudioFilename: value);
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
 index bb2461fe..3c68805f 100644
 --- a/lib/services/app_preferences_service.dart
