@@ -1009,6 +1009,704 @@ index 57780234..00000000
 -        return bitmap
 -    }
 -}
+diff --git a/android/app/src/main/res/drawable/widget_art_background.xml b/android/app/src/main/res/drawable/widget_art_background.xml
+deleted file mode 100644
+index 3bc7ad5e..00000000
+--- a/android/app/src/main/res/drawable/widget_art_background.xml
++++ /dev/null
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#2A2A2A" />
+-    <corners android:radius="12dp" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_background.xml b/android/app/src/main/res/drawable/widget_background.xml
+deleted file mode 100644
+index 9366993e..00000000
+--- a/android/app/src/main/res/drawable/widget_background.xml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#E51A1A1A" />
+-    <corners android:radius="24dp" />
+-    <stroke android:width="1dp" android:color="#1AFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_bg_0.xml b/android/app/src/main/res/drawable/widget_bg_0.xml
+deleted file mode 100644
+index 3eb82ca8..00000000
+--- a/android/app/src/main/res/drawable/widget_bg_0.xml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#001A1A1A" />
+-    <corners android:radius="24dp" />
+-    <stroke android:width="1dp" android:color="#0DFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_bg_1.xml b/android/app/src/main/res/drawable/widget_bg_1.xml
+deleted file mode 100644
+index f53f999d..00000000
+--- a/android/app/src/main/res/drawable/widget_bg_1.xml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#401A1A1A" />
+-    <corners android:radius="24dp" />
+-    <stroke android:width="1dp" android:color="#0DFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_bg_2.xml b/android/app/src/main/res/drawable/widget_bg_2.xml
+deleted file mode 100644
+index 3eff6bd9..00000000
+--- a/android/app/src/main/res/drawable/widget_bg_2.xml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#801A1A1A" />
+-    <corners android:radius="24dp" />
+-    <stroke android:width="1dp" android:color="#0DFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_bg_3.xml b/android/app/src/main/res/drawable/widget_bg_3.xml
+deleted file mode 100644
+index 57e1bce9..00000000
+--- a/android/app/src/main/res/drawable/widget_bg_3.xml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#C01A1A1A" />
+-    <corners android:radius="24dp" />
+-    <stroke android:width="1dp" android:color="#0DFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_bg_4.xml b/android/app/src/main/res/drawable/widget_bg_4.xml
+deleted file mode 100644
+index 6ccf1be0..00000000
+--- a/android/app/src/main/res/drawable/widget_bg_4.xml
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="rectangle">
+-    <solid android:color="#FF1A1A1A" />
+-    <corners android:radius="24dp" />
+-    <stroke android:width="1dp" android:color="#1AFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_button_play_bg.xml b/android/app/src/main/res/drawable/widget_button_play_bg.xml
+deleted file mode 100644
+index d7d44cd5..00000000
+--- a/android/app/src/main/res/drawable/widget_button_play_bg.xml
++++ /dev/null
+@@ -1,8 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="oval">
+-    <solid android:color="#26FFFFFF" />
+-    <stroke
+-        android:width="1dp"
+-        android:color="#40FFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_button_transport_active_bg.xml b/android/app/src/main/res/drawable/widget_button_transport_active_bg.xml
+deleted file mode 100644
+index bc4f0561..00000000
+--- a/android/app/src/main/res/drawable/widget_button_transport_active_bg.xml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="oval">
+-    <solid android:color="#33FFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_button_transport_bg.xml b/android/app/src/main/res/drawable/widget_button_transport_bg.xml
+deleted file mode 100644
+index 894282c9..00000000
+--- a/android/app/src/main/res/drawable/widget_button_transport_bg.xml
++++ /dev/null
+@@ -1,5 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<shape xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:shape="oval">
+-    <solid android:color="#0DFFFFFF" />
+-</shape>
+diff --git a/android/app/src/main/res/drawable/widget_default_art.xml b/android/app/src/main/res/drawable/widget_default_art.xml
+deleted file mode 100644
+index 3a2e0a01..00000000
+--- a/android/app/src/main/res/drawable/widget_default_art.xml
++++ /dev/null
+@@ -1,24 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!-- Placeholder shown when no album art is available. -->
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item>
+-        <shape android:shape="rectangle">
+-            <solid android:color="#2A2A2A" />
+-            <corners android:radius="12dp" />
+-        </shape>
+-    </item>
+-    <item
+-        android:gravity="center"
+-        android:width="40dp"
+-        android:height="40dp">
+-        <vector
+-            android:width="40dp"
+-            android:height="40dp"
+-            android:viewportWidth="24"
+-            android:viewportHeight="24">
+-            <path
+-                android:fillColor="#888888"
+-                android:pathData="M12,3v10.55c-0.59,-0.34 -1.27,-0.55 -2,-0.55 -2.21,0 -4,1.79 -4,4s1.79,4 4,4 4,-1.79 4,-4V7h4V3h-6z" />
+-        </vector>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_ic_flick_logo.xml b/android/app/src/main/res/drawable/widget_ic_flick_logo.xml
+deleted file mode 100644
+index 15010743..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_flick_logo.xml
++++ /dev/null
+@@ -1,61 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="606dp"
+-    android:height="734dp"
+-    android:viewportWidth="606"
+-    android:viewportHeight="734">
+-    <path
+-        android:pathData="M 539.2,603.5 A 29.5,29.5 0 1,0 598.2,603.5 A 29.5,29.5 0 1,0 539.2,603.5"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 445.9,572.5 A 29.5,29.5 0 1,0 504.9,572.5 A 29.5,29.5 0 1,0 445.9,572.5"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 352.6,541.5 A 29.5,29.5 0 1,0 411.6,541.5 A 29.5,29.5 0 1,0 352.6,541.5"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 353.0,253.8 A 29.5,29.5 0 1,0 412.0,253.8 A 29.5,29.5 0 1,0 353.0,253.8"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 353.0,352.1 A 29.5,29.5 0 1,0 412.0,352.1 A 29.5,29.5 0 1,0 353.0,352.1"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 353.0,450.5 A 29.5,29.5 0 1,0 412.0,450.5 A 29.5,29.5 0 1,0 353.0,450.5"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 169.7,89.7 A 29.5,29.5 0 1,0 228.7,89.7 A 29.5,29.5 0 1,0 169.7,89.7"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 261.3,125.6 A 29.5,29.5 0 1,0 320.3,125.6 A 29.5,29.5 0 1,0 261.3,125.6"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 352.9,161.4 A 29.5,29.5 0 1,0 411.9,161.4 A 29.5,29.5 0 1,0 352.9,161.4"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 77.8,144.9 A 29.5,29.5 0 1,0 136.8,144.9 A 29.5,29.5 0 1,0 77.8,144.9"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 169.4,180.7 A 29.5,29.5 0 1,0 228.4,180.7 A 29.5,29.5 0 1,0 169.4,180.7"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 260.9,216.6 A 29.5,29.5 0 1,0 319.9,216.6 A 29.5,29.5 0 1,0 260.9,216.6"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 84.4,58.5 A 29.5,29.5 0 1,0 143.4,58.5 A 29.5,29.5 0 1,0 84.4,58.5"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 261.1,315.1 A 29.5,29.5 0 1,0 320.1,315.1 A 29.5,29.5 0 1,0 261.1,315.1"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 0.0,29.5 A 29.5,29.5 0 1,0 59.0,29.5 A 29.5,29.5 0 1,0 0.0,29.5"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 538.9,696.2 A 29.5,29.5 0 1,0 597.9,696.2 A 29.5,29.5 0 1,0 538.9,696.2"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 445.6,665.2 A 29.5,29.5 0 1,0 504.6,665.2 A 29.5,29.5 0 1,0 445.6,665.2"
+-        android:fillColor="#F5F5F5" />
+-    <path
+-        android:pathData="M 352.2,634.2 A 29.5,29.5 0 1,0 411.2,634.2 A 29.5,29.5 0 1,0 352.2,634.2"
+-        android:fillColor="#F5F5F5" />
+-</vector>
+\ No newline at end of file
+diff --git a/android/app/src/main/res/drawable/widget_ic_lucide_pause.xml b/android/app/src/main/res/drawable/widget_ic_lucide_pause.xml
+deleted file mode 100644
+index dccfedc0..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_lucide_pause.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:pathData="M5,3h5v18h-5zM14,3h5v18h-5z"
+-        android:fillColor="#FFFFFFFF" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_lucide_play.xml b/android/app/src/main/res/drawable/widget_ic_lucide_play.xml
+deleted file mode 100644
+index a2648d6f..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_lucide_play.xml
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:pathData="M5,5a2,2,0,0,1,3.008,-1.728l11.997,6.998a2,2,0,0,1,.003,3.458l-12,7A2,2,0,0,1,5,19z"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_lucide_repeat.xml b/android/app/src/main/res/drawable/widget_ic_lucide_repeat.xml
+deleted file mode 100644
+index b8da4678..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_lucide_repeat.xml
++++ /dev/null
+@@ -1,31 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:pathData="M17,2l4,4l-4,4"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M3,11v-1a4,4 0,0,1 4,-4h14"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M7,22l-4,-4l4,-4"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M21,13v1a4,4 0,0,1 -4,4H3"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_lucide_shuffle.xml b/android/app/src/main/res/drawable/widget_ic_lucide_shuffle.xml
+deleted file mode 100644
+index 0e9ea588..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_lucide_shuffle.xml
++++ /dev/null
+@@ -1,37 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:pathData="M18,14l4,4l-4,4"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M18,2l4,4l-4,4"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M2,18h1.973a4,4 0,0,0 3.3,-1.7l5.454,-8.6a4,4 0,0,1 3.3,-1.7H22"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M2,6h1.972a4,4 0,0,1 3.6,2.2"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-    <path
+-        android:pathData="M22,18h-6.041a4,4 0,0,1 -3.3,-1.8l-0.359,-0.45"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_lucide_skip_back.xml b/android/app/src/main/res/drawable/widget_ic_lucide_skip_back.xml
+deleted file mode 100644
+index 9a71c334..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_lucide_skip_back.xml
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:pathData="M17.971,4.285A2,2,0,0,1,21,6v12a2,2,0,0,1,-3.029,1.715l-9.997,-5.998a2,2,0,0,1,-.003,-3.432zM3,20V4"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_lucide_skip_forward.xml b/android/app/src/main/res/drawable/widget_ic_lucide_skip_forward.xml
+deleted file mode 100644
+index f0d5594f..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_lucide_skip_forward.xml
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:pathData="M21,4v16M6.029,4.285A2,2,0,0,0,3,6v12a2,2,0,0,0,3.029,1.715l9.997,-5.998a2,2,0,0,0,.003,-3.432z"
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeLineCap="round"
+-        android:strokeLineJoin="round"
+-        android:strokeWidth="2" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_next.xml b/android/app/src/main/res/drawable/widget_ic_next.xml
+deleted file mode 100644
+index e357cb82..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_next.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="28dp"
+-    android:height="28dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M6,18l8.5,-6L6,6v12zM16,6v12h2V6h-2z" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_pause.xml b/android/app/src/main/res/drawable/widget_ic_pause.xml
+deleted file mode 100644
+index bababa79..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_pause.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="32dp"
+-    android:height="32dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M6,5h4v14h-4zM14,5h4v14h-4z" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_play.xml b/android/app/src/main/res/drawable/widget_ic_play.xml
+deleted file mode 100644
+index 5976f802..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_play.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="32dp"
+-    android:height="32dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M8,5v14l11,-7z" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_previous.xml b/android/app/src/main/res/drawable/widget_ic_previous.xml
+deleted file mode 100644
+index d3ed8aea..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_previous.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="28dp"
+-    android:height="28dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M6,6h2v12H6V6zM9.5,12L18,18V6l-8.5,6z" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_queue.xml b/android/app/src/main/res/drawable/widget_ic_queue.xml
+deleted file mode 100644
+index 22949f9c..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_queue.xml
++++ /dev/null
+@@ -1,31 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <!-- List lines on left -->
+-    <path
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeWidth="2"
+-        android:strokeLineCap="round"
+-        android:pathData="M3,6h8" />
+-    <path
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeWidth="2"
+-        android:strokeLineCap="round"
+-        android:pathData="M3,12h8" />
+-    <path
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeWidth="2"
+-        android:strokeLineCap="round"
+-        android:pathData="M3,18h8" />
+-    <!-- Music note on right -->
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M16,7v6.5a2.5,2.5 0,0,1 -2.5,2.5H13a2.5,2.5 0,0,1 0,-5h0.5V8a1,1 0,0,1 1,-1h2V7z" />
+-    <path
+-        android:strokeColor="#FFFFFFFF"
+-        android:strokeWidth="2"
+-        android:pathData="M19,11a2,2 0,1,1 -4,0" />
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_repeat.xml b/android/app/src/main/res/drawable/widget_ic_repeat.xml
+deleted file mode 100644
+index 23432e4b..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_repeat.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M17,2l4,4-4,4V7H7c-2.76,0-5,2.24-5,5h2c0-1.66,1.34-3,3-3h10v3zM7,22l-4-4,4-4v3h10c2.76,0,5-2.24,5-5h-2c0,1.66-1.34,3-3,3H7v3z"/>
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_repeat1.xml b/android/app/src/main/res/drawable/widget_ic_repeat1.xml
+deleted file mode 100644
+index 28f62c25..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_repeat1.xml
++++ /dev/null
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M17,2l4,4-4,4V7H7c-2.76,0-5,2.24-5,5h2c0-1.66,1.34-3,3-3h10v3zM7,22l-4-4,4-4v3h10c2.76,0,5-2.24,5-5h-2c0,1.66-1.34,3-3,3H7v3z"/>
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M11.5,12.5v-3h-1v0.45l-1,-0.56 -0.4,0.72 1,0.56v1.83h1.4z"/>
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_ic_shuffle.xml b/android/app/src/main/res/drawable/widget_ic_shuffle.xml
+deleted file mode 100644
+index 2bc3596d..00000000
+--- a/android/app/src/main/res/drawable/widget_ic_shuffle.xml
++++ /dev/null
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M10.59,9.17L5.41,4 4,5.41l5.17,5.17 1.42,-1.41zM14.5,4l2.04,2.04L4,18.59 5.41,20 17.96,7.46 20,9.5V4h-5.5zM14.83,13.41l-1.41,1.41 3.13,3.13L14.5,20H20v-5.5l-2.04,2.04 -3.13,-3.13z"/>
+-</vector>
+diff --git a/android/app/src/main/res/drawable/widget_navbar_bg.xml b/android/app/src/main/res/drawable/widget_navbar_bg.xml
+deleted file mode 100644
+index 7bb97d9c..00000000
+--- a/android/app/src/main/res/drawable/widget_navbar_bg.xml
++++ /dev/null
+@@ -1,21 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item>
+-        <shape android:shape="rectangle">
+-            <gradient
+-                android:angle="315"
+-                android:endColor="#F0141414"
+-                android:startColor="#E61C1C1C"
+-                android:type="linear" />
+-            <corners android:radius="20dp" />
+-        </shape>
+-    </item>
+-    <item>
+-        <shape android:shape="rectangle">
+-            <corners android:radius="20dp" />
+-            <stroke
+-                android:width="1dp"
+-                android:color="#1AFFFFFF" />
+-        </shape>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_poweramp_overlay.xml b/android/app/src/main/res/drawable/widget_poweramp_overlay.xml
+deleted file mode 100644
+index 698c90ce..00000000
+--- a/android/app/src/main/res/drawable/widget_poweramp_overlay.xml
++++ /dev/null
+@@ -1,21 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item>
+-        <shape android:shape="rectangle">
+-            <gradient
+-                android:angle="135"
+-                android:endColor="#F0141414"
+-                android:startColor="#E61C1C1C"
+-                android:type="linear" />
+-            <corners android:radius="28dp" />
+-        </shape>
+-    </item>
+-    <item>
+-        <shape android:shape="rectangle">
+-            <corners android:radius="28dp" />
+-            <stroke
+-                android:width="1dp"
+-                android:color="#2EFFFFFF" />
+-        </shape>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_progress_amber.xml b/android/app/src/main/res/drawable/widget_progress_amber.xml
+deleted file mode 100644
+index fec621a2..00000000
+--- a/android/app/src/main/res/drawable/widget_progress_amber.xml
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:id="@android:id/background">
+-        <shape android:shape="rectangle">
+-            <corners android:radius="2dp" />
+-            <solid android:color="#33FFFFFF" />
+-        </shape>
+-    </item>
+-    <item android:id="@android:id/progress">
+-        <clip>
+-            <shape android:shape="rectangle">
+-                <corners android:radius="2dp" />
+-                <solid android:color="#FFFFB300" />
+-            </shape>
+-        </clip>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_progress_blue.xml b/android/app/src/main/res/drawable/widget_progress_blue.xml
+deleted file mode 100644
+index bb5112b7..00000000
+--- a/android/app/src/main/res/drawable/widget_progress_blue.xml
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:id="@android:id/background">
+-        <shape android:shape="rectangle">
+-            <corners android:radius="2dp" />
+-            <solid android:color="#33FFFFFF" />
+-        </shape>
+-    </item>
+-    <item android:id="@android:id/progress">
+-        <clip>
+-            <shape android:shape="rectangle">
+-                <corners android:radius="2dp" />
+-                <solid android:color="#FF64B5F6" />
+-            </shape>
+-        </clip>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_progress_green.xml b/android/app/src/main/res/drawable/widget_progress_green.xml
+deleted file mode 100644
+index 3c9922bf..00000000
+--- a/android/app/src/main/res/drawable/widget_progress_green.xml
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:id="@android:id/background">
+-        <shape android:shape="rectangle">
+-            <corners android:radius="2dp" />
+-            <solid android:color="#33FFFFFF" />
+-        </shape>
+-    </item>
+-    <item android:id="@android:id/progress">
+-        <clip>
+-            <shape android:shape="rectangle">
+-                <corners android:radius="2dp" />
+-                <solid android:color="#FF81C784" />
+-            </shape>
+-        </clip>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_progress_purple.xml b/android/app/src/main/res/drawable/widget_progress_purple.xml
+deleted file mode 100644
+index 50444666..00000000
+--- a/android/app/src/main/res/drawable/widget_progress_purple.xml
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:id="@android:id/background">
+-        <shape android:shape="rectangle">
+-            <corners android:radius="2dp" />
+-            <solid android:color="#33FFFFFF" />
+-        </shape>
+-    </item>
+-    <item android:id="@android:id/progress">
+-        <clip>
+-            <shape android:shape="rectangle">
+-                <corners android:radius="2dp" />
+-                <solid android:color="#FFCE93D8" />
+-            </shape>
+-        </clip>
+-    </item>
+-</layer-list>
+diff --git a/android/app/src/main/res/drawable/widget_progress_white.xml b/android/app/src/main/res/drawable/widget_progress_white.xml
+deleted file mode 100644
+index 2d639239..00000000
+--- a/android/app/src/main/res/drawable/widget_progress_white.xml
++++ /dev/null
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+-    <item android:id="@android:id/background">
+-        <shape android:shape="rectangle">
+-            <corners android:radius="2dp" />
+-            <solid android:color="#33FFFFFF" />
+-        </shape>
+-    </item>
+-    <item android:id="@android:id/progress">
+-        <clip>
+-            <shape android:shape="rectangle">
+-                <corners android:radius="2dp" />
+-                <solid android:color="#FFFFFFFF" />
+-            </shape>
+-        </clip>
+-    </item>
+-</layer-list>
 diff --git a/android/app/src/main/res/layout/widget_compact.xml b/android/app/src/main/res/layout/widget_compact.xml
 deleted file mode 100644
 index 06430fd3..00000000

@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 10:26:51 +0700
+Subject: [PATCH] fixup! pubspec: drop image_picker
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 6b8131ee..5994e2ae 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -40,7 +40,6 @@ dependencies:
+   home_widget: ^0.7.0
+   freezed_annotation: ^3.0.0
+   image: ^4.8.0
+-  image_picker: ^1.1.2
+   isar_community: ^3.3.2
+   isar_community_flutter_libs: ^3.3.2
+   json_annotation: ^4.9.0
+-- 
+2.55.0
+
