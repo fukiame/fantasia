@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 14:01:59 +0700
+Subject: [PATCH] Revert "Add cachedPeaks support for real waveform data"
+
+This reverts commit bebaa325302333204ba723fb6f2020d86f275089.
+
+diff --git a/lib/features/player/widgets/waveform_seek_bar.dart b/lib/features/player/widgets/waveform_seek_bar.dart
+index 79d902d4..188958b8 100644
+--- a/lib/features/player/widgets/waveform_seek_bar.dart
++++ b/lib/features/player/widgets/waveform_seek_bar.dart
+@@ -9,7 +9,6 @@ class WaveformSeekBar extends StatefulWidget {
+   final ValueChanged<Duration> onChanged;
+   final ValueChanged<Duration>? onChangeEnd;
+   final double appearProgress;
+-  final List<double>? cachedPeaks;
+ 
+   const WaveformSeekBar({
+     super.key,
+@@ -19,7 +18,6 @@ class WaveformSeekBar extends StatefulWidget {
+     this.onChangeEnd,
+     this.barCount = 60,
+     this.appearProgress = 1.0,
+-    this.cachedPeaks,
+   });
+ 
+   final int barCount;
+@@ -50,28 +48,15 @@ class _WaveformSeekBarState extends State<WaveformSeekBar> {
+   @override
+   void didUpdateWidget(WaveformSeekBar oldWidget) {
+     super.didUpdateWidget(oldWidget);
+-    final peaksChanged = widget.cachedPeaks != oldWidget.cachedPeaks;
+-    final durationChanged = widget.duration != oldWidget.duration ||
+-        widget.barCount != oldWidget.barCount;
+-    if ((durationChanged || peaksChanged) &&
++    if ((widget.duration != oldWidget.duration ||
++            widget.barCount != oldWidget.barCount) &&
+         widget.duration.inMilliseconds > 0) {
+       _generateWaveform();
+     }
+   }
+ 
+   void _generateWaveform() {
+-    final peaks = widget.cachedPeaks;
+-    if (peaks != null && peaks.isNotEmpty) {
+-      // Resample cached peaks to barCount-sized array
+-      final target = max(widget.barCount, _cachedSampleCount);
+-      _waveformData = List.generate(target, (i) {
+-        final t = i / (target - 1);
+-        final idx = (t * (peaks.length - 1)).round();
+-        return peaks[idx].clamp(0.0, 1.0) * 0.9 + 0.1;
+-      });
+-      return;
+-    }
+-    // Fallback: deterministic pseudo-random bar heights
++    // Generate pseudo-random bar heights based on duration to be deterministic for the same song
+     final random = Random(widget.duration.inMilliseconds);
+     _waveformData = List.generate(
+       max(widget.barCount, _cachedSampleCount),
+-- 
+2.55.0
+

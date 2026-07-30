@@ -1,0 +1,67 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 14:03:55 +0700
+Subject: [PATCH] Revert "Load cached waveform peaks from song repository"
+
+This reverts commit cf7c838c2fadc73789306e255eec1646ea9682ce.
+
+diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
+index 57079d90..0617431f 100644
+--- a/lib/features/player/widgets/waveform_layer.dart
++++ b/lib/features/player/widgets/waveform_layer.dart
+@@ -7,7 +7,6 @@ import 'package:flick/models/progress_bar_style.dart';
+ import 'package:flick/features/player/widgets/line_seek_bar.dart';
+ import 'package:flick/features/player/widgets/waveform_seek_bar.dart';
+ import 'package:flick/providers/providers.dart';
+-import 'package:flick/data/repositories/song_repository.dart';
+ 
+ class WaveformLayer extends StatefulWidget {
+   final PlayerService playerService;
+@@ -29,7 +28,6 @@ class _WaveformLayerState extends State<WaveformLayer>
+   late final AnimationController _appearController;
+   late final Animation<double> _appearAnimation;
+   String? _lastSongId;
+-  List<double>? _cachedPeaks;
+ 
+   @override
+   void initState() {
+@@ -44,7 +42,6 @@ class _WaveformLayerState extends State<WaveformLayer>
+       curve: Curves.easeOutCubic,
+     );
+     _appearController.forward();
+-    _loadCachedPeaks();
+   }
+ 
+   @override
+@@ -53,28 +50,9 @@ class _WaveformLayerState extends State<WaveformLayer>
+     if (widget.currentSong?.id != _lastSongId) {
+       _lastSongId = widget.currentSong?.id;
+       _appearController.forward(from: 0.0);
+-      _cachedPeaks = null;
+-      _loadCachedPeaks();
+     }
+   }
+ 
+-  void _loadCachedPeaks() {
+-    final song = widget.currentSong;
+-    if (song == null || song.isExternal) return;
+-    final songId = int.tryParse(song.id);
+-    if (songId == null) return;
+-    SongRepository()
+-        .getAudioCache(songId)
+-        .then((cache) {
+-          if (cache != null &&
+-              cache.peaks.isNotEmpty &&
+-              mounted &&
+-              widget.currentSong?.id == song.id) {
+-            setState(() => _cachedPeaks = cache.peaks);
+-          }
+-        });
+-  }
+-
+   @override
+   void dispose() {
+     _appearController.dispose();
+-- 
+2.55.0
+
