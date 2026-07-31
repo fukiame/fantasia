@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 21:42:02 +0700
+Subject: [PATCH] lefto2
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/library_scanner_service.dart b/lib/services/library_scanner_service.dart
+index cb27bd88..99e4b9d5 100644
+--- a/lib/services/library_scanner_service.dart
++++ b/lib/services/library_scanner_service.dart
+@@ -979,8 +979,6 @@ class LibraryScannerService {
+         existing.metadataComplete =
+             meta.sampleRate != null && meta.bitDepth != null;
+ 
+-        // Text fields respect manual edits.
+-        if (!existing.hasLocalEdits) {
+           if (meta.title?.trim().isNotEmpty ?? false) {
+             existing.title = meta.title!.trim();
+           }
+@@ -996,7 +994,6 @@ class LibraryScannerService {
+                   : existing.artist;
+           existing.trackNumber = meta.trackNumber ?? existing.trackNumber;
+           existing.discNumber = meta.discNumber ?? existing.discNumber;
+-        }
+ 
+         updateBatch.add(existing);
+       }
+-- 
+2.55.0
+
