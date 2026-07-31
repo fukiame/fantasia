@@ -6,10 +6,19 @@ Subject: [PATCH] lyricseditor
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/inline_lyrics_panel.dart b/lib/features/player/widgets/inline_lyrics_panel.dart
-index 35c666ea..08798cb7 100644
+index 35c666ea..3ed86804 100644
 --- a/lib/features/player/widgets/inline_lyrics_panel.dart
 +++ b/lib/features/player/widgets/inline_lyrics_panel.dart
-@@ -9,7 +9,6 @@ import 'package:flick/models/song.dart';
+@@ -1,4 +1,8 @@
+ import 'dart:async';
++import 'dart:convert';
++import 'dart:io';
++import 'dart:typed_data';
++
+ import 'package:flutter/material.dart';
+ import 'package:flutter/rendering.dart';
+ import 'package:file_picker/file_picker.dart';
+@@ -9,7 +13,6 @@ import 'package:flick/models/song.dart';
  import 'package:flick/core/theme/app_colors.dart';
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/features/player/widgets/album_color_helpers.dart';
@@ -17,7 +26,7 @@ index 35c666ea..08798cb7 100644
  class InlineLyricsPanel extends StatefulWidget {
    final PlayerService playerService;
    final LyricsService lyricsService;
-@@ -195,19 +194,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+@@ -195,19 +198,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
        );
    }
  
@@ -37,7 +46,7 @@ index 35c666ea..08798cb7 100644
    Future<void> _importLyricsFile() async {
      try {
        final result = await FilePicker.pickFiles(
-@@ -285,12 +271,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+@@ -285,12 +275,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
          spacing: 8,
          runSpacing: 8,
          children: [
@@ -50,7 +59,7 @@ index 35c666ea..08798cb7 100644
            action(
              icon: LucideIcons.filePlus,
              label: 'Use Existing File',
-@@ -404,7 +384,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+@@ -404,7 +388,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
                            ? 'Tap any line to seek'
                            : 'Static lyrics — no timestamps',
                      ),
@@ -58,7 +67,7 @@ index 35c666ea..08798cb7 100644
                      if (lyrics.lines.isNotEmpty)
                        chip(
                          Icons.format_align_left,
-@@ -641,6 +620,31 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+@@ -641,6 +624,31 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
    }
  }
  
