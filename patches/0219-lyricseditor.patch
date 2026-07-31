@@ -6,7 +6,7 @@ Subject: [PATCH] lyricseditor
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/inline_lyrics_panel.dart b/lib/features/player/widgets/inline_lyrics_panel.dart
-index 35c666ea..9eb4ccdf 100644
+index 35c666ea..08798cb7 100644
 --- a/lib/features/player/widgets/inline_lyrics_panel.dart
 +++ b/lib/features/player/widgets/inline_lyrics_panel.dart
 @@ -9,7 +9,6 @@ import 'package:flick/models/song.dart';
@@ -58,6 +58,38 @@ index 35c666ea..9eb4ccdf 100644
                      if (lyrics.lines.isNotEmpty)
                        chip(
                          Icons.format_align_left,
+@@ -641,6 +620,31 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+   }
+ }
+ 
++Future<String?> readTextFromPickedLyricsFile(PlatformFile file) async {
++  if (file.bytes != null) {
++    return _decodeLyricsBytes(file.bytes!);
++  }
++
++  final path = file.path;
++  if (path == null || path.isEmpty) return null;
++  final diskFile = File(path);
++  if (!await diskFile.exists()) return null;
++  final bytes = await diskFile.readAsBytes();
++  return _decodeLyricsBytes(bytes);
++}
++
++String? _decodeLyricsBytes(Uint8List bytes) {
++  try {
++    return utf8.decode(bytes);
++  } catch (_) {
++    try {
++      return latin1.decode(bytes);
++    } catch (_) {
++      return null;
++    }
++  }
++}
++
+ /// Extracted waveform layer widget.
+ /// Owns a ValueListenableBuilder on [positionNotifier] so that 50ms position
+ /// ticks **never** cause the parent [_FullPlayerScreenState] to rebuild.
 -- 
 2.55.0
 
