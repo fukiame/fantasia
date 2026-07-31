@@ -1664,7 +1664,7 @@ index c82212ee..00000000
 -    }
 -}
 diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
-index a393f1d1..18c33c3a 100644
+index a393f1d1..4b685adf 100644
 --- a/rust/src/audio/engine.rs
 +++ b/rust/src/audio/engine.rs
 @@ -1,12 +1,11 @@
@@ -2080,7 +2080,7 @@ index a393f1d1..18c33c3a 100644
  
      start_playback_source(
          source,
-@@ -3024,77 +2782,6 @@ fn queue_playback_source(
+@@ -3024,75 +2782,20 @@ fn queue_playback_source(
      let _ = event_tx.try_send(AudioEvent::NextTrackReady { path: queued_path });
  }
  
@@ -2099,18 +2099,18 @@ index a393f1d1..18c33c3a 100644
 -    configured.min(half)
 -}
 -
--fn handle_skip_to_next(
--    callback_data: &AudioCallbackData,
--    state: &Arc<AtomicU8>,
--    event_tx: &Sender<AudioEvent>,
--) {
--    let mut sources = callback_data.sources.lock();
+ fn handle_skip_to_next(
+     callback_data: &AudioCallbackData,
+     state: &Arc<AtomicU8>,
+     event_tx: &Sender<AudioEvent>,
+ ) {
+     let mut sources = callback_data.sources.lock();
 -    let mut crossfader = callback_data.crossfader.lock();
--
--    if !sources.has_next() {
--        return;
--    }
--
+ 
+     if !sources.has_next() {
+         return;
+     }
+ 
 -    // Manual skip crossfades when allowed (DSP path, no 432 Hz tuning) and the
 -    // fade length is sane for the incoming track; otherwise hard-cut.
 -    let started = if callback_data.is_crossfade_allowed()
@@ -2149,16 +2149,14 @@ index a393f1d1..18c33c3a 100644
 -    };
 -
 -    if !started {
--        // Immediate transition
--        sources.advance_to_next();
--        state.store(PlaybackState::Playing as u8, Ordering::Relaxed);
+         // Immediate transition
+         sources.advance_to_next();
+         state.store(PlaybackState::Playing as u8, Ordering::Relaxed);
 -    }
--}
--
+ }
+ 
  fn handle_seek(
-     position_secs: f64,
-     callback_data: &AudioCallbackData,
-@@ -3123,8 +2810,6 @@ fn handle_seek(
+@@ -3123,8 +2826,6 @@ fn handle_seek(
      let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Buffering));
  
      callback_data.sources.lock().stop();
