@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 22:29:21 +0700
+Subject: [PATCH] rust: audio: do not multiply if 1
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
+index 59de8820..7488b2cc 100644
+--- a/rust/src/audio/engine.rs
++++ b/rust/src/audio/engine.rs
+@@ -2202,6 +2202,7 @@ pub(crate) fn audio_callback(
+         if read < output.len() {
+             output[read..].fill(0.0);
+         }
++        if gain == 1.0 return;
+         for sample in output[..read].iter_mut() {
+             *sample *= gain;
+         }
+@@ -2230,10 +2231,12 @@ pub(crate) fn audio_callback(
+                 output[read..].fill(0.0);
+             }
+ 
++    if volume != 1.0 {
+     // Volume is always applied last, after all DSP processing.
+     for sample in output.iter_mut() {
+         *sample *= volume;
+     }
++    }
+ }
+ 
+ /// Command processing loop running in the audio thread.
+-- 
+2.55.0
+

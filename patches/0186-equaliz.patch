@@ -3861,10 +3861,10 @@ index 15cc00b8..00000000
 -
 -
 diff --git a/lib/features/settings/screens/privacy_policy_screen.dart b/lib/features/settings/screens/privacy_policy_screen.dart
-index e6c58dab..f9a7a8af 100644
+index e6c58dab..253ee726 100644
 --- a/lib/features/settings/screens/privacy_policy_screen.dart
 +++ b/lib/features/settings/screens/privacy_policy_screen.dart
-@@ -38,7 +38,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
+@@ -38,12 +38,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
                          _Section(
                            title: 'Local Data',
                            content:
@@ -3873,6 +3873,12 @@ index e6c58dab..f9a7a8af 100644
                          ),
                          _Section(
                            title: 'Storage Permissions',
+                           content:
+-                              'Storage access is required to scan and read music files, extract metadata, import/export EQ presets, and save recap images. All processing happens on-device.',
++                              'Storage access is required to scan and read music files, extract metadata, and save recap images. All processing happens on-device.',
+                         ),
+                         _Section(
+                           title: 'USB Device Access',
 diff --git a/lib/features/settings/screens/widgets/autoeq_search_sheet.dart b/lib/features/settings/screens/widgets/autoeq_search_sheet.dart
 deleted file mode 100644
 index 614ebdb7..00000000
