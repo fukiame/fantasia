@@ -6,7 +6,7 @@ Subject: [PATCH] drop url_launcher
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index e644a274..550b542e 100644
+index e644a274..0bd363d1 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -2,7 +2,6 @@
@@ -43,8 +43,35 @@ index e644a274..550b542e 100644
                  ),
                ),
              ],
+@@ -184,26 +180,6 @@ SOFTWARE.
+     );
+   }
+ 
+-  Future<void> _launchUrl(String url) async {
+-    final uri = Uri.parse(url);
+-    try {
+-      bool launched = await launchUrl(
+-        uri,
+-        mode: LaunchMode.externalApplication,
+-      );
+-      if (!launched) {
+-        launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+-      }
+-      if (!launched && mounted) {
+-        _showToast('Could not open the link');
+-      }
+-    } catch (e) {
+-      if (mounted) {
+-        _showToast('Could not open the link: $e');
+-      }
+-    }
+-  }
+-
+   @override
+   Widget build(BuildContext context) {
+     return SettingsScaffold(
 diff --git a/lib/features/settings/screens/support_flick_screen.dart b/lib/features/settings/screens/support_flick_screen.dart
-index c79bdee5..df9eeab4 100644
+index c79bdee5..19b32779 100644
 --- a/lib/features/settings/screens/support_flick_screen.dart
 +++ b/lib/features/settings/screens/support_flick_screen.dart
 @@ -1,7 +1,6 @@
@@ -64,7 +91,29 @@ index c79bdee5..df9eeab4 100644
    late final AnimationController _pulseController;
    late final Animation<double> _pulseAnimation;
    late final AnimationController _revealController;
-@@ -207,11 +204,10 @@ class _SupportFlickScreenState extends ConsumerState<SupportFlickScreen>
+@@ -99,21 +96,6 @@ class _SupportFlickScreenState extends ConsumerState<SupportFlickScreen>
+     super.dispose();
+   }
+ 
+-  Future<void> _launchKoFi() async {
+-    final uri = Uri.parse(_kofiUrl);
+-    try {
+-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+-    } catch (_) {
+-      if (!mounted) return;
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        const SnackBar(
+-          content: Text('Could not open link'),
+-          behavior: SnackBarBehavior.floating,
+-        ),
+-      );
+-    }
+-  }
+-
+   @override
+   Widget build(BuildContext context) {
+     return SettingsScaffold(
+@@ -207,11 +189,10 @@ class _SupportFlickScreenState extends ConsumerState<SupportFlickScreen>
                            width: 1.0 + _pulseAnimation.value * 1.2,
                          ),
                          children: [
@@ -81,7 +130,7 @@ index c79bdee5..df9eeab4 100644
                          ],
                        );
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 005f944b..c1375b04 100644
+index 5e0aa9d4..87f48183 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -49,7 +49,6 @@ dependencies:
