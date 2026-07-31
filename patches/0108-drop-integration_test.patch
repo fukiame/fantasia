@@ -28,12 +28,12 @@ index 16745312..00000000
 -  });
 -}
 diff --git a/pubspec.yaml b/pubspec.yaml
-index d6f6e41b..6b8131ee 100644
+index 3acb08cf..70f531b7 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
-@@ -61,8 +61,6 @@ dev_dependencies:
-   flutter_test:
+@@ -62,8 +62,6 @@ dev_dependencies:
      sdk: flutter
+   test: ^1.25.0
    freezed: ^3.0.0
 -  integration_test:
 -    sdk: flutter

@@ -6,7 +6,7 @@ Subject: [PATCH] fixup! pubspec: drop restart_app
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 5994e2ae..27f64efe 100644
+index 283a96b6..3d563570 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -48,7 +48,6 @@ dependencies:

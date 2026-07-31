@@ -697,6 +697,1032 @@ index 2fe970f3..038d9304 100644
  /// Configure crossfade settings.
  ///
  /// The engine's own `is_crossfade_allowed()` trigger gate (plus the Dart-side
+diff --git a/lib/src/rust/frb_generated.dart b/lib/src/rust/frb_generated.dart
+index eeb8c911..776c6026 100644
+--- a/lib/src/rust/frb_generated.dart
++++ b/lib/src/rust/frb_generated.dart
+@@ -75,7 +75,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
+   String get codegenVersion => '2.12.0';
+ 
+   @override
+-  int get rustContentHash => -2002384660;
++  int get rustContentHash => 782832198;
+ 
+   static const kDefaultExternalLibraryLoaderConfig =
+       ExternalLibraryLoaderConfig(
+@@ -118,8 +118,6 @@ abstract class RustLibApi extends BaseApi {
+     required double timeSeconds,
+   });
+ 
+-  Future<void> crateApiAudioApiAudioClearIr();
+-
+   String crateApiAudioApiAudioGetActiveEngine();
+ 
+   String crateApiAudioApiAudioGetAudioApi();
+@@ -153,8 +151,6 @@ abstract class RustLibApi extends BaseApi {
+ 
+   bool crateApiAudioApiAudioIsNativeAvailable();
+ 
+-  Future<void> crateApiAudioApiAudioLoadIr({required String path});
+-
+   Future<void> crateApiAudioApiAudioPause();
+ 
+   Future<void> crateApiAudioApiAudioPlay({required String path});
+@@ -192,11 +188,6 @@ abstract class RustLibApi extends BaseApi {
+     required double makeupGainDb,
+   });
+ 
+-  Future<void> crateApiAudioApiAudioSetConvolver({
+-    required bool enabled,
+-    required double mix,
+-  });
+-
+   Future<void> crateApiAudioApiAudioSetCrossfade({
+     required bool enabled,
+     required double durationSecs,
+@@ -221,19 +212,6 @@ abstract class RustLibApi extends BaseApi {
+     required List<double> gainsDb,
+   });
+ 
+-  Future<void> crateApiAudioApiAudioSetFx({
+-    required bool enabled,
+-    required double balance,
+-    required double tempo,
+-    required double damp,
+-    required double filterHz,
+-    required double delayMs,
+-    required double size,
+-    required double mix,
+-    required double feedback,
+-    required double width,
+-  });
+-
+   void crateApiAudioApiAudioSetHighResMode({required bool enabled});
+ 
+   Future<void> crateApiAudioApiAudioSetLimiter({
+@@ -617,40 +595,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         argNames: ["sessionId", "timeSeconds"],
+       );
+ 
+-  @override
+-  Future<void> crateApiAudioApiAudioClearIr() {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 9,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_unit,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiAudioApiAudioClearIrConstMeta,
+-        argValues: [],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiAudioApiAudioClearIrConstMeta =>
+-      const TaskConstMeta(debugName: "audio_clear_ir", argNames: []);
+-
+   @override
+   String crateApiAudioApiAudioGetActiveEngine() {
+     return handler.executeSync(
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_String,
+@@ -672,7 +623,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_String,
+@@ -700,7 +651,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 12,
++            funcId: 11,
+             port: port_,
+           );
+         },
+@@ -727,7 +678,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_opt_box_autoadd_usize,
+@@ -749,7 +700,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_opt_String,
+@@ -771,7 +722,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_opt_box_autoadd_f_32,
+@@ -793,7 +744,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_opt_box_autoadd_audio_progress,
+@@ -819,7 +770,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 17,
++            funcId: 16,
+             port: port_,
+           );
+         },
+@@ -849,7 +800,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 18,
++            funcId: 17,
+             port: port_,
+           );
+         },
+@@ -876,7 +827,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_opt_box_autoadd_u_32,
+@@ -898,7 +849,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_String,
+@@ -920,7 +871,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -946,7 +897,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 22,
++            funcId: 21,
+             port: port_,
+           );
+         },
+@@ -973,7 +924,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -995,7 +946,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -1011,34 +962,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+   TaskConstMeta get kCrateApiAudioApiAudioIsNativeAvailableConstMeta =>
+       const TaskConstMeta(debugName: "audio_is_native_available", argNames: []);
+ 
+-  @override
+-  Future<void> crateApiAudioApiAudioLoadIr({required String path}) {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          sse_encode_String(path, serializer);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 25,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_unit,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiAudioApiAudioLoadIrConstMeta,
+-        argValues: [path],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiAudioApiAudioLoadIrConstMeta =>
+-      const TaskConstMeta(debugName: "audio_load_ir", argNames: ["path"]);
+-
+   @override
+   Future<void> crateApiAudioApiAudioPause() {
+     return handler.executeNormal(
+@@ -1048,7 +971,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 26,
++            funcId: 24,
+             port: port_,
+           );
+         },
+@@ -1076,7 +999,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 27,
++            funcId: 25,
+             port: port_,
+           );
+         },
+@@ -1100,7 +1023,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_opt_box_autoadd_audio_event_type,
+@@ -1126,7 +1049,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 29,
++            funcId: 27,
+             port: port_,
+           );
+         },
+@@ -1159,7 +1082,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 30,
++            funcId: 28,
+             port: port_,
+           );
+         },
+@@ -1187,7 +1110,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 31,
++            funcId: 29,
+             port: port_,
+           );
+         },
+@@ -1214,7 +1137,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 32,
++            funcId: 30,
+             port: port_,
+           );
+         },
+@@ -1242,7 +1165,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 33,
++            funcId: 31,
+             port: port_,
+           );
+         },
+@@ -1267,7 +1190,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_bool(enabled, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1295,7 +1218,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_audio_api_preference(preference, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1323,7 +1246,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_box_autoadd_audio_capability_info(info, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1364,7 +1287,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 37,
++            funcId: 35,
+             port: port_,
+           );
+         },
+@@ -1399,41 +1322,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         ],
+       );
+ 
+-  @override
+-  Future<void> crateApiAudioApiAudioSetConvolver({
+-    required bool enabled,
+-    required double mix,
+-  }) {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          sse_encode_bool(enabled, serializer);
+-          sse_encode_f_32(mix, serializer);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 38,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_unit,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiAudioApiAudioSetConvolverConstMeta,
+-        argValues: [enabled, mix],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiAudioApiAudioSetConvolverConstMeta =>
+-      const TaskConstMeta(
+-        debugName: "audio_set_convolver",
+-        argNames: ["enabled", "mix"],
+-      );
+-
+   @override
+   Future<void> crateApiAudioApiAudioSetCrossfade({
+     required bool enabled,
+@@ -1448,7 +1336,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 39,
++            funcId: 36,
+             port: port_,
+           );
+         },
+@@ -1481,7 +1369,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 40,
++            funcId: 37,
+             port: port_,
+           );
+         },
+@@ -1509,7 +1397,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_bool(enabled, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1535,7 +1423,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_opt_box_autoadd_bool(value, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1561,7 +1449,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_bool(enabled, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1587,7 +1475,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_u_8(mode, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1613,7 +1501,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_opt_box_autoadd_u_8(value, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1646,7 +1534,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 46,
++            funcId: 43,
+             port: port_,
+           );
+         },
+@@ -1667,78 +1555,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         argNames: ["enabled", "gainsDb"],
+       );
+ 
+-  @override
+-  Future<void> crateApiAudioApiAudioSetFx({
+-    required bool enabled,
+-    required double balance,
+-    required double tempo,
+-    required double damp,
+-    required double filterHz,
+-    required double delayMs,
+-    required double size,
+-    required double mix,
+-    required double feedback,
+-    required double width,
+-  }) {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          sse_encode_bool(enabled, serializer);
+-          sse_encode_f_32(balance, serializer);
+-          sse_encode_f_32(tempo, serializer);
+-          sse_encode_f_32(damp, serializer);
+-          sse_encode_f_32(filterHz, serializer);
+-          sse_encode_f_32(delayMs, serializer);
+-          sse_encode_f_32(size, serializer);
+-          sse_encode_f_32(mix, serializer);
+-          sse_encode_f_32(feedback, serializer);
+-          sse_encode_f_32(width, serializer);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 47,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_unit,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiAudioApiAudioSetFxConstMeta,
+-        argValues: [
+-          enabled,
+-          balance,
+-          tempo,
+-          damp,
+-          filterHz,
+-          delayMs,
+-          size,
+-          mix,
+-          feedback,
+-          width,
+-        ],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiAudioApiAudioSetFxConstMeta => const TaskConstMeta(
+-    debugName: "audio_set_fx",
+-    argNames: [
+-      "enabled",
+-      "balance",
+-      "tempo",
+-      "damp",
+-      "filterHz",
+-      "delayMs",
+-      "size",
+-      "mix",
+-      "feedback",
+-      "width",
+-    ],
+-  );
+-
+   @override
+   void crateApiAudioApiAudioSetHighResMode({required bool enabled}) {
+     return handler.executeSync(
+@@ -1746,7 +1562,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_bool(enabled, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -1783,7 +1599,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 49,
++            funcId: 45,
+             port: port_,
+           );
+         },
+@@ -1814,7 +1630,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 50,
++            funcId: 46,
+             port: port_,
+           );
+         },
+@@ -1845,7 +1661,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 51,
++            funcId: 47,
+             port: port_,
+           );
+         },
+@@ -1872,7 +1688,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 52,
++            funcId: 48,
+             port: port_,
+           );
+         },
+@@ -1899,7 +1715,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 53,
++            funcId: 49,
+             port: port_,
+           );
+         },
+@@ -1926,7 +1742,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 54,
++            funcId: 50,
+             port: port_,
+           );
+         },
+@@ -1960,7 +1776,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 55,
++            funcId: 51,
+             port: port_,
+           );
+         },
+@@ -1990,7 +1806,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 56,
++            funcId: 52,
+             port: port_,
+           );
+         },
+@@ -2017,7 +1833,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 57,
++            funcId: 53,
+             port: port_,
+           );
+         },
+@@ -2044,7 +1860,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 58,
++            funcId: 54,
+             port: port_,
+           );
+         },
+@@ -2076,7 +1892,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 59,
++            funcId: 55,
+             port: port_,
+           );
+         },
+@@ -2109,7 +1925,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 60,
++            funcId: 56,
+             port: port_,
+           );
+         },
+@@ -2144,7 +1960,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 61,
++            funcId: 57,
+             port: port_,
+           );
+         },
+@@ -2177,7 +1993,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 62,
++            funcId: 58,
+             port: port_,
+           );
+         },
+@@ -2205,7 +2021,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+           sse_encode_String(name, serializer);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_String,
+@@ -2230,7 +2046,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 64,
++            funcId: 60,
+             port: port_,
+           );
+         },
+@@ -2258,7 +2074,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 65,
++            funcId: 61,
+             port: port_,
+           );
+         },
+@@ -2288,7 +2104,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+             pdeCallFfi(
+               generalizedFrbRustBinding,
+               serializer,
+-              funcId: 66,
++              funcId: 62,
+               port: port_,
+             );
+           },
+@@ -2327,7 +2143,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+             pdeCallFfi(
+               generalizedFrbRustBinding,
+               serializer,
+-              funcId: 67,
++              funcId: 63,
+               port: port_,
+             );
+           },
+@@ -2366,7 +2182,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 68,
++            funcId: 64,
+             port: port_,
+           );
+         },
+@@ -2396,7 +2212,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 69,
++            funcId: 65,
+             port: port_,
+           );
+         },
+@@ -2428,7 +2244,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 70,
++            funcId: 66,
+             port: port_,
+           );
+         },
+@@ -2461,7 +2277,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 71,
++            funcId: 67,
+             port: port_,
+           );
+         },
+@@ -2492,7 +2308,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 72,
++            funcId: 68,
+             port: port_,
+           );
+         },
+@@ -2523,7 +2339,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 73,
++            funcId: 69,
+             port: port_,
+           );
+         },
+@@ -2551,7 +2367,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 74,
++            funcId: 70,
+             port: port_,
+           );
+         },
+@@ -2578,7 +2394,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 75,
++            funcId: 71,
+             port: port_,
+           );
+         },
+@@ -2605,7 +2421,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 76,
++            funcId: 72,
+             port: port_,
+           );
+         },
+@@ -2632,7 +2448,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 77,
++            funcId: 73,
+             port: port_,
+           );
+         },
+@@ -2659,7 +2475,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 78,
++            funcId: 74,
+             port: port_,
+           );
+         },
+@@ -2683,7 +2499,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -2708,7 +2524,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 80)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_uac_2_connection_state,
+@@ -2736,7 +2552,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 81,
++            funcId: 77,
+             port: port_,
+           );
+         },
+@@ -2763,7 +2579,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 82)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_uac_2_fallback_info,
+@@ -2785,7 +2601,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 83)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -2807,7 +2623,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 84)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 80)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_u_32,
+@@ -2832,7 +2648,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 85)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 81)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_f_64,
+@@ -2857,7 +2673,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 86,
++            funcId: 82,
+             port: port_,
+           );
+         },
+@@ -2881,7 +2697,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 87)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 83)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -2903,7 +2719,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 88)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 84)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -2928,7 +2744,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 89)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 85)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_list_uac_2_device_info,
+@@ -2956,7 +2772,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 90,
++            funcId: 86,
+             port: port_,
+           );
+         },
+@@ -2987,7 +2803,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 91,
++            funcId: 87,
+             port: port_,
+           );
+         },
+@@ -3018,7 +2834,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 92,
++            funcId: 88,
+             port: port_,
+           );
+         },
+@@ -3048,7 +2864,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 93,
++            funcId: 89,
+             port: port_,
+           );
+         },
+@@ -3079,7 +2895,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 94,
++            funcId: 90,
+             port: port_,
+           );
+         },
+@@ -3109,7 +2925,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 95,
++            funcId: 91,
+             port: port_,
+           );
+         },
+@@ -3139,7 +2955,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 96,
++            funcId: 92,
+             port: port_,
+           );
+         },
+@@ -3171,7 +2987,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 97,
++            funcId: 93,
+             port: port_,
+           );
+         },
+@@ -3208,7 +3024,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 98,
++            funcId: 94,
+             port: port_,
+           );
+         },
 diff --git a/rust/src/api/audio_api.rs b/rust/src/api/audio_api.rs
 index eeedb891..7f6e41b7 100644
 --- a/rust/src/api/audio_api.rs
@@ -1211,6 +2237,585 @@ index b097004a..1045ce74 100644
  pub mod ir_loader;
  pub mod manager;
  pub mod opus_decoder;
+diff --git a/rust/src/frb_generated.rs b/rust/src/frb_generated.rs
+index 79536602..9a152331 100644
+--- a/rust/src/frb_generated.rs
++++ b/rust/src/frb_generated.rs
+@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
+     default_rust_auto_opaque = RustAutoOpaqueMoi,
+ );
+ pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
+-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -2002384660;
++pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 782832198;
+ 
+ // Section: executor
+ 
+@@ -313,38 +313,6 @@ fn wire__crate__api__alac_converter_api__alac_seek_impl(
+         },
+     )
+ }
+-fn wire__crate__api__audio_api__audio_clear_ir_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "audio_clear_ir",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok = crate::api::audio_api::audio_clear_ir()?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+ fn wire__crate__api__audio_api__audio_get_active_engine_impl(
+     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+     rust_vec_len_: i32,
+@@ -806,39 +774,6 @@ fn wire__crate__api__audio_api__audio_is_native_available_impl(
+         },
+     )
+ }
+-fn wire__crate__api__audio_api__audio_load_ir_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "audio_load_ir",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            let api_path = <String>::sse_decode(&mut deserializer);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok = crate::api::audio_api::audio_load_ir(api_path)?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+ fn wire__crate__api__audio_api__audio_pause_impl(
+     port_: flutter_rust_bridge::for_generated::MessagePort,
+     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+@@ -1241,41 +1176,6 @@ fn wire__crate__api__audio_api__audio_set_compressor_impl(
+         },
+     )
+ }
+-fn wire__crate__api__audio_api__audio_set_convolver_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "audio_set_convolver",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            let api_enabled = <bool>::sse_decode(&mut deserializer);
+-            let api_mix = <f32>::sse_decode(&mut deserializer);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok =
+-                        crate::api::audio_api::audio_set_convolver(api_enabled, api_mix)?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+ fn wire__crate__api__audio_api__audio_set_crossfade_impl(
+     port_: flutter_rust_bridge::for_generated::MessagePort,
+     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+@@ -1540,59 +1440,6 @@ fn wire__crate__api__audio_api__audio_set_equalizer_impl(
+         },
+     )
+ }
+-fn wire__crate__api__audio_api__audio_set_fx_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "audio_set_fx",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            let api_enabled = <bool>::sse_decode(&mut deserializer);
+-            let api_balance = <f32>::sse_decode(&mut deserializer);
+-            let api_tempo = <f32>::sse_decode(&mut deserializer);
+-            let api_damp = <f32>::sse_decode(&mut deserializer);
+-            let api_filter_hz = <f32>::sse_decode(&mut deserializer);
+-            let api_delay_ms = <f32>::sse_decode(&mut deserializer);
+-            let api_size = <f32>::sse_decode(&mut deserializer);
+-            let api_mix = <f32>::sse_decode(&mut deserializer);
+-            let api_feedback = <f32>::sse_decode(&mut deserializer);
+-            let api_width = <f32>::sse_decode(&mut deserializer);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok = crate::api::audio_api::audio_set_fx(
+-                        api_enabled,
+-                        api_balance,
+-                        api_tempo,
+-                        api_damp,
+-                        api_filter_hz,
+-                        api_delay_ms,
+-                        api_size,
+-                        api_mix,
+-                        api_feedback,
+-                        api_width,
+-                    )?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+ fn wire__crate__api__audio_api__audio_set_high_res_mode_impl(
+     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+     rust_vec_len_: i32,
+@@ -4216,216 +4063,210 @@ fn pde_ffi_dispatcher_primary_impl(
+ ) {
+     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
+     match func_id {
+-        9 => wire__crate__api__audio_api__audio_clear_ir_impl(port, ptr, rust_vec_len, data_len),
+-        12 => wire__crate__api__audio_api__audio_get_capability_info_impl(
++        11 => wire__crate__api__audio_api__audio_get_capability_info_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        17 => wire__crate__api__audio_api__audio_get_runtime_debug_json_state_impl(
++        16 => wire__crate__api__audio_api__audio_get_runtime_debug_json_state_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        18 => wire__crate__api__audio_api__audio_get_runtime_debug_state_impl(
++        17 => wire__crate__api__audio_api__audio_get_runtime_debug_state_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        22 => wire__crate__api__audio_api__audio_is_dac_available_impl(
++        21 => wire__crate__api__audio_api__audio_is_dac_available_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        25 => wire__crate__api__audio_api__audio_load_ir_impl(port, ptr, rust_vec_len, data_len),
+-        26 => wire__crate__api__audio_api__audio_pause_impl(port, ptr, rust_vec_len, data_len),
+-        27 => wire__crate__api__audio_api__audio_play_impl(port, ptr, rust_vec_len, data_len),
+-        29 => wire__crate__api__audio_api__audio_prepare_engine_impl(
++        24 => wire__crate__api__audio_api__audio_pause_impl(port, ptr, rust_vec_len, data_len),
++        25 => wire__crate__api__audio_api__audio_play_impl(port, ptr, rust_vec_len, data_len),
++        27 => wire__crate__api__audio_api__audio_prepare_engine_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        30 => {
++        28 => {
+             wire__crate__api__audio_api__audio_probe_format_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        31 => wire__crate__api__audio_api__audio_queue_next_impl(port, ptr, rust_vec_len, data_len),
+-        32 => wire__crate__api__audio_api__audio_resume_impl(port, ptr, rust_vec_len, data_len),
+-        33 => wire__crate__api__audio_api__audio_seek_impl(port, ptr, rust_vec_len, data_len),
+-        37 => wire__crate__api__audio_api__audio_set_compressor_impl(
++        29 => wire__crate__api__audio_api__audio_queue_next_impl(port, ptr, rust_vec_len, data_len),
++        30 => wire__crate__api__audio_api__audio_resume_impl(port, ptr, rust_vec_len, data_len),
++        31 => wire__crate__api__audio_api__audio_seek_impl(port, ptr, rust_vec_len, data_len),
++        35 => wire__crate__api__audio_api__audio_set_compressor_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        38 => {
+-            wire__crate__api__audio_api__audio_set_convolver_impl(port, ptr, rust_vec_len, data_len)
+-        }
+-        39 => {
++        36 => {
+             wire__crate__api__audio_api__audio_set_crossfade_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        40 => wire__crate__api__audio_api__audio_set_crossfade_curve_impl(
++        37 => wire__crate__api__audio_api__audio_set_crossfade_curve_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        46 => {
++        43 => {
+             wire__crate__api__audio_api__audio_set_equalizer_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        47 => wire__crate__api__audio_api__audio_set_fx_impl(port, ptr, rust_vec_len, data_len),
+-        49 => {
++        45 => {
+             wire__crate__api__audio_api__audio_set_limiter_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        50 => wire__crate__api__audio_api__audio_set_playback_speed_impl(
++        46 => wire__crate__api__audio_api__audio_set_playback_speed_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        51 => wire__crate__api__audio_api__audio_set_volume_impl(port, ptr, rust_vec_len, data_len),
+-        52 => wire__crate__api__audio_api__audio_shutdown_impl(port, ptr, rust_vec_len, data_len),
+-        53 => {
++        47 => wire__crate__api__audio_api__audio_set_volume_impl(port, ptr, rust_vec_len, data_len),
++        48 => wire__crate__api__audio_api__audio_shutdown_impl(port, ptr, rust_vec_len, data_len),
++        49 => {
+             wire__crate__api__audio_api__audio_skip_to_next_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        54 => wire__crate__api__audio_api__audio_stop_impl(port, ptr, rust_vec_len, data_len),
+-        55 => {
++        50 => wire__crate__api__audio_api__audio_stop_impl(port, ptr, rust_vec_len, data_len),
++        51 => {
+             wire__crate__api__scanner__check_deleted_paths_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        56 => wire__crate__api__audio_api__clear_dsd_track_rate_impl(
++        52 => wire__crate__api__audio_api__clear_dsd_track_rate_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        57 => wire__crate__api__audio_api__current_dsd_output_mode_impl(
++        53 => wire__crate__api__audio_api__current_dsd_output_mode_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        58 => wire__crate__api__audio_api__current_dsd_track_rate_impl(
++        54 => wire__crate__api__audio_api__current_dsd_track_rate_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        59 => wire__crate__api__scanner__discover_playlist_files_impl(
++        55 => wire__crate__api__scanner__discover_playlist_files_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        60 => wire__crate__api__audio_api__effective_dsd_output_mode_impl(
++        56 => wire__crate__api__audio_api__effective_dsd_output_mode_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        61 => wire__crate__api__audio_api__effective_dsd_output_mode_for_rate_impl(
++        57 => wire__crate__api__audio_api__effective_dsd_output_mode_for_rate_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        62 => wire__crate__api__scanner__extract_embedded_artwork_impl(
++        58 => wire__crate__api__scanner__extract_embedded_artwork_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        64 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+-        65 => wire__crate__api__metadata_editor__read_tags_impl(port, ptr, rust_vec_len, data_len),
+-        66 => wire__crate__api__logging__register_log_sink_impl(port, ptr, rust_vec_len, data_len),
+-        67 => wire__crate__api__scanner__scan_music_library_impl(port, ptr, rust_vec_len, data_len),
+-        68 => wire__crate__api__scanner__scan_root_dir_impl(port, ptr, rust_vec_len, data_len),
+-        69 => {
++        60 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
++        61 => wire__crate__api__metadata_editor__read_tags_impl(port, ptr, rust_vec_len, data_len),
++        62 => wire__crate__api__logging__register_log_sink_impl(port, ptr, rust_vec_len, data_len),
++        63 => wire__crate__api__scanner__scan_music_library_impl(port, ptr, rust_vec_len, data_len),
++        64 => wire__crate__api__scanner__scan_root_dir_impl(port, ptr, rust_vec_len, data_len),
++        65 => {
+             wire__crate__api__audio_api__set_dsd_track_rate_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        70 => wire__crate__api__audio_api__set_pending_crossfade_impl(
++        66 => wire__crate__api__audio_api__set_pending_crossfade_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        71 => wire__crate__api__audio_api__set_pending_crossfade_curve_impl(
++        67 => wire__crate__api__audio_api__set_pending_crossfade_curve_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        72 => {
++        68 => {
+             wire__crate__api__audio_api__set_pending_volume_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        73 => wire__crate__api__audio_api__take_pending_crossfade_impl(
++        69 => wire__crate__api__audio_api__take_pending_crossfade_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        74 => {
++        70 => {
+             wire__crate__api__audio_api__take_pending_volume_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        75 => wire__crate__api__uac2_api__uac2_activate_fallback_impl(
++        71 => wire__crate__api__uac2_api__uac2_activate_fallback_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        76 => wire__crate__api__uac2_api__uac2_attempt_reconnect_impl(
++        72 => wire__crate__api__uac2_api__uac2_attempt_reconnect_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        77 => wire__crate__api__uac2_api__uac2_deactivate_fallback_impl(
++        73 => wire__crate__api__uac2_api__uac2_deactivate_fallback_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        78 => wire__crate__api__uac2_api__uac2_disconnect_impl(port, ptr, rust_vec_len, data_len),
+-        81 => wire__crate__api__uac2_api__uac2_get_device_capabilities_impl(
++        74 => wire__crate__api__uac2_api__uac2_disconnect_impl(port, ptr, rust_vec_len, data_len),
++        77 => wire__crate__api__uac2_api__uac2_get_device_capabilities_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        86 => wire__crate__api__uac2_api__uac2_get_volume_range_impl(
++        82 => wire__crate__api__uac2_api__uac2_get_volume_range_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        90 => {
++        86 => {
+             wire__crate__api__uac2_api__uac2_select_device_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        91 => wire__crate__api__uac2_api__uac2_set_auto_reconnect_impl(
++        87 => wire__crate__api__uac2_api__uac2_set_auto_reconnect_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        92 => wire__crate__api__uac2_api__uac2_set_mute_impl(port, ptr, rust_vec_len, data_len),
+-        93 => wire__crate__api__uac2_api__uac2_set_sampling_frequency_impl(
++        88 => wire__crate__api__uac2_api__uac2_set_mute_impl(port, ptr, rust_vec_len, data_len),
++        89 => wire__crate__api__uac2_api__uac2_set_sampling_frequency_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        94 => wire__crate__api__uac2_api__uac2_set_volume_impl(port, ptr, rust_vec_len, data_len),
+-        95 => {
++        90 => wire__crate__api__uac2_api__uac2_set_volume_impl(port, ptr, rust_vec_len, data_len),
++        91 => {
+             wire__crate__api__uac2_api__uac2_start_streaming_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        96 => {
++        92 => {
+             wire__crate__api__uac2_api__uac2_stop_streaming_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        97 => wire__crate__api__metadata_editor__write_tags_impl(port, ptr, rust_vec_len, data_len),
+-        98 => wire__crate__api__metadata_editor__write_tags_to_temp_impl(
++        93 => wire__crate__api__metadata_editor__write_tags_impl(port, ptr, rust_vec_len, data_len),
++        94 => wire__crate__api__metadata_editor__write_tags_to_temp_impl(
+             port,
+             ptr,
+             rust_vec_len,
+@@ -4479,81 +4320,79 @@ fn pde_ffi_dispatcher_sync_impl(
+             data_len,
+         ),
+         8 => wire__crate__api__alac_converter_api__alac_seek_impl(ptr, rust_vec_len, data_len),
+-        10 => {
+-            wire__crate__api__audio_api__audio_get_active_engine_impl(ptr, rust_vec_len, data_len)
+-        }
+-        11 => wire__crate__api__audio_api__audio_get_audio_api_impl(ptr, rust_vec_len, data_len),
+-        13 => wire__crate__api__audio_api__audio_get_channels_impl(ptr, rust_vec_len, data_len),
+-        14 => wire__crate__api__audio_api__audio_get_current_path_impl(ptr, rust_vec_len, data_len),
+-        15 => {
++        9 => wire__crate__api__audio_api__audio_get_active_engine_impl(ptr, rust_vec_len, data_len),
++        10 => wire__crate__api__audio_api__audio_get_audio_api_impl(ptr, rust_vec_len, data_len),
++        12 => wire__crate__api__audio_api__audio_get_channels_impl(ptr, rust_vec_len, data_len),
++        13 => wire__crate__api__audio_api__audio_get_current_path_impl(ptr, rust_vec_len, data_len),
++        14 => {
+             wire__crate__api__audio_api__audio_get_playback_speed_impl(ptr, rust_vec_len, data_len)
+         }
+-        16 => wire__crate__api__audio_api__audio_get_progress_impl(ptr, rust_vec_len, data_len),
+-        19 => wire__crate__api__audio_api__audio_get_sample_rate_impl(ptr, rust_vec_len, data_len),
+-        20 => wire__crate__api__audio_api__audio_get_state_impl(ptr, rust_vec_len, data_len),
+-        21 => wire__crate__api__audio_api__audio_init_impl(ptr, rust_vec_len, data_len),
+-        23 => wire__crate__api__audio_api__audio_is_initialized_impl(ptr, rust_vec_len, data_len),
+-        24 => {
++        15 => wire__crate__api__audio_api__audio_get_progress_impl(ptr, rust_vec_len, data_len),
++        18 => wire__crate__api__audio_api__audio_get_sample_rate_impl(ptr, rust_vec_len, data_len),
++        19 => wire__crate__api__audio_api__audio_get_state_impl(ptr, rust_vec_len, data_len),
++        20 => wire__crate__api__audio_api__audio_init_impl(ptr, rust_vec_len, data_len),
++        22 => wire__crate__api__audio_api__audio_is_initialized_impl(ptr, rust_vec_len, data_len),
++        23 => {
+             wire__crate__api__audio_api__audio_is_native_available_impl(ptr, rust_vec_len, data_len)
+         }
+-        28 => wire__crate__api__audio_api__audio_poll_event_impl(ptr, rust_vec_len, data_len),
+-        34 => wire__crate__api__audio_api__audio_set_432hz_tuning_enabled_impl(
++        26 => wire__crate__api__audio_api__audio_poll_event_impl(ptr, rust_vec_len, data_len),
++        32 => wire__crate__api__audio_api__audio_set_432hz_tuning_enabled_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        35 => wire__crate__api__audio_api__audio_set_audio_api_impl(ptr, rust_vec_len, data_len),
+-        36 => {
++        33 => wire__crate__api__audio_api__audio_set_audio_api_impl(ptr, rust_vec_len, data_len),
++        34 => {
+             wire__crate__api__audio_api__audio_set_capability_info_impl(ptr, rust_vec_len, data_len)
+         }
+-        41 => wire__crate__api__audio_api__audio_set_dap_bit_perfect_enabled_impl(
++        38 => wire__crate__api__audio_api__audio_set_dap_bit_perfect_enabled_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        42 => wire__crate__api__audio_api__audio_set_dsd_big_endian_override_impl(
++        39 => wire__crate__api__audio_api__audio_set_dsd_big_endian_override_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        43 => wire__crate__api__audio_api__audio_set_dsd_bit_reverse_override_impl(
++        40 => wire__crate__api__audio_api__audio_set_dsd_bit_reverse_override_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        44 => {
++        41 => {
+             wire__crate__api__audio_api__audio_set_dsd_output_mode_impl(ptr, rust_vec_len, data_len)
+         }
+-        45 => wire__crate__api__audio_api__audio_set_dsd_subslot_override_impl(
++        42 => wire__crate__api__audio_api__audio_set_dsd_subslot_override_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        48 => {
++        44 => {
+             wire__crate__api__audio_api__audio_set_high_res_mode_impl(ptr, rust_vec_len, data_len)
+         }
+-        63 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
+-        79 => wire__crate__api__uac2_api__uac2_force_release_usb_session_impl(
++        59 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
++        75 => wire__crate__api__uac2_api__uac2_force_release_usb_session_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        80 => {
++        76 => {
+             wire__crate__api__uac2_api__uac2_get_connection_state_impl(ptr, rust_vec_len, data_len)
+         }
+-        82 => wire__crate__api__uac2_api__uac2_get_fallback_info_impl(ptr, rust_vec_len, data_len),
+-        83 => wire__crate__api__uac2_api__uac2_get_mute_impl(ptr, rust_vec_len, data_len),
+-        84 => wire__crate__api__uac2_api__uac2_get_sampling_frequency_impl(
++        78 => wire__crate__api__uac2_api__uac2_get_fallback_info_impl(ptr, rust_vec_len, data_len),
++        79 => wire__crate__api__uac2_api__uac2_get_mute_impl(ptr, rust_vec_len, data_len),
++        80 => wire__crate__api__uac2_api__uac2_get_sampling_frequency_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        85 => wire__crate__api__uac2_api__uac2_get_volume_impl(ptr, rust_vec_len, data_len),
+-        87 => wire__crate__api__uac2_api__uac2_is_available_impl(ptr, rust_vec_len, data_len),
+-        88 => {
++        81 => wire__crate__api__uac2_api__uac2_get_volume_impl(ptr, rust_vec_len, data_len),
++        83 => wire__crate__api__uac2_api__uac2_is_available_impl(ptr, rust_vec_len, data_len),
++        84 => {
+             wire__crate__api__uac2_api__uac2_is_usb_session_active_impl(ptr, rust_vec_len, data_len)
+         }
+-        89 => wire__crate__api__uac2_api__uac2_list_devices_impl(ptr, rust_vec_len, data_len),
++        85 => wire__crate__api__uac2_api__uac2_list_devices_impl(ptr, rust_vec_len, data_len),
+         _ => unreachable!(),
+     }
+ }
 -- 
 2.55.0
 
