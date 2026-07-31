@@ -8,7 +8,7 @@ as of patch date, nonexistent
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
-index 26c54716..93f9345d 100644
+index 5af9fe57..7c4fc921 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 @@ -96,8 +96,6 @@ class MainActivity: FlutterActivity() {

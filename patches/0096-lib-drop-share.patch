@@ -1096,10 +1096,10 @@ index 91f558a3..d9b5750b 100644
                        ),
                      ),
 diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
-index 04a3817e..b1660af5 100644
+index 1b6883ee..dd49bb7a 100644
 --- a/lib/features/settings/screens/logs_screen.dart
 +++ b/lib/features/settings/screens/logs_screen.dart
-@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
+@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
  import 'package:flutter/services.dart';
  import 'package:flutter_riverpod/flutter_riverpod.dart';
  import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -1107,7 +1107,7 @@ index 04a3817e..b1660af5 100644
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/core/theme/app_colors.dart';
  import 'package:flick/core/theme/adaptive_color_provider.dart';
-@@ -81,11 +80,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+@@ -84,11 +83,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
      );
    }
  
@@ -1116,27 +1116,23 @@ index 04a3817e..b1660af5 100644
 -    await Share.share(entries.map(_format).join('\n'), subject: 'Flick logs');
 -  }
 -
-   Future<void> _confirmClear() async {
-     final ok = await showDialog<bool>(
-       context: context,
-@@ -161,17 +155,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
-               );
-             },
-           ),
--          ListenableBuilder(
--            listenable: AppLog.instance,
--            builder: (context, _) {
--              final count = AppLog.instance.entries.length;
--              return IconButton(
--                tooltip: 'Share',
--                onPressed: count == 0 ? null : () => _shareAll(_filtered(AppLog.instance.entries)),
--                icon: Icon(LucideIcons.share2, color: context.adaptiveTextSecondary),
--              );
--            },
--          ),
-           ListenableBuilder(
-             listenable: AppLog.instance,
-             builder: (context, _) {
+   void _snack(String message) {
+     if (!mounted) return;
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+@@ -204,13 +198,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+                         : () => _copyAll(_filtered(AppLog.instance.entries)),
+                     icon: Icon(LucideIcons.copy, color: context.adaptiveTextSecondary),
+                   ),
+-                  IconButton(
+-                    tooltip: 'Share',
+-                    onPressed: count == 0
+-                        ? null
+-                        : () => _shareAll(_filtered(AppLog.instance.entries)),
+-                    icon: Icon(LucideIcons.share2, color: context.adaptiveTextSecondary),
+-                  ),
+                   PopupMenuButton<String>(
+                     tooltip: 'More',
+                     icon: Icon(LucideIcons.moreVertical, color: context.adaptiveTextSecondary),
 diff --git a/lib/features/songs/widgets/song_actions_bottom_sheet.dart b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
 index 020d643e..ec442278 100644
 --- a/lib/features/songs/widgets/song_actions_bottom_sheet.dart

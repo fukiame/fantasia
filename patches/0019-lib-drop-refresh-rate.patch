@@ -378,10 +378,10 @@ index ac874b30..2c288445 100644
            SettingsCard(
              children: [
 diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
-index f5b922b4..fe469ab1 100644
+index 2c14587a..35518a70 100644
 --- a/lib/features/settings/screens/logs_screen.dart
 +++ b/lib/features/settings/screens/logs_screen.dart
-@@ -8,7 +8,6 @@ import 'package:flick/core/theme/app_colors.dart';
+@@ -12,7 +12,6 @@ import 'package:flick/core/theme/app_colors.dart';
  import 'package:flick/core/theme/adaptive_color_provider.dart';
  import 'package:flick/core/utils/app_haptics.dart';
  import 'package:flick/core/utils/app_log.dart';
@@ -389,7 +389,7 @@ index f5b922b4..fe469ab1 100644
  
  class LogsScreen extends ConsumerStatefulWidget {
    const LogsScreen({super.key});
-@@ -114,8 +113,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+@@ -238,8 +237,7 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
  
    @override
    Widget build(BuildContext context) {
@@ -399,7 +399,7 @@ index f5b922b4..fe469ab1 100644
          backgroundColor: AppColors.background,
          body: SafeArea(
            bottom: false,
-@@ -128,7 +126,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+@@ -252,7 +250,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
              ],
            ),
          ),

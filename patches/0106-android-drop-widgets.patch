@@ -20,7 +20,7 @@ index 8a235d66..642b0b87 100644
 -    implementation("androidx.glance:glance-material3:$glanceVersion")
  }
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
-index fb09c33c..26c54716 100644
+index c36b6bf8..5af9fe57 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 @@ -93,7 +93,6 @@ class MainActivity: FlutterActivity() {

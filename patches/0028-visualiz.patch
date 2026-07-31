@@ -19,7 +19,7 @@ index fbb4b214..5fb7f9cb 100644
      <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
      <application
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
-index 6bcf6b0e..fb09c33c 100644
+index df50e4d9..c36b6bf8 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 @@ -45,7 +45,6 @@ import android.media.AudioAttributes
@@ -80,7 +80,7 @@ index 6bcf6b0e..fb09c33c 100644
          // Audio converter channel
          // NOTE: FLAC to ALAC and M4A to MP3 conversion features are disabled for now
          /*
-@@ -4099,54 +4069,6 @@ class MainActivity: FlutterActivity() {
+@@ -4178,54 +4148,6 @@ class MainActivity: FlutterActivity() {
          }
      }
      
@@ -135,7 +135,7 @@ index 6bcf6b0e..fb09c33c 100644
      private val btBatteryServiceUuid = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb")
      private val btBatteryCharUuid = UUID.fromString("00002a19-0000-1000-8000-00805f9b34fb")
  
-@@ -4495,7 +4417,6 @@ class MainActivity: FlutterActivity() {
+@@ -4574,7 +4496,6 @@ class MainActivity: FlutterActivity() {
          aclReceiver = null
          unregisterVolumeContentObserver()
          justAudioProcessingController.release()

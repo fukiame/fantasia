@@ -391,10 +391,10 @@ index 06d30f41..6c9f998a 100644
                  icon: LucideIcons.arrowLeftRight,
                  title: 'Swipe Actions',
 diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
-index fe469ab1..04a3817e 100644
+index 35518a70..477ef515 100644
 --- a/lib/features/settings/screens/logs_screen.dart
 +++ b/lib/features/settings/screens/logs_screen.dart
-@@ -6,7 +6,6 @@ import 'package:share_plus/share_plus.dart';
+@@ -10,7 +10,6 @@ import 'package:share_plus/share_plus.dart';
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/core/theme/app_colors.dart';
  import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -402,7 +402,7 @@ index fe469ab1..04a3817e 100644
  import 'package:flick/core/utils/app_log.dart';
  
  class LogsScreen extends ConsumerStatefulWidget {
-@@ -139,7 +138,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+@@ -263,7 +262,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
          children: [
            IconButton(
              onPressed: () {
@@ -410,7 +410,7 @@ index fe469ab1..04a3817e 100644
                Navigator.of(context).pop();
              },
              icon: Icon(LucideIcons.chevronLeft, color: context.adaptiveTextPrimary),
-@@ -244,7 +242,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+@@ -391,7 +389,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
        padding: const EdgeInsets.only(right: AppConstants.spacingXs),
        child: GestureDetector(
          onTap: () {
