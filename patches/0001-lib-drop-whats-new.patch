@@ -64,10 +64,10 @@ index 478a054b..03cf9b3e 100644
      final desynced = _playerService.playbackDesyncedNotifier.value;
 diff --git a/lib/features/whats_new/data/changelog_data.dart b/lib/features/whats_new/data/changelog_data.dart
 deleted file mode 100644
-index f64fb8f1..00000000
+index 795278a0..00000000
 --- a/lib/features/whats_new/data/changelog_data.dart
 +++ /dev/null
-@@ -1,1096 +0,0 @@
+@@ -1,1134 +0,0 @@
 -/// Structured changelog data shown to the user in the "What's New" bottom
 -/// sheet. Entries are keyed by version string and must match `kAppVersion`
 -/// exactly to be considered "new".
@@ -201,6 +201,44 @@ index f64fb8f1..00000000
 -          'MediaStore prioritized for deep scans on removable storage before SAF fallback.',
 -          'Text styles and icon sizes updated across Last.fm, ListenBrainz, and library settings.',
 -          'Documentation: network sources plan, CONTRIBUTING.md with bit-perfect/DAC notes.',
+-        ],
+-      ),
+-      ChangelogSection(
+-        title: 'Detail Screen Overlay Top Bar',
+-        bullets: [
+-          'Detail screens (album, artist, playlist) migrated from `SliverAppBar` to a custom **overlay top bar** with pinned positioning.',
+-          'Background rendering refined with art layer gradient seal for a polished glass-morphism look.',
+-        ],
+-      ),
+-      ChangelogSection(
+-        title: 'DSD & MediaStore Integration',
+-        bullets: [
+-          'DSD and WavPack audio files now supported by OEM MediaScanners for proper file indexing.',
+-          'Deletion guard prevents accidental removal of DSD/WavPack files through the app.',
+-        ],
+-      ),
+-      ChangelogSection(
+-        title: 'Logs Screen Enhancements',
+-        bullets: [
+-          'Log upload and save-as-text options on the logs screen for sharing diagnostics.',
+-        ],
+-      ),
+-      ChangelogSection(
+-        title: 'Slider & Scale Improvements',
+-        bullets: [
+-          '`SliderSetting` gains an edit icon and `onDisplayTap` callback for direct value entry.',
+-          'Text scale slider range expanded with a manual input dialog for precise values.',
+-          '`scaledSp` upper bound increased to 30 for high-density screens.',
+-          'Album grid aspect ratio now computed per device width for responsive layouts.',
+-        ],
+-      ),
+-      ChangelogSection(
+-        title: 'Bug Fixes',
+-        bullets: [
+-          'Pause-on-disconnect preference now respected in USB DAC audio fallback.',
+-          'Queue pill padding fixed in the player song scene.',
+-          'Back gesture accounts for vertical distance during horizontal drag.',
+-          'USB DAC fallback logging improved.',
 -        ],
 -      ),
 -    ],
