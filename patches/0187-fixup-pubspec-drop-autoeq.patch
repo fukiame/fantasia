@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 18:42:57 +0700
+Subject: [PATCH] fixup! pubspec: drop autoeq
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index e91cfaf6..3db0b24f 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -80,8 +80,6 @@ flutter:
+     - assets/icons/svg/settings_white.svg
+     - assets/icons/svg/shuffle_black.svg
+     - assets/icons/svg/shuffle_white.svg
+-    - assets/autoeq/autoeq_catalog.json
+-    - assets/autoeq/autoeq_brands.json
+ 
+   fonts:
+     - family: ProductSans
+-- 
+2.55.0
+
