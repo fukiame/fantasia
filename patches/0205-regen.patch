@@ -1,0 +1,1304 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 21:23:40 +0700
+Subject: [PATCH] regen
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/src/rust/frb_generated.dart b/lib/src/rust/frb_generated.dart
+index 135c1ec8..a93e0b47 100644
+--- a/lib/src/rust/frb_generated.dart
++++ b/lib/src/rust/frb_generated.dart
+@@ -6,7 +6,6 @@
+ import 'api/alac_converter_api.dart';
+ import 'api/audio_api.dart';
+ import 'api/logging.dart';
+-import 'api/metadata_editor.dart';
+ import 'api/scanner.dart';
+ import 'api/simple.dart';
+ import 'api/uac2_api.dart';
+@@ -74,7 +73,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
+   String get codegenVersion => '2.12.0';
+ 
+   @override
+-  int get rustContentHash => -399381442;
++  int get rustContentHash => 1835817216;
+ 
+   static const kDefaultExternalLibraryLoaderConfig =
+       ExternalLibraryLoaderConfig(
+@@ -228,8 +227,6 @@ abstract class RustLibApi extends BaseApi {
+ 
+   Future<void> crateApiSimpleInitApp();
+ 
+-  Future<TagReadResult> crateApiMetadataEditorReadTags({required String path});
+-
+   Stream<String> crateApiLoggingRegisterLogSink();
+ 
+   Stream<ScanChunk> crateApiScannerScanMusicLibrary({
+@@ -301,17 +298,6 @@ abstract class RustLibApi extends BaseApi {
+   });
+ 
+   Future<bool> crateApiUac2ApiUac2StopStreaming();
+-
+-  Future<TagWriteResult> crateApiMetadataEditorWriteTags({
+-    required String path,
+-    required TagEditFields fields,
+-  });
+-
+-  Future<TagWriteResult> crateApiMetadataEditorWriteTagsToTemp({
+-    required String path,
+-    required TagEditFields fields,
+-    required String tempDir,
+-  });
+ }
+ 
+ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+@@ -1737,34 +1723,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+   TaskConstMeta get kCrateApiSimpleInitAppConstMeta =>
+       const TaskConstMeta(debugName: "init_app", argNames: []);
+ 
+-  @override
+-  Future<TagReadResult> crateApiMetadataEditorReadTags({required String path}) {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          sse_encode_String(path, serializer);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 53,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_tag_read_result,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiMetadataEditorReadTagsConstMeta,
+-        argValues: [path],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiMetadataEditorReadTagsConstMeta =>
+-      const TaskConstMeta(debugName: "read_tags", argNames: ["path"]);
+-
+   @override
+   Stream<String> crateApiLoggingRegisterLogSink() {
+     final sink = RustStreamSink<String>();
+@@ -1777,7 +1735,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+             pdeCallFfi(
+               generalizedFrbRustBinding,
+               serializer,
+-              funcId: 54,
++              funcId: 53,
+               port: port_,
+             );
+           },
+@@ -1816,7 +1774,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+             pdeCallFfi(
+               generalizedFrbRustBinding,
+               serializer,
+-              funcId: 55,
++              funcId: 54,
+               port: port_,
+             );
+           },
+@@ -1855,7 +1813,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 56,
++            funcId: 55,
+             port: port_,
+           );
+         },
+@@ -1885,7 +1843,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 57,
++            funcId: 56,
+             port: port_,
+           );
+         },
+@@ -1913,7 +1871,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 58,
++            funcId: 57,
+             port: port_,
+           );
+         },
+@@ -1943,7 +1901,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 59,
++            funcId: 58,
+             port: port_,
+           );
+         },
+@@ -1970,7 +1928,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 60,
++            funcId: 59,
+             port: port_,
+           );
+         },
+@@ -1997,7 +1955,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 61,
++            funcId: 60,
+             port: port_,
+           );
+         },
+@@ -2024,7 +1982,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 62,
++            funcId: 61,
+             port: port_,
+           );
+         },
+@@ -2051,7 +2009,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 63,
++            funcId: 62,
+             port: port_,
+           );
+         },
+@@ -2075,7 +2033,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_unit,
+@@ -2100,7 +2058,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_uac_2_connection_state,
+@@ -2128,7 +2086,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 66,
++            funcId: 65,
+             port: port_,
+           );
+         },
+@@ -2155,7 +2113,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_uac_2_fallback_info,
+@@ -2177,7 +2135,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -2199,7 +2157,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_u_32,
+@@ -2224,7 +2182,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 70)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_f_64,
+@@ -2249,7 +2207,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 71,
++            funcId: 70,
+             port: port_,
+           );
+         },
+@@ -2273,7 +2231,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -2295,7 +2253,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_bool,
+@@ -2320,7 +2278,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+       SyncTask(
+         callFfi: () {
+           final serializer = SseSerializer(generalizedFrbRustBinding);
+-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
++          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
+         },
+         codec: SseCodec(
+           decodeSuccessData: sse_decode_list_uac_2_device_info,
+@@ -2348,7 +2306,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 75,
++            funcId: 74,
+             port: port_,
+           );
+         },
+@@ -2379,7 +2337,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 76,
++            funcId: 75,
+             port: port_,
+           );
+         },
+@@ -2410,7 +2368,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 77,
++            funcId: 76,
+             port: port_,
+           );
+         },
+@@ -2440,7 +2398,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 78,
++            funcId: 77,
+             port: port_,
+           );
+         },
+@@ -2471,7 +2429,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 79,
++            funcId: 78,
+             port: port_,
+           );
+         },
+@@ -2501,7 +2459,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 80,
++            funcId: 79,
+             port: port_,
+           );
+         },
+@@ -2531,7 +2489,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+           pdeCallFfi(
+             generalizedFrbRustBinding,
+             serializer,
+-            funcId: 81,
++            funcId: 80,
+             port: port_,
+           );
+         },
+@@ -2549,78 +2507,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+   TaskConstMeta get kCrateApiUac2ApiUac2StopStreamingConstMeta =>
+       const TaskConstMeta(debugName: "uac2_stop_streaming", argNames: []);
+ 
+-  @override
+-  Future<TagWriteResult> crateApiMetadataEditorWriteTags({
+-    required String path,
+-    required TagEditFields fields,
+-  }) {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          sse_encode_String(path, serializer);
+-          sse_encode_box_autoadd_tag_edit_fields(fields, serializer);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 82,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_tag_write_result,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiMetadataEditorWriteTagsConstMeta,
+-        argValues: [path, fields],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiMetadataEditorWriteTagsConstMeta =>
+-      const TaskConstMeta(
+-        debugName: "write_tags",
+-        argNames: ["path", "fields"],
+-      );
+-
+-  @override
+-  Future<TagWriteResult> crateApiMetadataEditorWriteTagsToTemp({
+-    required String path,
+-    required TagEditFields fields,
+-    required String tempDir,
+-  }) {
+-    return handler.executeNormal(
+-      NormalTask(
+-        callFfi: (port_) {
+-          final serializer = SseSerializer(generalizedFrbRustBinding);
+-          sse_encode_String(path, serializer);
+-          sse_encode_box_autoadd_tag_edit_fields(fields, serializer);
+-          sse_encode_String(tempDir, serializer);
+-          pdeCallFfi(
+-            generalizedFrbRustBinding,
+-            serializer,
+-            funcId: 83,
+-            port: port_,
+-          );
+-        },
+-        codec: SseCodec(
+-          decodeSuccessData: sse_decode_tag_write_result,
+-          decodeErrorData: sse_decode_String,
+-        ),
+-        constMeta: kCrateApiMetadataEditorWriteTagsToTempConstMeta,
+-        argValues: [path, fields, tempDir],
+-        apiImpl: this,
+-      ),
+-    );
+-  }
+-
+-  TaskConstMeta get kCrateApiMetadataEditorWriteTagsToTempConstMeta =>
+-      const TaskConstMeta(
+-        debugName: "write_tags_to_temp",
+-        argNames: ["path", "fields", "tempDir"],
+-      );
+-
+   @protected
+   AnyhowException dco_decode_AnyhowException(dynamic raw) {
+     // Codec=Dco (DartCObject based), see doc to use other codecs
+@@ -2867,12 +2753,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+     return dco_decode_scan_options(raw);
+   }
+ 
+-  @protected
+-  TagEditFields dco_decode_box_autoadd_tag_edit_fields(dynamic raw) {
+-    // Codec=Dco (DartCObject based), see doc to use other codecs
+-    return dco_decode_tag_edit_fields(raw);
+-  }
+-
+   @protected
+   int dco_decode_box_autoadd_u_32(dynamic raw) {
+     // Codec=Dco (DartCObject based), see doc to use other codecs
+@@ -3121,55 +3001,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+     );
+   }
+ 
+-  @protected
+-  TagEditFields dco_decode_tag_edit_fields(dynamic raw) {
+-    // Codec=Dco (DartCObject based), see doc to use other codecs
+-    final arr = raw as List<dynamic>;
+-    if (arr.length != 8)
+-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+-    return TagEditFields(
+-      title: dco_decode_opt_String(arr[0]),
+-      artist: dco_decode_opt_String(arr[1]),
+-      album: dco_decode_opt_String(arr[2]),
+-      albumArtist: dco_decode_opt_String(arr[3]),
+-      genre: dco_decode_opt_String(arr[4]),
+-      year: dco_decode_opt_box_autoadd_u_32(arr[5]),
+-      trackNumber: dco_decode_opt_box_autoadd_u_32(arr[6]),
+-      discNumber: dco_decode_opt_box_autoadd_u_32(arr[7]),
+-    );
+-  }
+-
+-  @protected
+-  TagReadResult dco_decode_tag_read_result(dynamic raw) {
+-    // Codec=Dco (DartCObject based), see doc to use other codecs
+-    final arr = raw as List<dynamic>;
+-    if (arr.length != 8)
+-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+-    return TagReadResult(
+-      title: dco_decode_opt_String(arr[0]),
+-      artist: dco_decode_opt_String(arr[1]),
+-      album: dco_decode_opt_String(arr[2]),
+-      albumArtist: dco_decode_opt_String(arr[3]),
+-      genre: dco_decode_opt_String(arr[4]),
+-      year: dco_decode_opt_box_autoadd_u_32(arr[5]),
+-      trackNumber: dco_decode_opt_box_autoadd_u_32(arr[6]),
+-      discNumber: dco_decode_opt_box_autoadd_u_32(arr[7]),
+-    );
+-  }
+-
+-  @protected
+-  TagWriteResult dco_decode_tag_write_result(dynamic raw) {
+-    // Codec=Dco (DartCObject based), see doc to use other codecs
+-    final arr = raw as List<dynamic>;
+-    if (arr.length != 3)
+-      throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+-    return TagWriteResult(
+-      success: dco_decode_bool(arr[0]),
+-      error: dco_decode_opt_String(arr[1]),
+-      tempPath: dco_decode_opt_String(arr[2]),
+-    );
+-  }
+-
+   @protected
+   int dco_decode_u_16(dynamic raw) {
+     // Codec=Dco (DartCObject based), see doc to use other codecs
+@@ -3599,14 +3430,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+     return (sse_decode_scan_options(deserializer));
+   }
+ 
+-  @protected
+-  TagEditFields sse_decode_box_autoadd_tag_edit_fields(
+-    SseDeserializer deserializer,
+-  ) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    return (sse_decode_tag_edit_fields(deserializer));
+-  }
+-
+   @protected
+   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer) {
+     // Codec=Sse (Serialization based), see doc to use other codecs
+@@ -3964,65 +3787,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+     );
+   }
+ 
+-  @protected
+-  TagEditFields sse_decode_tag_edit_fields(SseDeserializer deserializer) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    var var_title = sse_decode_opt_String(deserializer);
+-    var var_artist = sse_decode_opt_String(deserializer);
+-    var var_album = sse_decode_opt_String(deserializer);
+-    var var_albumArtist = sse_decode_opt_String(deserializer);
+-    var var_genre = sse_decode_opt_String(deserializer);
+-    var var_year = sse_decode_opt_box_autoadd_u_32(deserializer);
+-    var var_trackNumber = sse_decode_opt_box_autoadd_u_32(deserializer);
+-    var var_discNumber = sse_decode_opt_box_autoadd_u_32(deserializer);
+-    return TagEditFields(
+-      title: var_title,
+-      artist: var_artist,
+-      album: var_album,
+-      albumArtist: var_albumArtist,
+-      genre: var_genre,
+-      year: var_year,
+-      trackNumber: var_trackNumber,
+-      discNumber: var_discNumber,
+-    );
+-  }
+-
+-  @protected
+-  TagReadResult sse_decode_tag_read_result(SseDeserializer deserializer) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    var var_title = sse_decode_opt_String(deserializer);
+-    var var_artist = sse_decode_opt_String(deserializer);
+-    var var_album = sse_decode_opt_String(deserializer);
+-    var var_albumArtist = sse_decode_opt_String(deserializer);
+-    var var_genre = sse_decode_opt_String(deserializer);
+-    var var_year = sse_decode_opt_box_autoadd_u_32(deserializer);
+-    var var_trackNumber = sse_decode_opt_box_autoadd_u_32(deserializer);
+-    var var_discNumber = sse_decode_opt_box_autoadd_u_32(deserializer);
+-    return TagReadResult(
+-      title: var_title,
+-      artist: var_artist,
+-      album: var_album,
+-      albumArtist: var_albumArtist,
+-      genre: var_genre,
+-      year: var_year,
+-      trackNumber: var_trackNumber,
+-      discNumber: var_discNumber,
+-    );
+-  }
+-
+-  @protected
+-  TagWriteResult sse_decode_tag_write_result(SseDeserializer deserializer) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    var var_success = sse_decode_bool(deserializer);
+-    var var_error = sse_decode_opt_String(deserializer);
+-    var var_tempPath = sse_decode_opt_String(deserializer);
+-    return TagWriteResult(
+-      success: var_success,
+-      error: var_error,
+-      tempPath: var_tempPath,
+-    );
+-  }
+-
+   @protected
+   int sse_decode_u_16(SseDeserializer deserializer) {
+     // Codec=Sse (Serialization based), see doc to use other codecs
+@@ -4430,15 +4194,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+     sse_encode_scan_options(self, serializer);
+   }
+ 
+-  @protected
+-  void sse_encode_box_autoadd_tag_edit_fields(
+-    TagEditFields self,
+-    SseSerializer serializer,
+-  ) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    sse_encode_tag_edit_fields(self, serializer);
+-  }
+-
+   @protected
+   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer) {
+     // Codec=Sse (Serialization based), see doc to use other codecs
+@@ -4787,49 +4542,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+     sse_encode_u_32(self.totalFiles, serializer);
+   }
+ 
+-  @protected
+-  void sse_encode_tag_edit_fields(
+-    TagEditFields self,
+-    SseSerializer serializer,
+-  ) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    sse_encode_opt_String(self.title, serializer);
+-    sse_encode_opt_String(self.artist, serializer);
+-    sse_encode_opt_String(self.album, serializer);
+-    sse_encode_opt_String(self.albumArtist, serializer);
+-    sse_encode_opt_String(self.genre, serializer);
+-    sse_encode_opt_box_autoadd_u_32(self.year, serializer);
+-    sse_encode_opt_box_autoadd_u_32(self.trackNumber, serializer);
+-    sse_encode_opt_box_autoadd_u_32(self.discNumber, serializer);
+-  }
+-
+-  @protected
+-  void sse_encode_tag_read_result(
+-    TagReadResult self,
+-    SseSerializer serializer,
+-  ) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    sse_encode_opt_String(self.title, serializer);
+-    sse_encode_opt_String(self.artist, serializer);
+-    sse_encode_opt_String(self.album, serializer);
+-    sse_encode_opt_String(self.albumArtist, serializer);
+-    sse_encode_opt_String(self.genre, serializer);
+-    sse_encode_opt_box_autoadd_u_32(self.year, serializer);
+-    sse_encode_opt_box_autoadd_u_32(self.trackNumber, serializer);
+-    sse_encode_opt_box_autoadd_u_32(self.discNumber, serializer);
+-  }
+-
+-  @protected
+-  void sse_encode_tag_write_result(
+-    TagWriteResult self,
+-    SseSerializer serializer,
+-  ) {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    sse_encode_bool(self.success, serializer);
+-    sse_encode_opt_String(self.error, serializer);
+-    sse_encode_opt_String(self.tempPath, serializer);
+-  }
+-
+   @protected
+   void sse_encode_u_16(int self, SseSerializer serializer) {
+     // Codec=Sse (Serialization based), see doc to use other codecs
+diff --git a/lib/src/rust/frb_generated.io.dart b/lib/src/rust/frb_generated.io.dart
+index ff900f36..9ed15cfd 100644
+--- a/lib/src/rust/frb_generated.io.dart
++++ b/lib/src/rust/frb_generated.io.dart
+@@ -6,7 +6,6 @@
+ import 'api/alac_converter_api.dart';
+ import 'api/audio_api.dart';
+ import 'api/logging.dart';
+-import 'api/metadata_editor.dart';
+ import 'api/scanner.dart';
+ import 'api/simple.dart';
+ import 'api/uac2_api.dart';
+@@ -100,9 +99,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanOptions dco_decode_box_autoadd_scan_options(dynamic raw);
+ 
+-  @protected
+-  TagEditFields dco_decode_box_autoadd_tag_edit_fields(dynamic raw);
+-
+   @protected
+   int dco_decode_box_autoadd_u_32(dynamic raw);
+ 
+@@ -214,15 +210,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanResult dco_decode_scan_result(dynamic raw);
+ 
+-  @protected
+-  TagEditFields dco_decode_tag_edit_fields(dynamic raw);
+-
+-  @protected
+-  TagReadResult dco_decode_tag_read_result(dynamic raw);
+-
+-  @protected
+-  TagWriteResult dco_decode_tag_write_result(dynamic raw);
+-
+   @protected
+   int dco_decode_u_16(dynamic raw);
+ 
+@@ -357,11 +344,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanOptions sse_decode_box_autoadd_scan_options(SseDeserializer deserializer);
+ 
+-  @protected
+-  TagEditFields sse_decode_box_autoadd_tag_edit_fields(
+-    SseDeserializer deserializer,
+-  );
+-
+   @protected
+   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
+ 
+@@ -491,15 +473,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanResult sse_decode_scan_result(SseDeserializer deserializer);
+ 
+-  @protected
+-  TagEditFields sse_decode_tag_edit_fields(SseDeserializer deserializer);
+-
+-  @protected
+-  TagReadResult sse_decode_tag_read_result(SseDeserializer deserializer);
+-
+-  @protected
+-  TagWriteResult sse_decode_tag_write_result(SseDeserializer deserializer);
+-
+   @protected
+   int sse_decode_u_16(SseDeserializer deserializer);
+ 
+@@ -663,12 +636,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+     SseSerializer serializer,
+   );
+ 
+-  @protected
+-  void sse_encode_box_autoadd_tag_edit_fields(
+-    TagEditFields self,
+-    SseSerializer serializer,
+-  );
+-
+   @protected
+   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
+ 
+@@ -822,18 +789,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   void sse_encode_scan_result(ScanResult self, SseSerializer serializer);
+ 
+-  @protected
+-  void sse_encode_tag_edit_fields(TagEditFields self, SseSerializer serializer);
+-
+-  @protected
+-  void sse_encode_tag_read_result(TagReadResult self, SseSerializer serializer);
+-
+-  @protected
+-  void sse_encode_tag_write_result(
+-    TagWriteResult self,
+-    SseSerializer serializer,
+-  );
+-
+   @protected
+   void sse_encode_u_16(int self, SseSerializer serializer);
+ 
+diff --git a/lib/src/rust/frb_generated.web.dart b/lib/src/rust/frb_generated.web.dart
+index 9b0addc2..834307ac 100644
+--- a/lib/src/rust/frb_generated.web.dart
++++ b/lib/src/rust/frb_generated.web.dart
+@@ -9,7 +9,6 @@
+ import 'api/alac_converter_api.dart';
+ import 'api/audio_api.dart';
+ import 'api/logging.dart';
+-import 'api/metadata_editor.dart';
+ import 'api/scanner.dart';
+ import 'api/simple.dart';
+ import 'api/uac2_api.dart';
+@@ -102,9 +101,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanOptions dco_decode_box_autoadd_scan_options(dynamic raw);
+ 
+-  @protected
+-  TagEditFields dco_decode_box_autoadd_tag_edit_fields(dynamic raw);
+-
+   @protected
+   int dco_decode_box_autoadd_u_32(dynamic raw);
+ 
+@@ -216,15 +212,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanResult dco_decode_scan_result(dynamic raw);
+ 
+-  @protected
+-  TagEditFields dco_decode_tag_edit_fields(dynamic raw);
+-
+-  @protected
+-  TagReadResult dco_decode_tag_read_result(dynamic raw);
+-
+-  @protected
+-  TagWriteResult dco_decode_tag_write_result(dynamic raw);
+-
+   @protected
+   int dco_decode_u_16(dynamic raw);
+ 
+@@ -359,11 +346,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanOptions sse_decode_box_autoadd_scan_options(SseDeserializer deserializer);
+ 
+-  @protected
+-  TagEditFields sse_decode_box_autoadd_tag_edit_fields(
+-    SseDeserializer deserializer,
+-  );
+-
+   @protected
+   int sse_decode_box_autoadd_u_32(SseDeserializer deserializer);
+ 
+@@ -493,15 +475,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   ScanResult sse_decode_scan_result(SseDeserializer deserializer);
+ 
+-  @protected
+-  TagEditFields sse_decode_tag_edit_fields(SseDeserializer deserializer);
+-
+-  @protected
+-  TagReadResult sse_decode_tag_read_result(SseDeserializer deserializer);
+-
+-  @protected
+-  TagWriteResult sse_decode_tag_write_result(SseDeserializer deserializer);
+-
+   @protected
+   int sse_decode_u_16(SseDeserializer deserializer);
+ 
+@@ -665,12 +638,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+     SseSerializer serializer,
+   );
+ 
+-  @protected
+-  void sse_encode_box_autoadd_tag_edit_fields(
+-    TagEditFields self,
+-    SseSerializer serializer,
+-  );
+-
+   @protected
+   void sse_encode_box_autoadd_u_32(int self, SseSerializer serializer);
+ 
+@@ -824,18 +791,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+   @protected
+   void sse_encode_scan_result(ScanResult self, SseSerializer serializer);
+ 
+-  @protected
+-  void sse_encode_tag_edit_fields(TagEditFields self, SseSerializer serializer);
+-
+-  @protected
+-  void sse_encode_tag_read_result(TagReadResult self, SseSerializer serializer);
+-
+-  @protected
+-  void sse_encode_tag_write_result(
+-    TagWriteResult self,
+-    SseSerializer serializer,
+-  );
+-
+   @protected
+   void sse_encode_u_16(int self, SseSerializer serializer);
+ 
+diff --git a/rust/src/frb_generated.rs b/rust/src/frb_generated.rs
+index 6ba2d2b5..2e6a9ef1 100644
+--- a/rust/src/frb_generated.rs
++++ b/rust/src/frb_generated.rs
+@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
+     default_rust_auto_opaque = RustAutoOpaqueMoi,
+ );
+ pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
+-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -399381442;
++pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1835817216;
+ 
+ // Section: executor
+ 
+@@ -1746,39 +1746,6 @@ fn wire__crate__api__simple__init_app_impl(
+         },
+     )
+ }
+-fn wire__crate__api__metadata_editor__read_tags_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "read_tags",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            let api_path = <String>::sse_decode(&mut deserializer);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok = crate::api::metadata_editor::read_tags(api_path)?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+ fn wire__crate__api__logging__register_log_sink_impl(
+     port_: flutter_rust_bridge::for_generated::MessagePort,
+     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+@@ -2699,81 +2666,6 @@ fn wire__crate__api__uac2_api__uac2_stop_streaming_impl(
+         },
+     )
+ }
+-fn wire__crate__api__metadata_editor__write_tags_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "write_tags",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            let api_path = <String>::sse_decode(&mut deserializer);
+-            let api_fields =
+-                <crate::api::metadata_editor::TagEditFields>::sse_decode(&mut deserializer);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok = crate::api::metadata_editor::write_tags(api_path, api_fields)?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+-fn wire__crate__api__metadata_editor__write_tags_to_temp_impl(
+-    port_: flutter_rust_bridge::for_generated::MessagePort,
+-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+-    rust_vec_len_: i32,
+-    data_len_: i32,
+-) {
+-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+-        flutter_rust_bridge::for_generated::TaskInfo {
+-            debug_name: "write_tags_to_temp",
+-            port: Some(port_),
+-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+-        },
+-        move || {
+-            let message = unsafe {
+-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+-                    ptr_,
+-                    rust_vec_len_,
+-                    data_len_,
+-                )
+-            };
+-            let mut deserializer =
+-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+-            let api_path = <String>::sse_decode(&mut deserializer);
+-            let api_fields =
+-                <crate::api::metadata_editor::TagEditFields>::sse_decode(&mut deserializer);
+-            let api_temp_dir = <String>::sse_decode(&mut deserializer);
+-            deserializer.end();
+-            move |context| {
+-                transform_result_sse::<_, String>((move || {
+-                    let output_ok = crate::api::metadata_editor::write_tags_to_temp(
+-                        api_path,
+-                        api_fields,
+-                        api_temp_dir,
+-                    )?;
+-                    Ok(output_ok)
+-                })())
+-            }
+-        },
+-    )
+-}
+ 
+ // Section: dart2rust
+ 
+@@ -3398,68 +3290,6 @@ impl SseDecode for crate::api::scanner::ScanResult {
+     }
+ }
+ 
+-impl SseDecode for crate::api::metadata_editor::TagEditFields {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+-        let mut var_title = <Option<String>>::sse_decode(deserializer);
+-        let mut var_artist = <Option<String>>::sse_decode(deserializer);
+-        let mut var_album = <Option<String>>::sse_decode(deserializer);
+-        let mut var_albumArtist = <Option<String>>::sse_decode(deserializer);
+-        let mut var_genre = <Option<String>>::sse_decode(deserializer);
+-        let mut var_year = <Option<u32>>::sse_decode(deserializer);
+-        let mut var_trackNumber = <Option<u32>>::sse_decode(deserializer);
+-        let mut var_discNumber = <Option<u32>>::sse_decode(deserializer);
+-        return crate::api::metadata_editor::TagEditFields {
+-            title: var_title,
+-            artist: var_artist,
+-            album: var_album,
+-            album_artist: var_albumArtist,
+-            genre: var_genre,
+-            year: var_year,
+-            track_number: var_trackNumber,
+-            disc_number: var_discNumber,
+-        };
+-    }
+-}
+-
+-impl SseDecode for crate::api::metadata_editor::TagReadResult {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+-        let mut var_title = <Option<String>>::sse_decode(deserializer);
+-        let mut var_artist = <Option<String>>::sse_decode(deserializer);
+-        let mut var_album = <Option<String>>::sse_decode(deserializer);
+-        let mut var_albumArtist = <Option<String>>::sse_decode(deserializer);
+-        let mut var_genre = <Option<String>>::sse_decode(deserializer);
+-        let mut var_year = <Option<u32>>::sse_decode(deserializer);
+-        let mut var_trackNumber = <Option<u32>>::sse_decode(deserializer);
+-        let mut var_discNumber = <Option<u32>>::sse_decode(deserializer);
+-        return crate::api::metadata_editor::TagReadResult {
+-            title: var_title,
+-            artist: var_artist,
+-            album: var_album,
+-            album_artist: var_albumArtist,
+-            genre: var_genre,
+-            year: var_year,
+-            track_number: var_trackNumber,
+-            disc_number: var_discNumber,
+-        };
+-    }
+-}
+-
+-impl SseDecode for crate::api::metadata_editor::TagWriteResult {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+-        let mut var_success = <bool>::sse_decode(deserializer);
+-        let mut var_error = <Option<String>>::sse_decode(deserializer);
+-        let mut var_tempPath = <Option<String>>::sse_decode(deserializer);
+-        return crate::api::metadata_editor::TagWriteResult {
+-            success: var_success,
+-            error: var_error,
+-            temp_path: var_tempPath,
+-        };
+-    }
+-}
+-
+ impl SseDecode for u16 {
+     // Codec=Sse (Serialization based), see doc to use other codecs
+     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+@@ -3689,80 +3519,72 @@ fn pde_ffi_dispatcher_primary_impl(
+             data_len,
+         ),
+         52 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+-        53 => wire__crate__api__metadata_editor__read_tags_impl(port, ptr, rust_vec_len, data_len),
+-        54 => wire__crate__api__logging__register_log_sink_impl(port, ptr, rust_vec_len, data_len),
+-        55 => wire__crate__api__scanner__scan_music_library_impl(port, ptr, rust_vec_len, data_len),
+-        56 => wire__crate__api__scanner__scan_root_dir_impl(port, ptr, rust_vec_len, data_len),
+-        57 => {
++        53 => wire__crate__api__logging__register_log_sink_impl(port, ptr, rust_vec_len, data_len),
++        54 => wire__crate__api__scanner__scan_music_library_impl(port, ptr, rust_vec_len, data_len),
++        55 => wire__crate__api__scanner__scan_root_dir_impl(port, ptr, rust_vec_len, data_len),
++        56 => {
+             wire__crate__api__audio_api__set_dsd_track_rate_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        58 => {
++        57 => {
+             wire__crate__api__audio_api__set_pending_volume_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        59 => {
++        58 => {
+             wire__crate__api__audio_api__take_pending_volume_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        60 => wire__crate__api__uac2_api__uac2_activate_fallback_impl(
++        59 => wire__crate__api__uac2_api__uac2_activate_fallback_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        61 => wire__crate__api__uac2_api__uac2_attempt_reconnect_impl(
++        60 => wire__crate__api__uac2_api__uac2_attempt_reconnect_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        62 => wire__crate__api__uac2_api__uac2_deactivate_fallback_impl(
++        61 => wire__crate__api__uac2_api__uac2_deactivate_fallback_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        63 => wire__crate__api__uac2_api__uac2_disconnect_impl(port, ptr, rust_vec_len, data_len),
+-        66 => wire__crate__api__uac2_api__uac2_get_device_capabilities_impl(
++        62 => wire__crate__api__uac2_api__uac2_disconnect_impl(port, ptr, rust_vec_len, data_len),
++        65 => wire__crate__api__uac2_api__uac2_get_device_capabilities_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        71 => wire__crate__api__uac2_api__uac2_get_volume_range_impl(
++        70 => wire__crate__api__uac2_api__uac2_get_volume_range_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        75 => {
++        74 => {
+             wire__crate__api__uac2_api__uac2_select_device_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        76 => wire__crate__api__uac2_api__uac2_set_auto_reconnect_impl(
++        75 => wire__crate__api__uac2_api__uac2_set_auto_reconnect_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        77 => wire__crate__api__uac2_api__uac2_set_mute_impl(port, ptr, rust_vec_len, data_len),
+-        78 => wire__crate__api__uac2_api__uac2_set_sampling_frequency_impl(
++        76 => wire__crate__api__uac2_api__uac2_set_mute_impl(port, ptr, rust_vec_len, data_len),
++        77 => wire__crate__api__uac2_api__uac2_set_sampling_frequency_impl(
+             port,
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        79 => wire__crate__api__uac2_api__uac2_set_volume_impl(port, ptr, rust_vec_len, data_len),
+-        80 => {
++        78 => wire__crate__api__uac2_api__uac2_set_volume_impl(port, ptr, rust_vec_len, data_len),
++        79 => {
+             wire__crate__api__uac2_api__uac2_start_streaming_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        81 => {
++        80 => {
+             wire__crate__api__uac2_api__uac2_stop_streaming_impl(port, ptr, rust_vec_len, data_len)
+         }
+-        82 => wire__crate__api__metadata_editor__write_tags_impl(port, ptr, rust_vec_len, data_len),
+-        83 => wire__crate__api__metadata_editor__write_tags_to_temp_impl(
+-            port,
+-            ptr,
+-            rust_vec_len,
+-            data_len,
+-        ),
+         _ => unreachable!(),
+     }
+ }
+@@ -3855,27 +3677,27 @@ fn pde_ffi_dispatcher_sync_impl(
+             wire__crate__api__audio_api__audio_set_high_res_mode_impl(ptr, rust_vec_len, data_len)
+         }
+         51 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
+-        64 => wire__crate__api__uac2_api__uac2_force_release_usb_session_impl(
++        63 => wire__crate__api__uac2_api__uac2_force_release_usb_session_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        65 => {
++        64 => {
+             wire__crate__api__uac2_api__uac2_get_connection_state_impl(ptr, rust_vec_len, data_len)
+         }
+-        67 => wire__crate__api__uac2_api__uac2_get_fallback_info_impl(ptr, rust_vec_len, data_len),
+-        68 => wire__crate__api__uac2_api__uac2_get_mute_impl(ptr, rust_vec_len, data_len),
+-        69 => wire__crate__api__uac2_api__uac2_get_sampling_frequency_impl(
++        66 => wire__crate__api__uac2_api__uac2_get_fallback_info_impl(ptr, rust_vec_len, data_len),
++        67 => wire__crate__api__uac2_api__uac2_get_mute_impl(ptr, rust_vec_len, data_len),
++        68 => wire__crate__api__uac2_api__uac2_get_sampling_frequency_impl(
+             ptr,
+             rust_vec_len,
+             data_len,
+         ),
+-        70 => wire__crate__api__uac2_api__uac2_get_volume_impl(ptr, rust_vec_len, data_len),
+-        72 => wire__crate__api__uac2_api__uac2_is_available_impl(ptr, rust_vec_len, data_len),
+-        73 => {
++        69 => wire__crate__api__uac2_api__uac2_get_volume_impl(ptr, rust_vec_len, data_len),
++        71 => wire__crate__api__uac2_api__uac2_is_available_impl(ptr, rust_vec_len, data_len),
++        72 => {
+             wire__crate__api__uac2_api__uac2_is_usb_session_active_impl(ptr, rust_vec_len, data_len)
+         }
+-        74 => wire__crate__api__uac2_api__uac2_list_devices_impl(ptr, rust_vec_len, data_len),
++        73 => wire__crate__api__uac2_api__uac2_list_devices_impl(ptr, rust_vec_len, data_len),
+         _ => unreachable!(),
+     }
+ }
+@@ -4267,82 +4089,6 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::scanner::ScanResult>
+     }
+ }
+ // Codec=Dco (DartCObject based), see doc to use other codecs
+-impl flutter_rust_bridge::IntoDart for crate::api::metadata_editor::TagEditFields {
+-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+-        [
+-            self.title.into_into_dart().into_dart(),
+-            self.artist.into_into_dart().into_dart(),
+-            self.album.into_into_dart().into_dart(),
+-            self.album_artist.into_into_dart().into_dart(),
+-            self.genre.into_into_dart().into_dart(),
+-            self.year.into_into_dart().into_dart(),
+-            self.track_number.into_into_dart().into_dart(),
+-            self.disc_number.into_into_dart().into_dart(),
+-        ]
+-        .into_dart()
+-    }
+-}
+-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+-    for crate::api::metadata_editor::TagEditFields
+-{
+-}
+-impl flutter_rust_bridge::IntoIntoDart<crate::api::metadata_editor::TagEditFields>
+-    for crate::api::metadata_editor::TagEditFields
+-{
+-    fn into_into_dart(self) -> crate::api::metadata_editor::TagEditFields {
+-        self
+-    }
+-}
+-// Codec=Dco (DartCObject based), see doc to use other codecs
+-impl flutter_rust_bridge::IntoDart for crate::api::metadata_editor::TagReadResult {
+-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+-        [
+-            self.title.into_into_dart().into_dart(),
+-            self.artist.into_into_dart().into_dart(),
+-            self.album.into_into_dart().into_dart(),
+-            self.album_artist.into_into_dart().into_dart(),
+-            self.genre.into_into_dart().into_dart(),
+-            self.year.into_into_dart().into_dart(),
+-            self.track_number.into_into_dart().into_dart(),
+-            self.disc_number.into_into_dart().into_dart(),
+-        ]
+-        .into_dart()
+-    }
+-}
+-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+-    for crate::api::metadata_editor::TagReadResult
+-{
+-}
+-impl flutter_rust_bridge::IntoIntoDart<crate::api::metadata_editor::TagReadResult>
+-    for crate::api::metadata_editor::TagReadResult
+-{
+-    fn into_into_dart(self) -> crate::api::metadata_editor::TagReadResult {
+-        self
+-    }
+-}
+-// Codec=Dco (DartCObject based), see doc to use other codecs
+-impl flutter_rust_bridge::IntoDart for crate::api::metadata_editor::TagWriteResult {
+-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+-        [
+-            self.success.into_into_dart().into_dart(),
+-            self.error.into_into_dart().into_dart(),
+-            self.temp_path.into_into_dart().into_dart(),
+-        ]
+-        .into_dart()
+-    }
+-}
+-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+-    for crate::api::metadata_editor::TagWriteResult
+-{
+-}
+-impl flutter_rust_bridge::IntoIntoDart<crate::api::metadata_editor::TagWriteResult>
+-    for crate::api::metadata_editor::TagWriteResult
+-{
+-    fn into_into_dart(self) -> crate::api::metadata_editor::TagWriteResult {
+-        self
+-    }
+-}
+-// Codec=Dco (DartCObject based), see doc to use other codecs
+ impl flutter_rust_bridge::IntoDart for crate::api::uac2_api::Uac2AudioFormat {
+     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+         [
+@@ -4987,43 +4733,6 @@ impl SseEncode for crate::api::scanner::ScanResult {
+     }
+ }
+ 
+-impl SseEncode for crate::api::metadata_editor::TagEditFields {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+-        <Option<String>>::sse_encode(self.title, serializer);
+-        <Option<String>>::sse_encode(self.artist, serializer);
+-        <Option<String>>::sse_encode(self.album, serializer);
+-        <Option<String>>::sse_encode(self.album_artist, serializer);
+-        <Option<String>>::sse_encode(self.genre, serializer);
+-        <Option<u32>>::sse_encode(self.year, serializer);
+-        <Option<u32>>::sse_encode(self.track_number, serializer);
+-        <Option<u32>>::sse_encode(self.disc_number, serializer);
+-    }
+-}
+-
+-impl SseEncode for crate::api::metadata_editor::TagReadResult {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+-        <Option<String>>::sse_encode(self.title, serializer);
+-        <Option<String>>::sse_encode(self.artist, serializer);
+-        <Option<String>>::sse_encode(self.album, serializer);
+-        <Option<String>>::sse_encode(self.album_artist, serializer);
+-        <Option<String>>::sse_encode(self.genre, serializer);
+-        <Option<u32>>::sse_encode(self.year, serializer);
+-        <Option<u32>>::sse_encode(self.track_number, serializer);
+-        <Option<u32>>::sse_encode(self.disc_number, serializer);
+-    }
+-}
+-
+-impl SseEncode for crate::api::metadata_editor::TagWriteResult {
+-    // Codec=Sse (Serialization based), see doc to use other codecs
+-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+-        <bool>::sse_encode(self.success, serializer);
+-        <Option<String>>::sse_encode(self.error, serializer);
+-        <Option<String>>::sse_encode(self.temp_path, serializer);
+-    }
+-}
+-
+ impl SseEncode for u16 {
+     // Codec=Sse (Serialization based), see doc to use other codecs
+     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+-- 
+2.55.0
+
