@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: move lyrics save pref to library
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 10e28314..00dbda30 100644
+index 7fca8507..a17371df 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -1415,6 +1415,24 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1451,6 +1451,24 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
              ],
            ),
            const SizedBox(height: AppConstants.spacingLg),

@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: library: move battery opt up
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 5f52c494..f228d174 100644
+index eb0082f7..0b445932 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -1284,9 +1284,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1320,9 +1320,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
            const SettingsSectionHeader('Library'),
            SettingsCard(
              children: [
@@ -19,7 +19,7 @@ index 5f52c494..f228d174 100644
                  Material(
                    color: Colors.transparent,
                    child: InkWell(
-@@ -1344,7 +1342,9 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1380,7 +1378,9 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                      ),
                    ),
                  ),

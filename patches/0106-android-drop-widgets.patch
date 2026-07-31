@@ -6,10 +6,10 @@ Subject: [PATCH] android: drop widgets
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 8a235d66..642b0b87 100644
+index bdd3be9b..b93d4468 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
-@@ -209,9 +209,4 @@ dependencies {
+@@ -211,9 +211,4 @@ dependencies {
      implementation("androidx.documentfile:documentfile:1.1.0")
      implementation("androidx.media:media:1.7.0")
      implementation("androidx.lifecycle:lifecycle-service:2.7.0")

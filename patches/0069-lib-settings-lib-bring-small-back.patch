@@ -9,10 +9,10 @@ this partially reverts c967336b50b65d7987f266484aaed0db43c9b31c
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index 82588b5d..dd0c75b3 100644
+index d10d7e47..9e1454e2 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -994,14 +994,14 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1030,14 +1030,14 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                    children: [
                        Text(
                          'library',
@@ -29,7 +29,7 @@ index 82588b5d..dd0c75b3 100644
                           color: context.adaptiveTextTertiary,
                         ),
                       ),
-@@ -1072,7 +1072,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1108,7 +1108,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                  children: [
                    Text(
                      folder.displayName,
@@ -38,7 +38,7 @@ index 82588b5d..dd0c75b3 100644
                        color: context.adaptiveTextPrimary,
                      ),
                      overflow: TextOverflow.ellipsis,
-@@ -1146,13 +1146,13 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1182,13 +1182,13 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                        children: [
                          Text(
                            'scanning settings',
@@ -54,7 +54,7 @@ index 82588b5d..dd0c75b3 100644
                                 ?.copyWith(color: context.adaptiveTextTertiary),
                          ),
                        ],
-@@ -1304,7 +1304,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1340,7 +1340,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                                     _isXiaomiDevice
                                        ? 'disable battery optimization (recommended)'
                                        : 'disable battery optimization',
@@ -63,7 +63,7 @@ index 82588b5d..dd0c75b3 100644
                                         ?.copyWith(
                                           color: context.adaptiveTextPrimary,
                                         ),
-@@ -1312,7 +1312,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1348,7 +1348,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                                   const SizedBox(height: 2),
                                   Text(
                                    'for background features to work',

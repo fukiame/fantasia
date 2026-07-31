@@ -6,10 +6,10 @@ Subject: [PATCH] lib lib
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index f228d174..82588b5d 100644
+index 0b445932..d10d7e47 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -993,7 +993,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1029,7 +1029,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                        Text(
@@ -18,7 +18,7 @@ index f228d174..82588b5d 100644
                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
                            color: context.adaptiveTextPrimary,
                          ),
-@@ -1145,13 +1145,13 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1181,13 +1181,13 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
                          Text(
@@ -34,7 +34,7 @@ index f228d174..82588b5d 100644
                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: context.adaptiveTextTertiary),
                          ),
-@@ -1302,8 +1302,8 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1338,8 +1338,8 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                                children: [
                                   Text(
                                     _isXiaomiDevice
@@ -45,7 +45,7 @@ index f228d174..82588b5d 100644
                                     style: Theme.of(context).textTheme.titleMedium
                                         ?.copyWith(
                                           color: context.adaptiveTextPrimary,
-@@ -1311,9 +1311,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1347,9 +1347,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
@@ -56,7 +56,7 @@ index f228d174..82588b5d 100644
                                     style: Theme.of(context).textTheme.bodyMedium
                                         ?.copyWith(
                                           color: context.adaptiveTextTertiary,
-@@ -1331,7 +1329,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1367,7 +1365,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
                                ),
                                color: context.adaptiveTextTertiary,
                              ),

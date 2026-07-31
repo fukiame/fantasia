@@ -47,10 +47,10 @@ index 2ee95d92..03f71cb5 100644
      return GestureDetector(
        onTapDown: (_) => _controller.forward(),
 diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
-index dd0c75b3..10e28314 100644
+index 9e1454e2..7fca8507 100644
 --- a/lib/features/settings/screens/library_settings_screen.dart
 +++ b/lib/features/settings/screens/library_settings_screen.dart
-@@ -1415,24 +1415,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+@@ -1451,24 +1451,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
              ],
            ),
            const SizedBox(height: AppConstants.spacingLg),
