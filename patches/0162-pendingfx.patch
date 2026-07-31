@@ -554,7 +554,7 @@ index 9e07876e..ab04d198 100644
    }
  
 diff --git a/lib/services/equalizer_service.dart b/lib/services/equalizer_service.dart
-index 8f67eb58..678c1aff 100644
+index 8f67eb58..09d60893 100644
 --- a/lib/services/equalizer_service.dart
 +++ b/lib/services/equalizer_service.dart
 @@ -63,22 +63,6 @@ Future<void> applyEqualizer(EqualizerState state) async {
@@ -580,7 +580,7 @@ index 8f67eb58..678c1aff 100644
        return;
      }
  
-@@ -100,28 +84,11 @@ Future<void> applyEqualizer(EqualizerState state) async {
+@@ -100,51 +84,11 @@ Future<void> applyEqualizer(EqualizerState state) async {
        ceilingDb: state.limiter.ceilingDb,
        releaseMs: state.limiter.releaseMs,
      );
@@ -606,13 +606,13 @@ index 8f67eb58..678c1aff 100644
  Future<void> reapplyEqualizer() async {
    await applyEqualizer(_lastRequestedState);
 -  final ir = _lastRequestedState.convolver.irPath;
-   if (ir != null && ir.isNotEmpty) {
-     try {
-       await rust_audio.audioLoadIr(path: ir);
-@@ -129,24 +96,6 @@ Future<void> reapplyEqualizer() async {
-   }
- }
- 
+-  if (ir != null && ir.isNotEmpty) {
+-    try {
+-      await rust_audio.audioLoadIr(path: ir);
+-    } catch (_) {}
+-  }
+-}
+-
 -/// Loads (decodes + resamples) an impulse response into the native convolver.
 -Future<void> loadConvolverIr(String path) async {
 -  if (!rust_audio.audioIsNativeAvailable() ||
@@ -629,12 +629,10 @@ index 8f67eb58..678c1aff 100644
 -    return;
 -  }
 -  await rust_audio.audioClearIr();
--}
--
+ }
+ 
  /// Map parametric bands to 10-band gains for Rust engine (graphic-only).
- List<double> _parametricToGraphicGains(List<ParametricBand> bands) {
-   final freqs = EqualizerState.defaultGraphicFrequenciesHz;
-@@ -167,8 +116,6 @@ EqualizerState _snapshotState(EqualizerState state) {
+@@ -167,8 +111,6 @@ EqualizerState _snapshotState(EqualizerState state) {
      ),
      compressor: state.compressor.copyWith(),
      limiter: state.limiter.copyWith(),
