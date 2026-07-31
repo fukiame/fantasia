@@ -6,7 +6,7 @@ Subject: [PATCH] android: drop firebase and gms
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 535a4b19..c1674e76 100644
+index 905bec2e..9685acb7 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -3,7 +3,6 @@ plugins {
@@ -17,7 +17,7 @@ index 535a4b19..c1674e76 100644
  }
  
  import java.io.File
-@@ -208,7 +207,6 @@ tasks.named("preBuild") {
+@@ -206,7 +205,6 @@ tasks.named("preBuild") {
  }
  
  dependencies {

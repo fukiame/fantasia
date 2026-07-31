@@ -444,7 +444,7 @@ index 0584c5ba..00000000
 -    }
 -}
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
-index 2de9aaf6..6bcf6b0e 100644
+index 26b548b7..df50e4d9 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 @@ -729,24 +729,6 @@ class MainActivity: FlutterActivity() {

@@ -8,10 +8,10 @@ as if anyone uses that?
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 38aa67ed..bdd3be9b 100644
+index 4e18366f..8a235d66 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
-@@ -142,7 +142,6 @@ tasks.register("copyNdkLibs") {
+@@ -140,7 +140,6 @@ tasks.register("copyNdkLibs") {
              "arm64-v8a" to "aarch64-linux-android",
              "armeabi-v7a" to "arm-linux-androideabi",
              "x86_64" to "x86_64-linux-android",

@@ -130,7 +130,7 @@ index c79bdee5..19b32779 100644
                          ],
                        );
 diff --git a/pubspec.yaml b/pubspec.yaml
-index 5e0aa9d4..87f48183 100644
+index 005f944b..c1375b04 100644
 --- a/pubspec.yaml
 +++ b/pubspec.yaml
 @@ -49,7 +49,6 @@ dependencies:
