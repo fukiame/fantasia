@@ -1,0 +1,93 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 13:22:39 +0700
+Subject: [PATCH] idk
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/src/rust/api/audio_api.dart b/lib/src/rust/api/audio_api.dart
+index 038d9304..8369534b 100644
+--- a/lib/src/rust/api/audio_api.dart
++++ b/lib/src/rust/api/audio_api.dart
+@@ -3,7 +3,6 @@
+ 
+ // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
+ 
+-import '../audio/crossfader.dart';
+ import '../audio/dsd_engine/dsd.dart';
+ import '../audio/engine.dart';
+ import '../frb_generated.dart';
+@@ -46,20 +45,6 @@ Future<void> setPendingVolume({required double volume}) =>
+ Future<double?> takePendingVolume() =>
+     RustLib.instance.api.crateApiAudioApiTakePendingVolume();
+ 
+-Future<void> setPendingCrossfade({
+-  required bool enabled,
+-  required double durationSecs,
+-}) => RustLib.instance.api.crateApiAudioApiSetPendingCrossfade(
+-  enabled: enabled,
+-  durationSecs: durationSecs,
+-);
+-
+-Future<void> setPendingCrossfadeCurve({required CrossfadeCurve curve}) =>
+-    RustLib.instance.api.crateApiAudioApiSetPendingCrossfadeCurve(curve: curve);
+-
+-Future<(bool, double, CrossfadeCurve)?> takePendingCrossfade() =>
+-    RustLib.instance.api.crateApiAudioApiTakePendingCrossfade();
+-
+ /// Check if native audio is available on this platform.
+ bool audioIsNativeAvailable() =>
+     RustLib.instance.api.crateApiAudioApiAudioIsNativeAvailable();
+@@ -230,20 +215,6 @@ Future<void> audioSetLimiter({
+   releaseMs: releaseMs,
+ );
+ 
+-/// Configure crossfade settings.
+-///
+-/// The engine's own `is_crossfade_allowed()` trigger gate (plus the Dart-side
+-/// processing policy) authoritatively decide whether crossfade runs; the old
+-/// passthrough guard here was redundant and self-defeating — it blocked the
+-/// very `crossfade_forces_dsp` flip that lets crossfade escape passthrough.
+-Future<void> audioSetCrossfade({
+-  required bool enabled,
+-  required double durationSecs,
+-}) => RustLib.instance.api.crateApiAudioApiAudioSetCrossfade(
+-  enabled: enabled,
+-  durationSecs: durationSecs,
+-);
+-
+ /// Skip to the next queued track.
+ Future<void> audioSkipToNext() =>
+     RustLib.instance.api.crateApiAudioApiAudioSkipToNext();
+@@ -267,10 +238,6 @@ AudioProgress? audioGetProgress() =>
+ AudioEventType? audioPollEvent() =>
+     RustLib.instance.api.crateApiAudioApiAudioPollEvent();
+ 
+-/// Set the crossfade curve type.
+-Future<void> audioSetCrossfadeCurve({required CrossfadeCurveType curve}) =>
+-    RustLib.instance.api.crateApiAudioApiAudioSetCrossfadeCurve(curve: curve);
+-
+ /// Get the audio engine's sample rate.
+ int? audioGetSampleRate() =>
+     RustLib.instance.api.crateApiAudioApiAudioGetSampleRate();
+@@ -334,10 +301,6 @@ sealed class AudioEventType with _$AudioEventType {
+   }) = AudioEventType_Progress;
+   const factory AudioEventType.trackEnded({required String path}) =
+       AudioEventType_TrackEnded;
+-  const factory AudioEventType.crossfadeStarted({
+-    required String fromPath,
+-    required String toPath,
+-  }) = AudioEventType_CrossfadeStarted;
+   const factory AudioEventType.error({required String message}) =
+       AudioEventType_Error;
+   const factory AudioEventType.nextTrackReady({required String path}) =
+@@ -524,6 +487,3 @@ class AudioRuntimeDebugState {
+           sampleRate == other.sampleRate &&
+           channels == other.channels;
+ }
+-
+-/// Crossfade curve type for Dart.
+-enum CrossfadeCurveType { equalPower, linear, squareRoot, sCurve }
+-- 
+2.55.0
+
