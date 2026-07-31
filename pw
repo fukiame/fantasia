@@ -22,6 +22,7 @@ case "$1" in
         cd $downstream
         # build commands here
         flutter pub get
+	rm -f pubspec.lock
         flutter pub upgrade --major-versions
         cd rust && cargo fetch \
 		--target "aarch64-linux-android" \

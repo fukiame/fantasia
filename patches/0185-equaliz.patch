@@ -7461,6 +7461,19 @@ index 95be6e68..00000000
 -}
 -
 -// Chart helpers moved to eq_graph_utils.dart
+diff --git a/pubspec.yaml b/pubspec.yaml
+index e91cfaf6..3db0b24f 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -80,8 +80,6 @@ flutter:
+     - assets/icons/svg/settings_white.svg
+     - assets/icons/svg/shuffle_black.svg
+     - assets/icons/svg/shuffle_white.svg
+-    - assets/autoeq/autoeq_catalog.json
+-    - assets/autoeq/autoeq_brands.json
+ 
+   fonts:
+     - family: ProductSans
 diff --git a/rust/src/api/audio_api.rs b/rust/src/api/audio_api.rs
 index b76f7545..8faa6c04 100644
 --- a/rust/src/api/audio_api.rs
