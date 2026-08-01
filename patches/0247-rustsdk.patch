@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 18:36:49 +0700
+Subject: [PATCH] rustsdk
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/rust_builder/android/build.gradle b/rust_builder/android/build.gradle
+index 8454ecae..c2fd312a 100644
+--- a/rust_builder/android/build.gradle
++++ b/rust_builder/android/build.gradle
+@@ -26,7 +26,7 @@ android {
+ 
+     // Bumping the plugin compileSdkVersion requires all clients of this plugin
+     // to bump the version in their app.
+-    compileSdkVersion 33
++    compileSdkVersion 36
+ 
+     // Use the NDK version
+     // declared in /android/app/build.gradle file of the Flutter project.
+@@ -59,4 +59,4 @@ apply from: "../cargokit/gradle/plugin.gradle"
+ cargokit {
+     manifestDir = "../../rust"
+     libname = "rust_lib_flick_player"
+-}
+\ No newline at end of file
++}
+-- 
+2.55.0
+
