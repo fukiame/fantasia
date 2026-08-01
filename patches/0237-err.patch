@@ -1,0 +1,106 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 15:21:45 +0700
+Subject: [PATCH] err
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index 08f89845..291c4877 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -20,7 +20,7 @@ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+ import 'package:flick/providers/app_preferences_provider.dart';
+ 
+-/// Album detail screen showing songs, album info, and more from the artist.
++/// Album detail screen showing songs, album info from the artist.
+ class AlbumDetailScreen extends ConsumerStatefulWidget {
+   final String albumName;
+   final String albumArtist;
+@@ -60,7 +60,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+   void initState() {
+     super.initState();
+     _scrollController.addListener(_onScroll);
+-    _loadExtras();
+     _extractAlbumColor();
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+       if (mounted) ref.read(navBarVisibleProvider.notifier).setVisible(true);
+@@ -82,62 +81,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+     }
+   }
+ 
+-  Future<void> _loadExtras() async {
+-    final allAlbums = await _songRepository.getAlbumGroups();
+-    final allArtists = await _songRepository.getSongsByArtist();
+-
+-    final moreAlbums =
+-        allAlbums
+-            .where(
+-              (a) =>
+-                  a.key != _albumKey(widget.albumName) &&
+-                  (a.albumArtist.toLowerCase() ==
+-                      widget.albumArtist.toLowerCase()),
+-            )
+-            .toList();
+-
+-    final moreArtists =
+-        Map<String, List<Song>>.from(allArtists)
+-          ..remove(widget.albumArtist);
+-
+-    if (mounted) {
+-      setState(() {
+-        _moreAlbums = moreAlbums;
+-        _moreArtists = moreArtists;
+-      });
+-    }
+-  }
+-
+   String _albumKey(String albumName) {
+     return albumName;
+   }
+ 
+-  String? _getArt(List<Song> songs) {
+-    for (final song in songs) {
+-      if (song.albumArt != null && song.albumArt!.isNotEmpty) {
+-        return song.albumArt;
+-      }
+-    }
+-    return null;
+-  }
+-
+-  // ponytail: pick the source path of the SAME song whose albumArt we'd use,
+-  // so CachedImageWidget's embedded-art fallback targets the matching track.
+-  String? _getSourcePath(List<Song> songs) {
+-    for (final song in songs) {
+-      if (song.albumArt != null && song.albumArt!.isNotEmpty) {
+-        final fp = song.filePath;
+-        if (fp != null && fp.isNotEmpty) return fp;
+-      }
+-    }
+-    for (final song in songs) {
+-      if (song.filePath != null && song.filePath!.isNotEmpty) {
+-        return song.filePath;
+-      }
+-    }
+-    return null;
+-  }
+-
+   Duration get _totalDuration {
+     var total = Duration.zero;
+     for (final song in widget.songs) {
+diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
+index f1c26cab..4eff0f5a 100644
+--- a/lib/features/artists/screens/artist_detail_screen.dart
++++ b/lib/features/artists/screens/artist_detail_screen.dart
+@@ -100,7 +100,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+     if (mounted) {
+       setState(() {
+         _artistAlbums = artistAlbums;
+-        _isLoadingExtras = false;
+       });
+     }
+   }
+-- 
+2.55.0
+
