@@ -6,15 +6,16 @@ Subject: [PATCH] eat
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
-index ef8dbd9b..2979b355 100644
+index ef8dbd9b..f055a743 100644
 --- a/lib/features/settings/screens/uac2_preferences_screen.dart
 +++ b/lib/features/settings/screens/uac2_preferences_screen.dart
-@@ -483,17 +483,18 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+@@ -483,17 +483,19 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
      final effectiveSubtitle =
          !enabled && disabledSubtitle != null ? disabledSubtitle : subtitle;
      final tile = Padding(
 -      padding: const EdgeInsets.all(AppConstants.spacingMd),
 +      padding: const EdgeInsets.symmetric(
++        vertical: AppConstants.spacingXs,
 +        horizontal: AppConstants.spacingMd,
 +      ),
        child: Row(
@@ -31,7 +32,7 @@ index ef8dbd9b..2979b355 100644
                      color: context.adaptiveTextPrimary,
                      fontWeight: FontWeight.w500,
                    ),
-@@ -837,7 +838,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+@@ -837,7 +839,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
                            Expanded(
                              child: Text(
                                title,
@@ -40,7 +41,7 @@ index ef8dbd9b..2979b355 100644
                                    ?.copyWith(
                                      color: context.adaptiveTextPrimary,
                                      fontWeight: FontWeight.w600,
-@@ -959,7 +960,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+@@ -959,7 +961,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
                children: [
                  Text(
                    'Current Playback Mode',
@@ -49,7 +50,7 @@ index ef8dbd9b..2979b355 100644
                      color: context.adaptiveTextPrimary,
                      fontWeight: FontWeight.w500,
                    ),
-@@ -1016,7 +1017,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+@@ -1016,7 +1018,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
                      children: [
                        Text(
                          title,
