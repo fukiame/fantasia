@@ -5,6 +5,31 @@ Subject: [PATCH] agp
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
+index b2a26f3e..91171c08 100644
+--- a/android/app/build.gradle.kts
++++ b/android/app/build.gradle.kts
+@@ -6,6 +6,7 @@ plugins {
+ 
+ import java.io.File
+ import java.util.Properties
++import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+ 
+ val keystoreProperties = Properties()
+ val keystoreFile = rootProject.file("key.properties")
+@@ -23,8 +24,10 @@ android {
+         targetCompatibility = JavaVersion.VERSION_17
+     }
+ 
+-    kotlinOptions {
+-        jvmTarget = "17"
++    kotlin {
++      compilerOptions {
++        jvmTarget = JvmTarget.JVM_17
++      }
+     }
+ 
+     /*
 diff --git a/android/gradle.properties b/android/gradle.properties
 index db7a19ef..9db65030 100644
 --- a/android/gradle.properties
