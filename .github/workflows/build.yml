@@ -16,7 +16,24 @@ jobs:
             - uses: subosito/flutter-action@v2
               with:
                 channel: stable
-            - run: ./pw b
+            - name: something
+              env:
+                KST: ${{ secrets.KST }}
+                KPROP: ${{ secrets.KPROP }}
+                KLOC: ${{ secrets.KLOC }}
+                KPLOC: ${{ secrets.KPLOC }}
+              run: |
+                  echo "$KST" | base64 -d > "$KLOC"
+                  echo "$KPROC" | base64 -d > "$KPLOC"
+            - name: build
+              env:
+                KPLOC: ${{ secrets.KPLOC }}
+              run: ./pw b
+            - name: no
+              if: always()
+              env:
+                KLOC: ${{ secrets.KLOC }}
+              run: shred -fzu "$KLOC"
             - uses: actions/upload-artifact@v7
               with:
                 path: fantasia/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk

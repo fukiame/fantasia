@@ -6,7 +6,7 @@ Subject: [PATCH] nocom
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 642b0b87..b2a26f3e 100644
+index 1088e578..497f4e98 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -1,7 +1,6 @@
@@ -25,9 +25,9 @@ index 642b0b87..b2a26f3e 100644
 -        compose = true
 -    }
 -
-     /*
      signingConfigs {
          create("release") {
+             storeFile = keystoreProperties.getProperty("storeFile")?.let { rootProject.file(it) }
 diff --git a/android/settings.gradle.kts b/android/settings.gradle.kts
 index dca18efa..8bed66a6 100644
 --- a/android/settings.gradle.kts

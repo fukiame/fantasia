@@ -6,10 +6,10 @@ Subject: [PATCH] android: drop ndk abi filter
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index 2f6e96e3..4e18366f 100644
+index e51cca5d..16bae1bd 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
-@@ -52,10 +52,6 @@ android {
+@@ -50,10 +50,6 @@ android {
          versionCode = flutter.versionCode
          versionName = flutter.versionName
  

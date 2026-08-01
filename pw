@@ -28,6 +28,9 @@ case "$1" in
 		lib/core/constants/app_constants.dart
 	sed -i "s/FANTASIA_SED_HERE/$(git rev-parse --short HEAD)/" \
 		lib/core/constants/app_constants.dart
+	if [ -n "$KPLOC" ] ; then
+            mv "$KPLOC" android/key.properties
+	fi
         cd rust && cargo fetch \
 		--target "aarch64-linux-android" \
 		--target "armv7-linux-androideabi" \

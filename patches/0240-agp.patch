@@ -6,7 +6,7 @@ Subject: [PATCH] agp
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
-index b2a26f3e..91171c08 100644
+index 497f4e98..ca241a8b 100644
 --- a/android/app/build.gradle.kts
 +++ b/android/app/build.gradle.kts
 @@ -6,6 +6,7 @@ plugins {
@@ -29,7 +29,7 @@ index b2a26f3e..91171c08 100644
 +      }
      }
  
-     /*
+     signingConfigs {
 diff --git a/android/gradle.properties b/android/gradle.properties
 index db7a19ef..9db65030 100644
 --- a/android/gradle.properties
