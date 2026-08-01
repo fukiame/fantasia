@@ -6,7 +6,7 @@ Subject: [PATCH] no
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/rust/Cargo.toml b/rust/Cargo.toml
-index 9243bda8..ccb71600 100644
+index 9243bda8..5be794f7 100644
 --- a/rust/Cargo.toml
 +++ b/rust/Cargo.toml
 @@ -5,7 +5,7 @@ edition = "2021"
@@ -14,7 +14,7 @@ index 9243bda8..ccb71600 100644
  [profile.release]
  strip = "symbols"
 -opt-level = "s"
-+opt-level = "3"
++opt-level = 3
  lto = "fat"
  
  [lib]
