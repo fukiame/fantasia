@@ -30,9 +30,9 @@ case "$1" in
 		lib/core/constants/app_constants.dart
 	if [ -n "$KPLOC" ] ; then
             mv "$KPLOC" android/key.properties
-	    mv "$KLOC" android/app/"$KSLOC"
+	    mv "$KLOC" android/"$KSLOC"
 	    ( [ ! -f android/key.properties ] || \
-	      [ ! -f android/app/"$KSLOC" ] ) && exit 72
+	      [ ! -f android/"$KSLOC" ] ) && exit 72
 	fi
         cd rust && cargo fetch \
 		--target "aarch64-linux-android" \
