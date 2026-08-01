@@ -25,7 +25,7 @@ case "$1" in
 	rm -f pubspec.lock
         flutter pub upgrade --major-versions
 	sed -i "s/SED_HERE/$(git rev-parse --short HEAD)/" \
-		fantasia/lib/core/constants/app_constants.dart
+		lib/core/constants/app_constants.dart
         cd rust && cargo fetch \
 		--target "aarch64-linux-android" \
 		--target "armv7-linux-androideabi" \
