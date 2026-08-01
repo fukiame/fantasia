@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 08:34:31 +0700
+Subject: [PATCH] fixup! recap nuke: 5 pills
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index bc2010cd..60493b00 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -282,7 +282,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                                   horizontal: AppConstants.spacingLg,
+                                 ),
+                                 scrollDirection: Axis.horizontal,
+-                                itemCount: 6,
++                                itemCount: 5,
+                                 separatorBuilder: (_, _) => const SizedBox(
+                                   width: AppConstants.spacingSm,
+                                 ),
+-- 
+2.55.0
+
