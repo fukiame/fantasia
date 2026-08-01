@@ -24,7 +24,7 @@ jobs:
                 KPLOC: ${{ secrets.KPLOC }}
               run: |
                   echo "$KST" | base64 -d > "$KLOC"
-                  echo "$KPROC" | base64 -d > "$KPLOC"
+                  echo "$KPROP" | base64 -d > "$KPLOC"
                   a="$(du -b "$KPLOC" | cut -d'	' -f1 )"
                   [ "$a" -lt 1 ] && exit 1
             - name: build
