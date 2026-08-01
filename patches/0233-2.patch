@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 13:20:57 +0700
+Subject: [PATCH] 2
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index fc71a892..682c6acc 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -146,10 +146,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     if (mounted) setState(() {});
+   }
+ 
+-  void _handleImmersiveSceneTap() {
+-    return;
+-  }
+-
+   Future<void> _animateToNextSong() async {
+     _dismissVolumePopup?.call();
+     _dismissVolumePopup = null;
+@@ -231,7 +227,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+ 
+               return GestureDetector(
+                 behavior: HitTestBehavior.translucent,
+-                onTap: _handleImmersiveSceneTap,
+                 onVerticalDragStart: (details) {
+                   if (_isVinylRotationActive) return;
+                   final screenHeight = MediaQuery.sizeOf(context).height;
+-- 
+2.55.0
+

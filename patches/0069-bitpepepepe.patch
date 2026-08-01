@@ -6,7 +6,7 @@ Subject: [PATCH] bitpepepepe
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index b8fddffd..90e94b05 100644
+index b8fddffd..a047eaa3 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -460,7 +460,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
@@ -45,19 +45,42 @@ index b8fddffd..90e94b05 100644
                    style: TextStyle(
                      fontFamily: 'ProductSans',
                      fontSize: 12,
-@@ -517,12 +517,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
-             child: Row(
-               mainAxisSize: MainAxisSize.min,
-               children: [
+@@ -506,35 +506,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+             ],
+           ),
+         ),
+-        if (widget.isVerified)
+-          Container(
+-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+-            decoration: BoxDecoration(
+-              color: Colors.green.withValues(alpha: 0.15),
+-              borderRadius: BorderRadius.circular(6),
+-              border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
+-            ),
+-            child: Row(
+-              mainAxisSize: MainAxisSize.min,
+-              children: [
 -                Icon(
 -                  Icons.verified_rounded,
 -                  size: 12,
 -                  color: Colors.green.shade400,
 -                ),
 -                const SizedBox(width: 4),
-                 Text(
-                   'BP',
-                   style: TextStyle(
+-                Text(
+-                  'BP',
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: 11,
+-                    fontWeight: FontWeight.w600,
+-                    color: Colors.green.shade400,
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+       ],
+     );
+   }
 -- 
 2.55.0
 

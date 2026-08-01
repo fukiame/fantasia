@@ -1,0 +1,1086 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 13:20:47 +0700
+Subject: [PATCH] 1
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index bd01db49..fc71a892 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -14,13 +14,11 @@ import 'package:flick/features/player/widgets/player_navigation.dart';
+ import 'package:flick/features/player/widgets/song_actions_sheet.dart';
+ 
+ import 'package:flick/models/album_color_mode.dart';
+-import 'package:flick/models/player_screen_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/services/external_playback_service.dart';
+ import 'package:flick/services/favorites_service.dart';
+-import 'package:flick/services/player_screen_mode_preference_service.dart';
+ 
+ 
+ import 'package:flick/widgets/uac2/iso_volume_popup.dart';
+@@ -40,8 +38,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+   final ExternalPlaybackService _externalPlaybackService =
+       ExternalPlaybackService();
+   final FavoritesService _favoritesService = FavoritesService();
+-  final PlayerScreenModePreferenceService _playerScreenModePreferenceService =
+-      PlayerScreenModePreferenceService();
+   final SongRepository _songRepository = SongRepository();
+   late final PlayerNavigation _navigation = PlayerNavigation(
+     playerService: _playerService,
+@@ -78,21 +74,13 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+   double _cachedTopBarTextWidth = 0;
+   bool _isVinylRotationActive = false;
+   bool _isVinylMode = false;
+-  bool _isImmersiveFullView = false;
+   int _songTransitionDirection = 1;
+-  PlayerScreenMode _playerScreenMode = PlayerScreenMode.immersive;
+-  int _immersiveAutoFullViewDelaySeconds = 0;
+-  Timer? _immersiveFullViewTimer;
+   final GlobalKey _usbVolumeButtonKey = GlobalKey();
+   VoidCallback? _dismissVolumePopup;
+ 
+   @override
+   void initState() {
+     super.initState();
+-    _immersiveAutoFullViewDelaySeconds = ref
+-        .read(appPreferencesProvider)
+-        .immersiveAutoFullViewSeconds;
+-
+     // Initialize drag animation controller for smooth return animation
+     _dragController = AnimationController(
+       vsync: this,
+@@ -123,8 +111,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+       _handleFavoriteToggledFromNotification,
+     );
+     _updateTopBarTextMeasurement(_playerService.currentSongNotifier.value);
+-    _loadPlayerScreenMode();
+-    _refreshImmersiveFullViewTimer();
+   }
+ 
+   @override
+@@ -142,7 +128,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+       _handleFavoriteToggledFromNotification,
+     );
+     _positionThrottleTimer?.cancel();
+-    _immersiveFullViewTimer?.cancel();
+     _dismissVolumePopup?.call();
+     _dismissVolumePopup = null;
+     _throttledPositionNotifier.dispose();
+@@ -154,82 +139,15 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     if (_playerService.currentSongNotifier.value == null) {
+       return;
+     }
+-    if (_isImmersiveFullView) {
+-      setState(() {
+-        _isImmersiveFullView = false;
+-      });
+-    }
+     _updateTopBarTextMeasurement(_playerService.currentSongNotifier.value);
+-    _refreshImmersiveFullViewTimer();
+   }
+ 
+   void _handleFavoriteToggledFromNotification() {
+     if (mounted) setState(() {});
+   }
+ 
+-  Future<void> _loadPlayerScreenMode() async {
+-    final mode = await _playerScreenModePreferenceService.getMode();
+-    if (!mounted) return;
+-    if (_playerScreenMode != mode) {
+-      setState(() {
+-        _playerScreenMode = mode;
+-        if (mode != PlayerScreenMode.immersive) {
+-          _isImmersiveFullView = false;
+-        }
+-      });
+-    }
+-    _refreshImmersiveFullViewTimer();
+-  }
+-
+-  Future<void> _setPlayerScreenMode(PlayerScreenMode mode) async {
+-    if (_playerScreenMode == mode) return;
+-    setState(() {
+-      _playerScreenMode = mode;
+-      if (mode != PlayerScreenMode.immersive) {
+-        _isImmersiveFullView = false;
+-      }
+-    });
+-    _refreshImmersiveFullViewTimer();
+-    await _playerScreenModePreferenceService.setMode(mode);
+-  }
+-
+-  bool get _canUseImmersiveFullView =>
+-      _playerScreenMode == PlayerScreenMode.immersive;
+-
+-  void _refreshImmersiveFullViewTimer() {
+-    _immersiveFullViewTimer?.cancel();
+-    if (!_canUseImmersiveFullView ||
+-        _isImmersiveFullView ||
+-        _immersiveAutoFullViewDelaySeconds <= 0) {
+-      return;
+-    }
+-
+-    _immersiveFullViewTimer = Timer(
+-      Duration(seconds: _immersiveAutoFullViewDelaySeconds),
+-      () {
+-        if (!mounted || !_canUseImmersiveFullView || _isImmersiveFullView) {
+-          return;
+-        }
+-        setState(() {
+-          _isImmersiveFullView = true;
+-        });
+-      },
+-    );
+-  }
+-
+-  void _setImmersiveAutoFullViewDelaySeconds(int value) {
+-    if (_immersiveAutoFullViewDelaySeconds == value) return;
+-    _immersiveAutoFullViewDelaySeconds = value;
+-    _refreshImmersiveFullViewTimer();
+-  }
+-
+   void _handleImmersiveSceneTap() {
+-    if (_playerScreenMode != PlayerScreenMode.immersive) return;
+-
+-    setState(() {
+-      _isImmersiveFullView = !_isImmersiveFullView;
+-    });
+-    _refreshImmersiveFullViewTimer();
++    return;
+   }
+ 
+   Future<void> _animateToNextSong() async {
+@@ -283,10 +201,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+ 
+   @override
+   Widget build(BuildContext context) {
+-    ref.listen(appPreferencesProvider, (previous, next) {
+-      _setImmersiveAutoFullViewDelaySeconds(next.immersiveAutoFullViewSeconds);
+-    });
+-
+     final appPrefs = ref.watch(appPreferencesProvider);
+ 
+     final colorMode = ref.watch(albumColorModeProvider);
+@@ -397,8 +311,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                   },
+                   child: AnimatedSongScene(
+                     song: song,
+-                    immersiveFullView: _isImmersiveFullView,
+-                    playerScreenMode: _playerScreenMode,
+                     albumColorMode: colorMode,
+                     albumColor: albumColor,
+                     transitionDirection: _songTransitionDirection,
+@@ -426,7 +338,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                     buildFileInfoRow: (song, mode) =>
+                         PlayerActionButtonRow(
+                       song: song,
+-                      playerScreenMode: mode,
+                       albumColor: albumColor,
+                       albumColorMode: colorMode,
+                       leftAction: PlayerActionButtonX.fromStorageValue(
+@@ -450,12 +361,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                     artworkCardShowAlbum: appPrefs.artworkCardShowAlbum,
+                     artworkCardShowFileInfo: appPrefs.artworkCardShowFileInfo,
+                     artworkCardShowFrame: appPrefs.artworkCardShowFrame,
+-                    immersiveTextScale: appPrefs.immersiveTextScale,
+-                    immersiveVerticalOffset: appPrefs.immersiveVerticalOffset,
+-                    immersiveFullViewScale: appPrefs.immersiveFullViewScale,
+-                    immersiveShowTitle: appPrefs.immersiveShowTitle,
+-                    immersiveShowArtist: appPrefs.immersiveShowArtist,
+-                    immersiveShowFileInfo: appPrefs.immersiveShowFileInfo,
+                     hideQueueBadge:
+                         PlayerActionButtonX.fromStorageValue(
+                               appPrefs.leftActionButton,
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 857ad968..298aca09 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -10,7 +10,6 @@ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/models/album_color_mode.dart';
+-import 'package:flick/models/player_screen_mode.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/features/player/widgets/album_color_helpers.dart';
+ import 'package:flick/features/player/widgets/ambient_background.dart';
+@@ -22,8 +21,6 @@ import 'package:flick/features/player/widgets/waveform_layer.dart';
+ import 'package:flick/features/player/widgets/player_controls.dart';
+ class AnimatedSongScene extends StatelessWidget {
+   final Song song;
+-  final bool immersiveFullView;
+-  final PlayerScreenMode playerScreenMode;
+   final AlbumColorMode albumColorMode;
+   final Color? albumColor;
+   final int transitionDirection;
+@@ -42,7 +39,7 @@ class AnimatedSongScene extends StatelessWidget {
+   final Future<void> Function() onNext;
+   final void Function(Song song) onNavigateToArtistDetail;
+   final void Function(Song song) onNavigateToAlbumDetail;
+-  final Widget Function(Song song, PlayerScreenMode mode)
++  final Widget Function(Song song)
+   buildFileInfoRow;
+   final double artworkCardArtworkScale;
+   final double artworkCardTextScale;
+@@ -52,12 +49,6 @@ class AnimatedSongScene extends StatelessWidget {
+   final bool artworkCardShowAlbum;
+   final bool artworkCardShowFileInfo;
+   final bool artworkCardShowFrame;
+-  final double immersiveTextScale;
+-  final double immersiveVerticalOffset;
+-  final double immersiveFullViewScale;
+-  final bool immersiveShowTitle;
+-  final bool immersiveShowArtist;
+-  final bool immersiveShowFileInfo;
+   final bool hideQueueBadge;
+   final void Function(bool enabled)? onRotationEnabledChanged;
+   final bool vinylMode;
+@@ -65,8 +56,6 @@ class AnimatedSongScene extends StatelessWidget {
+ 
+   const AnimatedSongScene({super.key,
+     required this.song,
+-    required this.immersiveFullView,
+-    required this.playerScreenMode,
+     required this.albumColorMode,
+     this.albumColor,
+     required this.transitionDirection,
+@@ -93,12 +82,6 @@ class AnimatedSongScene extends StatelessWidget {
+     this.artworkCardShowAlbum = true,
+     this.artworkCardShowFileInfo = true,
+     this.artworkCardShowFrame = true,
+-    this.immersiveTextScale = 1.0,
+-    this.immersiveVerticalOffset = 0.0,
+-    this.immersiveFullViewScale = 1.0,
+-    this.immersiveShowTitle = true,
+-    this.immersiveShowArtist = true,
+-    this.immersiveShowFileInfo = true,
+     this.hideQueueBadge = false,
+     this.onRotationEnabledChanged,
+     this.vinylMode = false,
+@@ -108,9 +91,7 @@ class AnimatedSongScene extends StatelessWidget {
+   @override
+   Widget build(BuildContext context) {
+     final direction = transitionDirection >= 0 ? 1.0 : -1.0;
+-    final sceneKey = ValueKey('${song.id}_${playerScreenMode.storageValue}');
+-    final showImmersiveFullView =
+-        immersiveFullView && playerScreenMode == PlayerScreenMode.immersive;
++    final sceneKey = ValueKey('${song.id}');
+ 
+     final scene = RepaintBoundary(
+       key: sceneKey,
+@@ -128,8 +109,6 @@ class AnimatedSongScene extends StatelessWidget {
+               );
+             },
+             transitionBuilder: (Widget child, Animation<double> animation) {
+-              final isFullView =
+-                  child.key == const ValueKey('immersive-full-view');
+               final slideOffset = isFullView
+                   ? const Offset(0, 0.12)
+                   : const Offset(0, 0.03);
+@@ -144,14 +123,7 @@ class AnimatedSongScene extends StatelessWidget {
+                 child: FadeTransition(opacity: animation, child: child),
+               );
+             },
+-            child: showImmersiveFullView
+-                ? KeyedSubtree(
+-                    key: const ValueKey('immersive-full-view'),
+-                    child: SafeArea(
+-                      child: _buildImmersiveFullViewLayout(context),
+-                    ),
+-                  )
+-                : KeyedSubtree(
++            child: KeyedSubtree(
+                     key: const ValueKey('immersive-default-layout'),
+                     child: SafeArea(
+                       child: Column(
+@@ -160,10 +132,7 @@ class AnimatedSongScene extends StatelessWidget {
+                           _buildTopChrome(context),
+                           SizedBox(height: context.responsive(8.0, 10.0, 12.0)),
+                           Expanded(
+-                            child:
+-                                playerScreenMode == PlayerScreenMode.artworkCard
+-                                ? _buildArtworkCardLayout(context)
+-                                : _buildImmersiveLayout(context),
++                            child: _buildArtworkCardLayout(context),
+                           ),
+                         ],
+                       ),
+@@ -224,7 +193,6 @@ class AnimatedSongScene extends StatelessWidget {
+     final bgBlend = albumColorMode.backgroundBlend;
+     final hasAlbumTint = albumColor != null && bgBlend > 0;
+ 
+-    if (playerScreenMode == PlayerScreenMode.artworkCard) {
+       return Stack(
+         children: [
+           Positioned.fill(
+@@ -272,79 +240,12 @@ class AnimatedSongScene extends StatelessWidget {
+           ),
+         ],
+       );
+-    }
+-
+-    // Immersive mode: full-bleed album art with dark gradient overlay
+-    final gradientBase = hasAlbumTint
+-        ? albumSurface(albumColor!, bgBlend)
+-        : const Color(0xFF121212);
+-
+-    final gradientColors = immersiveFullView
+-        ? [
+-            gradientBase.withValues(alpha: 0.3),
+-            gradientBase.withValues(alpha: 0.25),
+-            gradientBase.withValues(alpha: 0.2),
+-            gradientBase.withValues(alpha: 0.15),
+-            gradientBase.withValues(alpha: 0.08),
+-            Colors.transparent,
+-          ]
+-        : [
+-            gradientBase,
+-            gradientBase.withValues(alpha: 0.95),
+-            gradientBase.withValues(alpha: 0.85),
+-            gradientBase.withValues(alpha: 0.6),
+-            gradientBase.withValues(alpha: 0.3),
+-            Colors.transparent,
+-          ];
+-
+-    return Stack(
+-      children: [
+-        Positioned.fill(
+-          child: CachedImageWidget(
+-            imagePath: song.albumArt,
+-            audioSourcePath: song.filePath,
+-            fit: BoxFit.cover,
+-            placeholder: Container(
+-              color: AppColors.background,
+-              child: Icon(
+-                LucideIcons.music,
+-                size: 120,
+-                color: AppColors.textTertiary.withValues(alpha: 0.3),
+-              ),
+-            ),
+-            errorWidget: Container(
+-              color: AppColors.background,
+-              child: Icon(
+-                LucideIcons.music,
+-                size: 120,
+-                color: AppColors.textTertiary.withValues(alpha: 0.3),
+-              ),
+-            ),
+-          ),
+-        ),
+-        Positioned.fill(
+-          child: AnimatedContainer(
+-            duration: AppConstants.animationNormal,
+-            decoration: BoxDecoration(
+-              gradient: LinearGradient(
+-                begin: Alignment.bottomCenter,
+-                end: Alignment.topCenter,
+-                colors: gradientColors,
+-                stops: const [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+-              ),
+-            ),
+-          ),
+-        ),
+-      ],
+-    );
+   }
+ 
+   Widget _buildTopChrome(BuildContext context) {
+     return Padding(
+       padding: EdgeInsets.symmetric(
+-        horizontal: playerScreenMode == PlayerScreenMode.artworkCard
+-	     ? context.responsive(20.0, 24.0, 28.0)
+-	     : context.responsive(8.0, 12.0, 16.0),
++        horizontal: context.responsive(20.0, 24.0, 28.0),
+         vertical: context.responsive(4.0, 6.0, 8.0),
+       ),
+       child: Row(
+@@ -607,7 +508,6 @@ class AnimatedSongScene extends StatelessWidget {
+                                   ),
+                                   child: buildFileInfoRow(
+                                     song,
+-                                    playerScreenMode,
+                                   ),
+                                 ),
+                               ],
+@@ -948,7 +848,7 @@ class AnimatedSongScene extends StatelessWidget {
+                 ),
+               ),
+               if (artworkCardShowFileInfo)
+-                buildFileInfoRow(song, playerScreenMode),
++                buildFileInfoRow(song),
+               if (artworkCardShowFileInfo) SizedBox(height: playbackSpacing),
+               _buildPlaybackStack(context),
+               SizedBox(height: directorySpacing),
+@@ -1138,10 +1038,7 @@ class AnimatedSongScene extends StatelessWidget {
+   }
+ 
+   Widget _buildPlaybackStack(BuildContext context) {
+-    final immersivePlaybackPadding =
+-        playerScreenMode == PlayerScreenMode.immersive
+-        ? context.responsive(18.0, 24.0, 30.0)
+-        : 0.0;
++    final immersivePlaybackPadding = 0.0;
+ 
+     return Column(
+       mainAxisSize: MainAxisSize.min,
+diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
+index 35ce1b72..b31b10cf 100644
+--- a/lib/features/player/widgets/player_action_button_row.dart
++++ b/lib/features/player/widgets/player_action_button_row.dart
+@@ -6,7 +6,6 @@ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/models/album_color_mode.dart';
+-import 'package:flick/models/player_screen_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/services/favorites_service.dart';
+@@ -18,7 +17,6 @@ import 'package:flick/features/player/widgets/volume_bottom_sheet.dart';
+ 
+ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   final Song song;
+-  final PlayerScreenMode playerScreenMode;
+   final Color? albumColor;
+   final AlbumColorMode albumColorMode;
+   final PlayerActionButton leftAction;
+@@ -32,7 +30,6 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   const PlayerActionButtonRow({
+     super.key,
+     required this.song,
+-    required this.playerScreenMode,
+     required this.albumColor,
+     required this.albumColorMode,
+     required this.leftAction,
+@@ -53,16 +50,12 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+   @override
+   Widget build(BuildContext context) {
+     final song = widget.song;
+-    final playerScreenMode = widget.playerScreenMode;
+     final albumColor = widget.albumColor;
+     final albumColorMode = widget.albumColorMode;
+     final leftAction = widget.leftAction;
+     final rightAction = widget.rightAction;
+-    final immersiveActions = playerScreenMode == PlayerScreenMode.immersive;
+-    final actionPadding = immersiveActions
+-        ? EdgeInsets.all(context.responsive(8.0, 9.0, 10.0))
+-        : EdgeInsets.all(context.responsive(6.0, 7.0, 8.0));
+-    final actionRadius = immersiveActions ? 12.0 : 10.0;
++    final actionPadding = EdgeInsets.all(context.responsive(6.0, 7.0, 8.0));
++    final actionRadius = 10.0;
+     final actionIconSize = context.responsive(18.0, 20.0, 22.0);
+ 
+     final accentBlend = albumColorMode.accentBlend;
+@@ -97,7 +90,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           albumColor: albumColor,
+           accentBlend: accentBlend,
+           hasAlbumTint: hasAlbumTint,
+-          immersiveActions: immersiveActions,
+         ),
+         Flexible(
+           child: Row(
+@@ -164,7 +156,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           albumColor: albumColor,
+           accentBlend: accentBlend,
+           hasAlbumTint: hasAlbumTint,
+-          immersiveActions: immersiveActions,
+         ),
+       ],
+     );
+@@ -203,7 +194,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+     required Color? albumColor,
+     required double accentBlend,
+     required bool hasAlbumTint,
+-    required bool immersiveActions,
+   }) {
+     switch (action) {
+       case PlayerActionButton.favorites:
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 5d402929..ed069ee3 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/models/player_screen_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/providers/providers.dart';
+@@ -23,169 +22,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+   @override
+   Widget build(BuildContext context, WidgetRef ref) {
+     final appPrefs = ref.watch(appPreferencesProvider);
+-    final playerScreenMode = ref.watch(playerScreenModeProvider);
+ 
+     return SettingsScaffold(
+       title: 'Player Layout',
+       body: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+-          const SettingsSectionHeader('Layout Mode'),
+-          SettingsCard(
+-            children: [
+-              SelectionSetting(
+-                icon: Icons.fit_screen_rounded,
+-                title: PlayerScreenMode.immersive.label,
+-                subtitle: PlayerScreenMode.immersive.description,
+-                selected: playerScreenMode == PlayerScreenMode.immersive,
+-                onTap: () {
+-                  ref
+-                      .read(playerScreenModeProvider.notifier)
+-                      .setMode(PlayerScreenMode.immersive);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: Icons.rounded_corner_rounded,
+-                title: PlayerScreenMode.artworkCard.label,
+-                subtitle: PlayerScreenMode.artworkCard.description,
+-                selected: playerScreenMode == PlayerScreenMode.artworkCard,
+-                onTap: () {
+-                  ref
+-                      .read(playerScreenModeProvider.notifier)
+-                      .setMode(PlayerScreenMode.artworkCard);
+-                },
+-              ),
+-            ],
+-          ),
+-	  if (playerScreenMode == PlayerScreenMode.immersive) ...[
+-          const SizedBox(height: AppConstants.spacingLg),
+-          SettingsCard(
+-            children: [
+-              SliderSetting(
+-                icon: LucideIcons.type,
+-                title: 'Text Size',
+-                subtitle: 'Adjust metadata text size',
+-                value: appPrefs.immersiveTextScale,
+-                displayValue: _percentLabel(appPrefs.immersiveTextScale),
+-                min: 0.82,
+-                max: 1.2,
+-                divisions: 19,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveTextScale(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.arrowUpDown,
+-                title: 'Text Placement',
+-                subtitle: 'Shift metadata text up or down',
+-                value: appPrefs.immersiveVerticalOffset,
+-                displayValue: _placementLabel(appPrefs.immersiveVerticalOffset),
+-                min: -36,
+-                max: 36,
+-                divisions: 12,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveVerticalOffset(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.maximize,
+-                title: 'Full-view Card Size',
+-                subtitle: 'Scale the full-view album art card',
+-                value: appPrefs.immersiveFullViewScale,
+-                displayValue: _percentLabel(appPrefs.immersiveFullViewScale),
+-                min: 0.82,
+-                max: 1.18,
+-                divisions: 18,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveFullViewScale(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.maximize,
+-                title: 'Immersive Full View Timer',
+-                subtitle:
+-                    'Auto-show the Spotify-style immersive full view after inactivity',
+-                value: appPrefs.immersiveAutoFullViewSeconds.toDouble(),
+-                displayValue: appPrefs.immersiveAutoFullViewSeconds == 0
+-                    ? 'Off'
+-                    : '${appPrefs.immersiveAutoFullViewSeconds}s',
+-                min: 0,
+-                max: 15,
+-                divisions: 15,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveAutoFullViewSeconds(value.round());
+-                },
+-              ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.fileText,
+-                title: 'Show Title',
+-                subtitle: '',
+-                value: appPrefs.immersiveShowTitle,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveShowTitle(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.mic,
+-                title: 'Show Artist',
+-                subtitle: '',
+-                value: appPrefs.immersiveShowArtist,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveShowArtist(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.info,
+-                title: 'Show File Info',
+-                subtitle: '',
+-                value: appPrefs.immersiveShowFileInfo,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveShowFileInfo(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.clock,
+-                title: 'Auto Full View',
+-                subtitle: 'Auto-show full view after inactivity',
+-                value: appPrefs.immersiveAutoFullViewSeconds.toDouble(),
+-                displayValue: appPrefs.immersiveAutoFullViewSeconds == 0
+-                    ? 'Off'
+-                    : '${appPrefs.immersiveAutoFullViewSeconds}s',
+-                min: 0,
+-                max: 15,
+-                divisions: 15,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setImmersiveAutoFullViewSeconds(value.round());
+-                },
+-              ),
+-            ],
+-          ),
+-	  ],
+-	  if (playerScreenMode == PlayerScreenMode.artworkCard) ...[
+           const SizedBox(height: AppConstants.spacingLg),
+           SettingsCard(
+             children: [
+@@ -314,7 +156,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+               ),
+             ],
+           ),
+-	  ],
+           const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Quick Actions'),
+           SettingsCard(
+diff --git a/lib/models/player_screen_mode.dart b/lib/models/player_screen_mode.dart
+deleted file mode 100644
+index 1c31be06..00000000
+--- a/lib/models/player_screen_mode.dart
++++ /dev/null
+@@ -1,41 +0,0 @@
+-/// Full player layout modes persisted across app launches.
+-enum PlayerScreenMode { immersive, artworkCard }
+-
+-extension PlayerScreenModeX on PlayerScreenMode {
+-  String get storageValue {
+-    switch (this) {
+-      case PlayerScreenMode.immersive:
+-        return 'immersive';
+-      case PlayerScreenMode.artworkCard:
+-        return 'artwork_card';
+-    }
+-  }
+-
+-  String get label {
+-    switch (this) {
+-      case PlayerScreenMode.immersive:
+-        return 'Immersive';
+-      case PlayerScreenMode.artworkCard:
+-        return 'Artwork Card';
+-    }
+-  }
+-
+-  String get description {
+-    switch (this) {
+-      case PlayerScreenMode.immersive:
+-        return 'Full-bleed album art with the current cinematic look.';
+-      case PlayerScreenMode.artworkCard:
+-        return 'Rounded album art card with a blurred album-art background.';
+-    }
+-  }
+-
+-  static PlayerScreenMode fromStorageValue(String? value) {
+-    switch (value) {
+-      case 'artwork_card':
+-        return PlayerScreenMode.artworkCard;
+-      case 'immersive':
+-      default:
+-        return PlayerScreenMode.immersive;
+-    }
+-  }
+-}
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index f639cc7f..ed18aa06 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -85,14 +85,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setFastIndexTimeoutSeconds(value);
+   }
+ 
+-  Future<void> setImmersiveAutoFullViewSeconds(int value) async {
+-    if (state.immersiveAutoFullViewSeconds == value) return;
+-    state = state.copyWith(immersiveAutoFullViewSeconds: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setImmersiveAutoFullViewSeconds(value);
+-  }
+-
+   Future<void> setArtworkCardArtworkScale(double value) async {
+     if (state.artworkCardArtworkScale == value) return;
+     state = state.copyWith(artworkCardArtworkScale: value);
+@@ -157,48 +149,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setArtworkCardShowFrame(value);
+   }
+ 
+-  Future<void> setImmersiveTextScale(double value) async {
+-    if (state.immersiveTextScale == value) return;
+-    state = state.copyWith(immersiveTextScale: value);
+-    await ref.read(appPreferencesServiceProvider).setImmersiveTextScale(value);
+-  }
+-
+-  Future<void> setImmersiveVerticalOffset(double value) async {
+-    if (state.immersiveVerticalOffset == value) return;
+-    state = state.copyWith(immersiveVerticalOffset: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setImmersiveVerticalOffset(value);
+-  }
+-
+-  Future<void> setImmersiveFullViewScale(double value) async {
+-    if (state.immersiveFullViewScale == value) return;
+-    state = state.copyWith(immersiveFullViewScale: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setImmersiveFullViewScale(value);
+-  }
+-
+-  Future<void> setImmersiveShowTitle(bool value) async {
+-    if (state.immersiveShowTitle == value) return;
+-    state = state.copyWith(immersiveShowTitle: value);
+-    await ref.read(appPreferencesServiceProvider).setImmersiveShowTitle(value);
+-  }
+-
+-  Future<void> setImmersiveShowArtist(bool value) async {
+-    if (state.immersiveShowArtist == value) return;
+-    state = state.copyWith(immersiveShowArtist: value);
+-    await ref.read(appPreferencesServiceProvider).setImmersiveShowArtist(value);
+-  }
+-
+-  Future<void> setImmersiveShowFileInfo(bool value) async {
+-    if (state.immersiveShowFileInfo == value) return;
+-    state = state.copyWith(immersiveShowFileInfo: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setImmersiveShowFileInfo(value);
+-  }
+-
+   Future<void> setLeftActionButton(String value) async {
+     if (state.leftActionButton == value) return;
+     state = state.copyWith(leftActionButton: value);
+diff --git a/lib/providers/player_screen_mode_provider.dart b/lib/providers/player_screen_mode_provider.dart
+deleted file mode 100644
+index 14255061..00000000
+--- a/lib/providers/player_screen_mode_provider.dart
++++ /dev/null
+@@ -1,41 +0,0 @@
+-import 'package:flutter_riverpod/flutter_riverpod.dart';
+-
+-import 'package:flick/models/player_screen_mode.dart';
+-import 'package:flick/services/player_screen_mode_preference_service.dart';
+-
+-final playerScreenModePreferenceServiceProvider =
+-    Provider<PlayerScreenModePreferenceService>((ref) {
+-  return PlayerScreenModePreferenceService();
+-});
+-
+-class PlayerScreenModeNotifier extends Notifier<PlayerScreenMode> {
+-  bool _initialized = false;
+-
+-  @override
+-  PlayerScreenMode build() {
+-    if (!_initialized) {
+-      _initialized = true;
+-      Future<void>.microtask(_loadFromPreferences);
+-    }
+-    return PlayerScreenMode.immersive;
+-  }
+-
+-  Future<void> _loadFromPreferences() async {
+-    final mode =
+-        await ref.read(playerScreenModePreferenceServiceProvider).getMode();
+-    if (ref.mounted && state != mode) {
+-      state = mode;
+-    }
+-  }
+-
+-  Future<void> setMode(PlayerScreenMode mode) async {
+-    if (state == mode) return;
+-    state = mode;
+-    await ref.read(playerScreenModePreferenceServiceProvider).setMode(mode);
+-  }
+-}
+-
+-final playerScreenModeProvider =
+-    NotifierProvider<PlayerScreenModeNotifier, PlayerScreenMode>(
+-  PlayerScreenModeNotifier.new,
+-);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 292e8cb7..f595d041 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -9,7 +9,6 @@ class AppPreferences {
+   final String favoriteRemovalMode; // 'swipe' or 'longpress'
+   final bool fastIndexEnabled;
+   final int fastIndexTimeoutSeconds;
+-  final int immersiveAutoFullViewSeconds;
+   final double artworkCardArtworkScale;
+   final double artworkCardTextScale;
+   final double artworkCardVerticalOffset;
+@@ -18,12 +17,6 @@ class AppPreferences {
+   final bool artworkCardShowAlbum;
+   final bool artworkCardShowFileInfo;
+   final bool artworkCardShowFrame;
+-  final double immersiveTextScale;
+-  final double immersiveVerticalOffset;
+-  final double immersiveFullViewScale;
+-  final bool immersiveShowTitle;
+-  final bool immersiveShowArtist;
+-  final bool immersiveShowFileInfo;
+   final int widgetBgOpacity;
+   final bool widgetShowAlbumArt;
+   final bool widgetShowArtist;
+@@ -74,7 +67,6 @@ class AppPreferences {
+     this.favoriteRemovalMode = 'longpress',
+     this.fastIndexEnabled = true,
+     this.fastIndexTimeoutSeconds = 3,
+-    this.immersiveAutoFullViewSeconds = 0,
+     this.artworkCardArtworkScale = 1.0,
+     this.artworkCardTextScale = 1.0,
+     this.artworkCardVerticalOffset = 0.0,
+@@ -83,12 +75,6 @@ class AppPreferences {
+     this.artworkCardShowAlbum = true,
+     this.artworkCardShowFileInfo = true,
+     this.artworkCardShowFrame = true,
+-    this.immersiveTextScale = 1.0,
+-    this.immersiveVerticalOffset = 0.0,
+-    this.immersiveFullViewScale = 1.0,
+-    this.immersiveShowTitle = true,
+-    this.immersiveShowArtist = true,
+-    this.immersiveShowFileInfo = true,
+     this.widgetBgOpacity = 3,
+     this.widgetShowAlbumArt = true,
+     this.widgetShowArtist = true,
+@@ -140,7 +126,6 @@ class AppPreferences {
+     String? favoriteRemovalMode,
+     bool? fastIndexEnabled,
+     int? fastIndexTimeoutSeconds,
+-    int? immersiveAutoFullViewSeconds,
+     double? artworkCardArtworkScale,
+     double? artworkCardTextScale,
+     double? artworkCardVerticalOffset,
+@@ -149,12 +134,6 @@ class AppPreferences {
+     bool? artworkCardShowAlbum,
+     bool? artworkCardShowFileInfo,
+     bool? artworkCardShowFrame,
+-    double? immersiveTextScale,
+-    double? immersiveVerticalOffset,
+-    double? immersiveFullViewScale,
+-    bool? immersiveShowTitle,
+-    bool? immersiveShowArtist,
+-    bool? immersiveShowFileInfo,
+     int? widgetBgOpacity,
+     bool? widgetShowAlbumArt,
+     bool? widgetShowArtist,
+@@ -206,8 +185,6 @@ class AppPreferences {
+       fastIndexEnabled: fastIndexEnabled ?? this.fastIndexEnabled,
+       fastIndexTimeoutSeconds:
+           fastIndexTimeoutSeconds ?? this.fastIndexTimeoutSeconds,
+-      immersiveAutoFullViewSeconds:
+-          immersiveAutoFullViewSeconds ?? this.immersiveAutoFullViewSeconds,
+       artworkCardArtworkScale:
+           artworkCardArtworkScale ?? this.artworkCardArtworkScale,
+       artworkCardTextScale: artworkCardTextScale ?? this.artworkCardTextScale,
+@@ -220,15 +197,6 @@ class AppPreferences {
+       artworkCardShowFileInfo:
+           artworkCardShowFileInfo ?? this.artworkCardShowFileInfo,
+       artworkCardShowFrame: artworkCardShowFrame ?? this.artworkCardShowFrame,
+-      immersiveTextScale: immersiveTextScale ?? this.immersiveTextScale,
+-      immersiveVerticalOffset:
+-          immersiveVerticalOffset ?? this.immersiveVerticalOffset,
+-      immersiveFullViewScale:
+-          immersiveFullViewScale ?? this.immersiveFullViewScale,
+-      immersiveShowTitle: immersiveShowTitle ?? this.immersiveShowTitle,
+-      immersiveShowArtist: immersiveShowArtist ?? this.immersiveShowArtist,
+-      immersiveShowFileInfo:
+-          immersiveShowFileInfo ?? this.immersiveShowFileInfo,
+       widgetBgOpacity: widgetBgOpacity ?? this.widgetBgOpacity,
+       widgetShowAlbumArt: widgetShowAlbumArt ?? this.widgetShowAlbumArt,
+       widgetShowArtist: widgetShowArtist ?? this.widgetShowArtist,
+@@ -306,7 +274,6 @@ class AppPreferencesService {
+   static const _favoriteRemovalModeKey = 'favorite_removal_mode';
+   static const _fastIndexEnabledKey = 'fast_index_enabled';
+   static const _fastIndexTimeoutKey = 'fast_index_timeout_seconds';
+-  static const _immersiveAutoFullViewKey = 'immersive_auto_full_view_seconds';
+   static const _artworkCardArtworkScaleKey = 'artwork_card_artwork_scale';
+   static const _artworkCardTextScaleKey = 'artwork_card_text_scale';
+   static const _artworkCardVerticalOffsetKey = 'artwork_card_vertical_offset';
+@@ -315,12 +282,6 @@ class AppPreferencesService {
+   static const _artworkCardShowAlbumKey = 'artwork_card_show_album';
+   static const _artworkCardShowFileInfoKey = 'artwork_card_show_file_info';
+   static const _artworkCardShowFrameKey = 'artwork_card_show_frame';
+-  static const _immersiveTextScaleKey = 'immersive_text_scale';
+-  static const _immersiveVerticalOffsetKey = 'immersive_vertical_offset';
+-  static const _immersiveFullViewScaleKey = 'immersive_full_view_scale';
+-  static const _immersiveShowTitleKey = 'immersive_show_title';
+-  static const _immersiveShowArtistKey = 'immersive_show_artist';
+-  static const _immersiveShowFileInfoKey = 'immersive_show_file_info';
+   static const _leftActionButtonKey = 'left_action_button';
+   static const _rightActionButtonKey = 'right_action_button';
+   static const _replaceAlbumWithBitPerfectCapsuleKey =
+@@ -369,8 +330,6 @@ class AppPreferencesService {
+           prefs.getString(_favoriteRemovalModeKey) ?? 'longpress',
+       fastIndexEnabled: prefs.getBool(_fastIndexEnabledKey) ?? true,
+       fastIndexTimeoutSeconds: prefs.getInt(_fastIndexTimeoutKey) ?? 3,
+-      immersiveAutoFullViewSeconds:
+-          prefs.getInt(_immersiveAutoFullViewKey) ?? 0,
+       artworkCardArtworkScale:
+           prefs.getDouble(_artworkCardArtworkScaleKey) ?? 1.0,
+       artworkCardTextScale: prefs.getDouble(_artworkCardTextScaleKey) ?? 1.0,
+@@ -382,14 +341,6 @@ class AppPreferencesService {
+       artworkCardShowFileInfo:
+           prefs.getBool(_artworkCardShowFileInfoKey) ?? true,
+       artworkCardShowFrame: prefs.getBool(_artworkCardShowFrameKey) ?? true,
+-      immersiveTextScale: prefs.getDouble(_immersiveTextScaleKey) ?? 1.0,
+-      immersiveVerticalOffset:
+-          prefs.getDouble(_immersiveVerticalOffsetKey) ?? 0.0,
+-      immersiveFullViewScale:
+-          prefs.getDouble(_immersiveFullViewScaleKey) ?? 1.0,
+-      immersiveShowTitle: prefs.getBool(_immersiveShowTitleKey) ?? true,
+-      immersiveShowArtist: prefs.getBool(_immersiveShowArtistKey) ?? true,
+-      immersiveShowFileInfo: prefs.getBool(_immersiveShowFileInfoKey) ?? true,
+       leftActionButton: prefs.getString(_leftActionButtonKey) ?? 'usb_volume',
+       rightActionButton: prefs.getString(_rightActionButtonKey) ?? 'favorites',
+       replaceAlbumWithBitPerfectCapsule:
+@@ -514,16 +465,6 @@ class AppPreferencesService {
+     await prefs.setInt(_fastIndexTimeoutKey, value);
+   }
+ 
+-  Future<int> getImmersiveAutoFullViewSeconds() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getInt(_immersiveAutoFullViewKey) ?? 0;
+-  }
+-
+-  Future<void> setImmersiveAutoFullViewSeconds(int value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setInt(_immersiveAutoFullViewKey, value);
+-  }
+-
+   Future<void> setArtworkCardArtworkScale(double value) async {
+     final prefs = await SharedPreferences.getInstance();
+     await prefs.setDouble(_artworkCardArtworkScaleKey, value);
+@@ -589,51 +530,6 @@ class AppPreferencesService {
+     await prefs.setBool(_artworkCardShowFrameKey, value);
+   }
+ 
+-  Future<void> setImmersiveTextScale(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_immersiveTextScaleKey, value);
+-  }
+-
+-  Future<void> setImmersiveVerticalOffset(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_immersiveVerticalOffsetKey, value);
+-  }
+-
+-  Future<void> setImmersiveFullViewScale(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_immersiveFullViewScaleKey, value);
+-  }
+-
+-  Future<bool> getImmersiveShowTitle() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_immersiveShowTitleKey) ?? true;
+-  }
+-
+-  Future<void> setImmersiveShowTitle(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_immersiveShowTitleKey, value);
+-  }
+-
+-  Future<bool> getImmersiveShowArtist() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_immersiveShowArtistKey) ?? true;
+-  }
+-
+-  Future<void> setImmersiveShowArtist(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_immersiveShowArtistKey, value);
+-  }
+-
+-  Future<bool> getImmersiveShowFileInfo() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_immersiveShowFileInfoKey) ?? true;
+-  }
+-
+-  Future<void> setImmersiveShowFileInfo(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_immersiveShowFileInfoKey, value);
+-  }
+-
+   Future<String> getLeftActionButton() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getString(_leftActionButtonKey) ?? 'usb_volume';
+diff --git a/lib/services/player_screen_mode_preference_service.dart b/lib/services/player_screen_mode_preference_service.dart
+deleted file mode 100644
+index 989f099d..00000000
+--- a/lib/services/player_screen_mode_preference_service.dart
++++ /dev/null
+@@ -1,19 +0,0 @@
+-import 'package:shared_preferences/shared_preferences.dart';
+-
+-import 'package:flick/models/player_screen_mode.dart';
+-
+-class PlayerScreenModePreferenceService {
+-  static const _keyPlayerScreenMode = 'player_screen_mode';
+-
+-  Future<PlayerScreenMode> getMode() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return PlayerScreenModeX.fromStorageValue(
+-      prefs.getString(_keyPlayerScreenMode),
+-    );
+-  }
+-
+-  Future<void> setMode(PlayerScreenMode mode) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setString(_keyPlayerScreenMode, mode.storageValue);
+-  }
+-}
+-- 
+2.55.0
+
