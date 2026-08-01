@@ -1,0 +1,331 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 13:30:31 +0700
+Subject: [PATCH] fixu
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index 682c6acc..5d4d1c59 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -330,7 +330,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                         _navigation.openArtistFromSong(context, song),
+                     onNavigateToAlbumDetail: (song) =>
+                         _navigation.openAlbumFromSong(context, song),
+-                    buildFileInfoRow: (song, mode) =>
++                    buildFileInfoRow: (song) =>
+                         PlayerActionButtonRow(
+                       song: song,
+                       albumColor: albumColor,
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 298aca09..c3b7821c 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -418,303 +418,6 @@ class AnimatedSongScene extends StatelessWidget {
+     );
+   }
+ 
+-  Widget _buildImmersiveLayout(BuildContext context) {
+-    final layout = 
+-        KeyedSubtree(
+-            key: const ValueKey('immersive-default-layout'),
+-            child: Column(
+-              children: [
+-                const Spacer(flex: 2),
+-                Transform.translate(
+-                  offset: Offset(0, immersiveVerticalOffset),
+-                  child: Column(
+-                    mainAxisSize: MainAxisSize.min,
+-                    children: [
+-                      Padding(
+-                        padding: EdgeInsets.symmetric(
+-                          horizontal: context.responsive(12.0, 16.0, 20.0),
+-                        ),
+-                        child: _buildImmersiveSongHeader(context),
+-                      ),
+-                      if (immersiveShowFileInfo) ...[
+-                        Builder(
+-                          builder: (context) {
+-                            final diagnostics = ProviderScope.containerOf(
+-                              context,
+-                            ).read(audioOutputDiagnosticsProvider);
+-                            final appPrefs = ProviderScope.containerOf(
+-                              context,
+-                            ).read(appPreferencesProvider);
+-                            return Column(
+-                              mainAxisSize: MainAxisSize.min,
+-                              children: [
+-                                if (diagnostics != null &&
+-                                    appPrefs
+-                                        .replaceAlbumWithBitPerfectCapsule) ...[
+-                                  SizedBox(
+-                                    height: context.responsive(6.0, 8.0, 10.0),
+-                                  ),
+-                                  Padding(
+-                                    padding: EdgeInsets.symmetric(
+-                                      horizontal: context.responsive(
+-                                        12.0,
+-                                        16.0,
+-                                        20.0,
+-                                      ),
+-                                    ),
+-                                    child: BitPerfectCapsule(
+-                                      diagnostics: diagnostics,
+-                                      horizontalPadding: context.responsive(
+-                                        12.0,
+-                                        14.0,
+-                                        16.0,
+-                                      ),
+-                                      verticalPadding: context.responsive(
+-                                        4.0,
+-                                        5.0,
+-                                        6.0,
+-                                      ),
+-                                      fontSize: context.responsive(
+-                                        11.0,
+-                                        12.0,
+-                                        13.0,
+-                                      ),
+-                                      onTap: () {
+-                                        final deviceStatus =
+-                                            ProviderScope.containerOf(
+-                                              context,
+-                                            ).read(uac2DeviceStatusProvider);
+-                                        BitPerfectIndicator.showInfoSheet(
+-                                          context,
+-                                          song: song,
+-                                          diagnostics: diagnostics,
+-                                          deviceStatus: deviceStatus,
+-                                          playerService: playerService,
+-                                        );
+-                                      },
+-                                    ),
+-                                  ),
+-                                ],
+-                                SizedBox(
+-                                  height: context.responsive(10.0, 12.0, 14.0),
+-                                ),
+-                                Padding(
+-                                  padding: EdgeInsets.symmetric(
+-                                    horizontal: context.responsive(
+-                                      12.0,
+-                                      16.0,
+-                                      20.0,
+-                                    ),
+-                                  ),
+-                                  child: buildFileInfoRow(
+-                                    song,
+-                                  ),
+-                                ),
+-                              ],
+-                            );
+-                          },
+-                        ),
+-                      ],
+-                    ],
+-                  ),
+-                ),
+-                SizedBox(height: context.responsive(12.0, 14.0, 16.0)),
+-                _buildPlaybackStack(context),
+-                SizedBox(height: context.responsive(24.0, 32.0, 40.0)),
+-              ],
+-            ),
+-          );
+-
+-    if (AppConstants.animationNormal == Duration.zero) {
+-      return layout;
+-    }
+-
+-    return AnimatedSwitcher(
+-      duration: AppConstants.animationNormal,
+-      switchInCurve: Curves.easeOutCubic,
+-      switchOutCurve: Curves.easeInOutCubic,
+-      layoutBuilder: (currentChild, previousChildren) {
+-        return Stack(
+-          fit: StackFit.expand,
+-          children: [
+-            ...previousChildren,
+-            ...?currentChild == null ? null : [currentChild],
+-          ],
+-        );
+-      },
+-      transitionBuilder: (child, animation) {
+-        final offsetAnimation = Tween<Offset>(
+-          begin: const Offset(0, 0.05),
+-          end: Offset.zero,
+-        ).animate(animation);
+-
+-        return FadeTransition(
+-          opacity: animation,
+-          child: SlideTransition(position: offsetAnimation, child: child),
+-        );
+-      },
+-      child: layout,
+-    );
+-  }
+-
+-  Widget _buildImmersiveFullViewLayout(BuildContext context) {
+-    final artworkSize =
+-        context.responsive(56.0, 60.0, 64.0) * immersiveFullViewScale;
+-    return Align(
+-      alignment: Alignment.bottomCenter,
+-      child: Padding(
+-        padding: EdgeInsets.fromLTRB(
+-          context.responsive(16.0, 20.0, 24.0),
+-          0,
+-          context.responsive(16.0, 20.0, 24.0),
+-          context.responsive(20.0, 24.0, 28.0),
+-        ),
+-        child: Container(
+-          padding: EdgeInsets.all(
+-            context.responsive(10.0, 12.0, 14.0) * immersiveFullViewScale,
+-          ),
+-          decoration: BoxDecoration(
+-            color: const Color(0xFF121212).withValues(alpha: 0.72),
+-            borderRadius: BorderRadius.circular(24),
+-            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+-          ),
+-          child: Row(
+-            children: [
+-              ClipRRect(
+-                borderRadius: BorderRadius.circular(
+-                  18 * immersiveFullViewScale,
+-                ),
+-                child: SizedBox(
+-                  width: artworkSize,
+-                  height: artworkSize,
+-                  child: CachedImageWidget(
+-                    imagePath: song.albumArt,
+-                    audioSourcePath: song.filePath,
+-                    fit: BoxFit.cover,
+-                    placeholder: Container(
+-                      color: Colors.white.withValues(alpha: 0.05),
+-                      child: Icon(
+-                        LucideIcons.music,
+-                        color: Colors.white.withValues(alpha: 0.5),
+-                        size: artworkSize * 0.44,
+-                      ),
+-                    ),
+-                    errorWidget: Container(
+-                      color: Colors.white.withValues(alpha: 0.05),
+-                      child: Icon(
+-                        LucideIcons.music,
+-                        color: Colors.white.withValues(alpha: 0.5),
+-                        size: artworkSize * 0.44,
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              ),
+-              SizedBox(width: context.responsive(12.0, 14.0, 16.0)),
+-              Expanded(
+-                child: Column(
+-                  mainAxisSize: MainAxisSize.min,
+-                  crossAxisAlignment: CrossAxisAlignment.start,
+-                  children: [
+-                    if (immersiveShowTitle)
+-                      Text(
+-                        song.title,
+-                        maxLines: 2,
+-                        overflow: TextOverflow.ellipsis,
+-                        style: TextStyle(
+-                          fontFamily: 'ProductSans',
+-                          fontSize: context.responsiveText(
+-                            context.responsive(18.0, 19.0, 21.0) *
+-                                immersiveTextScale,
+-                          ),
+-                          fontWeight: FontWeight.w700,
+-                          color: Colors.white,
+-                          height: 1.12,
+-                        ),
+-                      ),
+-                    if (immersiveShowTitle && immersiveShowArtist)
+-                      SizedBox(height: context.responsive(6.0, 7.0, 8.0)),
+-                    if (immersiveShowArtist)
+-                      GestureDetector(
+-                        onTap: () => onNavigateToArtistDetail(song),
+-                        child: Text(
+-                          song.artist,
+-                          maxLines: 1,
+-                          overflow: TextOverflow.ellipsis,
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: context.responsiveText(
+-                              context.responsive(13.0, 14.0, 15.0) *
+-                                  immersiveTextScale,
+-                            ),
+-                            fontWeight: FontWeight.w500,
+-                            color: Colors.white.withValues(alpha: 0.78),
+-                          ),
+-                        ),
+-                      ),
+-                  ],
+-                ),
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildImmersiveSongHeader(BuildContext context) {
+-    return Row(
+-      crossAxisAlignment: CrossAxisAlignment.end,
+-      children: [
+-        Expanded(
+-          child: Column(
+-            crossAxisAlignment: CrossAxisAlignment.start,
+-            mainAxisSize: MainAxisSize.min,
+-            children: [
+-              if (immersiveShowTitle)
+-                Text(
+-                  song.title,
+-                  maxLines: 2,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: context.responsiveText(
+-                      context.responsive(22.0, 24.0, 28.0) * immersiveTextScale,
+-                    ),
+-                    fontWeight: FontWeight.w700,
+-                    color: Colors.white,
+-                    height: 1.08,
+-                  ),
+-                ),
+-              if (immersiveShowTitle && immersiveShowArtist)
+-                SizedBox(height: context.responsive(10.0, 12.0, 14.0)),
+-              if (immersiveShowArtist)
+-                GestureDetector(
+-                  onTap: () => onNavigateToArtistDetail(song),
+-                  child: Text(
+-                    song.artist,
+-                    maxLines: 1,
+-                    overflow: TextOverflow.ellipsis,
+-                    style: TextStyle(
+-                      fontFamily: 'ProductSans',
+-                      fontSize: context.responsiveText(
+-                        context.responsive(13.0, 14.0, 16.0) *
+-                            immersiveTextScale,
+-                      ),
+-                      fontWeight: FontWeight.w500,
+-                      color: Colors.white.withValues(alpha: 0.82),
+-                    ),
+-                  ),
+-                ),
+-              if (immersiveShowTitle || immersiveShowArtist)
+-                SizedBox(height: context.responsive(10.0, 12.0, 14.0)),
+-            ],
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-
+   Widget _buildArtworkCardLayout(BuildContext context) {
+     return LayoutBuilder(
+       builder: (context, constraints) {
+-- 
+2.55.0
+
