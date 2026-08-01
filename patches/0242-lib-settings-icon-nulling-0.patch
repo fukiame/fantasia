@@ -1,0 +1,175 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 16:07:59 +0700
+Subject: [PATCH] lib: settings: icon nulling 0
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
+index b3d06588..dfd7e6ee 100644
+--- a/lib/features/settings/screens/logs_screen.dart
++++ b/lib/features/settings/screens/logs_screen.dart
+@@ -4,7 +4,6 @@ import 'package:file_picker/file_picker.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+@@ -161,11 +160,15 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+       ),
+       child: Row(
+         children: [
+-          IconButton(
+-            onPressed: () {
+-              Navigator.of(context).pop();
+-            },
+-            icon: Icon(LucideIcons.chevronLeft, color: context.adaptiveTextPrimary),
++          TextButton(
++            onPressed: () => Navigator.of(context).pop(),
++            child: const Text(
++              'Cancel',
++              style: TextStyle(
++                fontFamily: 'ProductSans',
++                color: AppColors.textPrimary,
++              ),
++            ),
+           ),
+           Text(
+             'Logs',
+@@ -182,16 +185,26 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+               return Row(
+                 mainAxisSize: MainAxisSize.min,
+                 children: [
+-                  IconButton(
+-                    tooltip: 'Copy',
++                  TextButton(
+                     onPressed: count == 0
+-                        ? null
+-                        : () => _copyAll(_filtered(AppLog.instance.entries)),
+-                    icon: Icon(LucideIcons.copy, color: context.adaptiveTextSecondary),
++                                ? null
++                                : () => _copyAll(_filtered(AppLog.instance.entries)),
++                    child: const Text(
++                      'Copy',
++                      style: TextStyle(
++                        fontFamily: 'ProductSans',
++                        color: AppColors.textSecondary,
++                      ),
++                    ),
+                   ),
+                   PopupMenuButton<String>(
+-                    tooltip: 'More',
+-                    icon: Icon(LucideIcons.moreVertical, color: context.adaptiveTextSecondary),
++                    child: const Text(
++                      'More',
++                      style: TextStyle(
++                        fontFamily: 'ProductSans',
++                        color: AppColors.textSecondary,
++                      ),
++                    ),
+                     itemBuilder: (_) => const [
+                       PopupMenuItem(value: 'save', child: Text('Save as text')),
+                       PopupMenuItem(value: 'clear', child: Text('Clear')),
+@@ -225,7 +238,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+               isDense: true,
+               hintText: 'Filter logs…',
+               hintStyle: TextStyle(color: context.adaptiveTextTertiary, fontSize: 13),
+-              prefixIcon: Icon(LucideIcons.search, size: 16, color: context.adaptiveTextTertiary),
+               filled: true,
+               fillColor: AppColors.surface,
+               border: OutlineInputBorder(
+diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
+index 33119927..384649cf 100644
+--- a/lib/features/settings/widgets/settings_widgets.dart
++++ b/lib/features/settings/widgets/settings_widgets.dart
+@@ -96,7 +96,7 @@ class SettingsDivider extends StatelessWidget {
+ class ToggleSetting extends StatelessWidget {
+   const ToggleSetting({
+     super.key,
+-    required this.icon,
++    this.icon = null,
+     required this.title,
+     required this.subtitle,
+     required this.value,
+@@ -123,7 +123,7 @@ class ToggleSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
+-              if (ic) ...[
++              if (ic && icon != null) ...[
+                 _SettingsIcon(icon: icon),
+                 const SizedBox(width: AppConstants.spacingMd),
+               ],
+@@ -162,7 +162,7 @@ class ToggleSetting extends StatelessWidget {
+ class NavigationSetting extends StatelessWidget {
+   const NavigationSetting({
+     super.key,
+-    required this.icon,
++    this.icon = null,
+     required this.title,
+     required this.subtitle,
+     required this.onTap,
+@@ -224,7 +224,7 @@ class NavigationSetting extends StatelessWidget {
+ class SelectionSetting extends StatelessWidget {
+   const SelectionSetting({
+     super.key,
+-    required this.icon,
++    this.icon = null,
+     required this.title,
+     required this.subtitle,
+     required this.selected,
+@@ -251,7 +251,7 @@ class SelectionSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
+-              if (ic) ...[
++              if (ic && icon != null) ...[
+                 _SettingsIcon(icon: icon),
+                 const SizedBox(width: AppConstants.spacingMd),
+               ],
+@@ -298,7 +298,7 @@ class SelectionSetting extends StatelessWidget {
+ class ActionButton extends StatelessWidget {
+   const ActionButton({
+     super.key,
+-    required this.icon,
++    this.icon = null,
+     required this.title,
+     required this.subtitle,
+     this.onTap,
+@@ -417,7 +417,7 @@ class CustomSwitch extends StatelessWidget {
+ class SliderSetting extends StatelessWidget {
+   const SliderSetting({
+     super.key,
+-    required this.icon,
++    this.icon = null,
+     required this.title,
+     required this.subtitle,
+     required this.value,
+@@ -565,7 +565,7 @@ class _SettingsIcon extends StatelessWidget {
+ class ColoredSettingsIcon extends StatelessWidget {
+   const ColoredSettingsIcon({
+     super.key,
+-    required this.icon,
++    this.icon = null,
+     required this.backgroundColor,
+     required this.iconColor,
+   });
+@@ -583,11 +583,13 @@ class ColoredSettingsIcon extends StatelessWidget {
+         color: backgroundColor,
+         borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+       ),
++      if (icon != null) ...[
+       child: Icon(
+         icon,
+         color: iconColor,
+         size: context.responsiveIcon(AppConstants.iconSizeLg),
+       ),
++      ],
+     );
+   }
+ }
+-- 
+2.55.0
+

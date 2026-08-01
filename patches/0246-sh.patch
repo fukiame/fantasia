@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 16:32:10 +0700
+Subject: [PATCH] sh
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/uac2_settings_screen.dart b/lib/features/settings/screens/uac2_settings_screen.dart
+index 7a322593..1fa4b4e3 100644
+--- a/lib/features/settings/screens/uac2_settings_screen.dart
++++ b/lib/features/settings/screens/uac2_settings_screen.dart
+@@ -564,7 +564,7 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+     final diagnostics = ref.watch(audioOutputDiagnosticsProvider);
+ 
+     return Container(
+-      padding: const EdgeInsets.all(AppConstants.spacingMd),
++      padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
+       decoration: BoxDecoration(
+         color: AppColors.surface.withValues(alpha: 0.6),
+         borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-- 
+2.55.0
+
