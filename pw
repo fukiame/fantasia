@@ -24,7 +24,9 @@ case "$1" in
         flutter pub get
 	rm -f pubspec.lock
         flutter pub upgrade --major-versions
-	sed -i "s/SED_HERE/$(git rev-parse --short HEAD)/" \
+	sed -i "s/FLICK_SED_HERE/$(git -C ../Flick rev-parse --short HEAD)/" \
+		lib/core/constants/app_constants.dart
+	sed -i "s/FANTASIA_SED_HERE/$(git rev-parse --short HEAD)/" \
 		lib/core/constants/app_constants.dart
         cd rust && cargo fetch \
 		--target "aarch64-linux-android" \

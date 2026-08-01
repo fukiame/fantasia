@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 19:45:17 +0700
+Subject: [PATCH] lowerc
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/uac2_settings_screen.dart b/lib/features/settings/screens/uac2_settings_screen.dart
+index 8bfe1e53..14b82072 100644
+--- a/lib/features/settings/screens/uac2_settings_screen.dart
++++ b/lib/features/settings/screens/uac2_settings_screen.dart
+@@ -783,7 +783,7 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  label,
++                  label.toLowerCase(),
+                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                     color: context.adaptiveTextTertiary,
+                   ),
+-- 
+2.55.0
+

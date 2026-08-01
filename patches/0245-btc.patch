@@ -1,0 +1,97 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 20:04:10 +0700
+Subject: [PATCH] btc
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/bluetooth_settings_screen.dart b/lib/features/settings/screens/bluetooth_settings_screen.dart
+index 5329530c..53dc174a 100644
+--- a/lib/features/settings/screens/bluetooth_settings_screen.dart
++++ b/lib/features/settings/screens/bluetooth_settings_screen.dart
+@@ -529,41 +529,27 @@ class _BluetoothCodecInfo extends StatelessWidget {
+         : 'When you play over Bluetooth, Android negotiates the codec with your headphones or speaker.';
+ 
+     return Padding(
+-      padding: const EdgeInsets.all(AppConstants.spacingLg),
++      padding: const EdgeInsets.all(AppConstants.spacingMd),
+       child: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           Row(
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+-              Container(
+-                width: 40,
+-                height: 40,
+-                decoration: BoxDecoration(
+-                  color: AppColors.glassBackgroundStrong,
+-                  borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-                ),
+-                child: Icon(
+-                  LucideIcons.bluetooth,
+-                  color: context.adaptiveTextSecondary,
+-                  size: 20,
+-                ),
+-              ),
+-              const SizedBox(width: AppConstants.spacingMd),
+               Expanded(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+                       'Bluetooth codec info',
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
++                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                             color: context.adaptiveTextPrimary,
+                           ),
+                     ),
+                     const SizedBox(height: 2),
+                     Text(
+                       currentRouteLabel,
+-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                             color: context.adaptiveTextTertiary,
+                             height: 1.35,
+                           ),
+@@ -572,7 +558,7 @@ class _BluetoothCodecInfo extends StatelessWidget {
+                       const SizedBox(height: 4),
+                       Text(
+                         negotiatedLine.toString(),
+-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                               color: context.adaptiveTextPrimary,
+                               fontWeight: FontWeight.w600,
+                               height: 1.35,
+@@ -602,7 +588,7 @@ class _BluetoothCodecInfo extends StatelessWidget {
+           const SizedBox(height: AppConstants.spacingLg),
+           Text(
+             'Flick can attempt to prefer a specific codec above, but success depends on your device, headset, and Android version. Codec forcing uses a hidden system API and may not work on non-rooted devices.',
+-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                   color: context.adaptiveTextSecondary,
+                   height: 1.4,
+                 ),
+@@ -630,8 +616,8 @@ class _CodecChip extends StatelessWidget {
+   Widget build(BuildContext context) {
+     return Container(
+       padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingMd,
+-        vertical: AppConstants.spacingSm,
++        horizontal: AppConstants.spacingSm,
++        vertical: AppConstants.spacingXs,
+       ),
+       decoration: BoxDecoration(
+         color: AppColors.glassBackgroundStrong,
+@@ -640,7 +626,7 @@ class _CodecChip extends StatelessWidget {
+       ),
+       child: Text(
+         label,
+-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
++        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+               color: context.adaptiveTextSecondary,
+               fontWeight: FontWeight.w600,
+             ),
+-- 
+2.55.0
+
