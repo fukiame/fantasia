@@ -1,12 +1,12 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
 Date: Sat, 1 Aug 2026 13:20:47 +0700
-Subject: [PATCH] 1
+Subject: [PATCH] immersive
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
-index bd01db49..fc71a892 100644
+index bd01db49..5d4d1c59 100644
 --- a/lib/features/player/screens/full_player_screen.dart
 +++ b/lib/features/player/screens/full_player_screen.dart
 @@ -14,13 +14,11 @@ import 'package:flick/features/player/widgets/player_navigation.dart';
@@ -71,7 +71,7 @@ index bd01db49..fc71a892 100644
      _dismissVolumePopup?.call();
      _dismissVolumePopup = null;
      _throttledPositionNotifier.dispose();
-@@ -154,82 +139,15 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -154,84 +139,13 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
      if (_playerService.currentSongNotifier.value == null) {
        return;
      }
@@ -144,18 +144,19 @@ index bd01db49..fc71a892 100644
 -    _refreshImmersiveFullViewTimer();
 -  }
 -
-   void _handleImmersiveSceneTap() {
+-  void _handleImmersiveSceneTap() {
 -    if (_playerScreenMode != PlayerScreenMode.immersive) return;
 -
 -    setState(() {
 -      _isImmersiveFullView = !_isImmersiveFullView;
 -    });
 -    _refreshImmersiveFullViewTimer();
-+    return;
-   }
- 
+-  }
+-
    Future<void> _animateToNextSong() async {
-@@ -283,10 +201,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     _dismissVolumePopup?.call();
+     _dismissVolumePopup = null;
+@@ -283,10 +197,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
  
    @override
    Widget build(BuildContext context) {
@@ -166,7 +167,15 @@ index bd01db49..fc71a892 100644
      final appPrefs = ref.watch(appPreferencesProvider);
  
      final colorMode = ref.watch(albumColorModeProvider);
-@@ -397,8 +311,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -317,7 +227,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+ 
+               return GestureDetector(
+                 behavior: HitTestBehavior.translucent,
+-                onTap: _handleImmersiveSceneTap,
+                 onVerticalDragStart: (details) {
+                   if (_isVinylRotationActive) return;
+                   final screenHeight = MediaQuery.sizeOf(context).height;
+@@ -397,8 +306,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                    },
                    child: AnimatedSongScene(
                      song: song,
@@ -175,15 +184,19 @@ index bd01db49..fc71a892 100644
                      albumColorMode: colorMode,
                      albumColor: albumColor,
                      transitionDirection: _songTransitionDirection,
-@@ -426,7 +338,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
-                     buildFileInfoRow: (song, mode) =>
+@@ -423,10 +330,9 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                         _navigation.openArtistFromSong(context, song),
+                     onNavigateToAlbumDetail: (song) =>
+                         _navigation.openAlbumFromSong(context, song),
+-                    buildFileInfoRow: (song, mode) =>
++                    buildFileInfoRow: (song) =>
                          PlayerActionButtonRow(
                        song: song,
 -                      playerScreenMode: mode,
                        albumColor: albumColor,
                        albumColorMode: colorMode,
                        leftAction: PlayerActionButtonX.fromStorageValue(
-@@ -450,12 +361,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+@@ -450,12 +356,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
                      artworkCardShowAlbum: appPrefs.artworkCardShowAlbum,
                      artworkCardShowFileInfo: appPrefs.artworkCardShowFileInfo,
                      artworkCardShowFrame: appPrefs.artworkCardShowFrame,
@@ -197,7 +210,7 @@ index bd01db49..fc71a892 100644
                          PlayerActionButtonX.fromStorageValue(
                                appPrefs.leftActionButton,
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 857ad968..298aca09 100644
+index 857ad968..11ee434f 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -10,7 +10,6 @@ import 'package:flick/core/constants/app_constants.dart';
@@ -272,16 +285,20 @@ index 857ad968..298aca09 100644
  
      final scene = RepaintBoundary(
        key: sceneKey,
-@@ -128,8 +109,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -128,11 +109,7 @@ class AnimatedSongScene extends StatelessWidget {
                );
              },
              transitionBuilder: (Widget child, Animation<double> animation) {
 -              final isFullView =
 -                  child.key == const ValueKey('immersive-full-view');
-               final slideOffset = isFullView
-                   ? const Offset(0, 0.12)
-                   : const Offset(0, 0.03);
-@@ -144,14 +123,7 @@ class AnimatedSongScene extends StatelessWidget {
+-              final slideOffset = isFullView
+-                  ? const Offset(0, 0.12)
+-                  : const Offset(0, 0.03);
++              final slideOffset = const Offset(0, 0.03);
+               return SlideTransition(
+                 position: Tween<Offset>(begin: slideOffset, end: Offset.zero)
+                     .animate(
+@@ -144,14 +121,7 @@ class AnimatedSongScene extends StatelessWidget {
                  child: FadeTransition(opacity: animation, child: child),
                );
              },
@@ -297,7 +314,7 @@ index 857ad968..298aca09 100644
                      key: const ValueKey('immersive-default-layout'),
                      child: SafeArea(
                        child: Column(
-@@ -160,10 +132,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -160,10 +130,7 @@ class AnimatedSongScene extends StatelessWidget {
                            _buildTopChrome(context),
                            SizedBox(height: context.responsive(8.0, 10.0, 12.0)),
                            Expanded(
@@ -309,7 +326,7 @@ index 857ad968..298aca09 100644
                            ),
                          ],
                        ),
-@@ -224,7 +193,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -224,7 +191,6 @@ class AnimatedSongScene extends StatelessWidget {
      final bgBlend = albumColorMode.backgroundBlend;
      final hasAlbumTint = albumColor != null && bgBlend > 0;
  
@@ -317,7 +334,7 @@ index 857ad968..298aca09 100644
        return Stack(
          children: [
            Positioned.fill(
-@@ -272,79 +240,12 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -272,79 +238,12 @@ class AnimatedSongScene extends StatelessWidget {
            ),
          ],
        );
@@ -398,15 +415,312 @@ index 857ad968..298aca09 100644
          vertical: context.responsive(4.0, 6.0, 8.0),
        ),
        child: Row(
-@@ -607,7 +508,6 @@ class AnimatedSongScene extends StatelessWidget {
-                                   ),
-                                   child: buildFileInfoRow(
-                                     song,
+@@ -517,304 +416,6 @@ class AnimatedSongScene extends StatelessWidget {
+     );
+   }
+ 
+-  Widget _buildImmersiveLayout(BuildContext context) {
+-    final layout = 
+-        KeyedSubtree(
+-            key: const ValueKey('immersive-default-layout'),
+-            child: Column(
+-              children: [
+-                const Spacer(flex: 2),
+-                Transform.translate(
+-                  offset: Offset(0, immersiveVerticalOffset),
+-                  child: Column(
+-                    mainAxisSize: MainAxisSize.min,
+-                    children: [
+-                      Padding(
+-                        padding: EdgeInsets.symmetric(
+-                          horizontal: context.responsive(12.0, 16.0, 20.0),
+-                        ),
+-                        child: _buildImmersiveSongHeader(context),
+-                      ),
+-                      if (immersiveShowFileInfo) ...[
+-                        Builder(
+-                          builder: (context) {
+-                            final diagnostics = ProviderScope.containerOf(
+-                              context,
+-                            ).read(audioOutputDiagnosticsProvider);
+-                            final appPrefs = ProviderScope.containerOf(
+-                              context,
+-                            ).read(appPreferencesProvider);
+-                            return Column(
+-                              mainAxisSize: MainAxisSize.min,
+-                              children: [
+-                                if (diagnostics != null &&
+-                                    appPrefs
+-                                        .replaceAlbumWithBitPerfectCapsule) ...[
+-                                  SizedBox(
+-                                    height: context.responsive(6.0, 8.0, 10.0),
+-                                  ),
+-                                  Padding(
+-                                    padding: EdgeInsets.symmetric(
+-                                      horizontal: context.responsive(
+-                                        12.0,
+-                                        16.0,
+-                                        20.0,
+-                                      ),
+-                                    ),
+-                                    child: BitPerfectCapsule(
+-                                      diagnostics: diagnostics,
+-                                      horizontalPadding: context.responsive(
+-                                        12.0,
+-                                        14.0,
+-                                        16.0,
+-                                      ),
+-                                      verticalPadding: context.responsive(
+-                                        4.0,
+-                                        5.0,
+-                                        6.0,
+-                                      ),
+-                                      fontSize: context.responsive(
+-                                        11.0,
+-                                        12.0,
+-                                        13.0,
+-                                      ),
+-                                      onTap: () {
+-                                        final deviceStatus =
+-                                            ProviderScope.containerOf(
+-                                              context,
+-                                            ).read(uac2DeviceStatusProvider);
+-                                        BitPerfectIndicator.showInfoSheet(
+-                                          context,
+-                                          song: song,
+-                                          diagnostics: diagnostics,
+-                                          deviceStatus: deviceStatus,
+-                                          playerService: playerService,
+-                                        );
+-                                      },
+-                                    ),
+-                                  ),
+-                                ],
+-                                SizedBox(
+-                                  height: context.responsive(10.0, 12.0, 14.0),
+-                                ),
+-                                Padding(
+-                                  padding: EdgeInsets.symmetric(
+-                                    horizontal: context.responsive(
+-                                      12.0,
+-                                      16.0,
+-                                      20.0,
+-                                    ),
+-                                  ),
+-                                  child: buildFileInfoRow(
+-                                    song,
 -                                    playerScreenMode,
-                                   ),
-                                 ),
-                               ],
-@@ -948,7 +848,7 @@ class AnimatedSongScene extends StatelessWidget {
+-                                  ),
+-                                ),
+-                              ],
+-                            );
+-                          },
+-                        ),
+-                      ],
+-                    ],
+-                  ),
+-                ),
+-                SizedBox(height: context.responsive(12.0, 14.0, 16.0)),
+-                _buildPlaybackStack(context),
+-                SizedBox(height: context.responsive(24.0, 32.0, 40.0)),
+-              ],
+-            ),
+-          );
+-
+-    if (AppConstants.animationNormal == Duration.zero) {
+-      return layout;
+-    }
+-
+-    return AnimatedSwitcher(
+-      duration: AppConstants.animationNormal,
+-      switchInCurve: Curves.easeOutCubic,
+-      switchOutCurve: Curves.easeInOutCubic,
+-      layoutBuilder: (currentChild, previousChildren) {
+-        return Stack(
+-          fit: StackFit.expand,
+-          children: [
+-            ...previousChildren,
+-            ...?currentChild == null ? null : [currentChild],
+-          ],
+-        );
+-      },
+-      transitionBuilder: (child, animation) {
+-        final offsetAnimation = Tween<Offset>(
+-          begin: const Offset(0, 0.05),
+-          end: Offset.zero,
+-        ).animate(animation);
+-
+-        return FadeTransition(
+-          opacity: animation,
+-          child: SlideTransition(position: offsetAnimation, child: child),
+-        );
+-      },
+-      child: layout,
+-    );
+-  }
+-
+-  Widget _buildImmersiveFullViewLayout(BuildContext context) {
+-    final artworkSize =
+-        context.responsive(56.0, 60.0, 64.0) * immersiveFullViewScale;
+-    return Align(
+-      alignment: Alignment.bottomCenter,
+-      child: Padding(
+-        padding: EdgeInsets.fromLTRB(
+-          context.responsive(16.0, 20.0, 24.0),
+-          0,
+-          context.responsive(16.0, 20.0, 24.0),
+-          context.responsive(20.0, 24.0, 28.0),
+-        ),
+-        child: Container(
+-          padding: EdgeInsets.all(
+-            context.responsive(10.0, 12.0, 14.0) * immersiveFullViewScale,
+-          ),
+-          decoration: BoxDecoration(
+-            color: const Color(0xFF121212).withValues(alpha: 0.72),
+-            borderRadius: BorderRadius.circular(24),
+-            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+-          ),
+-          child: Row(
+-            children: [
+-              ClipRRect(
+-                borderRadius: BorderRadius.circular(
+-                  18 * immersiveFullViewScale,
+-                ),
+-                child: SizedBox(
+-                  width: artworkSize,
+-                  height: artworkSize,
+-                  child: CachedImageWidget(
+-                    imagePath: song.albumArt,
+-                    audioSourcePath: song.filePath,
+-                    fit: BoxFit.cover,
+-                    placeholder: Container(
+-                      color: Colors.white.withValues(alpha: 0.05),
+-                      child: Icon(
+-                        LucideIcons.music,
+-                        color: Colors.white.withValues(alpha: 0.5),
+-                        size: artworkSize * 0.44,
+-                      ),
+-                    ),
+-                    errorWidget: Container(
+-                      color: Colors.white.withValues(alpha: 0.05),
+-                      child: Icon(
+-                        LucideIcons.music,
+-                        color: Colors.white.withValues(alpha: 0.5),
+-                        size: artworkSize * 0.44,
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              ),
+-              SizedBox(width: context.responsive(12.0, 14.0, 16.0)),
+-              Expanded(
+-                child: Column(
+-                  mainAxisSize: MainAxisSize.min,
+-                  crossAxisAlignment: CrossAxisAlignment.start,
+-                  children: [
+-                    if (immersiveShowTitle)
+-                      Text(
+-                        song.title,
+-                        maxLines: 2,
+-                        overflow: TextOverflow.ellipsis,
+-                        style: TextStyle(
+-                          fontFamily: 'ProductSans',
+-                          fontSize: context.responsiveText(
+-                            context.responsive(18.0, 19.0, 21.0) *
+-                                immersiveTextScale,
+-                          ),
+-                          fontWeight: FontWeight.w700,
+-                          color: Colors.white,
+-                          height: 1.12,
+-                        ),
+-                      ),
+-                    if (immersiveShowTitle && immersiveShowArtist)
+-                      SizedBox(height: context.responsive(6.0, 7.0, 8.0)),
+-                    if (immersiveShowArtist)
+-                      GestureDetector(
+-                        onTap: () => onNavigateToArtistDetail(song),
+-                        child: Text(
+-                          song.artist,
+-                          maxLines: 1,
+-                          overflow: TextOverflow.ellipsis,
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: context.responsiveText(
+-                              context.responsive(13.0, 14.0, 15.0) *
+-                                  immersiveTextScale,
+-                            ),
+-                            fontWeight: FontWeight.w500,
+-                            color: Colors.white.withValues(alpha: 0.78),
+-                          ),
+-                        ),
+-                      ),
+-                  ],
+-                ),
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildImmersiveSongHeader(BuildContext context) {
+-    return Row(
+-      crossAxisAlignment: CrossAxisAlignment.end,
+-      children: [
+-        Expanded(
+-          child: Column(
+-            crossAxisAlignment: CrossAxisAlignment.start,
+-            mainAxisSize: MainAxisSize.min,
+-            children: [
+-              if (immersiveShowTitle)
+-                Text(
+-                  song.title,
+-                  maxLines: 2,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: context.responsiveText(
+-                      context.responsive(22.0, 24.0, 28.0) * immersiveTextScale,
+-                    ),
+-                    fontWeight: FontWeight.w700,
+-                    color: Colors.white,
+-                    height: 1.08,
+-                  ),
+-                ),
+-              if (immersiveShowTitle && immersiveShowArtist)
+-                SizedBox(height: context.responsive(10.0, 12.0, 14.0)),
+-              if (immersiveShowArtist)
+-                GestureDetector(
+-                  onTap: () => onNavigateToArtistDetail(song),
+-                  child: Text(
+-                    song.artist,
+-                    maxLines: 1,
+-                    overflow: TextOverflow.ellipsis,
+-                    style: TextStyle(
+-                      fontFamily: 'ProductSans',
+-                      fontSize: context.responsiveText(
+-                        context.responsive(13.0, 14.0, 16.0) *
+-                            immersiveTextScale,
+-                      ),
+-                      fontWeight: FontWeight.w500,
+-                      color: Colors.white.withValues(alpha: 0.82),
+-                    ),
+-                  ),
+-                ),
+-              if (immersiveShowTitle || immersiveShowArtist)
+-                SizedBox(height: context.responsive(10.0, 12.0, 14.0)),
+-            ],
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-
+   Widget _buildArtworkCardLayout(BuildContext context) {
+     return LayoutBuilder(
+       builder: (context, constraints) {
+@@ -948,7 +549,7 @@ class AnimatedSongScene extends StatelessWidget {
                  ),
                ),
                if (artworkCardShowFileInfo)
@@ -415,7 +729,7 @@ index 857ad968..298aca09 100644
                if (artworkCardShowFileInfo) SizedBox(height: playbackSpacing),
                _buildPlaybackStack(context),
                SizedBox(height: directorySpacing),
-@@ -1138,10 +1038,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -1138,10 +739,7 @@ class AnimatedSongScene extends StatelessWidget {
    }
  
    Widget _buildPlaybackStack(BuildContext context) {
@@ -499,7 +813,7 @@ index 35ce1b72..b31b10cf 100644
      switch (action) {
        case PlayerActionButton.favorites:
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 5d402929..ed069ee3 100644
+index 5d402929..c642276f 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
 @@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
@@ -510,7 +824,7 @@ index 5d402929..ed069ee3 100644
  import 'package:flick/models/player_action_button.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/providers/providers.dart';
-@@ -23,169 +22,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -23,170 +22,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
    @override
    Widget build(BuildContext context, WidgetRef ref) {
      final appPrefs = ref.watch(appPreferencesProvider);
@@ -677,17 +991,20 @@ index 5d402929..ed069ee3 100644
 -          ),
 -	  ],
 -	  if (playerScreenMode == PlayerScreenMode.artworkCard) ...[
-           const SizedBox(height: AppConstants.spacingLg),
+-          const SizedBox(height: AppConstants.spacingLg),
            SettingsCard(
              children: [
-@@ -314,7 +156,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+               SliderSetting(
+@@ -314,9 +155,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ),
              ],
            ),
 -	  ],
            const SizedBox(height: AppConstants.spacingLg),
-           const SettingsSectionHeader('Quick Actions'),
+-          const SettingsSectionHeader('Quick Actions'),
            SettingsCard(
+             children: [
+               NavigationSetting(
 diff --git a/lib/models/player_screen_mode.dart b/lib/models/player_screen_mode.dart
 deleted file mode 100644
 index 1c31be06..00000000
@@ -850,6 +1167,15 @@ index 14255061..00000000
 -    NotifierProvider<PlayerScreenModeNotifier, PlayerScreenMode>(
 -  PlayerScreenModeNotifier.new,
 -);
+diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
+index 96757b0f..07ed08ce 100644
+--- a/lib/providers/providers.dart
++++ b/lib/providers/providers.dart
+@@ -19,4 +19,3 @@ export 'app_preferences_provider.dart';
+ export 'progress_bar_style_provider.dart';
+ export 'album_color_provider.dart';
+ export 'nav_bar_config_provider.dart';
+-export 'player_screen_mode_provider.dart';
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
 index 292e8cb7..f595d041 100644
 --- a/lib/services/app_preferences_service.dart
