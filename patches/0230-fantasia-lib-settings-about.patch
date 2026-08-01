@@ -16,7 +16,7 @@ index 1bcefca6..1446ec3c 100644
 +
 +const String fantasiaGitRef = 'SED_HERE';
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 0bd363d1..5ebd603d 100644
+index 0bd363d1..ee839871 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -5,7 +5,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -194,7 +194,7 @@ index 0bd363d1..5ebd603d 100644
 +                Text(
 +                  label.toLowerCase(),
 +                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-+                    color: context.adaptiveTextTertiary,
++                    color: AppColors.textTertiary,
                    ),
 -                  width: 1.0 + _donationPulseAnimation.value * 1.2,
                  ),
@@ -214,7 +214,7 @@ index 0bd363d1..5ebd603d 100644
 +                Text(
 +                  value,
 +                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-+                    color: valueColor ?? context.adaptiveTextPrimary,
++                    color: AppColors.textPrimary,
 +                    fontWeight: FontWeight.w500,
                    ),
 -                ],
