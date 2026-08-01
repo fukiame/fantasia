@@ -318,7 +318,7 @@ index d893cf3a..00000000
 -  }
 -}
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index 31332b2a..80048db5 100644
+index 31332b2a..9b6a4b1d 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -12,7 +12,7 @@ import 'package:flick/services/player_service.dart';
@@ -338,14 +338,18 @@ index 31332b2a..80048db5 100644
      );
      final label = _getSongQuality(song);
  
-@@ -103,7 +102,6 @@ class BitPerfectIndicator extends ConsumerWidget {
+@@ -102,9 +101,8 @@ class BitPerfectIndicator extends ConsumerWidget {
+   }
  
    static _IndicatorState _resolveState(
-     AudioOutputDiagnostics? diagnostics, {
+-    AudioOutputDiagnostics? diagnostics, {
 -    bool suppressVerified = false,
-   }) {
+-  }) {
++    AudioOutputDiagnostics? diagnostics,
++  ) {
      final isVerified =
          diagnostics?.capabilityFlags.supportsVerifiedBitPerfect == true &&
+         diagnostics?.resamplerActive != true;
 @@ -114,12 +112,9 @@ class BitPerfectIndicator extends ConsumerWidget {
          diagnostics.capabilityFlags.supportsVerifiedBitPerfect == true &&
          diagnostics.resamplerActive == true;
