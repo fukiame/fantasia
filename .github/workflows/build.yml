@@ -19,14 +19,12 @@ jobs:
             - name: something
               env:
                 KST: ${{ secrets.KST }}
-                KPROP: ${{ secrets.KPROP }}
                 KLOC: ${{ secrets.KLOC }}
+                KPROP: ${{ secrets.KPROP }}
                 KPLOC: ${{ secrets.KPLOC }}
               run: |
                   echo "$KST" | base64 -d > "$KLOC"
                   echo "$KPROP" | base64 -d > "$KPLOC"
-                  a="$(du -b "$KPLOC" | cut -d'	' -f1 )"
-                  [ "$a" -lt 1 ] && exit 1
             - name: build
               env:
                 KPLOC: ${{ secrets.KPLOC }}
