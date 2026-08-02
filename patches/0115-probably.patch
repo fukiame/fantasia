@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 02:21:52 +0700
+Subject: [PATCH] probably
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 0dccc1ae..e6fdb8ee 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -907,6 +907,7 @@ class _ActionButtonPickerScreen extends ConsumerWidget {
+                       onSelected(action);
+                       Navigator.of(context).pop();
+                     },
++		    ic: true,
+                   ),
+                 );
+                 return list;
+diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
+index 7ffeeaaa..04f37f50 100644
+--- a/lib/features/settings/widgets/settings_widgets.dart
++++ b/lib/features/settings/widgets/settings_widgets.dart
+@@ -232,6 +232,7 @@ class SelectionSetting extends StatelessWidget {
+     required this.subtitle,
+     required this.selected,
+     required this.onTap,
++    this.ic = false,
+   });
+ 
+   final IconData icon;
+@@ -239,6 +240,7 @@ class SelectionSetting extends StatelessWidget {
+   final String subtitle;
+   final bool selected;
+   final VoidCallback onTap;
++  final bool ic;
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -253,6 +255,10 @@ class SelectionSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
++              if (ic) ...[
++                _SettingsIcon(icon: icon),
++                const SizedBox(width: AppConstants.spacingMd),
++              ],
+               Expanded(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+-- 
+2.55.0
+

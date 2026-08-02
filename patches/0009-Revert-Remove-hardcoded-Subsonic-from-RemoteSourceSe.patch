@@ -1,0 +1,127 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:23:34 +0700
+Subject: [PATCH] Revert "Remove hardcoded Subsonic from RemoteSourceService"
+
+This reverts commit 6ac1605ab5530df1926cc99584d1cc0623332570.
+
+diff --git a/lib/services/remote_source_service.dart b/lib/services/remote_source_service.dart
+index b8d843b9..dda06f10 100644
+--- a/lib/services/remote_source_service.dart
++++ b/lib/services/remote_source_service.dart
+@@ -3,21 +3,26 @@ import 'package:flutter/foundation.dart';
+ import '../core/utils/app_log.dart';
+ import '../data/database.dart';
+ import '../models/song.dart';
+-import 'sources/network_source_service.dart';
++import 'sources/subsonic_service.dart';
+ 
+ /// Bridges playback/download for network-sourced songs.
+ ///
+-/// A cache hit returns the local file path immediately (gapless/crossfade
+-/// handoff reads a local file); a miss downloads the original-quality stream
+-/// into [NetworkCacheService] via the protocol service registered for the
+-/// song's `sourceType`.
++/// v1 supports Subsonic only: a cache hit returns the local file path
++/// immediately (gapless/crossfade handoff reads a local file), a miss
++/// downloads the original-quality stream into [NetworkCacheService].
+ class RemoteSourceService {
+-  RemoteSourceService._();
++  RemoteSourceService._({SubsonicService? subsonic})
++      : _subsonic = subsonic ?? SubsonicService.instance;
+ 
+   static RemoteSourceService instance = RemoteSourceService._();
+ 
++  /// Test seam: build an isolated instance with mocked dependencies.
+   @visibleForTesting
+-  static RemoteSourceService create() => RemoteSourceService._();
++  static RemoteSourceService create({SubsonicService? subsonic}) {
++    return RemoteSourceService._(subsonic: subsonic);
++  }
++
++  final SubsonicService _subsonic;
+ 
+   /// Progress (0..1) of the interactive playback download, null when idle.
+   final ValueNotifier<double?> downloadProgressNotifier = ValueNotifier(null);
+@@ -40,27 +45,28 @@ class RemoteSourceService {
+     if (!song.isNetworkSource) {
+       throw StateError('Song is not a network source');
+     }
+-    final sourceType = song.sourceType;
+-    if (sourceType == null) {
+-      throw StateError('Network song has no source type');
+-    }
+     final server = await _serverFor(song);
+     final remoteId = song.remoteId;
+     if (remoteId == null) {
+       throw StateError('Network song has no remote id');
+     }
+-    final service = networkSourceServiceFor(sourceType);
+-    try {
+-      return await service.stream(
+-        server,
+-        remoteId,
+-        extension: song.fileType,
+-        onProgress: reportProgress
+-            ? (p) => downloadProgressNotifier.value = p
+-            : null,
+-      );
+-    } finally {
+-      if (reportProgress) downloadProgressNotifier.value = null;
++    switch (song.sourceType) {
++      case 'subsonic':
++        try {
++          return await _subsonic.stream(
++            server,
++            remoteId,
++            extension: song.fileType,
++            onProgress: reportProgress
++                ? (p) => downloadProgressNotifier.value = p
++                : null,
++          );
++        } finally {
++          if (reportProgress) downloadProgressNotifier.value = null;
++        }
++      default:
++        throw StateError(
++            'Source type "${song.sourceType}" is not supported yet');
+     }
+   }
+ 
+diff --git a/pubspec.lock b/pubspec.lock
+index dc7bdee6..23bb02ac 100644
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -912,7 +912,7 @@ packages:
+     source: hosted
+     version: "2.2.0"
+   path:
+-    dependency: "direct main"
++    dependency: transitive
+     description:
+       name: path
+       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
+@@ -1652,7 +1652,7 @@ packages:
+     source: hosted
+     version: "1.1.0"
+   xml:
+-    dependency: "direct main"
++    dependency: transitive
+     description:
+       name: xml
+       sha256: "971043b3a0d3da28727e40ed3e0b5d18b742fa5a68665cca88e74b7876d5e025"
+diff --git a/pubspec.yaml b/pubspec.yaml
+index dfe1dcdc..0e7313ba 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -68,7 +68,6 @@ dependencies:
+   share_plus: ^10.1.4
+   skeletonizer: ^2.1.2
+   url_launcher: ^6.3.2
+-  xml: ^6.5.0
+ 
+ dev_dependencies:
+   build_runner: ^2.4.13
+-- 
+2.55.0
+

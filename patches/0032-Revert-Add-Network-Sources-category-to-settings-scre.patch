@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:28:41 +0700
+Subject: [PATCH] Revert "Add Network Sources category to settings screen"
+
+This reverts commit 70923480f07f8a36b23c6407591615b15a190c24.
+
+diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
+index 4d5a34af..4bc0c58a 100644
+--- a/lib/features/settings/screens/settings_screen.dart
++++ b/lib/features/settings/screens/settings_screen.dart
+@@ -12,7 +12,6 @@ import 'package:flick/features/settings/screens/queue_settings_screen.dart';
+ import 'package:flick/features/settings/screens/ui_customization_settings_screen.dart';
+ import 'package:flick/features/settings/screens/integrations_settings_screen.dart';
+ import 'package:flick/features/settings/screens/lyrics_settings_screen.dart';
+-import 'package:flick/features/settings/screens/network_sources_screen.dart';
+ import 'package:flick/features/settings/screens/player_layout_settings_screen.dart';
+ import 'package:flick/features/settings/screens/widget_settings_screen.dart';
+ import 'package:flick/features/settings/screens/support_flick_screen.dart';
+@@ -84,16 +83,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                               _navigate(context, const LibrarySettingsScreen()),
+                         ),
+                         const SettingsDivider(),
+-                        _CategoryTile(
+-                          icon: LucideIcons.cloud,
+-                          iconBg: const Color(0xFF2D6F6F),
+-                          iconFg: const Color(0xFF8BFFE0),
+-                          title: 'Network Sources',
+-                          subtitle: 'Subsonic servers, sync, and streaming',
+-                          onTap: () =>
+-                              _navigate(context, const NetworkSourcesScreen()),
+-                        ),
+-                        const SettingsDivider(),
+                         _CategoryTile(
+                           icon: LucideIcons.play,
+                           iconBg: const Color(0xFF4A2D6F),
+-- 
+2.55.0
+

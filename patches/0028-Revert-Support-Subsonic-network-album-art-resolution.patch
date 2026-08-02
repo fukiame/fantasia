@@ -1,0 +1,88 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:28:41 +0700
+Subject: [PATCH] Revert "Support Subsonic network album art resolution"
+
+This reverts commit c6adc8db5b0339e885589f941e56de7f769154d1.
+
+diff --git a/lib/services/album_art_service.dart b/lib/services/album_art_service.dart
+index c028260b..c74bd491 100644
+--- a/lib/services/album_art_service.dart
++++ b/lib/services/album_art_service.dart
+@@ -7,12 +7,10 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+ import 'package:image/image.dart' as img;
+ import 'package:path_provider/path_provider.dart';
+ 
+-import '../data/database.dart';
+ import '../data/repositories/song_repository.dart';
+ import '../src/rust/api/scanner.dart' as rust_scanner;
+ import 'music_folder_service.dart';
+ import 'player_service.dart';
+-import 'sources/subsonic_service.dart';
+ 
+ class AlbumArtService {
+   AlbumArtService._();
+@@ -50,8 +48,7 @@ class AlbumArtService {
+     }
+ 
+     final future = _inFlightResolutions.putIfAbsent(audioSourcePath, () async {
+-      final raw = await _loadArtworkBytes(audioSourcePath,
+-          existingPath: existingPath);
++      final raw = await _loadArtworkBytes(audioSourcePath);
+       if (raw == null || raw.isEmpty) {
+         await _persistArtworkPath(audioSourcePath, null);
+         return null;
+@@ -132,34 +129,7 @@ class AlbumArtService {
+     return File(path).exists();
+   }
+ 
+-  /// Fetch raw artwork bytes. Network songs resolve through the Subsonic
+-  /// cover-art endpoint using the `subsonic-cover://<id>` marker stored in the
+-  /// entity's albumArtPath; local songs extract embedded art as before.
+-  Future<Uint8List?> _loadArtworkBytes(
+-    String audioSourcePath, {
+-    String? existingPath,
+-  }) async {
+-    final uri = Uri.tryParse(audioSourcePath);
+-    if (uri?.scheme == 'subsonic') {
+-      final marker = existingPath != null &&
+-              existingPath.startsWith(networkCoverArtScheme)
+-          ? existingPath.substring(networkCoverArtScheme.length)
+-          : null;
+-      if (marker == null || marker.isEmpty) return null;
+-
+-      final serverId = int.tryParse(uri!.host);
+-      if (serverId == null) return null;
+-      final server = await Database.networkServers.get(serverId);
+-      if (server == null) return null;
+-
+-      try {
+-        final bytes = await SubsonicService.instance.getCoverArt(server, marker);
+-        return Uint8List.fromList(bytes);
+-      } catch (e) {
+-        return null;
+-      }
+-    }
+-
++  Future<Uint8List?> _loadArtworkBytes(String audioSourcePath) async {
+     if (Platform.isAndroid && audioSourcePath.startsWith('content://')) {
+       return _musicFolderService.fetchEmbeddedArtwork(audioSourcePath);
+     }
+@@ -176,13 +146,7 @@ class AlbumArtService {
+     String? albumArtPath,
+   ) async {
+     try {
+-      // Network songs keep their cover-art marker in the DB so a cache
+-      // eviction can always re-resolve; only the in-memory playlist is
+-      // updated with the resolved local path.
+-      final isNetwork = Uri.tryParse(audioSourcePath)?.scheme == 'subsonic';
+-      if (!isNetwork) {
+-        await _songRepository.updateAlbumArtPath(audioSourcePath, albumArtPath);
+-      }
++      await _songRepository.updateAlbumArtPath(audioSourcePath, albumArtPath);
+       if (albumArtPath != null) {
+         PlayerService().syncAlbumArtPaths(
+           filePaths: [audioSourcePath],
+-- 
+2.55.0
+
