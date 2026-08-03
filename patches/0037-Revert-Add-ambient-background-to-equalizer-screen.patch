@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add ambient background to equalizer screen"
 This reverts commit 524700a1560babb7736b3d9f59876798a9fa1509.
 
 diff --git a/lib/features/settings/screens/equalizer_screen.dart b/lib/features/settings/screens/equalizer_screen.dart
-index b1c8f4aa..0c69f55a 100644
+index fbd19b48..830a2c44 100644
 --- a/lib/features/settings/screens/equalizer_screen.dart
 +++ b/lib/features/settings/screens/equalizer_screen.dart
 @@ -1,5 +1,6 @@
@@ -100,7 +100,7 @@ index b1c8f4aa..0c69f55a 100644
            ),
          ],
        ),
-@@ -4356,18 +4366,22 @@ class _GlassCard extends StatelessWidget {
+@@ -4417,18 +4427,22 @@ class _GlassCard extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
      return RepaintBoundary(

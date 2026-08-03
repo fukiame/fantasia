@@ -1,0 +1,81 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 15:22:37 +0700
+Subject: [PATCH] dart fix 3
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index 291c4877..bf8ca91d 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -8,7 +8,6 @@ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+-import 'package:flick/features/artists/screens/artist_detail_screen.dart';
+ import 'package:flick/models/playback_context.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/services/album_art_service.dart';
+diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
+index 9e56a5cf..a385e301 100644
+--- a/lib/features/artists/screens/artists_screen.dart
++++ b/lib/features/artists/screens/artists_screen.dart
+@@ -13,7 +13,6 @@ import 'package:flick/features/artists/screens/artist_detail_screen.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+-import 'package:flick/providers/app_preferences_provider.dart';
+ import 'package:flick/widgets/common/glass_search_bar.dart';
+ 
+ enum ArtistSortOption { name, songs, albums }
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index 69232a3d..0fb58839 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -6,7 +6,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/features/albums/screens/albums_screen.dart';
+@@ -20,7 +19,6 @@ import 'package:flick/features/songs/screens/songs_screen.dart';
+ import 'package:flick/models/playlist.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/providers/providers.dart';
+-import 'package:flick/services/color_extraction_service.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ 
+diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
+index ec62c13a..a06eae57 100644
+--- a/lib/features/player/widgets/waveform_layer.dart
++++ b/lib/features/player/widgets/waveform_layer.dart
+@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/features/player/widgets/line_seek_bar.dart';
+-import 'package:flick/providers/providers.dart';
+ 
+ class WaveformLayer extends StatefulWidget {
+   final PlayerService playerService;
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 8883783c..b9fb094a 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/models/player_action_button.dart';
+-import 'package:flick/models/song.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+-import 'package:flick/widgets/common/cached_image_widget.dart';
+ 
+ String _placementLabel(double value) {
+   if (value == 0) return 'Center';
+-- 
+2.55.0
+

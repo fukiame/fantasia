@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 4 Aug 2026 02:27:29 +0700
+Subject: [PATCH] Revert "Add removeParametricBand method to EqualizerNotifier"
+
+This reverts commit e95bf3d6bb139e2e3922af54a087ddc7eab4da60.
+
+diff --git a/lib/providers/equalizer_provider.dart b/lib/providers/equalizer_provider.dart
+index 986919bc..051fd3df 100644
+--- a/lib/providers/equalizer_provider.dart
++++ b/lib/providers/equalizer_provider.dart
+@@ -1111,18 +1111,6 @@ class EqualizerNotifier extends Notifier<EqualizerState> {
+     _syncToAudio();
+   }
+ 
+-  void removeParametricBand(int index) {
+-    final current = state.parametricBands;
+-    if (index < 0 || index >= current.length) return;
+-    // ponytail: floor at 1 band so the editor always has a band to show.
+-    if (current.length <= 1) return;
+-
+-    final next = List<ParametricBand>.of(current)..removeAt(index);
+-    state = state.copyWith(parametricBands: next, clearActivePresetName: true);
+-    ref.read(eqGraphRepaintControllerProvider).bump();
+-    _syncToAudio();
+-  }
+-
+   void applyPreset({
+     required String presetName,
+     required bool enabled,
+-- 
+2.55.0
+

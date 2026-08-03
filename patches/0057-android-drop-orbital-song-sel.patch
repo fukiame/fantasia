@@ -1,0 +1,1474 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 12:59:08 +0700
+Subject: [PATCH] android: drop orbital song sel
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/orbit_settings_screen.dart b/lib/features/settings/screens/orbit_settings_screen.dart
+deleted file mode 100644
+index 6050242b..00000000
+--- a/lib/features/settings/screens/orbit_settings_screen.dart
++++ /dev/null
+@@ -1,251 +0,0 @@
+-import 'package:flutter/material.dart';
+-import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/providers/app_preferences_provider.dart';
+-import 'package:flick/features/settings/widgets/settings_widgets.dart';
+-
+-class OrbitSettingsScreen extends ConsumerWidget {
+-  const OrbitSettingsScreen({super.key});
+-
+-  @override
+-  Widget build(BuildContext context, WidgetRef ref) {
+-    final prefs = ref.watch(appPreferencesProvider);
+-    final notifier = ref.read(appPreferencesProvider.notifier);
+-
+-    return SettingsScaffold(
+-      title: 'Customize Orbital',
+-      body: Column(
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          const SettingsSectionHeader('Geometry'),
+-          SettingsCard(
+-            children: [
+-              SliderSetting(
+-                icon: LucideIcons.radius,
+-                title: 'Curvature',
+-                subtitle: 'Curve of the orbit arc — higher is gentler',
+-                value: prefs.orbitRadiusRatio,
+-                displayValue: prefs.orbitRadiusRatio.toStringAsFixed(2),
+-                min: 0.5,
+-                max: 2.0,
+-                divisions: 30,
+-                onChanged: notifier.setOrbitRadiusRatio,
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.moveVertical,
+-                title: 'Vertical Position',
+-                subtitle: 'Where the focal song sits vertically',
+-                value: prefs.orbitCenterYRatio,
+-                displayValue: '${(prefs.orbitCenterYRatio * 100).round()}%',
+-                min: 0.30,
+-                max: 0.60,
+-                divisions: 30,
+-                onChanged: notifier.setOrbitCenterYRatio,
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.moveHorizontal,
+-                title: 'Horizontal Reach',
+-                subtitle: 'How far the arc opens from the left edge',
+-                value: prefs.orbitCenterOffsetRatio,
+-                displayValue: prefs.orbitCenterOffsetRatio.toStringAsFixed(2),
+-                min: -1.0,
+-                max: 0.0,
+-                divisions: 20,
+-                onChanged: notifier.setOrbitCenterOffsetRatio,
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.ruler,
+-                title: 'Item Spacing',
+-                subtitle: 'Distance between songs along the arc',
+-                value: prefs.orbitItemSpacing,
+-                displayValue: prefs.orbitItemSpacing.toStringAsFixed(2),
+-                min: 0.15,
+-                max: 0.50,
+-                divisions: 35,
+-                onChanged: notifier.setOrbitItemSpacing,
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Sizing'),
+-          SettingsCard(
+-            children: [
+-              SliderSetting(
+-                icon: LucideIcons.expand,
+-                title: 'Card Size',
+-                subtitle: 'Base album-art size for each song card',
+-                value: prefs.orbitCardArtSize,
+-                displayValue: '${prefs.orbitCardArtSize.round()}px',
+-                min: 48,
+-                max: 120,
+-                divisions: 72,
+-                onChanged: notifier.setOrbitCardArtSize,
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.arrowLeftRight,
+-                title: 'Card Width',
+-                subtitle: 'How wide each card spans across the screen',
+-                value: prefs.orbitCardWidthRatio,
+-                displayValue: '${(prefs.orbitCardWidthRatio * 100).round()}%',
+-                min: 0.5,
+-                max: 0.85,
+-                divisions: 35,
+-                onChanged: notifier.setOrbitCardWidthRatio,
+-              ),
+-              const SettingsDivider(),
+-              _VisibleItemsRow(
+-                value: prefs.orbitVisibleItems,
+-                onChanged: notifier.setOrbitVisibleItems,
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Depth'),
+-          SettingsCard(
+-            children: [
+-              SliderSetting(
+-                icon: LucideIcons.maximize,
+-                title: 'Selected Size',
+-                subtitle: 'Scale of the centered, focused song card',
+-                value: prefs.orbitSelectedScale,
+-                displayValue: prefs.orbitSelectedScale.toStringAsFixed(2),
+-                min: 1.0,
+-                max: 1.8,
+-                divisions: 16,
+-                onChanged: notifier.setOrbitSelectedScale,
+-              ),
+-              const SettingsDivider(),
+-              SliderSetting(
+-                icon: LucideIcons.chevronsDown,
+-                title: 'Depth',
+-                subtitle: 'How much side cards shrink away from center',
+-                value: prefs.orbitDepth,
+-                displayValue: '${(prefs.orbitDepth * 100).round()}%',
+-                min: 0.0,
+-                max: 1.0,
+-                divisions: 20,
+-                onChanged: notifier.setOrbitDepth,
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Art Resolution'),
+-          SettingsCard(
+-            children: [
+-              SelectionSetting(
+-                icon: LucideIcons.imageMinus,
+-                title: 'Low',
+-                subtitle: 'Pixelated — lightest on memory',
+-                selected: prefs.orbitArtResolutionMultiplier == 1.0,
+-                onTap: () => notifier.setOrbitArtResolutionMultiplier(1.0),
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.image,
+-                title: 'Medium',
+-                subtitle: 'Soft detail, balanced',
+-                selected: prefs.orbitArtResolutionMultiplier == 1.5,
+-                onTap: () => notifier.setOrbitArtResolutionMultiplier(1.5),
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.aperture,
+-                title: 'High',
+-                subtitle: 'Sharp (recommended)',
+-                selected: prefs.orbitArtResolutionMultiplier == 2.0,
+-                onTap: () => notifier.setOrbitArtResolutionMultiplier(2.0),
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.sparkles,
+-                title: 'Ultra',
+-                subtitle: 'Crispest — heavier during fast scrolling',
+-                selected: prefs.orbitArtResolutionMultiplier == 3.0,
+-                onTap: () => notifier.setOrbitArtResolutionMultiplier(3.0),
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Visuals'),
+-          SettingsCard(
+-            children: [
+-              ToggleSetting(
+-                icon: LucideIcons.spline,
+-                title: 'Show Orbit Path',
+-                subtitle: 'Draw the curved arc behind the songs',
+-                value: prefs.orbitShowPath,
+-                onChanged: notifier.setOrbitShowPath,
+-              ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.circle,
+-                title: 'Show Glow',
+-                subtitle: 'Soft highlight behind the selected song',
+-                value: prefs.orbitShowGlow,
+-                onChanged: notifier.setOrbitShowGlow,
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+-          SettingsCard(
+-            children: [
+-              NavigationSetting(
+-                icon: LucideIcons.refreshCw,
+-                title: 'Reset to Defaults',
+-                subtitle: 'Restore the original orbital layout',
+-                onTap: () {
+-                  notifier.resetOrbitSettings();
+-                  ScaffoldMessenger.of(context).showSnackBar(
+-                    const SnackBar(
+-                      content: Text('Orbital settings reset'),
+-                      duration: Duration(seconds: 2),
+-                    ),
+-                  );
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+-          const SizedBox(height: AppConstants.navBarHeight + 40),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+-class _VisibleItemsRow extends StatelessWidget {
+-  const _VisibleItemsRow({required this.value, required this.onChanged});
+-
+-  final int value;
+-  final ValueChanged<int> onChanged;
+-
+-  static const _options = [3, 5, 7, 9];
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Padding(
+-      padding: const EdgeInsets.fromLTRB(
+-        AppConstants.spacingLg,
+-        AppConstants.spacingMd,
+-        AppConstants.spacingMd,
+-        AppConstants.spacingSm,
+-      ),
+-      child: Wrap(
+-        spacing: AppConstants.spacingSm,
+-        children: _options.map((count) {
+-          final selected = count == value;
+-          return ChoiceChip(
+-            label: Text('$count'),
+-            selected: selected,
+-            onSelected: selected ? null : (_) => onChanged(count),
+-          );
+-        }).toList(),
+-      ),
+-    );
+-  }
+-}
+diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
+index 8eb4a2f1..4363359f 100644
+--- a/lib/features/settings/screens/playback_display_settings_screen.dart
++++ b/lib/features/settings/screens/playback_display_settings_screen.dart
+@@ -6,7 +6,6 @@ import 'package:flick/models/song_view_mode.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+-import 'package:flick/features/settings/screens/orbit_settings_screen.dart';
+ 
+ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+   const PlaybackDisplaySettingsScreen({super.key});
+@@ -62,45 +61,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+           const SettingsSectionHeader('Display'),
+           SettingsCard(
+             children: [
+-              SelectionSetting(
+-                icon: LucideIcons.disc,
+-                title: 'Song View: Orbital',
+-                subtitle: 'Use the orbital songs browser',
+-                selected: songsViewMode == SongViewMode.orbit,
+-                onTap: () {
+-                  ref
+-                      .read(songsViewModeProvider.notifier)
+-                      .setMode(SongViewMode.orbit);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.list,
+-                title: 'Song View: List',
+-                subtitle: 'Use the list songs browser',
+-                selected: songsViewMode == SongViewMode.list,
+-                onTap: () {
+-                  ref
+-                      .read(songsViewModeProvider.notifier)
+-                      .setMode(SongViewMode.list);
+-                },
+-              ),
+-              if (songsViewMode == SongViewMode.orbit) ...[
+-                const SettingsDivider(),
+-                NavigationSetting(
+-                  icon: LucideIcons.slidersHorizontal,
+-                  title: 'Customize Orbital',
+-                  subtitle: 'Curvature, sizing, depth, and visuals',
+-                  onTap: () {
+-                    Navigator.of(context).push(
+-                      MaterialPageRoute(
+-                        builder: (_) => const OrbitSettingsScreen(),
+-                      ),
+-                    );
+-                  },
+-                ),
+-              ],
+-              const SettingsDivider(),
+               ToggleSetting(
+                 icon: LucideIcons.panelBottom,
+                 title: 'Bottom Bar Always Visible',
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index 533cccea..1ea2d669 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -15,7 +15,6 @@ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/models/song_view_mode.dart';
+-import 'package:flick/features/songs/widgets/orbit_scroll.dart';
+ import 'package:flick/features/songs/widgets/song_fast_index_overlay.dart';
+ import 'package:flick/features/songs/widgets/song_actions_bottom_sheet.dart';
+ import 'package:flick/features/songs/widgets/sort_filter_bottom_sheet.dart';
+@@ -63,7 +62,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+   final TextEditingController _searchController = TextEditingController();
+   final ScrollController _listScrollController = ScrollController();
+   final ScrollController _albumGridScrollController = ScrollController();
+-  final OrbitScrollController _orbitScrollController = OrbitScrollController();
+   String _searchQuery = '';
+   List<Song> _cachedSongs = [];
+   List<Song> _cachedDisplaySongs = [];
+@@ -133,8 +131,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+     final sortOption =
+         songsAsync.value?.sortOption ?? SongSortOption.albumArtist;
+     final isAlbumMode = sortOption == SongSortOption.album;
+-    final shouldReserveOrbitBottomSpace =
+-        viewMode != SongViewMode.list && navBarVisible && !isAlbumMode;
+ 
+     return DisplayModeWrapper(
+       child: Stack(
+@@ -326,9 +322,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+                 AnimatedContainer(
+                   duration: AppConstants.animationNormal,
+                   curve: Curves.easeOutCubic,
+-                  height: shouldReserveOrbitBottomSpace
+-                      ? AppConstants.navBarHeight + AppConstants.spacingLg
+-                      : 0,
++                  height: 0,
+                 ),
+               ],
+             ),
+@@ -347,9 +341,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+     bool fastIndexEnabled,
+   ) {
+     final overlayRailVisible = fastIndexEnabled && _fastIndexVisible;
+-    final content = viewMode == SongViewMode.list
+-        ? _buildListView(songs, swipeActionsEnabled, overlayRailVisible)
+-        : _buildOrbitView(songs, swipeActionsEnabled);
++    final content = _buildListView(songs, swipeActionsEnabled, overlayRailVisible);
+ 
+     if (tokenToIndexMap.isEmpty) {
+       return content;
+@@ -418,63 +410,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+     );
+   }
+ 
+-  Widget _buildOrbitView(List<Song> songs, bool swipeActionsEnabled) {
+-    final orbit = ref.watch(appPreferencesProvider);
+-    return GestureDetector(
+-      onLongPress: () {
+-        if (_selectionMode) return;
+-        if (songs.isNotEmpty && _selectedIndex < songs.length) {
+-          SongActionsBottomSheet.show(
+-            context,
+-            songs[_selectedIndex],
+-            onSelect: () => _enterSelectionMode(songs[_selectedIndex].id),
+-          );
+-        }
+-      },
+-      child: OrbitScroll(
+-        controller: _orbitScrollController,
+-        songs: songs,
+-        selectedIndex: _selectedIndex.clamp(0, songs.length - 1).toInt(),
+-        swipeActionsEnabled: swipeActionsEnabled && !_selectionMode,
+-        isSelectionMode: _selectionMode,
+-        selectedIds: _selectedIds,
+-        radiusRatio: orbit.orbitRadiusRatio,
+-        centerOffsetRatio: orbit.orbitCenterOffsetRatio,
+-        centerYRatio: orbit.orbitCenterYRatio,
+-        itemSpacing: orbit.orbitItemSpacing,
+-        selectedScale: orbit.orbitSelectedScale,
+-        depth: orbit.orbitDepth,
+-        visibleItems: orbit.orbitVisibleItems,
+-        cardArtSize: orbit.orbitCardArtSize,
+-        cardWidthRatio: orbit.orbitCardWidthRatio,
+-        artResolutionMultiplier: orbit.orbitArtResolutionMultiplier,
+-        showPath: orbit.orbitShowPath,
+-        showGlow: orbit.orbitShowGlow,
+-        onSelectedIndexChanged: (index) {
+-          if (!mounted) return;
+-          _showFastIndexOverlay();
+-          setState(() {
+-            _selectedIndex = index;
+-          });
+-          _syncSelectedTokenForIndex(songs, index);
+-        },
+-        onSongSelected: (index) async {
+-          if (_selectionMode) {
+-            _toggleSelection(songs[index].id);
+-            return;
+-          }
+-          await _playSongAndOpenPlayer(songs: songs, index: index);
+-        },
+-        onSongSwipedLeft: (index) async {
+-          await _queueSong(songs[index]);
+-        },
+-        onSongSwipedRight: (index) async {
+-          await _favoriteSong(songs[index]);
+-        },
+-      ),
+-    );
+-  }
+-
+   Widget _buildListView(
+     List<Song> songs,
+     bool swipeActionsEnabled,
+@@ -955,8 +890,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+       _jumpInList(targetIndex, animate);
+       return;
+     }
+-
+-    _orbitScrollController.jumpToIndex(targetIndex, animate: animate);
+   }
+ 
+   void _jumpInList(int targetIndex, bool animate) {
+@@ -1017,8 +950,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+         _jumpInList(targetIndex, animate);
+         return;
+       }
+-
+-      _orbitScrollController.jumpToIndex(targetIndex, animate: animate);
+     });
+   }
+ 
+diff --git a/lib/features/songs/widgets/orbit_scroll.dart b/lib/features/songs/widgets/orbit_scroll.dart
+deleted file mode 100644
+index fcbd8d20..00000000
+--- a/lib/features/songs/widgets/orbit_scroll.dart
++++ /dev/null
+@@ -1,634 +0,0 @@
+-import 'dart:async';
+-import 'dart:math' as math;
+-
+-import 'package:flutter/material.dart';
+-import 'package:flutter/physics.dart';
+-import 'package:flutter/rendering.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/utils/app_haptics.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/features/songs/widgets/song_card.dart';
+-import 'package:flick/widgets/common/cached_image_widget.dart';
+-
+-class OrbitScrollController {
+-  void Function(int index, bool animate)? _jumpToIndex;
+-
+-  void _attach(void Function(int index, bool animate) jumpToIndex) {
+-    _jumpToIndex = jumpToIndex;
+-  }
+-
+-  void _detach() {
+-    _jumpToIndex = null;
+-  }
+-
+-  void jumpToIndex(int index, {bool animate = true}) {
+-    _jumpToIndex?.call(index, animate);
+-  }
+-}
+-
+-/// Orbital scrolling widget that displays songs in a curved arc.
+-class OrbitScroll extends StatefulWidget {
+-  /// List of songs to display
+-  final List<Song> songs;
+-
+-  /// Index of the currently selected song
+-  final int selectedIndex;
+-
+-  /// Callback when a song is selected
+-  final ValueChanged<int>? onSongSelected;
+-
+-  /// Callback when the selected song changes via scrolling
+-  final ValueChanged<int>? onSelectedIndexChanged;
+-
+-  /// Callback when a song card is swiped left.
+-  final ValueChanged<int>? onSongSwipedLeft;
+-
+-  /// Callback when a song card is swiped right.
+-  final ValueChanged<int>? onSongSwipedRight;
+-
+-  /// Whether swipe-to-queue and swipe-to-favorite gestures are enabled.
+-  final bool swipeActionsEnabled;
+-
+-  /// Whether multiselect mode is active.
+-  final bool isSelectionMode;
+-
+-  /// Set of selected song IDs in multiselect mode.
+-  final Set<String> selectedIds;
+-
+-  /// Controller for external jump-to-index actions.
+-  final OrbitScrollController? controller;
+-
+-  final double radiusRatio;
+-  final double centerOffsetRatio;
+-  final double centerYRatio;
+-  final double itemSpacing;
+-  final double selectedScale;
+-  final double depth;
+-  final int visibleItems;
+-  final double cardArtSize;
+-  final double cardWidthRatio;
+-  final double artResolutionMultiplier;
+-  final bool showPath;
+-  final bool showGlow;
+-
+-  const OrbitScroll({
+-    super.key,
+-    required this.songs,
+-    this.selectedIndex = 0,
+-    this.onSongSelected,
+-    this.onSelectedIndexChanged,
+-    this.onSongSwipedLeft,
+-    this.onSongSwipedRight,
+-    this.swipeActionsEnabled = false,
+-    this.isSelectionMode = false,
+-    this.selectedIds = const {},
+-    this.controller,
+-    this.radiusRatio = 1.0,
+-    this.centerOffsetRatio = -0.5,
+-    this.centerYRatio = 0.42,
+-    this.itemSpacing = 0.28,
+-    this.selectedScale = 1.25,
+-    this.depth = 0.75,
+-    this.visibleItems = 5,
+-    this.cardArtSize = 64.0,
+-    this.cardWidthRatio = 0.68,
+-    this.artResolutionMultiplier = 2.0,
+-    this.showPath = true,
+-    this.showGlow = true,
+-  });
+-
+-  @override
+-  State<OrbitScroll> createState() => _OrbitScrollState();
+-}
+-
+-class _OrbitScrollState extends State<OrbitScroll>
+-    with SingleTickerProviderStateMixin {
+-  late AnimationController _controller;
+-
+-  // The physics state — notifier drives only the song items rebuild
+-  final ValueNotifier<double> _scrollOffset = ValueNotifier<double>(0.0);
+-
+-  // Track if we're actively scrolling to reduce visible range when idle
+-  bool _isScrolling = false;
+-
+-  // Debounce timer that flushes deferred artwork extraction after a fling settles.
+-  Timer? _artworkGateTimer;
+-  DateTime _lastScrollTime = DateTime.now();
+-  int _lastReportedIndex = 0;
+-
+-  // Cache for transform calculations (bounded)
+-  final Map<int, _Position> _positionCache = {};
+-  final Map<int, _ItemTransform> _transformCache = {};
+-  static const int _maxCacheSize = 120;
+-
+-  // ponytail: recompute each build (~9 ints). Was a static final keyed on
+-  // AppConstants.orbitVisibleItems; now derives from widget.visibleItems so the
+-  // user-tunable count takes effect. Upgrade to a memo if this ever shows in a profile.
+-  List<int> get _orderedIndices {
+-    final visibleRange = widget.visibleItems ~/ 2;
+-    return List.generate(
+-          visibleRange * 2 + 1,
+-          (i) => i - visibleRange,
+-        )
+-      ..sort((a, b) => b.abs().compareTo(a.abs()));
+-  }
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    _scrollOffset.value = widget.selectedIndex.toDouble();
+-    _lastReportedIndex = widget.selectedIndex;
+-    _controller = AnimationController.unbounded(
+-      vsync: this,
+-      duration: const Duration(milliseconds: 500),
+-    );
+-    _controller.addListener(_onPhysicsTick);
+-    widget.controller?._attach(_jumpToIndex);
+-  }
+-
+-  @override
+-  void didUpdateWidget(OrbitScroll oldWidget) {
+-    super.didUpdateWidget(oldWidget);
+-    if (oldWidget.controller != widget.controller) {
+-      oldWidget.controller?._detach();
+-      widget.controller?._attach(_jumpToIndex);
+-    }
+-    // ponytail: invalidate transform/position caches when geometry changes.
+-    // Caches are keyed by relative index only, so any layout-affecting pref
+-    // (spacing, scales, depth, sizes) must flush them or stale transforms render.
+-    if (oldWidget.itemSpacing != widget.itemSpacing ||
+-        oldWidget.selectedScale != widget.selectedScale ||
+-        oldWidget.depth != widget.depth ||
+-        oldWidget.visibleItems != widget.visibleItems ||
+-        oldWidget.radiusRatio != widget.radiusRatio ||
+-        oldWidget.centerOffsetRatio != widget.centerOffsetRatio ||
+-        oldWidget.centerYRatio != widget.centerYRatio ||
+-        oldWidget.cardArtSize != widget.cardArtSize ||
+-        oldWidget.cardWidthRatio != widget.cardWidthRatio) {
+-      _transformCache.clear();
+-      _positionCache.clear();
+-    }
+-    if (widget.selectedIndex != oldWidget.selectedIndex) {
+-      _lastReportedIndex = widget.selectedIndex;
+-      // If the index changed externally, snap/spring to it
+-      if ((widget.selectedIndex.toDouble() - _scrollOffset.value).abs() > 0.05) {
+-        _animateTo(widget.selectedIndex.toDouble());
+-      }
+-    }
+-  }
+-
+-  @override
+-  void dispose() {
+-    widget.controller?._detach();
+-    _controller.dispose();
+-    _scrollOffset.dispose();
+-    _artworkGateTimer?.cancel();
+-    pauseArtworkExtraction(false);
+-    super.dispose();
+-  }
+-
+-  void _jumpToIndex(int index, bool animate) {
+-    if (widget.songs.isEmpty) return;
+-
+-    final clampedIndex = index.clamp(0, widget.songs.length - 1);
+-    if (animate) {
+-      _animateTo(clampedIndex.toDouble());
+-      return;
+-    }
+-
+-    _controller.stop();
+-    _scrollOffset.value = clampedIndex.toDouble();
+-    setState(() {
+-      _isScrolling = false;
+-      _lastScrollTime = DateTime.now();
+-    });
+-    if (_lastReportedIndex != clampedIndex) {
+-      _lastReportedIndex = clampedIndex;
+-      widget.onSelectedIndexChanged?.call(clampedIndex);
+-    }
+-  }
+-
+-  void _onPhysicsTick() {
+-    if (_controller.isAnimating) {
+-      final newOffset = _controller.value;
+-      if ((newOffset - _scrollOffset.value).abs() > 0.001) {
+-        _scrollOffset.value = newOffset;
+-        _markScrollActive();
+-        if (!_isScrolling) {
+-          setState(() {
+-            _isScrolling = true;
+-            _lastScrollTime = DateTime.now();
+-          });
+-        } else {
+-          _lastScrollTime = DateTime.now();
+-        }
+-      }
+-    } else if (_isScrolling) {
+-      final now = DateTime.now();
+-      if (now.difference(_lastScrollTime).inMilliseconds > 100) {
+-        setState(() {
+-          _isScrolling = false;
+-        });
+-      }
+-    }
+-  }
+-
+-  // --- Gesture Handling ---
+-
+-  void _markScrollActive() {
+-    pauseArtworkExtraction(true);
+-    _artworkGateTimer?.cancel();
+-    _artworkGateTimer = Timer(const Duration(milliseconds: 150), () {
+-      pauseArtworkExtraction(false);
+-    });
+-  }
+-
+-  void _onVerticalDragStart(DragStartDetails details) {
+-    _controller.stop();
+-  }
+-
+-  void _onVerticalDragUpdate(DragUpdateDetails details) {
+-    final delta = details.primaryDelta ?? 0.0;
+-    if (delta == 0) return;
+-
+-    final direction = delta > 0
+-        ? ScrollDirection.forward
+-        : ScrollDirection.reverse;
+-
+-    UserScrollNotification(
+-      metrics: FixedScrollMetrics(
+-        minScrollExtent: 0,
+-        maxScrollExtent: widget.songs.length.toDouble(),
+-        pixels: _scrollOffset.value,
+-        viewportDimension: 100,
+-        axisDirection: AxisDirection.down,
+-        devicePixelRatio: 1.0,
+-      ),
+-      context: context,
+-      direction: direction,
+-    ).dispatch(context);
+-
+-    const itemHeight = 90.0;
+-    var itemDelta = -(delta / itemHeight);
+-
+-    double newOffset = _scrollOffset.value + itemDelta;
+-    if (newOffset < -0.5 || newOffset > widget.songs.length - 0.5) {
+-      itemDelta = itemDelta * 0.4;
+-      newOffset = _scrollOffset.value + itemDelta;
+-    }
+-
+-    if ((newOffset - _scrollOffset.value).abs() > 0.001) {
+-      _scrollOffset.value = newOffset;
+-      if (!_isScrolling) {
+-        setState(() {
+-          _isScrolling = true;
+-          _lastScrollTime = DateTime.now();
+-        });
+-      } else {
+-        _lastScrollTime = DateTime.now();
+-      }
+-    }
+-  }
+-
+-  void _onVerticalDragEnd(DragEndDetails details) {
+-    final velocity = details.primaryVelocity ?? 0.0;
+-
+-    // Dispatch end notification (idle)
+-    UserScrollNotification(
+-      metrics: FixedScrollMetrics(
+-        minScrollExtent: 0,
+-        maxScrollExtent: widget.songs.length.toDouble(),
+-        pixels: _scrollOffset.value,
+-        viewportDimension: 100,
+-        axisDirection: AxisDirection.down,
+-        devicePixelRatio: 1.0,
+-      ),
+-      context: context,
+-      direction: ScrollDirection.idle,
+-    ).dispatch(context);
+-
+-    // Pixels per second
+-    // Convert to items per second
+-    const itemHeight = 90.0;
+-    final velocityItemsPerSec = -velocity / itemHeight;
+-
+-    // 1. Predict landing point
+-    // We use a FrictionSimulation to see where it WOULD land.
+-    final simulation = FrictionSimulation(
+-      0.15, // Drag coefficient (higher = stops faster)
+-      _scrollOffset.value,
+-      velocityItemsPerSec,
+-    );
+-
+-    final finalTime = 2.0; // Simulate far enough ahead
+-    final projectedOffset = simulation.x(finalTime);
+-
+-    // 2. Snap to nearest valid item
+-    final targetIndex = projectedOffset.round().clamp(
+-      0,
+-      widget.songs.length - 1,
+-    );
+-
+-    // 3. Spring to that target
+-    _animateTo(targetIndex.toDouble(), velocity: velocityItemsPerSec);
+-  }
+-
+-  void _animateTo(double target, {double velocity = 0.0}) {
+-    // Create a spring simulation from current => target
+-    final description = SpringDescription.withDampingRatio(
+-      mass: 1.0,
+-      stiffness: 100.0, // Reasonable stiffness for UI
+-      ratio: 1.0, // Critically damped (no bounce unless overshooting)
+-    );
+-
+-    final simulation = SpringSimulation(
+-      description,
+-      _scrollOffset.value,
+-      target,
+-      velocity,
+-    );
+-
+-    _controller.animateWith(simulation).whenComplete(() {
+-      // Ensure we explicitly set the final state to avoid micro-drifts
+-      _scrollOffset.value = target;
+-      setState(() {
+-        _isScrolling = false;
+-        _lastScrollTime = DateTime.now();
+-      });
+-      // Clear caches after animation completes to prevent unbounded growth
+-      if (_transformCache.length > _maxCacheSize) {
+-        _transformCache.clear();
+-      }
+-      if (_positionCache.length > _maxCacheSize) {
+-        _positionCache.clear();
+-      }
+-      final finalIndex = target.round();
+-      if (finalIndex >= 0 && finalIndex < widget.songs.length) {
+-        if (_lastReportedIndex != finalIndex) {
+-          _lastReportedIndex = finalIndex;
+-          AppHaptics.selection();
+-        }
+-        widget.onSelectedIndexChanged?.call(finalIndex);
+-      }
+-    });
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final size = MediaQuery.of(context).size;
+-
+-    // Calculate orbit parameters
+-    final orbitRadius = size.width * widget.radiusRatio;
+-    final orbitCenterX = size.width * widget.centerOffsetRatio;
+-    final orbitCenterY = size.height * widget.centerYRatio;
+-
+-    return GestureDetector(
+-      onVerticalDragStart: _onVerticalDragStart,
+-      onVerticalDragUpdate: _onVerticalDragUpdate,
+-      onVerticalDragEnd: _onVerticalDragEnd,
+-      behavior: HitTestBehavior.opaque,
+-      child: Container(
+-        width: double.infinity,
+-        height: double.infinity,
+-        color: Colors.transparent,
+-        child: Stack(
+-          clipBehavior: Clip.none,
+-          children: [
+-            // Background glow
+-            if (widget.showGlow)
+-              _buildSelectionGlow(orbitCenterX, orbitCenterY, orbitRadius),
+-
+-            // Path
+-            if (widget.showPath)
+-              _buildOrbitPath(orbitCenterX, orbitCenterY, orbitRadius),
+-
+-            // Songs — only rebuilds when scroll offset changes
+-            ValueListenableBuilder<double>(
+-              valueListenable: _scrollOffset,
+-              builder: (context, _, __) {
+-                return SizedBox.expand(
+-                  child: Stack(
+-                    clipBehavior: Clip.none,
+-                    children: _buildSongItems(orbitCenterX, orbitCenterY, orbitRadius),
+-                  ),
+-                );
+-              },
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildSelectionGlow(double centerX, double centerY, double radius) {
+-    final x = centerX + radius;
+-    final y = centerY;
+-    return Positioned(
+-      left: x - 120, // Slightly larger glow
+-      top: y - 120,
+-      child: RepaintBoundary(
+-        child: Container(
+-          width: 240,
+-          height: 240,
+-          decoration: BoxDecoration(
+-            shape: BoxShape.circle,
+-            gradient: RadialGradient(
+-              colors: [
+-                AppColors.accent.withValues(alpha: 0.15),
+-                Colors.transparent,
+-              ],
+-              stops: const [0.0, 0.7],
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildOrbitPath(double centerX, double centerY, double radius) {
+-    return RepaintBoundary(
+-      child: CustomPaint(
+-        size: Size.infinite,
+-        painter: _OrbitPathPainter(
+-          centerX: centerX,
+-          centerY: centerY,
+-          radius: radius,
+-        ),
+-      ),
+-    );
+-  }
+-
+-  List<Widget> _buildSongItems(double centerX, double centerY, double radius) {
+-    final List<Widget> items = [];
+-
+-    final centerIndex = _scrollOffset.value.round();
+-
+-    // ponytail: adjacent/distant shrink derived from one Depth slider.
+-    // adjacent = 1 - 0.6*depth, distant = 1 - 0.8*depth. At default depth 0.75
+-    // this reproduces the old 0.55/0.35. Split into two sliders if finer control is needed.
+-    final adjacentScale = 1.0 - 0.6 * widget.depth;
+-    final distantScale = 1.0 - 0.8 * widget.depth;
+-
+-    for (final relativeIndex in _orderedIndices) {
+-      final actualIndex = centerIndex + relativeIndex;
+-
+-      if (actualIndex < 0 || actualIndex >= widget.songs.length) continue;
+-
+-      final diff = actualIndex.toDouble() - _scrollOffset.value;
+-
+-      final cacheKey = (diff * 100).toInt();
+-      _ItemTransform? transform = _transformCache[cacheKey];
+-
+-      if (transform == null) {
+-        final position = _calculateItemPosition(diff, centerX, centerY, radius);
+-        final distanceFromCenter = diff.abs();
+-
+-        double scale;
+-        if (distanceFromCenter < 1.0) {
+-          scale = widget.selectedScale -
+-              (widget.selectedScale - adjacentScale) *
+-                  distanceFromCenter;
+-        } else if (distanceFromCenter < 2.0) {
+-          scale = adjacentScale -
+-              (adjacentScale - distantScale) *
+-                  (distanceFromCenter - 1.0);
+-        } else {
+-          scale = distantScale -
+-              (distanceFromCenter - 2.0) * 0.12;
+-        }
+-        scale = scale.clamp(0.0, 1.25);
+-
+-        if (scale < 0.1) continue;
+-
+-        final opacity = (1.0 - (distanceFromCenter * 0.25)).clamp(0.0, 1.0);
+-        final isSelected = distanceFromCenter < 0.4;
+-
+-        transform = _ItemTransform(
+-          position: position,
+-          scale: scale,
+-          opacity: opacity,
+-          isSelected: isSelected,
+-        );
+-
+-        _transformCache[cacheKey] = transform;
+-      }
+-
+-      items.add(
+-        Positioned(
+-          left: transform.position.x,
+-          top: transform.position.y,
+-          child: FractionalTranslation(
+-            translation: const Offset(-0.5, -0.5),
+-            child: SongCard(
+-              song: widget.songs[actualIndex],
+-              scale: transform.scale,
+-              opacity: transform.opacity,
+-              isSelected: transform.isSelected,
+-              swipeActionsEnabled: widget.swipeActionsEnabled,
+-              isSelectionMode: widget.isSelectionMode,
+-              isMultiSelected: widget.selectedIds.contains(widget.songs[actualIndex].id),
+-              artSizeBase: widget.cardArtSize,
+-              artSizeLarge: widget.cardArtSize * 1.5625,
+-              cardWidthRatio: widget.cardWidthRatio,
+-              artResolutionMultiplier: widget.artResolutionMultiplier,
+-              onTap: () {
+-                AppHaptics.tap();
+-                _animateTo(actualIndex.toDouble());
+-                widget.onSongSelected?.call(actualIndex);
+-              },
+-              onSwipeLeft: () => widget.onSongSwipedLeft?.call(actualIndex),
+-              onSwipeRight: () => widget.onSongSwipedRight?.call(actualIndex),
+-            ),
+-          ),
+-        ),
+-      );
+-    }
+-
+-    return items;
+-  }
+-
+-  _Position _calculateItemPosition(
+-    double relativeIndex,
+-    double centerX,
+-    double centerY,
+-    double radius,
+-  ) {
+-    final cacheKey = (relativeIndex * 100).toInt();
+-
+-    final existing = _positionCache[cacheKey];
+-    if (existing != null) {
+-      return existing;
+-    }
+-
+-    // Split effect: push adjacent items away from the center highlighted item
+-    double adjustedIndex = relativeIndex;
+-    final double splitAmount =
+-        0.55; // Determines how much the items split apart
+-    adjustedIndex +=
+-        relativeIndex.sign * splitAmount * math.min(relativeIndex.abs(), 1.0);
+-
+-    final angle = adjustedIndex * widget.itemSpacing;
+-    final x = centerX + radius * math.cos(angle);
+-    final y = centerY + radius * math.sin(angle);
+-
+-    final position = _Position(x, y);
+-
+-    _positionCache[cacheKey] = position;
+-    return position;
+-  }
+-}
+-
+-class _Position {
+-  final double x;
+-  final double y;
+-  const _Position(this.x, this.y);
+-}
+-
+-/// Cached transform data for orbit items
+-class _ItemTransform {
+-  final _Position position;
+-  final double scale;
+-  final double opacity;
+-  final bool isSelected;
+-
+-  const _ItemTransform({
+-    required this.position,
+-    required this.scale,
+-    required this.opacity,
+-    required this.isSelected,
+-  });
+-}
+-
+-class _OrbitPathPainter extends CustomPainter {
+-  final double centerX;
+-  final double centerY;
+-  final double radius;
+-
+-  _OrbitPathPainter({
+-    required this.centerX,
+-    required this.centerY,
+-    required this.radius,
+-  });
+-
+-  @override
+-  void paint(Canvas canvas, Size size) {
+-    final paint = Paint()
+-      ..color = AppColors.glassBorder.withValues(alpha: 0.15)
+-      ..style = PaintingStyle.stroke
+-      ..strokeWidth = 1.0;
+-
+-    final rect = Rect.fromCircle(
+-      center: Offset(centerX, centerY),
+-      radius: radius,
+-    );
+-
+-    canvas.drawArc(rect, -math.pi / 2.5, 2 * math.pi / 2.5, false, paint);
+-  }
+-
+-  @override
+-  bool shouldRepaint(covariant _OrbitPathPainter oldDelegate) {
+-    return centerX != oldDelegate.centerX ||
+-        centerY != oldDelegate.centerY ||
+-        radius != oldDelegate.radius;
+-  }
+-}
+diff --git a/lib/models/song_view_mode.dart b/lib/models/song_view_mode.dart
+index c2f2dae6..0a7b55ab 100644
+--- a/lib/models/song_view_mode.dart
++++ b/lib/models/song_view_mode.dart
+@@ -1,11 +1,9 @@
+ /// Song library display mode used across Songs UI and persistence.
+-enum SongViewMode { orbit, list }
++enum SongViewMode { list }
+ 
+ extension SongViewModeX on SongViewMode {
+   String get storageValue {
+     switch (this) {
+-      case SongViewMode.orbit:
+-        return 'orbit';
+       case SongViewMode.list:
+         return 'list';
+     }
+@@ -13,8 +11,6 @@ extension SongViewModeX on SongViewMode {
+ 
+   String get menuLabel {
+     switch (this) {
+-      case SongViewMode.orbit:
+-        return 'Orbital';
+       case SongViewMode.list:
+         return 'List';
+     }
+@@ -23,10 +19,8 @@ extension SongViewModeX on SongViewMode {
+   static SongViewMode fromStorageValue(String? value) {
+     switch (value) {
+       case 'list':
+-        return SongViewMode.list;
+-      case 'orbit':
+       default:
+-        return SongViewMode.orbit;
++        return SongViewMode.list;
+     }
+   }
+ }
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index ba29318f..4bbaef6d 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -631,84 +631,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setVisualizerEnabled(value);
+   }
+ 
+-  Future<void> setOrbitRadiusRatio(double value) async {
+-    if (state.orbitRadiusRatio == value) return;
+-    state = state.copyWith(orbitRadiusRatio: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitRadiusRatio(value);
+-  }
+-
+-  Future<void> setOrbitCenterOffsetRatio(double value) async {
+-    if (state.orbitCenterOffsetRatio == value) return;
+-    state = state.copyWith(orbitCenterOffsetRatio: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setOrbitCenterOffsetRatio(value);
+-  }
+-
+-  Future<void> setOrbitCenterYRatio(double value) async {
+-    if (state.orbitCenterYRatio == value) return;
+-    state = state.copyWith(orbitCenterYRatio: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitCenterYRatio(value);
+-  }
+-
+-  Future<void> setOrbitItemSpacing(double value) async {
+-    if (state.orbitItemSpacing == value) return;
+-    state = state.copyWith(orbitItemSpacing: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitItemSpacing(value);
+-  }
+-
+-  Future<void> setOrbitSelectedScale(double value) async {
+-    if (state.orbitSelectedScale == value) return;
+-    state = state.copyWith(orbitSelectedScale: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitSelectedScale(value);
+-  }
+-
+-  Future<void> setOrbitDepth(double value) async {
+-    if (state.orbitDepth == value) return;
+-    state = state.copyWith(orbitDepth: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitDepth(value);
+-  }
+-
+-  Future<void> setOrbitVisibleItems(int value) async {
+-    if (state.orbitVisibleItems == value) return;
+-    state = state.copyWith(orbitVisibleItems: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitVisibleItems(value);
+-  }
+-
+-  Future<void> setOrbitCardArtSize(double value) async {
+-    if (state.orbitCardArtSize == value) return;
+-    state = state.copyWith(orbitCardArtSize: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitCardArtSize(value);
+-  }
+-
+-  Future<void> setOrbitCardWidthRatio(double value) async {
+-    if (state.orbitCardWidthRatio == value) return;
+-    state = state.copyWith(orbitCardWidthRatio: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setOrbitCardWidthRatio(value);
+-  }
+-
+-  Future<void> setOrbitArtResolutionMultiplier(double value) async {
+-    if (state.orbitArtResolutionMultiplier == value) return;
+-    state = state.copyWith(orbitArtResolutionMultiplier: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setOrbitArtResolutionMultiplier(value);
+-  }
+-
+-  Future<void> setOrbitShowPath(bool value) async {
+-    if (state.orbitShowPath == value) return;
+-    state = state.copyWith(orbitShowPath: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitShowPath(value);
+-  }
+-
+-  Future<void> setOrbitShowGlow(bool value) async {
+-    if (state.orbitShowGlow == value) return;
+-    state = state.copyWith(orbitShowGlow: value);
+-    await ref.read(appPreferencesServiceProvider).setOrbitShowGlow(value);
+-  }
+-
+   Future<void> setShowMoreFromArtist(bool value) async {
+     if (state.showMoreFromArtist == value) return;
+     state = state.copyWith(showMoreFromArtist: value);
+@@ -736,24 +658,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .read(appPreferencesServiceProvider)
+         .setDetailHeaderCenteredTitle(value);
+   }
+-
+-  Future<void> resetOrbitSettings() async {
+-    state = state.copyWith(
+-      orbitRadiusRatio: 1.0,
+-      orbitCenterOffsetRatio: -0.5,
+-      orbitCenterYRatio: 0.42,
+-      orbitItemSpacing: 0.28,
+-      orbitSelectedScale: 1.25,
+-      orbitDepth: 0.75,
+-      orbitVisibleItems: 5,
+-      orbitCardArtSize: 64.0,
+-      orbitCardWidthRatio: 0.68,
+-      orbitArtResolutionMultiplier: 2.0,
+-      orbitShowPath: true,
+-      orbitShowGlow: true,
+-    );
+-    await ref.read(appPreferencesServiceProvider).clearOrbitSettings();
+-  }
+ }
+ 
+ final appPreferencesProvider =
+diff --git a/lib/providers/songs_view_mode_provider.dart b/lib/providers/songs_view_mode_provider.dart
+index bd08fb19..1caa9da9 100644
+--- a/lib/providers/songs_view_mode_provider.dart
++++ b/lib/providers/songs_view_mode_provider.dart
+@@ -18,7 +18,7 @@ class SongsViewModeNotifier extends Notifier<SongViewMode> {
+       _initialized = true;
+       Future<void>.microtask(_loadFromPreferences);
+     }
+-    return SongViewMode.orbit;
++    return SongViewMode.list;
+   }
+ 
+   Future<void> _loadFromPreferences() async {
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index a7dbc43e..8beb0ebe 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -86,18 +86,6 @@ class AppPreferences {
+   final String searchPlaybackMode; // 'results', 'library', or 'queue'
+   final String refreshRateMode; // 'high', 'standard', 'adaptive'
+   final bool visualizerEnabled;
+-  final double orbitRadiusRatio;
+-  final double orbitCenterOffsetRatio;
+-  final double orbitCenterYRatio;
+-  final double orbitItemSpacing;
+-  final double orbitSelectedScale;
+-  final double orbitDepth;
+-  final int orbitVisibleItems;
+-  final double orbitCardArtSize;
+-  final double orbitCardWidthRatio;
+-  final double orbitArtResolutionMultiplier;
+-  final bool orbitShowPath;
+-  final bool orbitShowGlow;
+   final bool showMoreFromArtist;
+   final bool showMoreArtists;
+   final bool detailHeaderArtExpanded;
+@@ -189,18 +177,6 @@ class AppPreferences {
+     this.searchPlaybackMode = 'results',
+     this.refreshRateMode = 'high',
+     this.visualizerEnabled = true,
+-    this.orbitRadiusRatio = 1.0,
+-    this.orbitCenterOffsetRatio = -0.5,
+-    this.orbitCenterYRatio = 0.42,
+-    this.orbitItemSpacing = 0.28,
+-    this.orbitSelectedScale = 1.25,
+-    this.orbitDepth = 0.75,
+-    this.orbitVisibleItems = 5,
+-    this.orbitCardArtSize = 64.0,
+-    this.orbitCardWidthRatio = 0.68,
+-    this.orbitArtResolutionMultiplier = 2.0,
+-    this.orbitShowPath = true,
+-    this.orbitShowGlow = true,
+     this.showMoreFromArtist = true,
+     this.showMoreArtists = true,
+     this.detailHeaderArtExpanded = true,
+@@ -293,18 +269,6 @@ class AppPreferences {
+     String? searchPlaybackMode,
+     String? refreshRateMode,
+     bool? visualizerEnabled,
+-    double? orbitRadiusRatio,
+-    double? orbitCenterOffsetRatio,
+-    double? orbitCenterYRatio,
+-    double? orbitItemSpacing,
+-    double? orbitSelectedScale,
+-    double? orbitDepth,
+-    int? orbitVisibleItems,
+-    double? orbitCardArtSize,
+-    double? orbitCardWidthRatio,
+-    double? orbitArtResolutionMultiplier,
+-    bool? orbitShowPath,
+-    bool? orbitShowGlow,
+     bool? showMoreFromArtist,
+     bool? showMoreArtists,
+     bool? detailHeaderArtExpanded,
+@@ -437,20 +401,6 @@ class AppPreferences {
+           searchPlaybackMode ?? this.searchPlaybackMode,
+       refreshRateMode: refreshRateMode ?? this.refreshRateMode,
+       visualizerEnabled: visualizerEnabled ?? this.visualizerEnabled,
+-      orbitRadiusRatio: orbitRadiusRatio ?? this.orbitRadiusRatio,
+-      orbitCenterOffsetRatio:
+-          orbitCenterOffsetRatio ?? this.orbitCenterOffsetRatio,
+-      orbitCenterYRatio: orbitCenterYRatio ?? this.orbitCenterYRatio,
+-      orbitItemSpacing: orbitItemSpacing ?? this.orbitItemSpacing,
+-      orbitSelectedScale: orbitSelectedScale ?? this.orbitSelectedScale,
+-      orbitDepth: orbitDepth ?? this.orbitDepth,
+-      orbitVisibleItems: orbitVisibleItems ?? this.orbitVisibleItems,
+-      orbitCardArtSize: orbitCardArtSize ?? this.orbitCardArtSize,
+-      orbitCardWidthRatio: orbitCardWidthRatio ?? this.orbitCardWidthRatio,
+-      orbitArtResolutionMultiplier:
+-          orbitArtResolutionMultiplier ?? this.orbitArtResolutionMultiplier,
+-      orbitShowPath: orbitShowPath ?? this.orbitShowPath,
+-      orbitShowGlow: orbitShowGlow ?? this.orbitShowGlow,
+       showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
+       showMoreArtists: showMoreArtists ?? this.showMoreArtists,
+       detailHeaderArtExpanded:
+@@ -552,19 +502,6 @@ class AppPreferencesService {
+   static const _searchPlaybackModeKey = 'app_search_playback_mode';
+   static const _refreshRateModeKey = 'app_refresh_rate_mode';
+   static const _visualizerEnabledKey = 'visualizer_enabled';
+-  static const _orbitRadiusRatioKey = 'orbit_radius_ratio';
+-  static const _orbitCenterOffsetRatioKey = 'orbit_center_offset_ratio';
+-  static const _orbitCenterYRatioKey = 'orbit_center_y_ratio';
+-  static const _orbitItemSpacingKey = 'orbit_item_spacing';
+-  static const _orbitSelectedScaleKey = 'orbit_selected_scale';
+-  static const _orbitDepthKey = 'orbit_depth';
+-  static const _orbitVisibleItemsKey = 'orbit_visible_items';
+-  static const _orbitCardArtSizeKey = 'orbit_card_art_size';
+-  static const _orbitCardWidthRatioKey = 'orbit_card_width_ratio';
+-  static const _orbitArtResolutionMultiplierKey =
+-      'orbit_art_resolution_multiplier';
+-  static const _orbitShowPathKey = 'orbit_show_path';
+-  static const _orbitShowGlowKey = 'orbit_show_glow';
+   static const _showMoreFromArtistKey = 'album_show_more_from_artist';
+   static const _showMoreArtistsKey = 'album_show_more_artists';
+   static const _detailHeaderArtExpandedKey = 'detail_header_art_expanded';
+@@ -701,20 +638,6 @@ class AppPreferencesService {
+           prefs.getString(_searchPlaybackModeKey) ?? 'results',
+       refreshRateMode: prefs.getString(_refreshRateModeKey) ?? 'high',
+       visualizerEnabled: prefs.getBool(_visualizerEnabledKey) ?? true,
+-      orbitRadiusRatio: prefs.getDouble(_orbitRadiusRatioKey) ?? 1.0,
+-      orbitCenterOffsetRatio:
+-          prefs.getDouble(_orbitCenterOffsetRatioKey) ?? -0.5,
+-      orbitCenterYRatio: prefs.getDouble(_orbitCenterYRatioKey) ?? 0.42,
+-      orbitItemSpacing: prefs.getDouble(_orbitItemSpacingKey) ?? 0.28,
+-      orbitSelectedScale: prefs.getDouble(_orbitSelectedScaleKey) ?? 1.25,
+-      orbitDepth: prefs.getDouble(_orbitDepthKey) ?? 0.75,
+-      orbitVisibleItems: prefs.getInt(_orbitVisibleItemsKey) ?? 5,
+-      orbitCardArtSize: prefs.getDouble(_orbitCardArtSizeKey) ?? 64.0,
+-      orbitCardWidthRatio: prefs.getDouble(_orbitCardWidthRatioKey) ?? 0.68,
+-      orbitArtResolutionMultiplier:
+-          prefs.getDouble(_orbitArtResolutionMultiplierKey) ?? 2.0,
+-      orbitShowPath: prefs.getBool(_orbitShowPathKey) ?? true,
+-      orbitShowGlow: prefs.getBool(_orbitShowGlowKey) ?? true,
+       showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
+       showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
+       detailHeaderArtExpanded:
+@@ -1553,66 +1476,6 @@ class AppPreferencesService {
+     await prefs.setBool(_visualizerEnabledKey, value);
+   }
+ 
+-  Future<void> setOrbitRadiusRatio(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitRadiusRatioKey, value);
+-  }
+-
+-  Future<void> setOrbitCenterOffsetRatio(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitCenterOffsetRatioKey, value);
+-  }
+-
+-  Future<void> setOrbitCenterYRatio(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitCenterYRatioKey, value);
+-  }
+-
+-  Future<void> setOrbitItemSpacing(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitItemSpacingKey, value);
+-  }
+-
+-  Future<void> setOrbitSelectedScale(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitSelectedScaleKey, value);
+-  }
+-
+-  Future<void> setOrbitDepth(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitDepthKey, value);
+-  }
+-
+-  Future<void> setOrbitVisibleItems(int value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setInt(_orbitVisibleItemsKey, value);
+-  }
+-
+-  Future<void> setOrbitCardArtSize(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitCardArtSizeKey, value);
+-  }
+-
+-  Future<void> setOrbitCardWidthRatio(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitCardWidthRatioKey, value);
+-  }
+-
+-  Future<void> setOrbitArtResolutionMultiplier(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_orbitArtResolutionMultiplierKey, value);
+-  }
+-
+-  Future<void> setOrbitShowPath(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_orbitShowPathKey, value);
+-  }
+-
+-  Future<void> setOrbitShowGlow(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_orbitShowGlowKey, value);
+-  }
+-
+   Future<bool> getShowMoreFromArtist() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_showMoreFromArtistKey) ?? true;
+@@ -1652,20 +1515,4 @@ class AppPreferencesService {
+     final prefs = await SharedPreferences.getInstance();
+     await prefs.setBool(_detailHeaderCenteredTitleKey, value);
+   }
+-
+-  Future<void> clearOrbitSettings() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.remove(_orbitRadiusRatioKey);
+-    await prefs.remove(_orbitCenterOffsetRatioKey);
+-    await prefs.remove(_orbitCenterYRatioKey);
+-    await prefs.remove(_orbitItemSpacingKey);
+-    await prefs.remove(_orbitSelectedScaleKey);
+-    await prefs.remove(_orbitDepthKey);
+-    await prefs.remove(_orbitVisibleItemsKey);
+-    await prefs.remove(_orbitCardArtSizeKey);
+-    await prefs.remove(_orbitCardWidthRatioKey);
+-    await prefs.remove(_orbitArtResolutionMultiplierKey);
+-    await prefs.remove(_orbitShowPathKey);
+-    await prefs.remove(_orbitShowGlowKey);
+-  }
+ }
+-- 
+2.55.0
+

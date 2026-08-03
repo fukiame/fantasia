@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 4 Aug 2026 02:27:04 +0700
+Subject: [PATCH] Revert "Refactor SetEqualizer to use variable band specs"
+
+This reverts commit 89df45215266f8abbecebc419d8d1c9bbc490ce5.
+
+diff --git a/rust/src/audio/commands.rs b/rust/src/audio/commands.rs
+index dbe36c1f..8892a51e 100644
+--- a/rust/src/audio/commands.rs
++++ b/rust/src/audio/commands.rs
+@@ -4,7 +4,6 @@
+ //! blocking the audio thread.
+ 
+ use crate::audio::decoder_handle::DecoderHandle;
+-use crate::audio::equalizer::EqBandSpec;
+ use crate::audio::source::AudioSource;
+ use std::path::PathBuf;
+ 
+@@ -42,8 +41,8 @@ pub enum AudioCommand {
+     },
+     /// Set playback speed (0.5 to 2.0)
+     SetPlaybackSpeed { speed: f32 },
+-    /// Set EQ: enabled and a variable list of band specs (real per-type biquads).
+-    SetEqualizer { enabled: bool, specs: Vec<EqBandSpec> },
++    /// Set graphic EQ: enabled and 10 band gains in dB.
++    SetEqualizer { enabled: bool, gains_db: [f32; 10] },
+     /// Set pitch shift in semitones (tempo preserved). 0 = bypass.
+     SetPitchShift { semitones: f32 },
+     /// Configure compressor settings.
+-- 
+2.55.0
+
