@@ -17,7 +17,7 @@ index 1bcefca6..9642c880 100644
 +const String flickGitRef = 'FLICK_SED_HERE';
 +const String fantasiaGitRef = 'FANTASIA_SED_HERE';
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 0bd363d1..a16a43fa 100644
+index 0bd363d1..ed9c3bf8 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -5,7 +5,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -124,7 +124,7 @@ index 0bd363d1..a16a43fa 100644
 +              _buildInfoRow(
 +                context,
 +                'Base Git ref',
-+                '$flickGitRef',
++                flickGitRef,
                ),
 +              _buildDivider(),
 +              _buildInfoRow(
