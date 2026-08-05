@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:42 +0700
+Subject: [PATCH] Revert "Add streamDescriptor to JellyfinService for audio
+ streaming"
+
+This reverts commit 84adb51a5a7c5585d3cd53a16e1e7ff37ebd3568.
+
+diff --git a/lib/services/sources/jellyfin_service.dart b/lib/services/sources/jellyfin_service.dart
+index 5fffb61e..bac03cf9 100644
+--- a/lib/services/sources/jellyfin_service.dart
++++ b/lib/services/sources/jellyfin_service.dart
+@@ -262,22 +262,6 @@ class JellyfinService implements NetworkSourceService {
+         extension: extension);
+   }
+ 
+-  @override
+-  Future<({String url, Map<String, String> headers})?> streamDescriptor(
+-    NetworkServerEntity server,
+-    String songId, {
+-    String? extension,
+-  }) async {
+-    final creds = _creds(server.token);
+-    if (creds == null) return null;
+-    final uri = Uri.parse('${_base(server)}/Audio/$songId/stream')
+-        .replace(queryParameters: {
+-      'static': 'true',
+-      'api_key': creds.token,
+-    });
+-    return (url: uri.toString(), headers: const <String, String>{});
+-  }
+-
+   // --- Sync ---------------------------------------------------------------
+ 
+   @override
+-- 
+2.55.0
+

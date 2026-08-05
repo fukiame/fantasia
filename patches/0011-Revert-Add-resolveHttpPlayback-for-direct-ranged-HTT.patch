@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:27 +0700
+Subject: [PATCH] Revert "Add resolveHttpPlayback for direct ranged HTTP stream
+ resolution"
+
+This reverts commit 35140e1cb560eee779b40f526f5974b050a28e4c.
+
+diff --git a/lib/services/remote_source_service.dart b/lib/services/remote_source_service.dart
+index 7c6a4b1f..b8d843b9 100644
+--- a/lib/services/remote_source_service.dart
++++ b/lib/services/remote_source_service.dart
+@@ -64,30 +64,6 @@ class RemoteSourceService {
+     }
+   }
+ 
+-  /// Resolve a direct ranged HTTP stream for [song] when the protocol supports
+-  /// byte-range requests. Returns null when unsupported (UPnP/SMB) or on
+-  /// resolve failure — callers fall back to cache-then-play via [ensureLocal].
+-  Future<({String url, Map<String, String> headers})?> resolveHttpPlayback(
+-    Song song,
+-  ) async {
+-    if (!song.isNetworkSource) return null;
+-    final sourceType = song.sourceType;
+-    final remoteId = song.remoteId;
+-    if (sourceType == null || remoteId == null) return null;
+-    try {
+-      final server = await _serverFor(song);
+-      final service = networkSourceServiceFor(sourceType);
+-      return await service.streamDescriptor(
+-        server,
+-        remoteId,
+-        extension: song.fileType,
+-      );
+-    } catch (e) {
+-      AppLog.instance.add('HTTP stream resolve failed for "${song.title}": $e');
+-      return null;
+-    }
+-  }
+-
+   /// Background prefetch for the next queue entry. Best effort: never throws,
+   /// does not touch [downloadProgressNotifier] (interactive downloads own it).
+   Future<void> prefetch(Song song) async {
+-- 
+2.55.0
+

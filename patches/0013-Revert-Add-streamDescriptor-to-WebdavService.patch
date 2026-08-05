@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:30 +0700
+Subject: [PATCH] Revert "Add streamDescriptor to WebdavService"
+
+This reverts commit a4139d34e7fd0159b22b9f011096ca4f1c80e3e5.
+
+diff --git a/lib/services/sources/webdav_service.dart b/lib/services/sources/webdav_service.dart
+index f552d5dd..030b31a0 100644
+--- a/lib/services/sources/webdav_service.dart
++++ b/lib/services/sources/webdav_service.dart
+@@ -263,20 +263,6 @@ class WebdavService implements NetworkSourceService {
+         extension: extension);
+   }
+ 
+-  @override
+-  Future<({String url, Map<String, String> headers})?> streamDescriptor(
+-    NetworkServerEntity server,
+-    String remoteId, {
+-    String? extension,
+-  }) async {
+-    // remoteId is stored url-encoded (cache-key-safe); decode for the URL.
+-    final href = remoteId.contains('%')
+-        ? Uri.decodeComponent(remoteId)
+-        : remoteId;
+-    final uri = Uri.parse('${_origin(server)}$href');
+-    return (url: uri.toString(), headers: {'Authorization': _basicAuth(server)});
+-  }
+-
+   // --- Library walk -------------------------------------------------------
+ 
+   @override
+-- 
+2.55.0
+

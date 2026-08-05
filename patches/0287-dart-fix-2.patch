@@ -66,7 +66,7 @@ index fd376270..58f61cb3 100644
  import 'package:flick/models/song.dart';
  import 'package:flick/models/album_color_mode.dart';
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index a16a43fa..b306ed0b 100644
+index ed9c3bf8..a64bc5d7 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -135,7 +135,7 @@ SOFTWARE.

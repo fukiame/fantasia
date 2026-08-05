@@ -947,7 +947,7 @@ index 3feeecac..ec62c13a 100644
            animation: _appearAnimation,
            builder: (context, _) {
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index b306ed0b..36984f96 100644
+index a64bc5d7..14bb3db0 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -29,13 +29,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>

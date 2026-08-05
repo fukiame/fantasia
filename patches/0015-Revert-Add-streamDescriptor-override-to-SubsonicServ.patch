@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:32 +0700
+Subject: [PATCH] Revert "Add streamDescriptor override to SubsonicService"
+
+This reverts commit 2d3dd48be3616ffdae2243aeca023ba72870dad2.
+
+diff --git a/lib/services/sources/subsonic_service.dart b/lib/services/sources/subsonic_service.dart
+index 2ae79667..48c4adff 100644
+--- a/lib/services/sources/subsonic_service.dart
++++ b/lib/services/sources/subsonic_service.dart
+@@ -244,17 +244,6 @@ class SubsonicService implements NetworkSourceService {
+         extension: extension);
+   }
+ 
+-  @override
+-  Future<({String url, Map<String, String> headers})?> streamDescriptor(
+-    NetworkServerEntity server,
+-    String songId, {
+-    String? extension,
+-  }) async {
+-    // ponytail: Subsonic auth is entirely URL-embedded (u/p/t+s query params),
+-    // so headers are empty. Range support is universal across servers.
+-    return (url: _endpoint(server, 'stream', {'id': songId}).toString(), headers: const <String, String>{});
+-  }
+-
+   // --- Library sync -------------------------------------------------------
+ 
+   /// Pull the full server library into the local DB as SongEntitys.
+-- 
+2.55.0
+

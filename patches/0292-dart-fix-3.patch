@@ -55,7 +55,7 @@ index c1dc0eea..d50c0dc1 100644
  import 'package:flick/services/uac2_service.dart';
  import 'package:lucide_icons_flutter/lucide_icons.dart';
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 5cd123ac..54952467 100644
+index 344447fd..898ef177 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -24,10 +24,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>

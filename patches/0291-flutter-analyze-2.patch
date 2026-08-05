@@ -137,7 +137,7 @@ index 9b6a4b1d..c1dc0eea 100644
    }) {
      return PageView(
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 36984f96..5cd123ac 100644
+index 14bb3db0..344447fd 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -19,21 +19,13 @@ class AppInfoSettingsScreen extends ConsumerStatefulWidget {
