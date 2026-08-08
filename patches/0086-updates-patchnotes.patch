@@ -280,7 +280,7 @@ index 8b164313..d9396f67 100644
      BuildContext context, {
      required Song? currentSong,
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index e35477e3..ef4bdc4f 100644
+index 1cd24c69..6d246f1a 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -4,7 +4,6 @@ import 'package:flutter/material.dart';

@@ -40,17 +40,27 @@ index 00000000..02e04a5b
 +        android:pathData="M61 69.19a0.81 0.81 0 1 0 0 1.62 0.81 0.81 0 1 0 0-1.62z"/>
 +</vector>
 diff --git a/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml b/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
-new file mode 100644
-index 00000000..dd4da123
---- /dev/null
+index c61e0813..dd4da123 100644
+--- a/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
 +++ b/android/app/src/main/res/mipmap-anydpi-v26/launcher_icon.xml
-@@ -0,0 +1,6 @@
-+<?xml version="1.0" encoding="utf-8"?>
-+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+@@ -1,14 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+-  <background android:drawable="@color/ic_launcher_background"/>
+-  <foreground>
+-      <inset
+-          android:drawable="@drawable/ic_launcher_foreground"
+-          android:inset="0%" />
+-  </foreground>
+-  <monochrome>
+-      <inset
+-          android:drawable="@drawable/ic_launcher_monochrome"
+-          android:inset="0%" />
+-  </monochrome>
 +    <background android:drawable="@color/ic_launcher_background"/>
 +    <foreground android:drawable="@drawable/ic_launcher_fg"/>
 +    <monochrome android:drawable="@drawable/ic_launcher_fg"/>
-+</adaptive-icon>
+ </adaptive-icon>
 -- 
 2.55.0
 

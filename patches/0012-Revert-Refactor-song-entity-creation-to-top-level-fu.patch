@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:27:54 +0700
+Subject: [PATCH] Revert "Refactor song entity creation to top-level function"
+
+This reverts commit 9e909e8cdfc6c2d6852811e9dd309169051b771e.
+
+diff --git a/lib/services/sources/subsonic_service.dart b/lib/services/sources/subsonic_service.dart
+index 0a980f6b..2ae79667 100644
+--- a/lib/services/sources/subsonic_service.dart
++++ b/lib/services/sources/subsonic_service.dart
+@@ -278,7 +278,7 @@ class SubsonicService implements NetworkSourceService {
+       try {
+         final rawSongs = await getAlbum(server, album['id'] as String);
+         final entities = rawSongs
+-            .map((s) => buildSongEntity(server, s,
++            .map((s) => _songEntity(server, s,
+                 albumName: albumName,
+                 albumArtist: albumArtist,
+                 coverArt: coverArt,
+@@ -331,12 +331,7 @@ class SubsonicService implements NetworkSourceService {
+     await _repo.deleteSongsByIds(stale.map((e) => e.id).toList());
+   }
+ 
+-  /// Map a raw Subsonic song map to a [SongEntity] tagged
+-  /// `sourceType = 'subsonic'` with a synthetic `subsonic://<serverId>/<remoteId>`
+-  /// filePath and a `subsonic-cover://<id>` album-art marker. Pure: no instance
+-  /// state, so [SubsonicService.syncLibrary] and tests share one mapping.
+-  @visibleForTesting
+-  static SongEntity buildSongEntity(
++  SongEntity _songEntity(
+     NetworkServerEntity server,
+     Map<String, dynamic> s, {
+     String? albumName,
+-- 
+2.55.0
+

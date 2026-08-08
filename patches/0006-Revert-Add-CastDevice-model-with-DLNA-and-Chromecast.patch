@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:27:47 +0700
+Subject: [PATCH] Revert "Add CastDevice model with DLNA and Chromecast
+ support"
+
+This reverts commit ced0a6eb75cc3a67ecffc54fe1f5949f9a9a7d17.
+
+diff --git a/lib/services/casting/cast_device.dart b/lib/services/casting/cast_device.dart
+deleted file mode 100644
+index 6d7db6be..00000000
+--- a/lib/services/casting/cast_device.dart
++++ /dev/null
+@@ -1,24 +0,0 @@
+-enum CastBackend { dlna, chromecast }
+-
+-class CastDevice {
+-  final String id;
+-  final String name;
+-  final CastBackend backend;
+-  final String? locationUrl;
+-  final String? iconUrl;
+-  final bool supportsVolume;
+-
+-  const CastDevice({
+-    required this.id,
+-    required this.name,
+-    required this.backend,
+-    this.locationUrl,
+-    this.iconUrl,
+-    this.supportsVolume = true,
+-  });
+-
+-  @override
+-  bool operator ==(Object other) => other is CastDevice && other.id == id;
+-  @override
+-  int get hashCode => id.hashCode;
+-}
+-- 
+2.55.0
+

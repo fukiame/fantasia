@@ -6,7 +6,7 @@ Subject: [PATCH] fixup! pubspec: drop flutter_markdown
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index ef4bdc4f..7277eed6 100644
+index 6d246f1a..ba287dc9 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -2,7 +2,6 @@ import 'dart:convert';

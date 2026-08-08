@@ -29,7 +29,7 @@ index fce56828..e06cf6df 100644
                    const SizedBox(height: AppConstants.spacingLg),
                    Text(
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 7277eed6..d77555ff 100644
+index ba287dc9..d77555ff 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -2,7 +2,6 @@ import 'dart:convert';
@@ -56,8 +56,8 @@ index 7277eed6..d77555ff 100644
 -            child: Center(
 -              child: SvgPicture.asset(
 -                'assets/icons/flicklogo_svg.svg',
--                width: 48,
--                height: 48,
+-                width: 28,
+-                height: 28,
 -                fit: BoxFit.contain,
 -              ),
 -            ),

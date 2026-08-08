@@ -1,0 +1,85 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:27:59 +0700
+Subject: [PATCH] Revert "Add cast button to player action row"
+
+This reverts commit 3bb67fe5c8851f4f07480825c4c9339150d24c10.
+
+diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
+index 62d08b3a..ca700d19 100644
+--- a/lib/features/player/widgets/player_action_button_row.dart
++++ b/lib/features/player/widgets/player_action_button_row.dart
+@@ -20,7 +20,6 @@ import 'package:flick/features/player/widgets/sleep_timer_bottom_sheet.dart';
+ import 'package:flick/features/player/widgets/volume_bottom_sheet.dart';
+ import 'package:flick/features/player/widgets/share/share_bottom_sheet.dart';
+ import 'package:flick/features/settings/screens/equalizer_screen.dart';
+-import 'package:flick/features/settings/screens/casting_settings_screen.dart';
+ 
+ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   final Song song;
+@@ -399,15 +398,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           inactiveBg: inactiveBg,
+           inactiveBorder: inactiveBorder,
+         );
+-      case PlayerActionButton.cast:
+-        return _buildCastButton(
+-          context: context,
+-          actionPadding: actionPadding,
+-          actionRadius: actionRadius,
+-          actionIconSize: actionIconSize,
+-          inactiveBg: inactiveBg,
+-          inactiveBorder: inactiveBorder,
+-        );
+     }
+   }
+ 
+@@ -828,46 +818,4 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+       ),
+     );
+   }
+-
+-  Widget _buildCastButton({
+-    required BuildContext context,
+-    required EdgeInsets actionPadding,
+-    required double actionRadius,
+-    required double actionIconSize,
+-    required Color inactiveBg,
+-    required Color inactiveBorder,
+-  }) {
+-    final isCasting = ref.watch(isCastingProvider);
+-    return Tooltip(
+-      message: isCasting ? 'Casting — tap to manage' : 'Cast',
+-      child: GestureDetector(
+-        onTap: () => Navigator.of(context).push(
+-          MaterialPageRoute(
+-            builder: (_) => const CastingSettingsScreen(),
+-          ),
+-        ),
+-        child: Container(
+-          padding: actionPadding,
+-          decoration: BoxDecoration(
+-            color: isCasting
+-                ? AppColors.accent.withValues(alpha: 0.28)
+-                : inactiveBg,
+-            borderRadius: BorderRadius.circular(actionRadius),
+-            border: Border.all(
+-              color: isCasting
+-                  ? AppColors.accent.withValues(alpha: 0.45)
+-                  : inactiveBorder,
+-            ),
+-          ),
+-          child: Icon(
+-            LucideIcons.cast,
+-            color: isCasting
+-                ? AppColors.accent
+-                : Colors.white.withValues(alpha: 0.96),
+-            size: actionIconSize,
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+ }
+-- 
+2.55.0
+
