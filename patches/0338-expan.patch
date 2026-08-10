@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 09:45:36 +0700
+Subject: [PATCH] expan
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 1ca851b5..297bd948 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -248,7 +248,7 @@ class AnimatedSongScene extends StatelessWidget {
+           ),
+           SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+           Expanded(
+-            child: const SizedBox.expand(),
++            child: const SizedBox.shrink(),
+           ),
+           SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+           Row(
+-- 
+2.55.0
+

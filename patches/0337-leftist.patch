@@ -6,10 +6,10 @@ Subject: [PATCH] leftist
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 6fe2d2d0..5b2c349f 100644
+index a8f2809e..1ca851b5 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -528,7 +528,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -529,7 +529,7 @@ class AnimatedSongScene extends StatelessWidget {
          if (artworkCardShowTitle)
            Text(
              song.title,
@@ -18,7 +18,7 @@ index 6fe2d2d0..5b2c349f 100644
              maxLines: 2,
              overflow: TextOverflow.ellipsis,
              style: TextStyle(
-@@ -546,7 +546,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -547,7 +547,7 @@ class AnimatedSongScene extends StatelessWidget {
              onTap: () => onNavigateToArtistDetail(song),
              child: Text(
                song.artist,
