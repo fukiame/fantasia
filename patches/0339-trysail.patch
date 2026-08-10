@@ -1,0 +1,107 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 22:49:50 +0700
+Subject: [PATCH] trysail
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index b2d18bae..c5a5dc1b 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -315,12 +315,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                     onClose: () => _close(context),
+                     onOpenQueue: () => _navigation.openQueue(context),
+                     onQueueSwipe: () => _navigation.queueSong(context, song),
+-                    onShowSongActions: () => SongActionsSheet.show(
+-                      context,
+-                      playerService: _playerService,
+-                      song: song,
+-                      navigation: _navigation,
+-                    ),
+                     onPrevious: _animateToPreviousSong,
+                     onNext: _animateToNextSong,
+                     onNavigateToArtistDetail: (song) =>
+@@ -349,6 +343,12 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                       onOpenQueue: (ctx) => _navigation.openQueue(ctx),
+                       usbVolumeButtonKey: _usbVolumeButtonKey,
+                       onShowUsbVolumePopup: (ctx) => _showUsbVolumePopup(ctx),
++                    onShowSongActions: () => SongActionsSheet.show(
++                      context,
++                      playerService: _playerService,
++                      song: song,
++                      navigation: _navigation,
++                    ),
+                     ),
+                     artworkCardArtworkScale: appPrefs.artworkCardArtworkScale,
+                     artworkCardTextScale: appPrefs.artworkCardTextScale,
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 535296de..41a86c23 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -29,7 +29,6 @@ class AnimatedSongScene extends StatelessWidget {
+   final VoidCallback onClose;
+   final VoidCallback onOpenQueue;
+   final Future<void> Function() onQueueSwipe;
+-  final VoidCallback onShowSongActions;
+   final Future<void> Function() onPrevious;
+   final Future<void> Function() onNext;
+   final void Function(Song song) onNavigateToArtistDetail;
+@@ -62,7 +61,6 @@ class AnimatedSongScene extends StatelessWidget {
+     required this.onClose,
+     required this.onOpenQueue,
+     required this.onQueueSwipe,
+-    required this.onShowSongActions,
+     required this.onPrevious,
+     required this.onNext,
+     required this.onNavigateToArtistDetail,
+@@ -257,7 +255,7 @@ class AnimatedSongScene extends StatelessWidget {
+               _buildChromeButton(
+                 context,
+                 icon: Icons.more_vert,
+-                onTap: onShowSongActions,
++                onTap: onClose,
+               ),
+             ],
+           ),
+diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
+index 503b91d3..6cc27874 100644
+--- a/lib/features/player/widgets/player_action_button_row.dart
++++ b/lib/features/player/widgets/player_action_button_row.dart
+@@ -26,6 +26,7 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   final void Function(BuildContext) onOpenQueue;
+   final GlobalKey usbVolumeButtonKey;
+   final void Function(BuildContext) onShowUsbVolumePopup;
++  final VoidCallback onShowSongActions;
+ 
+   const PlayerActionButtonRow({
+     super.key,
+@@ -41,6 +42,7 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+     required this.onOpenQueue,
+     required this.usbVolumeButtonKey,
+     required this.onShowUsbVolumePopup,
++    required this.onShowSongActions,
+   });
+ 
+   @override
+@@ -103,6 +105,9 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+                 },
+               ),
+               SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
++              GestureDetector(
++        onTap: () => onShowSongActions,
++        child: Row( children: [
+               if (song.isDsd && song.dsdRateLabel.isNotEmpty) ...[
+                 SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
+                 Flexible(
+@@ -132,6 +137,7 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+                   ),
+                 ),
+               ],
++        ], ), ),
+             ],
+           ),
+         ),
+-- 
+2.55.0
+
