@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 11:55:40 +0700
+Subject: [PATCH] rowex
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 38b840a6..8281f34a 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -526,8 +526,8 @@ class AnimatedSongScene extends StatelessWidget {
+ 
+     return Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+-      mainAxisSize: MainAxisSize.max,
+       children: [
++        Row( child: Expanded( child: const SizedBox.shrink(), ), ),
+         if (artworkCardShowTitle)
+           Text(
+             song.title,
+-- 
+2.55.0
+
