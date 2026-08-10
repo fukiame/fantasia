@@ -21,7 +21,7 @@ index c5a5dc1b..d199af34 100644
                        song: song,
                        navigation: _navigation,
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index 856e3714..b0e701e7 100644
+index 856e3714..b8cea7e8 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
 @@ -106,13 +106,12 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
@@ -31,7 +31,7 @@ index 856e3714..b0e701e7 100644
 -        onTap: () => widget.onShowSongActions,
 -        child: Row( children: [
 +        onTap: () => widget.onShowSongActions(context),
-+        child: Container( child: [
++        child: Container( child:
                if (song.isDsd && song.dsdRateLabel.isNotEmpty) ...[
 -                SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
                  Flexible(
@@ -53,6 +53,15 @@ index 856e3714..b0e701e7 100644
                      maxLines: 1,
                      overflow: TextOverflow.ellipsis,
                      style: TextStyle(
+@@ -137,7 +135,7 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+                   ),
+                 ),
+               ],
+-        ], ), ),
++        ), ),
+             ],
+           ),
+         ),
 -- 
 2.55.0
 
