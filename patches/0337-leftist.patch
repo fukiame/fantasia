@@ -6,10 +6,15 @@ Subject: [PATCH] leftist
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index a8f2809e..1ca851b5 100644
+index 24c6f01c..8bc7fc55 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -529,7 +529,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -525,11 +525,12 @@ class AnimatedSongScene extends StatelessWidget {
+     final hasAlbum = song.album != null && song.album!.trim().isNotEmpty;
+ 
+     return Column(
++      crossAxisAlignment: CrossAxisAlignment.start,
+       children: [
          if (artworkCardShowTitle)
            Text(
              song.title,
@@ -18,7 +23,7 @@ index a8f2809e..1ca851b5 100644
              maxLines: 2,
              overflow: TextOverflow.ellipsis,
              style: TextStyle(
-@@ -547,7 +547,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -547,7 +548,7 @@ class AnimatedSongScene extends StatelessWidget {
              onTap: () => onNavigateToArtistDetail(song),
              child: Text(
                song.artist,
@@ -28,7 +33,7 @@ index a8f2809e..1ca851b5 100644
                overflow: TextOverflow.ellipsis,
                style: TextStyle(
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index b8536e55..1d39782d 100644
+index b8536e55..01ecd997 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
 @@ -83,20 +83,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
@@ -52,10 +57,11 @@ index b8536e55..1d39782d 100644
          Flexible(
            child: Row(
              mainAxisSize: MainAxisSize.min,
-@@ -150,6 +136,20 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -150,6 +136,21 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
              ],
            ),
          ),
++	Row( children: [
 +        _buildSideButtons(
 +          topAction: leftTopAction,
 +          bottomAction: leftAction,
@@ -73,6 +79,14 @@ index b8536e55..1d39782d 100644
          _buildSideButtons(
            topAction: rightTopAction,
            bottomAction: rightAction,
+@@ -164,6 +165,7 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           accentBlend: accentBlend,
+           hasAlbumTint: hasAlbumTint,
+         ),
++	], ),
+       ],
+     );
+   }
 -- 
 2.55.0
 
