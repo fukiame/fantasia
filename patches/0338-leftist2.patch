@@ -6,10 +6,10 @@ Subject: [PATCH] leftist2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index 11480009..503b91d3 100644
+index 11480009..1e62fdff 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
-@@ -87,12 +87,27 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -87,12 +87,26 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
            child: Row(
              mainAxisSize: MainAxisSize.min,
              children: [
@@ -31,24 +31,27 @@ index 11480009..503b91d3 100644
 +              ),
 +              SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
                if (song.isDsd && song.dsdRateLabel.isNotEmpty) ...[
-                 SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
+-                SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
                  Flexible(
                    child: Text(
 -                    song.dsdRateLabel,
-+                    song.fileType.toUpperCase() + song.dsdRateLabel,
++                    song.fileType.toUpperCase() + ' / ' + song.dsdRateLabel,
                      maxLines: 1,
                      overflow: TextOverflow.ellipsis,
                      style: TextStyle(
-@@ -106,7 +121,7 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
-                 SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
+@@ -103,10 +117,9 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+                   ),
+                 ),
+               ] else if (song.resolution != null) ...[
+-                SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
                  Flexible(
                    child: Text(
 -                    song.resolution!,
-+                    song.fileType.toUpperCase() + song.resolution!,
++                    song.fileType.toUpperCase() + ' / ' + song.resolution!,
                      maxLines: 1,
                      overflow: TextOverflow.ellipsis,
                      style: TextStyle(
-@@ -117,22 +132,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -117,22 +130,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
                    ),
                  ),
                ],
@@ -71,7 +74,7 @@ index 11480009..503b91d3 100644
              ],
            ),
          ),
-@@ -171,27 +170,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -171,27 +168,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
      );
    }
  
