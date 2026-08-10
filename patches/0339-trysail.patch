@@ -65,7 +65,7 @@ index 535296de..41a86c23 100644
              ],
            ),
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index 503b91d3..6cc27874 100644
+index 503b91d3..856e3714 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
 @@ -26,6 +26,7 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
@@ -89,7 +89,7 @@ index 503b91d3..6cc27874 100644
                ),
                SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
 +              GestureDetector(
-+        onTap: () => onShowSongActions,
++        onTap: () => widget.onShowSongActions,
 +        child: Row( children: [
                if (song.isDsd && song.dsdRateLabel.isNotEmpty) ...[
                  SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
