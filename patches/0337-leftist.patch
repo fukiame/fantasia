@@ -6,14 +6,15 @@ Subject: [PATCH] leftist
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 24c6f01c..8bc7fc55 100644
+index 24c6f01c..38b840a6 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -525,11 +525,12 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -525,11 +525,13 @@ class AnimatedSongScene extends StatelessWidget {
      final hasAlbum = song.album != null && song.album!.trim().isNotEmpty;
  
      return Column(
 +      crossAxisAlignment: CrossAxisAlignment.start,
++      mainAxisSize: MainAxisSize.max,
        children: [
          if (artworkCardShowTitle)
            Text(
@@ -23,7 +24,7 @@ index 24c6f01c..8bc7fc55 100644
              maxLines: 2,
              overflow: TextOverflow.ellipsis,
              style: TextStyle(
-@@ -547,7 +548,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -547,7 +549,7 @@ class AnimatedSongScene extends StatelessWidget {
              onTap: () => onNavigateToArtistDetail(song),
              child: Text(
                song.artist,
@@ -32,8 +33,28 @@ index 24c6f01c..8bc7fc55 100644
                maxLines: 1,
                overflow: TextOverflow.ellipsis,
                style: TextStyle(
+@@ -564,11 +566,6 @@ class AnimatedSongScene extends StatelessWidget {
+           SizedBox(height: artistToAlbumSpacing),
+             GestureDetector(
+               onTap: () => onNavigateToAlbumDetail(song),
+-              child: Container(
+-                padding: EdgeInsets.symmetric(
+-                  horizontal: albumHorizontalPadding,
+-                  vertical: albumVerticalPadding,
+-                ),
+                 child: Text(
+                   song.album!,
+                   maxLines: 1,
+@@ -579,7 +576,6 @@ class AnimatedSongScene extends StatelessWidget {
+                     color: Colors.white.withValues(alpha: 0.68),
+                   ),
+                 ),
+-              ),
+             ),
+         ],
+       ],
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index b8536e55..01ecd997 100644
+index b8536e55..11480009 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
 @@ -83,20 +83,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
@@ -57,7 +78,7 @@ index b8536e55..01ecd997 100644
          Flexible(
            child: Row(
              mainAxisSize: MainAxisSize.min,
-@@ -150,6 +136,21 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -150,6 +136,22 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
              ],
            ),
          ),
@@ -76,10 +97,11 @@ index b8536e55..01ecd997 100644
 +          accentBlend: accentBlend,
 +          hasAlbumTint: hasAlbumTint,
 +        ),
++	const SizedBox(width: 2.0),
          _buildSideButtons(
            topAction: rightTopAction,
            bottomAction: rightAction,
-@@ -164,6 +165,7 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -164,6 +166,7 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
            accentBlend: accentBlend,
            hasAlbumTint: hasAlbumTint,
          ),

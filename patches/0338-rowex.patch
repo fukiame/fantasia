@@ -6,7 +6,7 @@ Subject: [PATCH] rowex
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 38b840a6..8281f34a 100644
+index 38b840a6..b84bd717 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -526,8 +526,8 @@ class AnimatedSongScene extends StatelessWidget {
@@ -15,7 +15,7 @@ index 38b840a6..8281f34a 100644
        crossAxisAlignment: CrossAxisAlignment.start,
 -      mainAxisSize: MainAxisSize.max,
        children: [
-+        Row( child: Expanded( child: const SizedBox.shrink(), ), ),
++        Row( children: Expanded( child: const SizedBox.shrink(), ), ),
          if (artworkCardShowTitle)
            Text(
              song.title,
