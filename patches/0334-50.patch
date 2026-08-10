@@ -6,10 +6,10 @@ Subject: [PATCH] 50%
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 7f67af73..1c9a03cc 100644
+index 877839fc..62724d70 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -560,7 +560,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -634,7 +634,6 @@ class AnimatedSongScene extends StatelessWidget {
              (artworkCardShowTitle || artworkCardShowArtist) &&
              (hasAlbum)) ...[
            SizedBox(height: artistToAlbumSpacing),
@@ -17,7 +17,7 @@ index 7f67af73..1c9a03cc 100644
              GestureDetector(
                onTap: () => onNavigateToAlbumDetail(song),
                child: Container(
-@@ -569,10 +568,10 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -643,10 +642,10 @@ class AnimatedSongScene extends StatelessWidget {
                    vertical: albumVerticalPadding,
                  ),
                  decoration: BoxDecoration(
