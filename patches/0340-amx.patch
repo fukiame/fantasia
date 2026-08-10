@@ -1,0 +1,58 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 23:21:52 +0700
+Subject: [PATCH] amx
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index c5a5dc1b..d199af34 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -343,8 +343,8 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                       onOpenQueue: (ctx) => _navigation.openQueue(ctx),
+                       usbVolumeButtonKey: _usbVolumeButtonKey,
+                       onShowUsbVolumePopup: (ctx) => _showUsbVolumePopup(ctx),
+-                    onShowSongActions: () => SongActionsSheet.show(
+-                      context,
++                    onShowSongActions: (ctx) => SongActionsSheet.show(
++                      ctx,
+                       playerService: _playerService,
+                       song: song,
+                       navigation: _navigation,
+diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
+index 856e3714..b0e701e7 100644
+--- a/lib/features/player/widgets/player_action_button_row.dart
++++ b/lib/features/player/widgets/player_action_button_row.dart
+@@ -106,13 +106,12 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+               ),
+               SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
+               GestureDetector(
+-        onTap: () => widget.onShowSongActions,
+-        child: Row( children: [
++        onTap: () => widget.onShowSongActions(context),
++        child: Container( child: [
+               if (song.isDsd && song.dsdRateLabel.isNotEmpty) ...[
+-                SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
+                 Flexible(
+                   child: Text(
+-                    song.fileType.toUpperCase() + song.dsdRateLabel,
++                    song.fileType.toUpperCase() + ' / ' + song.dsdRateLabel,
+                     maxLines: 1,
+                     overflow: TextOverflow.ellipsis,
+                     style: TextStyle(
+@@ -123,10 +122,9 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+                   ),
+                 ),
+               ] else if (song.resolution != null) ...[
+-                SizedBox(width: context.responsive(5.0, 6.0, 7.0)),
+                 Flexible(
+                   child: Text(
+-                    song.fileType.toUpperCase() + song.resolution!,
++                    song.fileType.toUpperCase() + ' / ' + song.resolution!,
+                     maxLines: 1,
+                     overflow: TextOverflow.ellipsis,
+                     style: TextStyle(
+-- 
+2.55.0
+
