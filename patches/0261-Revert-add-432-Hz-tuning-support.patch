@@ -8,7 +8,7 @@ this partially reverts commit db705dfe8f3997298c8a44c4b24ed38ccb1fc271.
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 61cb9592..978bc8b9 100644
+index 4531b5d3..e9659dde 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -550,9 +550,6 @@ class PlayerService {
@@ -64,7 +64,7 @@ index 61cb9592..978bc8b9 100644
  
        final engineType = _sessionManager.selectedMode;
        if (engineType == AudioEngineType.usbDacExperimental ||
-@@ -4712,9 +4694,6 @@ class PlayerService {
+@@ -4718,9 +4700,6 @@ class PlayerService {
      _uac2Service.dapBitPerfectEnabledNotifier.removeListener(
        _updateBitPerfectProcessingLocked,
      );

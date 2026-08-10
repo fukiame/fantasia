@@ -30,19 +30,6 @@ index 3a13d188..db7a19ef 100644
 -android.builtInKotlin=false
 -# This newDsl flag was added automatically by Flutter migrator
 -android.newDsl=false
-diff --git a/pubspec.yaml b/pubspec.yaml
-index fb0b8e06..605bb383 100644
---- a/pubspec.yaml
-+++ b/pubspec.yaml
-@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
- # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
- # In Windows, build-name is used as the major, minor, and patch parts
- # of the product and file versions while build-number is used as the build suffix.
--version: 0.20.5-beta.6+24
-+version: 0.20.5-beta.6+23
- 
- environment:
-   sdk: ^3.10.4
 -- 
 2.55.0
 

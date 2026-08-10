@@ -905,7 +905,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index f8b2d679..982186ab 100644
+index b2fd04b6..81c9cd3b 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -1021,7 +1021,7 @@ index f8b2d679..982186ab 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -4923,7 +4865,6 @@ class PlayerService {
+@@ -4929,7 +4871,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();

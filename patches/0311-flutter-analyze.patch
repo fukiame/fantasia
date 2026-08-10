@@ -1338,7 +1338,7 @@ index 357c8aeb..fc2c1752 100644
    final SongRepository _songRepository;
    final AlbumArtService _albumArtService;
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index a421328d..ae61c280 100644
+index 603cec4d..31b003ba 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -307,7 +307,6 @@ class PlayerService {
@@ -1377,7 +1377,7 @@ index a421328d..ae61c280 100644
    }
  
    void _setupRustAudioListeners() {
-@@ -3562,19 +3554,6 @@ class PlayerService {
+@@ -3563,19 +3555,6 @@ class PlayerService {
      }
    }
  

@@ -6,7 +6,7 @@ Subject: [PATCH] leftist
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 24c6f01c..38b840a6 100644
+index 24c6f01c..535296de 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -525,11 +525,13 @@ class AnimatedSongScene extends StatelessWidget {
@@ -14,8 +14,8 @@ index 24c6f01c..38b840a6 100644
  
      return Column(
 +      crossAxisAlignment: CrossAxisAlignment.start,
-+      mainAxisSize: MainAxisSize.max,
        children: [
++        Row( children: [ Expanded( child: const SizedBox.shrink(), ), ], ),
          if (artworkCardShowTitle)
            Text(
              song.title,
