@@ -6,7 +6,7 @@ Subject: [PATCH] lib: recap: drop camera
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 5fb7f9cb..c91b1122 100644
+index bbf2e50c..2ee9052b 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -11,8 +11,6 @@

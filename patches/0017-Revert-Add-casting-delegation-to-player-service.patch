@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add casting delegation to player service"
 This reverts commit 183085d0f5585763a313b90d4b184e921d2d1692.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 8e845c06..a6c5ad7a 100644
+index b08aba58..53a5ca4c 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -38,7 +38,6 @@ import 'package:flick/models/album_color_mode.dart';
@@ -26,7 +26,7 @@ index 8e845c06..a6c5ad7a 100644
    final ColorExtractionService _colorExtractionService =
        ColorExtractionService();
    final AlbumColorModePreferenceService _albumColorModePreferenceService =
-@@ -3778,11 +3775,6 @@ class PlayerService {
+@@ -3794,11 +3791,6 @@ class PlayerService {
        _consumeQueueEntryAt(_currentIndex);
        _clearRestoredPlaybackContext(songId: song.id);
  
@@ -38,7 +38,7 @@ index 8e845c06..a6c5ad7a 100644
        if (song.filePath != null) {
          await _prepareImmediatePlaybackAsset(song);
          // Route changes are already pushed into the session manager via the
-@@ -3991,10 +3983,6 @@ class PlayerService {
+@@ -4007,10 +3999,6 @@ class PlayerService {
    }
  
    Future<void> _pauseInternal() async {
@@ -49,7 +49,7 @@ index 8e845c06..a6c5ad7a 100644
      _debugLog(
        '[Playback] pause() called, hasAttachedEngine=${_playbackManager.hasAttachedEngine}',
      );
-@@ -4026,10 +4014,6 @@ class PlayerService {
+@@ -4042,10 +4030,6 @@ class PlayerService {
    }
  
    Future<void> _resumeInternal() async {
@@ -60,7 +60,7 @@ index 8e845c06..a6c5ad7a 100644
      await initAudio();
  
      final song = currentSongNotifier.value ?? _songAtCurrentIndex();
-@@ -4204,10 +4188,6 @@ class PlayerService {
+@@ -4220,10 +4204,6 @@ class PlayerService {
    }
  
    Future<void> seek(Duration position) async {
@@ -71,7 +71,7 @@ index 8e845c06..a6c5ad7a 100644
      try {
        await _playbackManager.seek(position);
      } catch (e) {
-@@ -4515,11 +4495,6 @@ class PlayerService {
+@@ -4531,11 +4511,6 @@ class PlayerService {
  
    Future<void> setVolume(double volume) async {
      final clampedVolume = volume.clamp(0.0, 1.0).toDouble();

@@ -6,7 +6,7 @@ Subject: [PATCH] floating{island,pill}
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 75fdc700..fbb4b214 100644
+index 3f601ffc..4a69e03f 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -20,8 +20,6 @@
@@ -905,7 +905,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 0a019283..b429e6ab 100644
+index f8b2d679..982186ab 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -1021,7 +1021,7 @@ index 0a019283..b429e6ab 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -4907,7 +4849,6 @@ class PlayerService {
+@@ -4923,7 +4865,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();

@@ -19,7 +19,7 @@ index 9685acb7..e51cca5d 100644
          targetSdk = flutter.targetSdkVersion
          versionCode = flutter.versionCode
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 842e0323..88f5aac8 100644
+index 892cd3dc..4cc94574 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -27,7 +27,7 @@

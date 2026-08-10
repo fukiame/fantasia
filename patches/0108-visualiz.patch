@@ -6,7 +6,7 @@ Subject: [PATCH] visualiz
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index fbb4b214..5fb7f9cb 100644
+index 4a69e03f..bbf2e50c 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -18,8 +18,6 @@

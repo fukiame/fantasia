@@ -6,7 +6,7 @@ Subject: [PATCH] android: drop INTERNET perm
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index 88f5aac8..75fdc700 100644
+index 4cc94574..3f601ffc 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -1,8 +1,6 @@

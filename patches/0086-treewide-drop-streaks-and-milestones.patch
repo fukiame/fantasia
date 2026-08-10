@@ -2517,7 +2517,7 @@ index 496f3c63..00000000
 -}
 \ No newline at end of file
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index c67b2753..0a019283 100644
+index 067549f1..f8b2d679 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -26,7 +26,6 @@ import 'package:flick/data/repositories/recently_played_repository.dart';

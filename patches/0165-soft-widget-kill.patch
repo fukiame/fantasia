@@ -6,7 +6,7 @@ Subject: [PATCH] soft widget kill
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
-index c91b1122..a1d72ccc 100644
+index 2ee9052b..a99bbe46 100644
 --- a/android/app/src/main/AndroidManifest.xml
 +++ b/android/app/src/main/AndroidManifest.xml
 @@ -72,44 +72,6 @@

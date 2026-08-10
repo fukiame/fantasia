@@ -2380,7 +2380,7 @@ index 78dbda9b..00000000
 -  bool get isHeader => entry == null;
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index dee92108..919aaa7a 100644
+index bc999a80..e2a05b62 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -20,7 +20,6 @@ import 'package:flick/services/audio_engine_manager.dart';

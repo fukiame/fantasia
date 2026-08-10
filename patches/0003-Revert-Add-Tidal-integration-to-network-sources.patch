@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 07:05:38 +0700
+Subject: [PATCH] Revert "Add Tidal integration to network sources"
+
+This reverts commit 596a058d616cd411be23d9af8e2735df95f58414.
+
+diff --git a/FEATURE_REQUESTS.md b/FEATURE_REQUESTS.md
+index f09e0e05..7f56af97 100644
+--- a/FEATURE_REQUESTS.md
++++ b/FEATURE_REQUESTS.md
+@@ -74,7 +74,7 @@ name, track count, artist, and (newly added) **Year**.
+   - ~~HRTF preset library~~
+   - ~~Optional HRTF scan upload~~
+ - ~~**MQA (Master Quality Authenticated)**~~ — too far. Licensed, instant bankrupt for me.
+-- [X] **Pitch shifter** — adjust audio pitch independently of tempo
++- [ ] **Pitch shifter** — adjust audio pitch independently of tempo
+ 
+ ---
+ 
+@@ -95,7 +95,7 @@ name, track count, artist, and (newly added) **Year**.
+ 
+ ## Integrations
+ 
+-- [x] **Tidal integration** — Tidal streaming service support (reverse-engineered web/OAuth2 path: user signs in with their own account; HiFi lossless FLAC/ALAC through the bit-perfect engine; HiRes/MQA/Atmos gated by Tidal and surfaced as an error).
++- [ ] **Tidal integration** — Tidal streaming service support
+ - [X] **Local Media Server** — stream music from NAS / network shares. Shipped as Network Sources (`docs/NETWORK_SOURCES_PLAN.md`): Subsonic (Navidrome/Airsonic/gonic/etc.), WebDAV (Nextcloud/ownCloud/Synology/generic), Jellyfin, and UPnP/DLNA media-server browse/play, all through the existing Rust engine (bit-perfect/DSD/gapless preserved). SMB is a loud-failing placeholder recommending the WebDAV workaround.
+ 
+ ---
+diff --git a/lib/services/sources/network_source_service.dart b/lib/services/sources/network_source_service.dart
+index 8a666be7..c1fac158 100644
+--- a/lib/services/sources/network_source_service.dart
++++ b/lib/services/sources/network_source_service.dart
+@@ -4,7 +4,6 @@ import '../library_scanner_service.dart' show ScanProgress;
+ import 'jellyfin_service.dart';
+ import 'smb_service.dart';
+ import 'subsonic_service.dart';
+-import 'tidal_service.dart';
+ import 'upnp_service.dart';
+ import 'webdav_service.dart';
+ 
+@@ -75,9 +74,8 @@ class NetworkProtocol {
+   static const webdav = 'webdav';
+   static const upnp = 'upnp';
+   static const smb = 'smb';
+-  static const tidal = 'tidal';
+ 
+-  static const all = [subsonic, jellyfin, webdav, upnp, smb, tidal];
++  static const all = [subsonic, jellyfin, webdav, upnp, smb];
+ }
+ 
+ final Map<String, NetworkSourceService> _registry = {};
+@@ -92,7 +90,6 @@ void _ensureSeeded() {
+     WebdavService.instance,
+     UpnpService.instance,
+     SmbService.instance,
+-    TidalService.instance,
+   ]) {
+     _registry[s.protocol] = s;
+   }
+-- 
+2.55.0
+

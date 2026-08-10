@@ -570,7 +570,7 @@ index 7cd63a36..5849b55c 100644
      final prefs = await SharedPreferences.getInstance();
      return prefs.getBool(_swipeActionsEnabledKey) ?? false;
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 6af30723..80bc6de4 100644
+index de473730..61cb9592 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -307,9 +307,6 @@ class PlayerService {
@@ -747,7 +747,7 @@ index 6af30723..80bc6de4 100644
        await _handleGaplessTrackEnded();
        return;
      }
-@@ -3114,35 +3019,9 @@ class PlayerService {
+@@ -3130,35 +3035,9 @@ class PlayerService {
      } else if (playbackMode == AudioEngineType.usbDacExperimental) {
        await _rustAudioService.setVolume(_currentVolume);
        await _rustAudioService.setPlaybackSpeed(1.0);
@@ -783,7 +783,7 @@ index 6af30723..80bc6de4 100644
      }
  
      await reapplyEqualizer();
-@@ -3713,21 +3592,6 @@ class PlayerService {
+@@ -3729,21 +3608,6 @@ class PlayerService {
      }
    }
  
