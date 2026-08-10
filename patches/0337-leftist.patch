@@ -6,10 +6,10 @@ Subject: [PATCH] leftist
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index c6387625..d1e8574a 100644
+index 6fe2d2d0..5b2c349f 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -532,7 +532,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -528,7 +528,7 @@ class AnimatedSongScene extends StatelessWidget {
          if (artworkCardShowTitle)
            Text(
              song.title,
@@ -18,7 +18,7 @@ index c6387625..d1e8574a 100644
              maxLines: 2,
              overflow: TextOverflow.ellipsis,
              style: TextStyle(
-@@ -550,7 +550,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -546,7 +546,7 @@ class AnimatedSongScene extends StatelessWidget {
              onTap: () => onNavigateToArtistDetail(song),
              child: Text(
                song.artist,
@@ -28,15 +28,12 @@ index c6387625..d1e8574a 100644
                overflow: TextOverflow.ellipsis,
                style: TextStyle(
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index b8536e55..995de625 100644
+index b8536e55..1d39782d 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
-@@ -81,22 +81,8 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
- 
-     return Row(
+@@ -83,20 +83,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
        mainAxisAlignment: MainAxisAlignment.spaceBetween,
--      crossAxisAlignment: CrossAxisAlignment.center,
-+      crossAxisAlignment: CrossAxisAlignment.left,
+       crossAxisAlignment: CrossAxisAlignment.center,
        children: [
 -        _buildSideButtons(
 -          topAction: leftTopAction,
