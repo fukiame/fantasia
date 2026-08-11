@@ -8,18 +8,18 @@ track count alr there
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 7b51d961..38aa7726 100644
+index 7b51d961..af8fb036 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -371,7 +371,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
-                         overflow: TextOverflow.ellipsis,
-                       ),
-                       Text(
--                        '${widget.albumArtist} • ${widget.songs.length} songs',
-+                        '${widget.albumArtist}',
-                         style: Theme.of(context)
-                             .textTheme
-                             .bodySmall
+@@ -509,7 +509,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+               ),
+               const SizedBox(height: 4),
+               Text(
+-                '${widget.albumArtist} • ${widget.songs.length} songs',
++                '${widget.albumArtist}',
+                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                   color: context.adaptiveTextSecondary,
+                 ),
 -- 
 2.55.0
 
