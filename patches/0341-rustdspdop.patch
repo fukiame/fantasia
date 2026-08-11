@@ -777,7 +777,7 @@ index c9833f26..9127fbcb 100644
      SkipToNext,
      /// Shutdown the audio engine
 diff --git a/rust/src/audio/decoder_handle.rs b/rust/src/audio/decoder_handle.rs
-index 48da745f..0f1c5b56 100644
+index 48da745f..1a32487c 100644
 --- a/rust/src/audio/decoder_handle.rs
 +++ b/rust/src/audio/decoder_handle.rs
 @@ -1,11 +1,9 @@
@@ -829,7 +829,7 @@ index 48da745f..0f1c5b56 100644
      WavPack,
  }
  
-@@ -54,13 +44,7 @@ pub fn detect_file_type(path: &std::path::Path) -> FileType {
+@@ -54,14 +44,7 @@ pub fn detect_file_type(path: &std::path::Path) -> FileType {
          .unwrap_or_default();
  
      match ext.as_str() {
@@ -840,10 +840,11 @@ index 48da745f..0f1c5b56 100644
 -            } else {
 -                FileType::WavPack
 -            }
-+        "wv" => FileType::WavPack
-         }
+-        }
++        "wv" => FileType::WavPack,
          _ => FileType::Standard,
      }
+ }
 diff --git a/rust/src/audio/device.rs b/rust/src/audio/device.rs
 index c4b08a6f..21a89a3e 100644
 --- a/rust/src/audio/device.rs

@@ -493,7 +493,7 @@ index 8b67cdf5..f58c40f7 100644
 -  return service.getDsdOutputMode();
 -});
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 2d1c6f9a..03cda543 100644
+index 2d1c6f9a..cb24a87d 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -50,8 +50,6 @@ enum VolumeTier { hardware, software, system, unavailable }
@@ -587,12 +587,14 @@ index 2d1c6f9a..03cda543 100644
      final structuredSampleRate = song.sampleRate;
      final structuredBitDepth = song.bitDepth;
      if (structuredSampleRate != null || structuredBitDepth != null) {
-@@ -1429,8 +1380,6 @@ class PlayerService {
+@@ -1428,9 +1379,7 @@ class PlayerService {
+ 
      return a.sampleRate == b.sampleRate &&
          a.bitDepth == b.bitDepth &&
-         a.channels == b.channels &&
+-        a.channels == b.channels &&
 -        a.isDop == b.isDop &&
 -        a.isNativeDsd == b.isNativeDsd;
++        a.channels == b.channels;
    }
  
    bool get _isDirectUsbPath =>
