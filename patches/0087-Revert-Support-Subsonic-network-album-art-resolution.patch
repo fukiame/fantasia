@@ -5,16 +5,13 @@ Subject: [PATCH] Revert "Support Subsonic network album art resolution"
 
 This reverts commit c6adc8db5b0339e885589f941e56de7f769154d1.
 
+Signed-off-by: fukiame <fukiame@proton.me>
+
 diff --git a/lib/services/album_art_service.dart b/lib/services/album_art_service.dart
-index 6fab3729..f328d646 100644
+index c181639e..7a2208ef 100644
 --- a/lib/services/album_art_service.dart
 +++ b/lib/services/album_art_service.dart
-@@ -6,12 +6,10 @@ import 'package:flutter/foundation.dart';
- import 'package:image/image.dart' as img;
- import 'package:path_provider/path_provider.dart';
- 
--import '../data/database.dart';
- import '../data/repositories/song_repository.dart';
+@@ -11,7 +11,6 @@ import '../data/repositories/song_repository.dart';
  import '../src/rust/api/scanner.dart' as rust_scanner;
  import 'music_folder_service.dart';
  import 'player_service.dart';
@@ -22,7 +19,7 @@ index 6fab3729..f328d646 100644
  
  class AlbumArtService {
    AlbumArtService._();
-@@ -47,8 +45,7 @@ class AlbumArtService {
+@@ -47,8 +46,7 @@ class AlbumArtService {
      }
  
      final future = _inFlightResolutions.putIfAbsent(audioSourcePath, () async {
@@ -32,7 +29,7 @@ index 6fab3729..f328d646 100644
        if (raw == null || raw.isEmpty) {
          await _persistArtworkPath(audioSourcePath, null);
          return null;
-@@ -178,34 +175,7 @@ class AlbumArtService {
+@@ -177,34 +175,7 @@ class AlbumArtService {
      return File(path).exists();
    }
  
@@ -68,7 +65,7 @@ index 6fab3729..f328d646 100644
      if (Platform.isAndroid && audioSourcePath.startsWith('content://')) {
        return _musicFolderService.fetchEmbeddedArtwork(audioSourcePath);
      }
-@@ -222,13 +192,7 @@ class AlbumArtService {
+@@ -221,13 +192,7 @@ class AlbumArtService {
      String? albumArtPath,
    ) async {
      try {

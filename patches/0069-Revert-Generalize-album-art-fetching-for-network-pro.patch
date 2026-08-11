@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Generalize album art fetching for network protocols"
 This reverts commit 32590bdba9dfaefb37b37aaf339481d54499a94b.
 
 diff --git a/lib/services/album_art_service.dart b/lib/services/album_art_service.dart
-index fcadc59f..6fab3729 100644
+index 213c2024..c181639e 100644
 --- a/lib/services/album_art_service.dart
 +++ b/lib/services/album_art_service.dart
 @@ -11,7 +11,7 @@ import '../data/repositories/song_repository.dart';
@@ -18,7 +18,7 @@ index fcadc59f..6fab3729 100644
  
  class AlbumArtService {
    AlbumArtService._();
-@@ -178,29 +178,28 @@ class AlbumArtService {
+@@ -177,29 +177,28 @@ class AlbumArtService {
      return File(path).exists();
    }
  
@@ -56,7 +56,7 @@ index fcadc59f..6fab3729 100644
          return Uint8List.fromList(bytes);
        } catch (e) {
          return null;
-@@ -226,8 +225,7 @@ class AlbumArtService {
+@@ -225,8 +224,7 @@ class AlbumArtService {
        // Network songs keep their cover-art marker in the DB so a cache
        // eviction can always re-resolve; only the in-memory playlist is
        // updated with the resolved local path.
