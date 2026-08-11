@@ -5,6 +5,28 @@ Subject: [PATCH] lib: aps: fix preload
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index 76ee86fa..214b7095 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -1328,7 +1328,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                         icon: LucideIcons.audioWaveform,
+                         title: 'Preload audio data',
+                         subtitle:
+-                            'Decode songs after scanning to cache waveform peaks and loudness metrics',
++                            'Decode songs after scanning to cache artworks',
+                         value: prefs.preloadAudioData,
+                         onChanged: (value) {
+                           ref
+@@ -1460,7 +1460,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                 ActionButton(
+                   icon: LucideIcons.audioWaveform,
+                   title: 'Preload Library Audio',
+-                  subtitle: 'Cache waveforms and loudness for all songs',
++                  subtitle: 'Cache artworks for all songs',
+                   onTap: _isScanning ? null : _preloadLibraryAudio,
+                 ),
+                 const SettingsDivider(),
 diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
 index afe4c846..e722b963 100644
 --- a/lib/services/audio_preload_service.dart
