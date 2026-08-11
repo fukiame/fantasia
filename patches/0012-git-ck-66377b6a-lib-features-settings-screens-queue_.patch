@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 23:56:23 +0700
+Subject: [PATCH] git ck 66377b6a^ --
+ lib/features/settings/screens/queue_settings_screen.dart
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/queue_settings_screen.dart b/lib/features/settings/screens/queue_settings_screen.dart
+index 85817be0..eb98eb03 100644
+--- a/lib/features/settings/screens/queue_settings_screen.dart
++++ b/lib/features/settings/screens/queue_settings_screen.dart
+@@ -22,7 +22,6 @@ class QueueSettingsScreen extends ConsumerWidget {
+           SettingsCard(
+             children: [
+               _WrapAroundQueueTile(playerService: playerService),
+-              _AutoplayOnQueueEndTile(playerService: playerService),
+             ],
+           ),
+           const SizedBox(height: AppConstants.navBarHeight + 40),
+@@ -56,28 +55,3 @@ class _WrapAroundQueueTile extends StatelessWidget {
+     );
+   }
+ }
+-
+-class _AutoplayOnQueueEndTile extends StatelessWidget {
+-  const _AutoplayOnQueueEndTile({required this.playerService});
+-
+-  final PlayerService playerService;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return ListenableBuilder(
+-      listenable: playerService.autoplayOnQueueEndNotifier,
+-      builder: (context, _) {
+-        final enabled = playerService.autoplayOnQueueEndNotifier.value;
+-        return ToggleSetting(
+-          icon: LucideIcons.shuffle,
+-          title: 'Autoplay on Queue End',
+-          subtitle: enabled
+-              ? 'Play a random library song when the queue ends'
+-              : 'Stop when the queue ends',
+-          value: enabled,
+-          onChanged: (value) => playerService.setAutoplayOnQueueEnd(value),
+-        );
+-      },
+-    );
+-  }
+-}
+-- 
+2.55.0
+

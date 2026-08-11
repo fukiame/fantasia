@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 4 Aug 2026 02:27:04 +0700
+Subject: [PATCH] Revert "Refactor equalizer API to use variable band specs"
+
+This reverts commit 20940cf6e281ec75bfca7c307f95a99f0fafb65c.
+
+diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
+index 562da7b6..64dda113 100644
+--- a/rust/src/audio/engine.rs
++++ b/rust/src/audio/engine.rs
+@@ -14,7 +14,7 @@ use crate::audio::decoder_handle::{detect_file_type, DecoderHandle, FileType};
+ use crate::audio::device::current_device_profile;
+ use crate::audio::dsd_engine::DsdDecoderThread;
+ use crate::audio::dynamics::DynamicsChain;
+-use crate::audio::equalizer::{EqBandSpec, Equalizer};
++use crate::audio::equalizer::Equalizer;
+ use crate::audio::fx::SpatialFx;
+ use crate::audio::source::{AudioSource, SourceProvider};
+ use crate::audio::strategy::OutputStrategy;
+@@ -503,9 +503,9 @@ impl AudioEngineHandle {
+         self.send_command(AudioCommand::SetDopOverride { is_dop })
+     }
+ 
+-    /// Set EQ: enabled and a variable list of band specs (real per-type biquads).
+-    pub fn set_equalizer(&self, enabled: bool, specs: Vec<EqBandSpec>) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetEqualizer { enabled, specs })
++    /// Set graphic EQ: enabled and 10 band gains in dB (order matches EqualizerState.defaultGraphicFrequenciesHz).
++    pub fn set_equalizer(&self, enabled: bool, gains_db: [f32; 10]) -> Result<(), String> {
++        self.send_command(AudioCommand::SetEqualizer { enabled, gains_db })
+     }
+ 
+     /// Configure compressor settings.
+@@ -2792,9 +2792,9 @@ fn command_processing_loop(
+                         callback_data.set_playback_speed(speed);
+                         *callback_data.speed_frac_pos.lock() = 0.0;
+                     }
+-                    AudioCommand::SetEqualizer { enabled, specs } => {
++                    AudioCommand::SetEqualizer { enabled, gains_db } => {
+                         if let Some(mut eq) = callback_data.equalizer.try_lock() {
+-                            eq.set(enabled, &specs, sample_rate);
++                            eq.set(enabled, &gains_db, sample_rate);
+                         }
+                     }
+                     AudioCommand::SetCompressor {
+-- 
+2.55.0
+

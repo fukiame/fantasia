@@ -1,0 +1,87 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 14:40:49 +0700
+Subject: [PATCH] rustfix
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
+index 6925dede..f8144571 100644
+--- a/rust/src/audio/engine.rs
++++ b/rust/src/audio/engine.rs
+@@ -592,7 +592,7 @@ pub fn desired_output_signature(preferred_sample_rate: Option<u32>) -> String {
+     }
+ 
+     format!(
+-        "android-shared:requested:{}{}",
++        "android-shared:requested:{}",
+         preferred_sample_rate.unwrap_or(48_000),
+     )
+ }
+@@ -1145,6 +1145,7 @@ pub fn create_audio_engine(
+             event_tx_clone.clone(),
+             requested_sample_rate,
+             managed_prefer_exclusive,
++            false,
+             audio_api_pref,
+         )?;
+         let verification = OutputVerification::verify(
+@@ -1217,6 +1218,7 @@ pub fn create_audio_engine(
+                     event_tx.clone(),
+                     final_sample_rate,
+                     managed_prefer_exclusive,
++                    false,
+                     audio_api_pref,
+                 ),
+                 None => {
+diff --git a/rust/src/audio/manager.rs b/rust/src/audio/manager.rs
+index de8547ec..97661a24 100644
+--- a/rust/src/audio/manager.rs
++++ b/rust/src/audio/manager.rs
+@@ -292,6 +292,7 @@ impl EngineManager {
+ 
+                 #[cfg(target_os = "android")]
+                 {
++                    let strategy = handle.output_runtime().strategy.as_str();
+                     let requested_rate = preferred_sample_rate.unwrap_or(48_000);
+                     return handle.output_signature().starts_with("android-shared:")
+                         && handle.sample_rate() == requested_rate
+diff --git a/rust/src/uac2/android_direct.rs b/rust/src/uac2/android_direct.rs
+index 5f1ecfc9..7078e196 100644
+--- a/rust/src/uac2/android_direct.rs
++++ b/rust/src/uac2/android_direct.rs
+@@ -960,7 +960,7 @@ fn log_bit_perfect_transition(verified: bool, state: &AndroidDirectUsbState) {
+         return;
+     };
+     crate::dev_eprintln!(
+-        "[USB-BITPERFECT] verified: {} bit/{} Hz {}ch {} direct on \"{}\" — no mixer, no resample, no DSP",
++        "[USB-BITPERFECT] verified: {} bit/{} Hz {}ch direct on \"{}\" — no mixer, no resample, no DSP",
+         effective.bit_depth,
+         effective.sample_rate,
+         effective.channels,
+diff --git a/rust/src/uac2/device_classifier.rs b/rust/src/uac2/device_classifier.rs
+index 28f67e78..81c6f88e 100644
+--- a/rust/src/uac2/device_classifier.rs
++++ b/rust/src/uac2/device_classifier.rs
+@@ -1,4 +1,4 @@
+-use crate::uac2::audio_format::{AudioFormat, BitDepth, FormatType, SampleRate};
++use crate::uac2::audio_format::{AudioFormat, BitDepth, SampleRate};
+ use crate::uac2::capabilities::{DeviceCapabilities, DeviceType};
+ use crate::uac2::constants::*;
+ use crate::uac2::descriptors::{InputTerminal, OutputTerminal};
+diff --git a/rust/src/uac2/mod.rs b/rust/src/uac2/mod.rs
+index a3049273..8661b935 100644
+--- a/rust/src/uac2/mod.rs
++++ b/rust/src/uac2/mod.rs
+@@ -78,7 +78,7 @@ pub use android_direct::{
+     android_direct_usb_enabled, android_direct_verify_hardware_volume_health, clear_android_usb_device,
+     create_android_usb_backend, force_release_usb_session, is_usb_session_active,
+     mark_android_usb_fallback, negotiate_android_direct_output_sample_rate,
+-    register_android_usb_device, set_android_direct_usb_enabled, set_android_usb_dop_mode,
++    register_android_usb_device, set_android_direct_usb_enabled,
+     set_android_usb_lock_enabled, set_android_usb_playback_format,
+     validate_android_direct_request, wait_for_android_usb_session_stop, AndroidDirectUsbBackend,
+     AndroidDirectUsbDebugState, AndroidDirectUsbDevice, AndroidDirectUsbPlaybackFormat,
+-- 
+2.55.0
+

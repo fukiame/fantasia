@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 22:26:13 +0700
+Subject: [PATCH] lib: aps: fix preload
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
+index afe4c846..e722b963 100644
+--- a/lib/services/audio_preload_service.dart
++++ b/lib/services/audio_preload_service.dart
+@@ -61,11 +61,10 @@ class AudioPreloadService {
+     // so a concurrent fling gate won't clobber this on its settle timer.
+     pauseArtworkExtraction(true);
+     try {
+-      var skipped = forceAll ? 0 : songs.length;
++      var skipped = 0;
+       var completed = skipped;
+       var failed = 0;
+ 
+-      if (forceAll) {
+       yield PreloadProgress(
+         completed: completed,
+         total: songs.length,
+@@ -97,7 +96,6 @@ class AudioPreloadService {
+           currentFile: chunk.last.title,
+         );
+       }
+-      }
+ 
+       yield PreloadProgress(
+         completed: songs.length,
+-- 
+2.55.0
+

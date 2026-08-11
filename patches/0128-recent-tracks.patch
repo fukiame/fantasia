@@ -1,0 +1,307 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 20:06:14 +0700
+Subject: [PATCH] recent tracks
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index f521faf2..9fd31e3b 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -724,48 +724,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                             ),
+                           ),
+                         ),
+-                      if (appPreferences.showRecentTracks &&
+-                          homeData.recentTracks.isNotEmpty)
+-                        SliverToBoxAdapter(
+-                          child: _buildSection(
+-                            context,
+-                            title: 'Recently Played',
+-                            subtitle:
+-                                'Pick up exactly where your last sessions left off.',
+-                            trailing: TextButton(
+-                              onPressed: () => _navigateTo(
+-                                context,
+-                                const RecentlyPlayedScreen(),
+-                              ),
+-                              child: const Text('See all'),
+-                            ),
+-                            child: SizedBox(
+-                              height: 212,
+-                              child: ListView.separated(
+-                                padding: const EdgeInsets.symmetric(
+-                                  horizontal: AppConstants.spacingLg,
+-                                ),
+-                                scrollDirection: Axis.horizontal,
+-                                itemCount: homeData.recentTracks.length,
+-                                separatorBuilder: (_, _) => const SizedBox(
+-                                  width: AppConstants.spacingMd,
+-                                ),
+-                                itemBuilder: (context, index) {
+-                                  final song = homeData.recentTracks[index];
+-                                  return _RecentTrackCard(
+-                                    song: song,
+-                                    onTap: () => _playSongs(
+-                                      context,
+-                                      homeData.recentTracks,
+-                                      initialSong: song,
+-                                      heroSeed: 'menu_recent',
+-                                    ),
+-                                  );
+-                                },
+-                              ),
+-                            ),
+-                          ),
+-                        ),
+                       if (appPreferences.showPlaylistPreviews)
+                         SliverToBoxAdapter(
+                           child: _buildSection(
+@@ -998,16 +956,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+         artPath: homeData.favoriteArtPath,
+         onTap: () => _navigateTo(context, const FavoritesScreen()),
+       ),
+-      _QuickAccessItem(
+-        title: 'Recently Played',
+-        subtitle: homeData.recentTracks.isEmpty
+-            ? 'Your session history'
+-            : '${homeData.recentTracks.length} recent picks on hand',
+-        icon: LucideIcons.clock3,
+-        gradient: const [Color(0xFF133858), Color(0xFF175F80)],
+-        artPath: homeData.recentTracks.firstOrNull?.albumArt,
+-        onTap: () => _navigateTo(context, const RecentlyPlayedScreen()),
+-      ),
+       _QuickAccessItem(
+         title: 'Recently Added',
+         subtitle: 'Your latest library scans',
+@@ -1127,17 +1075,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+       songsByArtist[entry.key] = SongRepository.sortSongsByAlbum(entry.value);
+     }
+ 
+-    final recentTracks = _dedupeSongs(
+-      recentEntries.map((entry) => entry.song),
+-    ).take(12).toList();
+-
+     final playlistPreviews = _buildPlaylistPreviews(
+       playlists: playlists,
+       songById: songById,
+     );
+ 
+     return _MenuHomeData(
+-      recentTracks: recentTracks,
+       playlistPreviews: playlistPreviews,
+       favoriteArtPath: favoriteSongs.firstOrNull?.albumArt,
+     );
+@@ -1681,86 +1624,6 @@ class _ArtistShelfCard extends StatelessWidget {
+   }
+ }
+ 
+-class _RecentTrackCard extends StatelessWidget {
+-  final Song song;
+-  final VoidCallback onTap;
+-
+-  const _RecentTrackCard({required this.song, required this.onTap});
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Material(
+-      color: Colors.transparent,
+-      child: InkWell(
+-        onTap: onTap,
+-        borderRadius: BorderRadius.circular(22),
+-        child: Ink(
+-          width: 152,
+-          padding: const EdgeInsets.all(AppConstants.spacingMd),
+-          decoration: BoxDecoration(
+-            color: AppColors.surface.withValues(alpha: 0.72),
+-            borderRadius: BorderRadius.circular(22),
+-            border: Border.all(color: AppColors.glassBorder),
+-          ),
+-          child: Column(
+-            crossAxisAlignment: CrossAxisAlignment.start,
+-            children: [
+-              ClipRRect(
+-                borderRadius: BorderRadius.circular(18),
+-                child: SizedBox(
+-                  width: double.infinity,
+-                  height: 108,
+-                  child: CachedImageWidget(
+-                    imagePath: song.albumArt,
+-                    audioSourcePath: song.filePath,
+-                    fit: BoxFit.cover,
+-                    useThumbnail: true,
+-                    thumbnailWidth: 240,
+-                    thumbnailHeight: 240,
+-                    placeholder: Container(
+-                      color: AppColors.glassBackgroundStrong,
+-                      child: Icon(
+-                        LucideIcons.music4,
+-                        color: context.adaptiveTextSecondary,
+-                      ),
+-                    ),
+-                    errorWidget: Container(
+-                      color: AppColors.glassBackgroundStrong,
+-                      child: Icon(
+-                        LucideIcons.music4,
+-                        color: context.adaptiveTextSecondary,
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              ),
+-              const SizedBox(height: AppConstants.spacingSm),
+-              Text(
+-                song.title,
+-                maxLines: 1,
+-                overflow: TextOverflow.ellipsis,
+-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                  color: context.adaptiveTextPrimary,
+-                  fontWeight: FontWeight.w700,
+-                ),
+-              ),
+-              const SizedBox(height: AppConstants.spacingXxs),
+-              Text(
+-                song.artist,
+-                maxLines: 1,
+-                overflow: TextOverflow.ellipsis,
+-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  color: context.adaptiveTextTertiary,
+-                ),
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _PlaylistPreviewCard extends StatelessWidget {
+   final _PlaylistPreview preview;
+   final VoidCallback onTap;
+@@ -2135,12 +1998,10 @@ class _InlineActionButton extends StatelessWidget {
+ }
+ 
+ class _MenuHomeData {
+-  final List<Song> recentTracks;
+   final List<_PlaylistPreview> playlistPreviews;
+   final String? favoriteArtPath;
+ 
+   const _MenuHomeData({
+-    required this.recentTracks,
+     required this.playlistPreviews,
+     required this.favoriteArtPath,
+   });
+diff --git a/lib/features/settings/screens/ui_customization_settings_screen.dart b/lib/features/settings/screens/ui_customization_settings_screen.dart
+index 55245d3e..4474700e 100644
+--- a/lib/features/settings/screens/ui_customization_settings_screen.dart
++++ b/lib/features/settings/screens/ui_customization_settings_screen.dart
+@@ -33,18 +33,6 @@ class UiCustomizationSettingsScreen extends ConsumerWidget {
+                 },
+               ),
+               const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.clock3,
+-                title: 'Recently Played',
+-                subtitle: 'Show your recent listening history on the home screen',
+-                value: appPreferences.showRecentTracks,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setShowRecentTracks(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+               ToggleSetting(
+                 icon: LucideIcons.listMusic,
+                 title: 'Your Playlists',
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index 66dcedcb..ad6c3141 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -39,12 +39,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setHapticsEnabled(value);
+   }
+ 
+-  Future<void> setShowRecentTracks(bool value) async {
+-    if (state.showRecentTracks == value) return;
+-    state = state.copyWith(showRecentTracks: value);
+-    await ref.read(appPreferencesServiceProvider).setShowRecentTracks(value);
+-  }
+-
+   Future<void> setShowPlaylistPreviews(bool value) async {
+     if (state.showPlaylistPreviews == value) return;
+     state = state.copyWith(showPlaylistPreviews: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index eae1dc8e..21323a4b 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -3,7 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
+ class AppPreferences {
+   final bool animationsEnabled;
+   final bool hapticsEnabled;
+-  final bool showRecentTracks;
+   final bool showPlaylistPreviews;
+   final bool showBrowseMore;
+   final bool showQuickAccess;
+@@ -84,7 +83,6 @@ class AppPreferences {
+   const AppPreferences({
+     this.animationsEnabled = true,
+     this.hapticsEnabled = true,
+-    this.showRecentTracks = true,
+     this.showPlaylistPreviews = true,
+     this.showBrowseMore = true,
+     this.showQuickAccess = true,
+@@ -166,7 +164,6 @@ class AppPreferences {
+   AppPreferences copyWith({
+     bool? animationsEnabled,
+     bool? hapticsEnabled,
+-    bool? showRecentTracks,
+     bool? showPlaylistPreviews,
+     bool? showBrowseMore,
+     bool? showQuickAccess,
+@@ -247,7 +244,6 @@ class AppPreferences {
+     return AppPreferences(
+       animationsEnabled: animationsEnabled ?? this.animationsEnabled,
+       hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
+-      showRecentTracks: showRecentTracks ?? this.showRecentTracks,
+       showPlaylistPreviews: showPlaylistPreviews ?? this.showPlaylistPreviews,
+       showBrowseMore: showBrowseMore ?? this.showBrowseMore,
+       showQuickAccess: showQuickAccess ?? this.showQuickAccess,
+@@ -370,7 +366,6 @@ class AppPreferences {
+ class AppPreferencesService {
+   static const _animationsKey = 'app_animations_enabled';
+   static const _hapticsKey = 'app_haptics_enabled';
+-  static const _showRecentTracksKey = 'menu_show_recent_tracks';
+   static const _showPlaylistPreviewsKey = 'menu_show_playlist_previews';
+   static const _showBrowseMoreKey = 'menu_show_browse_more';
+   static const _showQuickAccessKey = 'menu_show_quick_access';
+@@ -462,7 +457,6 @@ class AppPreferencesService {
+     return AppPreferences(
+       animationsEnabled: prefs.getBool(_animationsKey) ?? true,
+       hapticsEnabled: prefs.getBool(_hapticsKey) ?? true,
+-      showRecentTracks: prefs.getBool(_showRecentTracksKey) ?? true,
+       showPlaylistPreviews: prefs.getBool(_showPlaylistPreviewsKey) ?? true,
+       showBrowseMore: prefs.getBool(_showBrowseMoreKey) ?? true,
+       showQuickAccess: prefs.getBool(_showQuickAccessKey) ?? true,
+@@ -599,16 +593,6 @@ class AppPreferencesService {
+     await prefs.setBool(_hapticsKey, value);
+   }
+ 
+-  Future<bool> getShowRecentTracks() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_showRecentTracksKey) ?? true;
+-  }
+-
+-  Future<void> setShowRecentTracks(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_showRecentTracksKey, value);
+-  }
+-
+   Future<bool> getShowPlaylistPreviews() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_showPlaylistPreviewsKey) ?? true;
+-- 
+2.55.0
+

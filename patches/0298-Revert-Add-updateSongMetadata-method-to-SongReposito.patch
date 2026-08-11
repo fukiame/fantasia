@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 21:10:38 +0700
+Subject: [PATCH] Revert "Add updateSongMetadata method to SongRepository"
+
+This reverts commit f75bceb237fbe0392108be255d4da59114d850e0.
+
+diff --git a/lib/data/repositories/song_repository.dart b/lib/data/repositories/song_repository.dart
+index 73196fba..eb9a6709 100644
+--- a/lib/data/repositories/song_repository.dart
++++ b/lib/data/repositories/song_repository.dart
+@@ -224,38 +224,6 @@ class SongRepository {
+     return paths.whereType<String>().where((p) => p.isNotEmpty).toSet();
+   }
+ 
+-  Future<void> updateSongMetadata(
+-    String filePath, {
+-    String? title,
+-    String? artist,
+-    String? album,
+-    String? albumArtist,
+-    int? trackNumber,
+-    int? discNumber,
+-    int? year,
+-    String? genre,
+-  }) async {
+-    await _isar.writeTxn(() async {
+-      final existing = await _isar.songEntitys
+-          .filter()
+-          .filePathEqualTo(filePath)
+-          .findFirst();
+-      if (existing == null) return;
+-
+-      if (title != null) existing.title = title;
+-      if (artist != null) existing.artist = artist;
+-      if (album != null) existing.album = album;
+-      if (albumArtist != null) existing.albumArtist = albumArtist;
+-      if (trackNumber != null) existing.trackNumber = trackNumber;
+-      if (discNumber != null) existing.discNumber = discNumber;
+-      if (year != null) existing.year = year;
+-      if (genre != null) existing.genre = genre;
+-      existing.hasLocalEdits = true;
+-
+-      await _isar.songEntitys.put(existing);
+-    });
+-  }
+-
+   /// Count songs in a folder.
+   Future<int> countSongsInFolder(String folderUri) async {
+     return await _isar.songEntitys.where().folderUriEqualTo(folderUri).count();
+@@ -396,8 +364,6 @@ class SongRepository {
+       albumArtist: entity.albumArtist,
+       trackNumber: entity.trackNumber,
+       discNumber: entity.discNumber,
+-      year: entity.year,
+-      genre: entity.genre,
+       filePath: entity.filePath,
+       folderUri: entity.folderUri,
+       dateAdded: entity.dateAdded,
+-- 
+2.55.0
+

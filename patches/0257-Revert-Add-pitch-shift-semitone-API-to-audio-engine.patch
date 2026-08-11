@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 18:06:22 +0700
+Subject: [PATCH] Revert "Add pitch shift semitone API to audio engine"
+
+This reverts commit 7635570e4aa4575fbe34fc28800c58b4406cef0d.
+
+diff --git a/rust/src/api/audio_api.rs b/rust/src/api/audio_api.rs
+index c2ccbd8e..ba8abc65 100644
+--- a/rust/src/api/audio_api.rs
++++ b/rust/src/api/audio_api.rs
+@@ -1218,13 +1218,6 @@ pub fn audio_set_equalizer(enabled: bool, gains_db: Vec<f32>) -> Result<(), Stri
+     with_audio_engine(|handle| handle.set_equalizer(enabled, arr))
+ }
+ 
+-/// Set pitch shift in semitones for the native audio engine (tempo preserved).
+-/// 0 = bypass. Range is clamped internally to ±12 semitones.
+-pub fn audio_set_pitch_shift_semitones(semitones: f32) -> Result<(), String> {
+-    log::info!("[PITCH] FFI audio_set_pitch_shift_semitones({semitones})");
+-    with_audio_engine(|handle| handle.set_pitch_shift(semitones))
+-}
+-
+ /// Configure compressor settings for the native audio engine.
+ pub fn audio_set_compressor(
+     enabled: bool,
+-- 
+2.55.0
+

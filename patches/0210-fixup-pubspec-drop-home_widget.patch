@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 10:52:48 +0700
+Subject: [PATCH] fixup! pubspec: drop home_widget
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 6ae9ef8f..ee5a489b 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -37,7 +37,6 @@ dependencies:
+   flutter_cache_manager: ^3.4.1
+   flutter_riverpod: ^3.0.3
+   flutter_rust_bridge: ^2.12.0
+-  home_widget: ^0.7.0
+   freezed_annotation: ^3.0.0
+   image: ^4.8.0
+   isar_community: ^3.3.2
+-- 
+2.55.0
+

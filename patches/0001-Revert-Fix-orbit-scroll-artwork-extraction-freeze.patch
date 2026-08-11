@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 23:41:28 +0700
+Subject: [PATCH] Revert "Fix orbit scroll artwork extraction freeze"
+
+This reverts commit ffc9b31fb2714afb3b2cd767fbe8710f5b614b1e.
+
+diff --git a/lib/features/songs/widgets/orbit_scroll.dart b/lib/features/songs/widgets/orbit_scroll.dart
+index e65de111..fcbd8d20 100644
+--- a/lib/features/songs/widgets/orbit_scroll.dart
++++ b/lib/features/songs/widgets/orbit_scroll.dart
+@@ -113,9 +113,6 @@ class _OrbitScrollState extends State<OrbitScroll>
+ 
+   // Debounce timer that flushes deferred artwork extraction after a fling settles.
+   Timer? _artworkGateTimer;
+-  // ponytail: hold at most ONE pause; per-tick pauses with canceled release
+-  // timers leaked the refcount and froze artwork extraction forever.
+-  bool _artworkGateHeld = false;
+   DateTime _lastScrollTime = DateTime.now();
+   int _lastReportedIndex = 0;
+ 
+@@ -186,10 +183,7 @@ class _OrbitScrollState extends State<OrbitScroll>
+     _controller.dispose();
+     _scrollOffset.dispose();
+     _artworkGateTimer?.cancel();
+-    if (_artworkGateHeld) {
+-      _artworkGateHeld = false;
+-      pauseArtworkExtraction(false);
+-    }
++    pauseArtworkExtraction(false);
+     super.dispose();
+   }
+ 
+@@ -242,17 +236,10 @@ class _OrbitScrollState extends State<OrbitScroll>
+   // --- Gesture Handling ---
+ 
+   void _markScrollActive() {
+-    if (!_artworkGateHeld) {
+-      _artworkGateHeld = true;
+-      pauseArtworkExtraction(true);
+-    }
++    pauseArtworkExtraction(true);
+     _artworkGateTimer?.cancel();
+     _artworkGateTimer = Timer(const Duration(milliseconds: 150), () {
+-      _artworkGateTimer = null;
+-      if (_artworkGateHeld) {
+-        _artworkGateHeld = false;
+-        pauseArtworkExtraction(false);
+-      }
++      pauseArtworkExtraction(false);
+     });
+   }
+ 
+-- 
+2.55.0
+
