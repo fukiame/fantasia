@@ -39,7 +39,7 @@ jobs:
               run: shred -fzu fantasia/android/"$KSLOC" fantasia/android/key.properties
             - uses: actions/upload-artifact@v7
               with:
-                path: fantasia/fantasia*.apk
+                path: fantasia/build/fantasia*.apk
                 archive: false
                 if-no-files-found: error
             - name: analyze
