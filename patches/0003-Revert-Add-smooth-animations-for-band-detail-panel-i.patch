@@ -1,0 +1,59 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 13 Aug 2026 01:10:54 +0700
+Subject: [PATCH] Revert "Add smooth animations for band detail panel in
+ equalizer"
+
+This reverts commit 813583cd077f3f950c7c00858f367511f45c5df6.
+
+diff --git a/lib/features/settings/screens/equalizer_screen.dart b/lib/features/settings/screens/equalizer_screen.dart
+index 3e704eae..fbd19b48 100644
+--- a/lib/features/settings/screens/equalizer_screen.dart
++++ b/lib/features/settings/screens/equalizer_screen.dart
+@@ -2358,35 +2358,14 @@ class _ParametricEqViewState extends ConsumerState<_ParametricEqView> {
+                   _ScrollProgressBar(
+                     controller: _bandScrollController,
+                   ),
+-                  AnimatedSize(
+-                    duration: AppConstants.animationNormal,
+-                    curve: Curves.easeInOutCubic,
+-                    alignment: Alignment.topCenter,
+-                    child: (_selectedIndex != null &&
+-                            _selectedIndex! < bands.length)
+-                        ? Padding(
+-                            padding: const EdgeInsets.only(
+-                              top: AppConstants.spacingMd,
+-                            ),
+-                            child: TweenAnimationBuilder<double>(
+-                              tween: Tween(begin: 0.0, end: 1.0),
+-                              duration: AppConstants.animationNormal,
+-                              curve: Curves.easeOutCubic,
+-                              builder: (context, t, child) => Opacity(
+-                                opacity: t,
+-                                child: Transform.translate(
+-                                  offset: Offset(0, 8 * (1 - t)),
+-                                  child: child,
+-                                ),
+-                              ),
+-                              child: _BandDetailPanel(
+-                                index: _selectedIndex!,
+-                                enabled: enabled,
+-                              ),
+-                            ),
+-                          )
+-                        : const SizedBox(width: double.infinity),
+-                  ),
++                  if (_selectedIndex != null &&
++                      _selectedIndex! < bands.length) ...[
++                    const SizedBox(height: AppConstants.spacingMd),
++                    _BandDetailPanel(
++                      index: _selectedIndex!,
++                      enabled: enabled,
++                    ),
++                  ],
+                 ],
+               ),
+             ),
+-- 
+2.55.0
+

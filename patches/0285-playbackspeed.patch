@@ -247,7 +247,7 @@ index 2905a5c6..3c5747ff 100644
  final shuffleModeProvider = Provider<ShuffleMode>((ref) {
    return ref.watch(playerProvider.select((state) => state.shuffleMode));
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index f23aeee8..2cb2b6af 100644
+index d8501cd5..0a4373a9 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -449,9 +449,6 @@ class PlayerService {
@@ -268,7 +268,7 @@ index f23aeee8..2cb2b6af 100644
        }
      }
  
-@@ -1259,7 +1255,6 @@ class PlayerService {
+@@ -1260,7 +1256,6 @@ class PlayerService {
      final player = just_audio.AudioPlayer();
      _justAudioPlayer = player;
      await player.setVolume(_currentVolume);
@@ -276,7 +276,7 @@ index f23aeee8..2cb2b6af 100644
      await _updateLoopMode();
      return player;
    }
-@@ -1279,7 +1274,6 @@ class PlayerService {
+@@ -1280,7 +1275,6 @@ class PlayerService {
      }
  
      await player.setVolume(_currentVolume);
@@ -284,7 +284,7 @@ index f23aeee8..2cb2b6af 100644
      await _updateLoopMode();
    }
  
-@@ -3033,13 +3027,10 @@ class PlayerService {
+@@ -3034,13 +3028,10 @@ class PlayerService {
          await _rustAudioService.setPipelineModePassthrough(true);
        }
        await _reconcileVolumeForTier(_determineCurrentTier());
@@ -298,7 +298,7 @@ index f23aeee8..2cb2b6af 100644
      }
  
      await reapplyEqualizer();
-@@ -4510,42 +4501,6 @@ class PlayerService {
+@@ -4511,42 +4502,6 @@ class PlayerService {
      _debounceQueueChanged();
    }
  
@@ -341,7 +341,7 @@ index f23aeee8..2cb2b6af 100644
    // ==================== Sleep Timer ====================
  
    void setSleepTimer(Duration duration) {
-@@ -4735,7 +4690,6 @@ class PlayerService {
+@@ -4736,7 +4691,6 @@ class PlayerService {
      positionNotifier.dispose();
      durationNotifier.dispose();
      bufferedPositionNotifier.dispose();

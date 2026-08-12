@@ -1338,7 +1338,7 @@ index 357c8aeb..fc2c1752 100644
    final SongRepository _songRepository;
    final AlbumArtService _albumArtService;
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 8079a532..ef78e4ff 100644
+index beb52d51..d2c7eb29 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -307,7 +307,6 @@ class PlayerService {
@@ -1365,7 +1365,7 @@ index 8079a532..ef78e4ff 100644
      /*
      if (!_floatingPlayerActive) return;
      await _deactivateFloatingPlayer();
-@@ -2036,11 +2033,6 @@ class PlayerService {
+@@ -2037,11 +2034,6 @@ class PlayerService {
        _replayPlayTracker.syncPosition(songId: song.id, position: position);
        return;
      }
@@ -1377,7 +1377,7 @@ index 8079a532..ef78e4ff 100644
    }
  
    void _setupRustAudioListeners() {
-@@ -3582,19 +3574,6 @@ class PlayerService {
+@@ -3583,19 +3575,6 @@ class PlayerService {
      }
    }
  

@@ -570,7 +570,7 @@ index 78ee0be6..2e9d7580 100644
      final prefs = await SharedPreferences.getInstance();
      return prefs.getBool(_swipeActionsEnabledKey) ?? false;
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 800aa277..e3f54f62 100644
+index 47331413..85abb5cd 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -307,9 +307,6 @@ class PlayerService {
@@ -691,7 +691,7 @@ index 800aa277..e3f54f62 100644
  
    void _notifyQueueChanged() {
      queueNotifier.value = List.unmodifiable(
-@@ -1392,19 +1314,6 @@ class PlayerService {
+@@ -1393,19 +1315,6 @@ class PlayerService {
        shouldIgnoreTrack: (track) => track.filePath == null,
        shouldFastStartCurrentTrackOnly: () =>
            loopModeNotifier.value != LoopMode.all,
@@ -711,7 +711,7 @@ index 800aa277..e3f54f62 100644
      );
      engine.onTrackEnded = () {
        if (_usingRustBackend) return;
-@@ -1665,7 +1574,7 @@ class PlayerService {
+@@ -1666,7 +1575,7 @@ class PlayerService {
  
    /// Prefer [primary], then the current-song notifier, then the last engine
    /// playback snapshot so USB focus stays latched when Rust is ahead of or
@@ -720,7 +720,7 @@ index 800aa277..e3f54f62 100644
    Song? _songForUac2Sync(Song? primary) =>
        primary ??
        currentSongNotifier.value ??
-@@ -2188,7 +2097,6 @@ class PlayerService {
+@@ -2189,7 +2098,6 @@ class PlayerService {
        // stream and surfaces as libusb I/O errors.
        final pipelineActive =
            rustState == RustPlaybackState.playing ||
@@ -728,7 +728,7 @@ index 800aa277..e3f54f62 100644
            rustState == RustPlaybackState.buffering;
  
        unawaited(
-@@ -2225,9 +2133,6 @@ class PlayerService {
+@@ -2226,9 +2134,6 @@ class PlayerService {
        if (!_usingRustBackend) return;
        unawaited(_onSongFinished(endedPath: endedPath));
      };
@@ -738,7 +738,7 @@ index 800aa277..e3f54f62 100644
      _rustAudioService.onError = (message) {
        _debugLog('[PlayerService] Rust backend error: $message');
        if (Platform.isAndroid &&
-@@ -2478,7 +2383,7 @@ class PlayerService {
+@@ -2479,7 +2384,7 @@ class PlayerService {
        '_onSongFinished: loopMode=${loopModeNotifier.value}, currentIndex=$_currentIndex, playlistLength=${_playlist.length}, usingRustBackend=$_usingRustBackend, endedPath=$endedPath',
      );
  
@@ -747,7 +747,7 @@ index 800aa277..e3f54f62 100644
        await _handleGaplessTrackEnded();
        return;
      }
-@@ -3150,35 +3055,9 @@ class PlayerService {
+@@ -3151,35 +3056,9 @@ class PlayerService {
      } else if (playbackMode == AudioEngineType.usbDacExperimental) {
        await _rustAudioService.setVolume(_currentVolume);
        await _rustAudioService.setPlaybackSpeed(1.0);
@@ -783,7 +783,7 @@ index 800aa277..e3f54f62 100644
      }
  
      await reapplyEqualizer();
-@@ -3749,21 +3628,6 @@ class PlayerService {
+@@ -3750,21 +3629,6 @@ class PlayerService {
      }
    }
  

@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Add HTTP-first source resolution for network songs"
 This reverts commit 35e8f85e3ecaaffbe4df6a3a1b377979c203559f.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 48423621..0f2d0c59 100644
+index 44f38a64..1c05ac21 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -2997,26 +2997,10 @@ class PlayerService {
+@@ -2998,26 +2998,10 @@ class PlayerService {
        rustAudioService: _rustAudioService,
        ensureInitialized: () => _ensureRustEngineInitialized(playbackMode),
        resolvePlaybackPath: _resolveRustPath,
@@ -36,7 +36,7 @@ index 48423621..0f2d0c59 100644
    Future<void> _ensureRustEngineInitialized(
      AudioEngineType playbackMode,
    ) async {
-@@ -3875,24 +3859,6 @@ class PlayerService {
+@@ -3876,24 +3860,6 @@ class PlayerService {
  
      final nextIndex = isLastTrack ? 0 : _currentIndex + 1;
      final nextSong = _playlist[nextIndex];

@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add pitch shift support for audio playback"
 This reverts commit 148d27cee1f1c46f7085b1de63341d2482c2818b.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 31488599..800aa277 100644
+index 0632b47e..47331413 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -454,7 +454,6 @@ class PlayerService {
@@ -17,7 +17,7 @@ index 31488599..800aa277 100644
  
    // Queue State
    final ValueNotifier<List<Song>> queueNotifier = ValueNotifier(const []);
-@@ -3148,11 +3147,9 @@ class PlayerService {
+@@ -3149,11 +3148,9 @@ class PlayerService {
        }
        await _reconcileVolumeForTier(_determineCurrentTier());
        await _rustAudioService.setPlaybackSpeed(1.0);
@@ -29,7 +29,7 @@ index 31488599..800aa277 100644
        await _rustAudioService.setCrossfade(
          enabled: false,
          durationSecs: _rustAudioService.crossfadeDurationNotifier.value,
-@@ -3185,9 +3182,6 @@ class PlayerService {
+@@ -3186,9 +3183,6 @@ class PlayerService {
      }
  
      await reapplyEqualizer();
@@ -39,7 +39,7 @@ index 31488599..800aa277 100644
      _updatePriorityAnchor();
    }
  
-@@ -4706,32 +4700,6 @@ class PlayerService {
+@@ -4707,32 +4701,6 @@ class PlayerService {
      await setPlaybackSpeed(speeds[nextIndex]);
    }
  
@@ -72,7 +72,7 @@ index 31488599..800aa277 100644
    // ==================== Sleep Timer ====================
  
    void setSleepTimer(Duration duration) {
-@@ -4925,7 +4893,6 @@ class PlayerService {
+@@ -4926,7 +4894,6 @@ class PlayerService {
      durationNotifier.dispose();
      bufferedPositionNotifier.dispose();
      playbackSpeedNotifier.dispose();

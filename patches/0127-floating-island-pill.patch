@@ -905,7 +905,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index f259e0b8..306d1425 100644
+index 4564aa1d..d714be0e 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -1012,7 +1012,7 @@ index f259e0b8..306d1425 100644
    }
  
    bool get _isGaplessActive =>
-@@ -2522,8 +2466,6 @@ class PlayerService {
+@@ -2523,8 +2467,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -1021,7 +1021,7 @@ index f259e0b8..306d1425 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -4950,7 +4892,6 @@ class PlayerService {
+@@ -4951,7 +4893,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();

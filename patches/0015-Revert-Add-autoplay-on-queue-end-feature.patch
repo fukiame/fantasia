@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add autoplay on queue end feature"
 This reverts commit 73254fedd45dc7388e480716b18a294258014c2e.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 23d92f03..f66810b9 100644
+index 9276b8c6..5b8d1916 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -464,8 +464,6 @@ class PlayerService {
@@ -18,7 +18,7 @@ index 23d92f03..f66810b9 100644
    // Category shuffle tracking
    final Set<String> _playedCategoryIds = {};
  
-@@ -2641,7 +2639,8 @@ class PlayerService {
+@@ -2642,7 +2640,8 @@ class PlayerService {
        await _advanceForMode(loopModeNotifier.value);
        return;
      } else {
@@ -28,7 +28,7 @@ index 23d92f03..f66810b9 100644
        return;
      }
  
-@@ -3974,8 +3973,6 @@ class PlayerService {
+@@ -3975,8 +3974,6 @@ class PlayerService {
      }
      wrapAroundQueueNotifier.value = await _appPreferencesService
          .getWrapAroundQueue();
@@ -37,7 +37,7 @@ index 23d92f03..f66810b9 100644
    }
  
    Future<void> restoreLastPlayed() async {
-@@ -4137,9 +4134,7 @@ class PlayerService {
+@@ -4138,9 +4135,7 @@ class PlayerService {
          normalized.contains('android usb direct') ||
          normalized.contains('usb dac disconnected') ||
          normalized.contains('usb session already active') ||
@@ -48,7 +48,7 @@ index 23d92f03..f66810b9 100644
    }
  
    bool _isDirectUsbClockSetupFailure(String message) {
-@@ -4326,8 +4321,9 @@ class PlayerService {
+@@ -4327,8 +4322,9 @@ class PlayerService {
        return;
      }
  
@@ -60,7 +60,7 @@ index 23d92f03..f66810b9 100644
    }
  
    Future<void> previous() {
-@@ -5200,42 +5196,11 @@ class PlayerService {
+@@ -5201,42 +5197,11 @@ class PlayerService {
      unawaited(_appPreferencesService.setWrapAroundQueue(value));
    }
  
@@ -105,7 +105,7 @@ index 23d92f03..f66810b9 100644
        return;
      }
  
-@@ -5255,14 +5220,16 @@ class PlayerService {
+@@ -5256,14 +5221,16 @@ class PlayerService {
        }
  
        if (nextSongs == null || nextSongs.isEmpty) {
@@ -125,7 +125,7 @@ index 23d92f03..f66810b9 100644
      }
    }
  
-@@ -5368,7 +5335,8 @@ class PlayerService {
+@@ -5369,7 +5336,8 @@ class PlayerService {
      final ctx = _playbackContext;
      if (ctx.source == PlaybackSource.unknown ||
          ctx.source == PlaybackSource.allSongs) {
@@ -135,7 +135,7 @@ index 23d92f03..f66810b9 100644
        return;
      }
  
-@@ -5387,7 +5355,8 @@ class PlayerService {
+@@ -5388,7 +5356,8 @@ class PlayerService {
                .toList();
          }
          if (available.isEmpty) {
@@ -145,7 +145,7 @@ index 23d92f03..f66810b9 100644
            return;
          }
        }
-@@ -5396,7 +5365,8 @@ class PlayerService {
+@@ -5397,7 +5366,8 @@ class PlayerService {
        final nextId = available[rng.nextInt(available.length)];
        final songs = await _getCategorySongsById(ctx.source, nextId);
        if (songs == null || songs.isEmpty) {
@@ -155,7 +155,7 @@ index 23d92f03..f66810b9 100644
          return;
        }
  
-@@ -5408,7 +5378,8 @@ class PlayerService {
+@@ -5409,7 +5379,8 @@ class PlayerService {
        await _playInternal(ordered.first, playlist: ordered);
      } catch (e) {
        _debugLog('_advanceToRandomCategory error: $e');

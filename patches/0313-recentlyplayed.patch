@@ -2380,7 +2380,7 @@ index 78dbda9b..00000000
 -  bool get isHeader => entry == null;
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index d938c87d..542a8bc5 100644
+index cd371fcc..f1717cc6 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -20,7 +20,6 @@ import 'package:flick/services/audio_engine_manager.dart';
@@ -2400,7 +2400,7 @@ index d938c87d..542a8bc5 100644
    final ReplayPlayTracker _replayPlayTracker = ReplayPlayTracker();
    static const MethodChannel _storageChannel = MethodChannel(
      'com.mossapps.flick/storage',
-@@ -2051,9 +2048,6 @@ class PlayerService {
+@@ -2052,9 +2049,6 @@ class PlayerService {
        songId: song.id,
        position: position,
      );

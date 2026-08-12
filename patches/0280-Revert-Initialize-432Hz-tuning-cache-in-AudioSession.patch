@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Initialize 432Hz tuning cache in AudioSessionManager"
 This reverts commit ea38a36af76a6f05878c948f0539142a543e335b.
 
 diff --git a/lib/services/audio_session_manager.dart b/lib/services/audio_session_manager.dart
-index 3dae05fe..e314b47c 100644
+index 76bf9332..ddd6e729 100644
 --- a/lib/services/audio_session_manager.dart
 +++ b/lib/services/audio_session_manager.dart
 @@ -181,7 +181,6 @@ class AudioSessionManager {
@@ -14,9 +14,9 @@ index 3dae05fe..e314b47c 100644
      await _preferencesService.initializeDeveloperModeCache();
      await _preferencesService.initializeKillIsochronousUsbOnQuitCache();
 -    await _preferencesService.initialize432HzTuningCache();
+     await _preferencesService.initializeBtFlagsCache();
      await _deviceService.initialize();
      selectedModeNotifier.value = await _resolvePreferredMode();
- 
 -- 
 2.55.0
 

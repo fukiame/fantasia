@@ -493,7 +493,7 @@ index 8b67cdf5..f58c40f7 100644
 -  return service.getDsdOutputMode();
 -});
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index eb09417d..1acf4303 100644
+index edb08afe..c4e98467 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -50,8 +50,6 @@ enum VolumeTier { hardware, software, system, unavailable }
@@ -539,15 +539,15 @@ index eb09417d..1acf4303 100644
  
    void _updateBitPerfectProcessingLocked() {
      final locked =
-@@ -1080,7 +1065,6 @@ class PlayerService {
-       await Future.wait<void>([
+@@ -1081,7 +1066,6 @@ class PlayerService {
          _preferencesService.initializeDeveloperModeCache(),
          _preferencesService.initializeKillIsochronousUsbOnQuitCache(),
+         _preferencesService.initializeBtFlagsCache(),
 -        _preferencesService.getDsdOutputMode(),
          _sessionManager.initialize(),
          _uac2Service.isBitPerfectEnabled(),
        ]);
-@@ -1355,39 +1339,6 @@ class PlayerService {
+@@ -1356,39 +1340,6 @@ class PlayerService {
    Uac2AudioFormat? _deriveUac2FormatFromSong(Song? song) {
      if (song == null) return null;
  
@@ -587,7 +587,7 @@ index eb09417d..1acf4303 100644
      final structuredSampleRate = song.sampleRate;
      final structuredBitDepth = song.bitDepth;
      if (structuredSampleRate != null || structuredBitDepth != null) {
-@@ -1430,9 +1381,7 @@ class PlayerService {
+@@ -1431,9 +1382,7 @@ class PlayerService {
  
      return a.sampleRate == b.sampleRate &&
          a.bitDepth == b.bitDepth &&
@@ -598,7 +598,7 @@ index eb09417d..1acf4303 100644
    }
  
    bool get _isDirectUsbPath =>
-@@ -1499,8 +1448,6 @@ class PlayerService {
+@@ -1500,8 +1449,6 @@ class PlayerService {
      isBitPerfectVolumePath: _isBitPerfectVolumePath,
      volumeMode: _uac2Service.currentDeviceStatus?.volumeMode,
      hwVolumeFailed: _hwVolumeFailed,
@@ -607,7 +607,7 @@ index eb09417d..1acf4303 100644
      isPassthrough: _isPassthroughActive,
      usingRustBackend: _usingRustBackend,
    );
-@@ -1594,9 +1541,6 @@ class PlayerService {
+@@ -1595,9 +1542,6 @@ class PlayerService {
          ) ??
          (outputSignature?.startsWith('android-uac2:') == true
              ? 'usb_direct'
@@ -617,7 +617,7 @@ index eb09417d..1acf4303 100644
              : 'resampled_fallback');
      final engineRequestedSampleRate = _intValue(
        engineState?['requested_sample_rate'] ??
-@@ -1611,12 +1555,6 @@ class PlayerService {
+@@ -1612,12 +1556,6 @@ class PlayerService {
      final enginePassthroughAllowed =
          engineState?['passthrough_allowed'] == true ||
          engineState?['passthroughAllowed'] == true;
@@ -630,7 +630,7 @@ index eb09417d..1acf4303 100644
      final engineVerificationReason = _stringValue(
        engineState?['verification_reason'] ?? engineState?['verificationReason'],
      );
-@@ -1672,8 +1610,7 @@ class PlayerService {
+@@ -1673,8 +1611,7 @@ class PlayerService {
          : !usesRustDiagnostics
          ? AudioPathManagement.androidManagedShared
          : (outputStrategy == 'usb_direct' &&
@@ -640,7 +640,7 @@ index eb09417d..1acf4303 100644
          ? AudioPathManagement.directUsbExperimental
          : AudioPathManagement.androidManagedLowLatency;
  
-@@ -1701,10 +1638,10 @@ class PlayerService {
+@@ -1702,10 +1639,10 @@ class PlayerService {
          usesRustDiagnostics &&
          (enginePassthroughAllowed || directUsbBitPerfectVerified);
      // bitPerfect on USB paths comes from direct USB verification; on internal
@@ -654,7 +654,7 @@ index eb09417d..1acf4303 100644
          ? directUsbBitPerfectVerified
          : (usesRustDiagnostics && passthroughAllowed && !resamplerActive);
      final verificationReason =
-@@ -1721,30 +1658,18 @@ class PlayerService {
+@@ -1722,30 +1659,18 @@ class PlayerService {
          ? 'Android shared'
          : switch (outputStrategy) {
              'dap_native' => 'DAP native',
@@ -685,7 +685,7 @@ index eb09417d..1acf4303 100644
              'dap_native' when passthroughAllowed =>
                'Rust engine via native DAP HAL path (verified)',
              'dap_native' => 'Rust engine via native DAP HAL path',
-@@ -1762,15 +1687,8 @@ class PlayerService {
+@@ -1763,15 +1688,8 @@ class PlayerService {
                ? 'Android shared (USB route)'
                : 'Android shared')
          : switch (outputStrategy) {
@@ -701,7 +701,7 @@ index eb09417d..1acf4303 100644
              'dap_native' when passthroughAllowed => 'Verified DAP native',
              'dap_native' => 'DAP native',
              'mixer_bit_perfect' when passthroughAllowed => 'Mixer bit-perfect',
-@@ -1809,8 +1727,7 @@ class PlayerService {
+@@ -1810,8 +1728,7 @@ class PlayerService {
            passthroughAllowed &&
            (pathManagement == AudioPathManagement.directUsbExperimental ||
                outputStrategy == 'mixer_bit_perfect' ||
@@ -711,7 +711,7 @@ index eb09417d..1acf4303 100644
        supportsAndroidManagedHighResOnly:
            activeEngineType == AudioEngineType.dapInternalHighRes,
        supportsInternalDapPathOnly:
-@@ -1968,8 +1885,6 @@ class PlayerService {
+@@ -1969,8 +1886,6 @@ class PlayerService {
        'verifyReason=${verificationReason ?? 'none'}, '
        'lastError=${directUsbLastError ?? 'none'}, '
        'fallback=${_sessionManager.fallbackReason ?? 'none'}, '
@@ -720,7 +720,7 @@ index eb09417d..1acf4303 100644
      );
    }
  
-@@ -4189,32 +4104,6 @@ class PlayerService {
+@@ -4190,32 +4105,6 @@ class PlayerService {
        unawaited(_preferencesService.setUsbSoftwareVolume(clampedVolume));
      }
  
@@ -753,7 +753,7 @@ index eb09417d..1acf4303 100644
      final tier = _determineCurrentTier();
      _activeTier = tier;
      switch (tier) {
-@@ -4249,34 +4138,6 @@ class PlayerService {
+@@ -4250,34 +4139,6 @@ class PlayerService {
      }
    }
  
@@ -842,7 +842,7 @@ index 1f07eb7a..35f76e8e 100644
    Future<void> pause() async {
      if (!_initialized) return;
 diff --git a/lib/services/uac2_preferences_service.dart b/lib/services/uac2_preferences_service.dart
-index 5b90924f..686531f0 100644
+index c84ae1c8..0f5b71ae 100644
 --- a/lib/services/uac2_preferences_service.dart
 +++ b/lib/services/uac2_preferences_service.dart
 @@ -9,17 +9,9 @@ enum Uac2FormatPreference { highestQuality, compatibility, custom }
@@ -882,7 +882,7 @@ index 5b90924f..686531f0 100644
    static final ValueNotifier<bool> btLowLatencyModeNotifier = ValueNotifier(false);
    static bool get isBtLowLatencyModeSync => btLowLatencyModeNotifier.value;
    static const _keyBtLowLatencyMode = 'bt_low_latency_mode';
-@@ -446,108 +429,6 @@ class Uac2PreferencesService {
+@@ -453,108 +436,6 @@ class Uac2PreferencesService {
      }
    }
  
@@ -991,7 +991,7 @@ index 5b90924f..686531f0 100644
    Future<void> clearAllPreferences() async {
      try {
        final prefs = await SharedPreferences.getInstance();
-@@ -565,15 +446,8 @@ await prefs.remove(_keyAudioEnginePreference);
+@@ -572,15 +453,8 @@ await prefs.remove(_keyAudioEnginePreference);
        await prefs.remove(_keyUsbSoftwareVolume);
      await prefs.remove(_keyKillIsochronousUsbOnQuit);
      await prefs.remove(_keyGaplessPlaybackEnabled);

@@ -2517,7 +2517,7 @@ index 496f3c63..00000000
 -}
 \ No newline at end of file
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index c478bd8a..f259e0b8 100644
+index 1a0e4bed..4564aa1d 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -26,7 +26,6 @@ import 'package:flick/data/repositories/recently_played_repository.dart';
@@ -2542,7 +2542,7 @@ index c478bd8a..f259e0b8 100644
    bool get _usingRustBackend => usingRustBackendNotifier.value;
    set _usingRustBackend(bool value) => usingRustBackendNotifier.value = value;
    bool _rustBackendAvailable = false;
-@@ -2219,38 +2211,6 @@ class PlayerService {
+@@ -2220,38 +2212,6 @@ class PlayerService {
      _replayPlayTracker.clear();
    }
  
@@ -2581,7 +2581,7 @@ index c478bd8a..f259e0b8 100644
    void _trackReplayProgress(Duration position) {
      final song = currentSongNotifier.value;
      if (song == null) {
-@@ -2269,7 +2229,6 @@ class PlayerService {
+@@ -2270,7 +2230,6 @@ class PlayerService {
      );
      if (counted && _shouldPersistSong(song)) {
        unawaited(_recentlyPlayedRepository.recordPlay(song.id));

@@ -6,10 +6,10 @@ Subject: [PATCH] partially reapplies 73254fedd45dc7388e480716b18a294258014c2e
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index f66810b9..03219374 100644
+index 5b8d1916..47daec9f 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -4134,7 +4134,9 @@ class PlayerService {
+@@ -4135,7 +4135,9 @@ class PlayerService {
          normalized.contains('android usb direct') ||
          normalized.contains('usb dac disconnected') ||
          normalized.contains('usb session already active') ||

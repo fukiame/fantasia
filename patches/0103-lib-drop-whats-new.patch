@@ -64,10 +64,10 @@ index ffd98427..9f56c8a8 100644
      final desynced = _playerService.playbackDesyncedNotifier.value;
 diff --git a/lib/features/whats_new/data/changelog_data.dart b/lib/features/whats_new/data/changelog_data.dart
 deleted file mode 100644
-index ceba82aa..00000000
+index 15df0ea8..00000000
 --- a/lib/features/whats_new/data/changelog_data.dart
 +++ /dev/null
-@@ -1,1262 +0,0 @@
+@@ -1,1261 +0,0 @@
 -/// Structured changelog data shown to the user in the "What's New" bottom
 -/// sheet. Entries are keyed by version string and must match `kAppVersion`
 -/// exactly to be considered "new".
@@ -552,11 +552,10 @@ index ceba82aa..00000000
 -      ChangelogSection(
 -        title: 'Bluetooth Codec Control',
 -        bullets: [
--          '**Bluetooth Hi-Res Direct mode** — forces the highest-quality codec path for capable headphones.',
+-          '**Bluetooth Hi-Res Direct mode** — biases route selection toward a high-resolution engine path.',
 -          'Per-codec preference controls with persistence (AAC, aptX, LDAC, etc.).',
 -          'Codec preferences applied on Bluetooth init and on device connect.',
 -          'Device connection state tracking with codec configuration feedback.',
--          'Hi-Res Direct mode resolved before low-latency in audio route selection.',
 -          'Bluetooth settings refactored with codec control, device filtering, and UI refinements.',
 -          'Developer mode toggle in Bluetooth settings for advanced codec debugging.',
 -        ],

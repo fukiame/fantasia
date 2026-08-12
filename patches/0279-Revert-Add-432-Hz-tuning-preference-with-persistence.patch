@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add 432 Hz tuning preference with persistence"
 This reverts commit 1e47c61435e268420534ac708350af6658c8243d.
 
 diff --git a/lib/services/uac2_preferences_service.dart b/lib/services/uac2_preferences_service.dart
-index 92ca7ac0..5b90924f 100644
+index cade088b..c84ae1c8 100644
 --- a/lib/services/uac2_preferences_service.dart
 +++ b/lib/services/uac2_preferences_service.dart
 @@ -26,7 +26,6 @@ class Uac2PreferencesService {
@@ -64,7 +64,7 @@ index 92ca7ac0..5b90924f 100644
    Future<void> setExclusiveDacModeEnabled(bool enabled) {
      return setBitPerfectEnabled(enabled);
    }
-@@ -591,7 +557,6 @@ class Uac2PreferencesService {
+@@ -598,7 +564,6 @@ class Uac2PreferencesService {
        await prefs.remove(_keyHiFiModeEnabled);
        await prefs.remove(_keyBitPerfectEnabled);
        await prefs.remove(_keyDapBitPerfectEnabled);
@@ -72,7 +72,7 @@ index 92ca7ac0..5b90924f 100644
        await prefs.remove(_keyExclusiveDacModeEnabled);
  await prefs.remove(_keyAudioEnginePreference);
      await prefs.remove(_keyAndroidAudioApi);
-@@ -611,7 +576,6 @@ await prefs.remove(_keyAudioEnginePreference);
+@@ -618,7 +583,6 @@ await prefs.remove(_keyAudioEnginePreference);
        dsdSubslotOverrideNotifier.value = null;
        developerModeNotifier.value = false;
        killIsochronousUsbOnQuitNotifier.value = true;
