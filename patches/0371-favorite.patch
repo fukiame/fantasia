@@ -1661,7 +1661,7 @@ index 07ed08ce..67bbce13 100644
  export 'library_scan_preferences_provider.dart';
  export 'navigation_provider.dart';
 diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
-index 7b814383..ba4b903a 100644
+index 7b814383..394ad0bd 100644
 --- a/lib/services/app_preferences_service.dart
 +++ b/lib/services/app_preferences_service.dart
 @@ -8,7 +8,6 @@ class AppPreferences {
@@ -1680,15 +1680,16 @@ index 7b814383..ba4b903a 100644
      this.fastIndexEnabled = true,
      this.fastIndexTimeoutSeconds = 3,
      this.artworkCardArtworkScale = 1.0,
-@@ -96,7 +94,6 @@ class AppPreferences {
+@@ -96,7 +94,7 @@ class AppPreferences {
      this.widgetFlagshipTextScale = 1.0,
      this.widgetCompactTextScale = 1.0,
      this.leftActionButton = 'usb_volume',
 -    this.rightActionButton = 'favorites',
++    this.rightActionButton = 'queue',
      this.leftTopActionButton = 'none',
      this.rightTopActionButton = 'none',
      this.animatedAlbumArt = true,
-@@ -133,7 +130,6 @@ class AppPreferences {
+@@ -133,7 +131,6 @@ class AppPreferences {
      bool? showUsbVolumeOnMenu,
      bool? showUsbVolumeOnSettings,
      bool? swipeActionsEnabled,
@@ -1696,7 +1697,7 @@ index 7b814383..ba4b903a 100644
      bool? fastIndexEnabled,
      int? fastIndexTimeoutSeconds,
      double? artworkCardArtworkScale,
-@@ -197,7 +193,6 @@ class AppPreferences {
+@@ -197,7 +194,6 @@ class AppPreferences {
        showUsbVolumeOnSettings:
            showUsbVolumeOnSettings ?? this.showUsbVolumeOnSettings,
        swipeActionsEnabled: swipeActionsEnabled ?? this.swipeActionsEnabled,
@@ -1704,7 +1705,7 @@ index 7b814383..ba4b903a 100644
        fastIndexEnabled: fastIndexEnabled ?? this.fastIndexEnabled,
        fastIndexTimeoutSeconds:
            fastIndexTimeoutSeconds ?? this.fastIndexTimeoutSeconds,
-@@ -290,7 +285,6 @@ class AppPreferencesService {
+@@ -290,7 +286,6 @@ class AppPreferencesService {
    static const _showUsbVolumeOnMenuKey = 'menu_show_usb_volume';
    static const _showUsbVolumeOnSettingsKey = 'settings_show_usb_volume';
    static const _swipeActionsEnabledKey = 'swipe_actions_enabled';
@@ -1712,7 +1713,7 @@ index 7b814383..ba4b903a 100644
    static const _fastIndexEnabledKey = 'fast_index_enabled';
    static const _fastIndexTimeoutKey = 'fast_index_timeout_seconds';
    static const _artworkCardArtworkScaleKey = 'artwork_card_artwork_scale';
-@@ -349,8 +343,6 @@ class AppPreferencesService {
+@@ -349,8 +344,6 @@ class AppPreferencesService {
        showUsbVolumeOnSettings:
            prefs.getBool(_showUsbVolumeOnSettingsKey) ?? false,
        swipeActionsEnabled: prefs.getBool(_swipeActionsEnabledKey) ?? false,
@@ -1721,7 +1722,7 @@ index 7b814383..ba4b903a 100644
        fastIndexEnabled: prefs.getBool(_fastIndexEnabledKey) ?? true,
        fastIndexTimeoutSeconds: prefs.getInt(_fastIndexTimeoutKey) ?? 3,
        artworkCardArtworkScale:
-@@ -365,7 +357,7 @@ class AppPreferencesService {
+@@ -365,7 +358,7 @@ class AppPreferencesService {
            prefs.getBool(_artworkCardShowFileInfoKey) ?? true,
        artworkCardShowFrame: prefs.getBool(_artworkCardShowFrameKey) ?? true,
        leftActionButton: prefs.getString(_leftActionButtonKey) ?? 'usb_volume',
@@ -1730,7 +1731,7 @@ index 7b814383..ba4b903a 100644
        leftTopActionButton:
            prefs.getString(_leftTopActionButtonKey) ?? 'none',
        rightTopActionButton:
-@@ -482,16 +474,6 @@ class AppPreferencesService {
+@@ -482,16 +475,6 @@ class AppPreferencesService {
      await prefs.setBool(_swipeActionsEnabledKey, value);
    }
  
@@ -1747,7 +1748,7 @@ index 7b814383..ba4b903a 100644
    Future<bool> getFastIndexEnabled() async {
      final prefs = await SharedPreferences.getInstance();
      return prefs.getBool(_fastIndexEnabledKey) ?? true;
-@@ -589,7 +571,7 @@ class AppPreferencesService {
+@@ -589,7 +572,7 @@ class AppPreferencesService {
  
    Future<String> getRightActionButton() async {
      final prefs = await SharedPreferences.getInstance();
