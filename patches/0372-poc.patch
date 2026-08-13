@@ -5,6 +5,24 @@ Subject: [PATCH] poc
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/lib/app/app.dart b/lib/app/app.dart
+index a96b7e6b..a7ec92f3 100644
+--- a/lib/app/app.dart
++++ b/lib/app/app.dart
+@@ -525,11 +525,8 @@ class _MainShellState extends ConsumerState<MainShell>
+ 
+                 // Persistent Background - always on for all bottom-bar screens
+                 Positioned.fill(
+-                  child: Consumer(
+-                    builder: (context, ref, _) {
+-                      final currentSong = ref.watch(currentSongProvider);
+-                      return AmbientBackground(song: currentSong);
+-                    },
++                  child: DecoratedBox(
++                    decoration: BoxDecoration(color: Color(0xFF000000)),
+                   ),
+                 ),
+ 
 diff --git a/lib/widgets/common/blurred_song_background.dart b/lib/widgets/common/blurred_song_background.dart
 index e7bfdd90..e38567e8 100644
 --- a/lib/widgets/common/blurred_song_background.dart
