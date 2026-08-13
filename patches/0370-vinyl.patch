@@ -65,7 +65,7 @@ index b2d18bae..f3d4b310 100644
                  ),
                );
 diff --git a/lib/features/player/widgets/album_art_box.dart b/lib/features/player/widgets/album_art_box.dart
-index 8204eff3..ddc3e6d6 100644
+index 8204eff3..27488a7d 100644
 --- a/lib/features/player/widgets/album_art_box.dart
 +++ b/lib/features/player/widgets/album_art_box.dart
 @@ -13,8 +13,6 @@ class AlbumArtBox extends StatefulWidget {
@@ -86,11 +86,10 @@ index 8204eff3..ddc3e6d6 100644
      this.showFrame = true,
    });
  
-@@ -33,284 +29,12 @@ class AlbumArtBox extends StatefulWidget {
- 
+@@ -34,283 +30,12 @@ class AlbumArtBox extends StatefulWidget {
  class _AlbumArtBoxState extends State<AlbumArtBox>
      with TickerProviderStateMixin {
--  static const double _labelRatio = 0.44;
+   static const double _labelRatio = 0.44;
 -  static const Duration _spinDuration = Duration(seconds: 4);
 -  static const Duration _seekAnimationDuration = Duration(milliseconds: 450);
 -  static const int _msPerSeekRevolution = 1500;
@@ -371,7 +370,7 @@ index 8204eff3..ddc3e6d6 100644
      final framePadding = resolvedSize < 220 ? 3.0 : 5.0;
      final outerRadius = resolvedSize < 220 ? 12.0 : 20.0;
      final innerRadius = math.max(outerRadius - 5.0, 5.0);
-@@ -320,49 +44,8 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -320,49 +45,8 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
      final labelSize = resolvedSize * _labelRatio;
      final labelRadius = labelSize / 2;
  
@@ -422,7 +421,7 @@ index 8204eff3..ddc3e6d6 100644
  
                final artSize = resolvedSize - (resolvedSize - labelSize) * t;
                final artFramePadding = framePadding * glass;
-@@ -371,22 +54,13 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -371,22 +55,13 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
                final artInnerRadius =
                    innerRadius + (labelRadius - innerRadius) * t;
  
@@ -450,7 +449,7 @@ index 8204eff3..ddc3e6d6 100644
                      widget.showFrame
                          ? Container(
                              width: artSize,
-@@ -499,239 +173,10 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -499,239 +174,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
                                ),
                              ),
                            ),
@@ -484,9 +483,9 @@ index 8204eff3..ddc3e6d6 100644
                  ),
 -              );
 -            },
-           ),
--        ),
-       ),
+-          ),
+         ),
+-      ),
      );
    }
  }
