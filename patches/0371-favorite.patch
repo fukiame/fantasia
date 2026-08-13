@@ -7,6 +7,163 @@ playlists exists
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+index b6b8de74..2011a4bd 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+@@ -554,7 +554,6 @@ class MainActivity: FlutterActivity() {
+                         else -> 0L
+                     }
+                     val isShuffle = call.argument<Boolean>("isShuffle") ?: false
+-                    val isFavorite = call.argument<Boolean>("isFavorite") ?: false
+                     val color = call.argument<Any>("color")?.let { c ->
+                         when (c) {
+                             is Int -> c
+@@ -571,7 +570,6 @@ class MainActivity: FlutterActivity() {
+                         putExtra("duration", duration)
+                         putExtra("position", position)
+                         putExtra("isShuffle", isShuffle)
+-                        putExtra("isFavorite", isFavorite)
+                         color?.let { putExtra("color", it) }
+                     }
+                     
+@@ -603,7 +601,6 @@ class MainActivity: FlutterActivity() {
+                         }
+                     }
+                     val isShuffle = call.argument<Boolean>("isShuffle")
+-                    val isFavorite = call.argument<Boolean>("isFavorite")
+                     val color = call.argument<Any>("color")?.let { c ->
+                         when (c) {
+                             is Int -> c
+@@ -620,7 +617,6 @@ class MainActivity: FlutterActivity() {
+                         duration?.let { putExtra("duration", it) }
+                         position?.let { putExtra("position", it) }
+                         isShuffle?.let { putExtra("isShuffle", it) }
+-                        isFavorite?.let { putExtra("isFavorite", it) }
+                         color?.let { putExtra("color", it) }
+                     }
+                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+index 1c4fbd4d..e127d25d 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+@@ -35,7 +35,6 @@ class MusicNotificationService : Service() {
+         const val ACTION_PREVIOUS = "com.mossapps.flick.PREVIOUS"
+         const val ACTION_STOP = "com.mossapps.flick.STOP"
+         const val ACTION_SHUFFLE = "com.mossapps.flick.SHUFFLE"
+-        const val ACTION_FAVORITE = "com.mossapps.flick.FAVORITE"
+ 
+         private const val PLAYER_CHANNEL = "com.mossapps.flick/player"
+     }
+@@ -53,7 +52,6 @@ class MusicNotificationService : Service() {
+     private var currentDuration: Long = 0
+     private var currentPosition: Long = 0
+     private var isShuffleMode: Boolean = false
+-    private var isFavorite: Boolean = false
+     private var currentColor: Int? = null
+ 
+     private var cachedAlbumArt: Bitmap? = null
+@@ -92,13 +90,6 @@ class MusicNotificationService : Service() {
+                     val notification = buildNotification()
+                     notificationManager.notify(NOTIFICATION_ID, notification)
+                 }
+-                ACTION_FAVORITE -> {
+-                    android.util.Log.d("MusicNotification", "Favorite action triggered")
+-                    isFavorite = !isFavorite
+-                    sendCommandToFlutter("toggleFavorite")
+-                    val notification = buildNotification()
+-                    notificationManager.notify(NOTIFICATION_ID, notification)
+-                }
+             }
+         }
+     }
+@@ -134,7 +125,6 @@ class MusicNotificationService : Service() {
+             addAction(ACTION_PREVIOUS)
+             addAction(ACTION_STOP)
+             addAction(ACTION_SHUFFLE)
+-            addAction(ACTION_FAVORITE)
+         }
+ 
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+@@ -170,7 +160,6 @@ class MusicNotificationService : Service() {
+                     ?: it.getIntExtra("position", 0).toLong()
+             }
+             if (it.hasExtra("isShuffle")) isShuffleMode = it.getBooleanExtra("isShuffle", false)
+-            if (it.hasExtra("isFavorite")) isFavorite = it.getBooleanExtra("isFavorite", false)
+             if (it.hasExtra("color")) currentColor = it.getIntExtra("color", 0)
+         }
+ 
+@@ -348,13 +337,6 @@ class MusicNotificationService : Service() {
+                             val notification = buildNotification()
+                             notificationManager.notify(NOTIFICATION_ID, notification)
+                         }
+-                        ACTION_FAVORITE -> {
+-                            isFavorite = !isFavorite
+-                            sendCommandToFlutter("toggleFavorite")
+-                            updatePlaybackState()
+-                            val notification = buildNotification()
+-                            notificationManager.notify(NOTIFICATION_ID, notification)
+-                        }
+                     }
+                 }
+             })
+@@ -413,17 +395,6 @@ class MusicNotificationService : Service() {
+                     shuffleIcon
+                 ).build()
+             )
+-
+-            val favoriteIcon = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+-            val favoriteTitle = if (isFavorite) "Unfavorite" else "Favorite"
+-            
+-            stateBuilder.addCustomAction(
+-                PlaybackStateCompat.CustomAction.Builder(
+-                    ACTION_FAVORITE,
+-                    favoriteTitle,
+-                    favoriteIcon
+-                ).build()
+-            )
+         }
+ 
+         mediaSession.setPlaybackState(stateBuilder.build())
+@@ -518,13 +489,10 @@ class MusicNotificationService : Service() {
+             val playPauseIntent = pendingBroadcast(100, ACTION_PLAY_PAUSE)
+             val prevIntent = pendingBroadcast(101, ACTION_PREVIOUS)
+             val nextIntent = pendingBroadcast(102, ACTION_NEXT)
+-            val favoriteIntent = pendingBroadcast(103, ACTION_FAVORITE)
+             val shuffleIntent = pendingBroadcast(104, ACTION_SHUFFLE)
+ 
+             val playPauseIcon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
+             val playPauseText = if (isPlaying) "Pause" else "Play"
+-            val favoriteIcon = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+-            val favoriteText = if (isFavorite) "Unfavorite" else "Favorite"
+             val shuffleIcon = if (isShuffleMode) R.drawable.ic_shuffle_on else R.drawable.ic_shuffle
+             val shuffleText = if (isShuffleMode) "Shuffle On" else "Shuffle Off"
+ 
+@@ -533,7 +501,6 @@ class MusicNotificationService : Service() {
+                 .addAction(playPauseIcon, playPauseText, playPauseIntent)
+                 .addAction(R.drawable.ic_next, "Next", nextIntent)
+                 .addAction(shuffleIcon, shuffleText, shuffleIntent)
+-                .addAction(favoriteIcon, favoriteText, favoriteIntent)
+                 .setStyle(
+                     MediaNotificationCompat.MediaStyle()
+                         .setMediaSession(mediaSession.sessionToken)
+@@ -566,7 +533,7 @@ class MusicNotificationService : Service() {
+     fun updateNotification(
+         title: String?, artist: String?, albumArtPath: String?,
+         playing: Boolean?, duration: Long?, position: Long?,
+-        shuffle: Boolean?, favorite: Boolean?, color: Int? = null
++        shuffle: Boolean?, color: Int? = null
+     ) {
+         title?.let { currentTitle = it }
+         artist?.let { currentArtist = it }
+@@ -575,7 +542,6 @@ class MusicNotificationService : Service() {
+         duration?.let { currentDuration = it }
+         position?.let { currentPosition = it }
+         shuffle?.let { isShuffleMode = it }
+-        favorite?.let { isFavorite = it }
+         color?.let { currentColor = it }
+ 
+         val notification = buildNotification()
 diff --git a/android/app/src/main/res/drawable/ic_favorite.xml b/android/app/src/main/res/drawable/ic_favorite.xml
 deleted file mode 100644
 index 06a53f5a..00000000
