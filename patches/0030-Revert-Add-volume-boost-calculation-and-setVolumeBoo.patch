@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Add volume boost calculation and setVolumeBoost
+ method"
+
+This reverts commit 1f75cc6a86a469b30ee90fe621b14bacf85cebf5.
+
+diff --git a/lib/services/android_audio_processing_service.dart b/lib/services/android_audio_processing_service.dart
+index 933e5ea9..c5f96bc6 100644
+--- a/lib/services/android_audio_processing_service.dart
++++ b/lib/services/android_audio_processing_service.dart
+@@ -1,4 +1,3 @@
+-import 'dart:math' as math;
+ import 'package:flutter/services.dart';
+ import 'package:flick/providers/equalizer_provider.dart';
+ 
+@@ -17,15 +16,6 @@ class AndroidJustAudioProcessingService {
+ 
+   final MethodChannel _channel;
+ 
+-  /// Boost gain in millibels for a linear volume > 1.0 (extended volume).
+-  /// 1.0 → 0 mB, 2.0 → ~602 mB (+6 dB). Returns 0 for volumes <= 1.0.
+-  static int volumeToBoostMb(double volume) {
+-    if (volume <= 1.0) return 0;
+-    final clamped = volume.clamp(1.0, 2.0);
+-    final db = 20.0 * math.log(clamped) / math.ln10;
+-    return (db * 100).round();
+-  }
+-
+   Future<void> apply({
+     required EqualizerState state,
+     required List<double> gainsDb,
+@@ -45,15 +35,6 @@ class AndroidJustAudioProcessingService {
+ 
+     await _channel.invokeMethod<void>('applyAudioProcessing', request.toMap());
+   }
+-
+-  /// Apply a positive volume boost (gain in millibels) to the just_audio
+-  /// session via Android's LoudnessEnhancer. Pass gainMb <= 0 to release.
+-  Future<void> setVolumeBoost({required int gainMb, int? audioSessionId}) async {
+-    await _channel.invokeMethod<void>('setVolumeBoost', <String, Object?>{
+-      'gainMb': gainMb,
+-      'audioSessionId': audioSessionId,
+-    });
+-  }
+ }
+ 
+ class _AndroidAudioProcessingRequest {
+-- 
+2.55.0
+

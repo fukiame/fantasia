@@ -1,0 +1,82 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Add separateMiniPlayerFromNavBar preference setting"
+
+This reverts commit 84187c6d59ca680d9b7bb7c8ca0a3b72f7238f8c.
+
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index c07abb64..dccd76c4 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -67,7 +67,6 @@ class AppPreferences {
+   final bool bottomBarAutoCollapseEnabled;
+   final int bottomBarAutoCollapseSeconds;
+   final String miniPlayerSwipeAction;
+-  final bool separateMiniPlayerFromNavBar;
+   final bool keepPlayingOnQuit;
+   final bool priorityAnchorEnabled;
+   final bool pauseOnBluetoothDisconnect;
+@@ -174,7 +173,6 @@ class AppPreferences {
+     this.bottomBarAutoCollapseEnabled = false,
+     this.bottomBarAutoCollapseSeconds = 5,
+     this.miniPlayerSwipeAction = 'visualizer',
+-    this.separateMiniPlayerFromNavBar = false,
+     this.keepPlayingOnQuit = false,
+     this.priorityAnchorEnabled = true,
+     this.pauseOnBluetoothDisconnect = true,
+@@ -282,7 +280,6 @@ class AppPreferences {
+     bool? bottomBarAutoCollapseEnabled,
+     int? bottomBarAutoCollapseSeconds,
+     String? miniPlayerSwipeAction,
+-    bool? separateMiniPlayerFromNavBar,
+     bool? keepPlayingOnQuit,
+     bool? priorityAnchorEnabled,
+     bool? pauseOnBluetoothDisconnect,
+@@ -418,8 +415,6 @@ class AppPreferences {
+           bottomBarAutoCollapseSeconds ?? this.bottomBarAutoCollapseSeconds,
+       miniPlayerSwipeAction:
+           miniPlayerSwipeAction ?? this.miniPlayerSwipeAction,
+-      separateMiniPlayerFromNavBar:
+-          separateMiniPlayerFromNavBar ?? this.separateMiniPlayerFromNavBar,
+       keepPlayingOnQuit: keepPlayingOnQuit ?? this.keepPlayingOnQuit,
+       priorityAnchorEnabled:
+           priorityAnchorEnabled ?? this.priorityAnchorEnabled,
+@@ -550,8 +545,6 @@ class AppPreferencesService {
+   static const _bottomBarAutoCollapseSecondsKey =
+       'bottom_bar_auto_collapse_seconds';
+   static const _miniPlayerSwipeActionKey = 'mini_player_swipe_action';
+-  static const _separateMiniPlayerFromNavBarKey =
+-      'separate_mini_player_from_nav_bar';
+   static const _keepPlayingOnQuitKey = 'app_keep_playing_on_quit';
+   static const _priorityAnchorEnabledKey = 'app_priority_anchor_enabled';
+   static const _pauseOnBluetoothDisconnectKey =
+@@ -696,8 +689,6 @@ class AppPreferencesService {
+           prefs.getInt(_bottomBarAutoCollapseSecondsKey) ?? 5,
+       miniPlayerSwipeAction:
+           prefs.getString(_miniPlayerSwipeActionKey) ?? 'visualizer',
+-      separateMiniPlayerFromNavBar:
+-          prefs.getBool(_separateMiniPlayerFromNavBarKey) ?? false,
+       keepPlayingOnQuit: prefs.getBool(_keepPlayingOnQuitKey) ?? false,
+       priorityAnchorEnabled:
+           prefs.getBool(_priorityAnchorEnabledKey) ?? true,
+@@ -1365,16 +1356,6 @@ class AppPreferencesService {
+     await prefs.setString(_miniPlayerSwipeActionKey, value);
+   }
+ 
+-  Future<bool> getSeparateMiniPlayerFromNavBar() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_separateMiniPlayerFromNavBarKey) ?? false;
+-  }
+-
+-  Future<void> setSeparateMiniPlayerFromNavBar(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_separateMiniPlayerFromNavBarKey, value);
+-  }
+-
+   Future<int> getShuffleMode() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getInt(_shuffleModeKey) ?? 0;
+-- 
+2.55.0
+
