@@ -1,0 +1,659 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 16:08:14 +0700
+Subject: [PATCH] playbackspeed
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
+index e1134c5d..2c1d4d90 100644
+--- a/lib/features/player/widgets/song_actions_sheet.dart
++++ b/lib/features/player/widgets/song_actions_sheet.dart
+@@ -13,7 +13,6 @@ import 'package:flick/features/songs/screens/metadata_editor_screen.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/features/player/widgets/song_metadata_sheet.dart';
+ import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
+-import 'package:flick/features/player/widgets/speed_bottom_sheet.dart';
+ import 'package:flick/features/player/widgets/sleep_timer_bottom_sheet.dart';
+ 
+ class SongActionsSheet extends ConsumerWidget {
+@@ -276,15 +275,6 @@ class SongActionsSheet extends ConsumerWidget {
+                               navigation.openAlbumFromSong(context, activeSong);
+                             },
+                           ),
+-                          _buildSongActionTile(
+-                            context: sheetContext,
+-                            icon: LucideIcons.gauge,
+-                            label: 'Playback Speed',
+-                            onTap: () {
+-                              Navigator.pop(sheetContext);
+-                              SpeedBottomSheet.show(context, playerService);
+-                            },
+-                          ),
+                           _buildSongActionTile(
+                             context: sheetContext,
+                             icon: LucideIcons.moonStar,
+diff --git a/lib/features/player/widgets/speed_bottom_sheet.dart b/lib/features/player/widgets/speed_bottom_sheet.dart
+deleted file mode 100644
+index 326cde2b..00000000
+--- a/lib/features/player/widgets/speed_bottom_sheet.dart
++++ /dev/null
+@@ -1,110 +0,0 @@
+-import 'package:flutter/material.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/services/player_service.dart';
+-
+-class SpeedBottomSheet extends StatelessWidget {
+-  final PlayerService playerService;
+-  const SpeedBottomSheet({super.key, required this.playerService});
+-
+-  static Future<void> show(BuildContext context, PlayerService playerService) {
+-    return showModalBottomSheet(
+-      context: context,
+-      backgroundColor: Colors.transparent,
+-      builder: (context) => SpeedBottomSheet(playerService: playerService),
+-    );
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    const min = 0.5;
+-    const max = 2.0;
+-    const step = 0.25;
+-    return Container(
+-      decoration: BoxDecoration(
+-        color: AppColors.surface,
+-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+-        border: Border.all(color: AppColors.glassBorder),
+-      ),
+-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+-      child: Column(
+-        mainAxisSize: MainAxisSize.min,
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          Row(
+-            children: [
+-              const Icon(
+-                LucideIcons.gauge,
+-                color: AppColors.accent,
+-                size: 24,
+-              ),
+-              const SizedBox(width: 12),
+-              const Text(
+-                'Playback Speed',
+-                style: TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 18,
+-                  fontWeight: FontWeight.bold,
+-                  color: AppColors.textPrimary,
+-                ),
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: 20),
+-          ValueListenableBuilder<double>(
+-            valueListenable: playerService.playbackSpeedNotifier,
+-            builder: (context, currentSpeed, _) {
+-              return Column(
+-                children: [
+-                  Row(
+-                    children: [
+-                      const SizedBox(width: 4),
+-                      Text(
+-                        '${min}x',
+-                        style: const TextStyle(
+-                          fontFamily: 'ProductSans',
+-                          fontSize: 14,
+-                          color: AppColors.textSecondary,
+-                        ),
+-                      ),
+-                      Expanded(
+-                        child: Slider(
+-                          value: currentSpeed,
+-                          min: min,
+-                          max: max,
+-                          divisions: ((max - min) / step).round(),
+-                          activeColor: AppColors.accent,
+-                          inactiveColor: AppColors.glassBorder,
+-                          onChanged: playerService.setPlaybackSpeed,
+-                        ),
+-                      ),
+-                      Text(
+-                        '${max}x',
+-                        style: const TextStyle(
+-                          fontFamily: 'ProductSans',
+-                          fontSize: 14,
+-                          color: AppColors.textSecondary,
+-                        ),
+-                      ),
+-                      const SizedBox(width: 4),
+-                    ],
+-                  ),
+-                  Text(
+-                    '${currentSpeed}x',
+-                    style: const TextStyle(
+-                      fontFamily: 'ProductSans',
+-                      fontSize: 16,
+-                      fontWeight: FontWeight.w600,
+-                      color: AppColors.accent,
+-                    ),
+-                  ),
+-                ],
+-              );
+-            },
+-          ),
+-          const SizedBox(height: 16),
+-        ],
+-      ),
+-    );
+-  }
+-}
+diff --git a/lib/providers/player_provider.dart b/lib/providers/player_provider.dart
+index 2905a5c6..3c5747ff 100644
+--- a/lib/providers/player_provider.dart
++++ b/lib/providers/player_provider.dart
+@@ -24,7 +24,6 @@ class PlayerState {
+   final bool isShuffle;
+   final ShuffleMode shuffleMode;
+   final LoopMode loopMode;
+-  final double playbackSpeed;
+   final Duration? sleepTimerRemaining;
+   final List<Song> queue;
+   final List<Song> upNext;
+@@ -39,7 +38,6 @@ class PlayerState {
+     this.isShuffle = false,
+     this.shuffleMode = ShuffleMode.off,
+     this.loopMode = LoopMode.all,
+-    this.playbackSpeed = 1.0,
+     this.sleepTimerRemaining,
+     this.queue = const [],
+     this.upNext = const [],
+@@ -55,7 +53,6 @@ class PlayerState {
+     bool? isShuffle,
+     ShuffleMode? shuffleMode,
+     LoopMode? loopMode,
+-    double? playbackSpeed,
+     Duration? sleepTimerRemaining,
+     List<Song>? queue,
+     List<Song>? upNext,
+@@ -72,7 +69,6 @@ class PlayerState {
+       isShuffle: isShuffle ?? this.isShuffle,
+       shuffleMode: shuffleMode ?? this.shuffleMode,
+       loopMode: loopMode ?? this.loopMode,
+-      playbackSpeed: playbackSpeed ?? this.playbackSpeed,
+       sleepTimerRemaining: clearSleepTimer
+           ? null
+           : (sleepTimerRemaining ?? this.sleepTimerRemaining),
+@@ -125,7 +121,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
+       isShuffle: _service.isShuffleNotifier.value,
+       shuffleMode: _service.shuffleModeNotifier.value,
+       loopMode: _service.loopModeNotifier.value,
+-      playbackSpeed: _service.playbackSpeedNotifier.value,
+       sleepTimerRemaining: _service.sleepTimerRemainingNotifier.value,
+       queue: _service.queueNotifier.value,
+       upNext: _service.upNextNotifier.value,
+@@ -177,7 +172,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
+         isShuffle: _service.isShuffleNotifier.value,
+         shuffleMode: _service.shuffleModeNotifier.value,
+         loopMode: _service.loopModeNotifier.value,
+-        playbackSpeed: _service.playbackSpeedNotifier.value,
+         sleepTimerRemaining: _service.sleepTimerRemainingNotifier.value,
+         queue: _service.queueNotifier.value,
+         upNext: _service.upNextNotifier.value,
+@@ -226,7 +220,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
+     _service.isShuffleNotifier.addListener(syncState);
+     _service.shuffleModeNotifier.addListener(syncState);
+     _service.loopModeNotifier.addListener(syncState);
+-    _service.playbackSpeedNotifier.addListener(syncState);
+     _service.sleepTimerRemainingNotifier.addListener(syncState);
+     _service.queueNotifier.addListener(syncState);
+     _service.upNextNotifier.addListener(syncState);
+@@ -242,7 +235,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
+       _service.isShuffleNotifier.removeListener(syncState);
+       _service.shuffleModeNotifier.removeListener(syncState);
+       _service.loopModeNotifier.removeListener(syncState);
+-      _service.playbackSpeedNotifier.removeListener(syncState);
+       _service.sleepTimerRemainingNotifier.removeListener(syncState);
+       _service.queueNotifier.removeListener(syncState);
+       _service.upNextNotifier.removeListener(syncState);
+@@ -378,16 +370,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
+     _service.clearAbRepeat();
+   }
+ 
+-  /// Set playback speed.
+-  Future<void> setPlaybackSpeed(double speed) async {
+-    await _service.setPlaybackSpeed(speed);
+-  }
+-
+-  /// Cycle through playback speeds.
+-  Future<void> cyclePlaybackSpeed() async {
+-    await _service.cyclePlaybackSpeed();
+-  }
+-
+   /// Set a sleep timer.
+   void setSleepTimer(Duration duration) {
+     _service.setSleepTimer(duration);
+@@ -466,11 +448,6 @@ final loopModeProvider = Provider<LoopMode>((ref) {
+   return ref.watch(playerProvider.select((state) => state.loopMode));
+ });
+ 
+-/// Playback speed selector.
+-final playbackSpeedProvider = Provider<double>((ref) {
+-  return ref.watch(playerProvider.select((state) => state.playbackSpeed));
+-});
+-
+ /// Shuffle mode selector (full enum).
+ final shuffleModeProvider = Provider<ShuffleMode>((ref) {
+   return ref.watch(playerProvider.select((state) => state.shuffleMode));
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 93c66c79..d3921e85 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -449,9 +449,6 @@ class PlayerService {
+   // Category shuffle tracking
+   final Set<String> _playedCategoryIds = {};
+ 
+-  // Playback Speed
+-  final ValueNotifier<double> playbackSpeedNotifier = ValueNotifier(1.0);
+-
+   // Queue State
+   final ValueNotifier<List<Song>> queueNotifier = ValueNotifier(const []);
+   final ValueNotifier<List<Song>> upNextNotifier = ValueNotifier(const []);
+@@ -739,7 +736,6 @@ class PlayerService {
+       final player = _justAudioPlayer;
+       if (player != null) {
+         await player.setVolume(_currentVolume);
+-        await player.setSpeed(playbackSpeedNotifier.value);
+       }
+     }
+ 
+@@ -1260,7 +1256,6 @@ class PlayerService {
+     final player = just_audio.AudioPlayer();
+     _justAudioPlayer = player;
+     await player.setVolume(_currentVolume);
+-    await player.setSpeed(playbackSpeedNotifier.value);
+     await _updateLoopMode();
+     return player;
+   }
+@@ -1280,7 +1275,6 @@ class PlayerService {
+     }
+ 
+     await player.setVolume(_currentVolume);
+-    await player.setSpeed(playbackSpeedNotifier.value);
+     await _updateLoopMode();
+   }
+ 
+@@ -3040,13 +3034,10 @@ class PlayerService {
+         await _rustAudioService.setPipelineModePassthrough(true);
+       }
+       await _reconcileVolumeForTier(_determineCurrentTier());
+-      await _rustAudioService.setPlaybackSpeed(1.0);
+     } else if (playbackMode == AudioEngineType.usbDacExperimental) {
+       await _rustAudioService.setVolume(_currentVolume);
+-      await _rustAudioService.setPlaybackSpeed(1.0);
+     } else {
+       await _rustAudioService.setVolume(_currentVolume);
+-      await _rustAudioService.setPlaybackSpeed(playbackSpeedNotifier.value);
+     }
+ 
+     await reapplyEqualizer();
+@@ -4517,42 +4508,6 @@ class PlayerService {
+     _debounceQueueChanged();
+   }
+ 
+-  // ==================== Playback Speed ====================
+-
+-  Future<void> setPlaybackSpeed(double speed) async {
+-    final clampedSpeed = speed.clamp(0.5, 2.0).toDouble();
+-    if (isBitPerfectProcessingLocked) {
+-      _debugLog(
+-        '[Playback] Ignoring playback-speed change while Bit-perfect (USB DAC) is enabled',
+-      );
+-      if (_usingRustBackend) {
+-        await _rustAudioService.setPlaybackSpeed(1.0);
+-      } else {
+-        final player = _justAudioPlayer;
+-        if (player != null) {
+-          await player.setSpeed(1.0);
+-        }
+-      }
+-      return;
+-    }
+-    playbackSpeedNotifier.value = clampedSpeed;
+-    if (_usingRustBackend) {
+-      await _rustAudioService.setPlaybackSpeed(clampedSpeed);
+-    } else {
+-      final player = _justAudioPlayer;
+-      if (player != null) {
+-        await player.setSpeed(clampedSpeed);
+-      }
+-    }
+-  }
+-
+-  Future<void> cyclePlaybackSpeed() async {
+-    const speeds = [0.75, 1.0, 1.25, 1.5, 1.75, 2.0];
+-    final currentIndex = speeds.indexOf(playbackSpeedNotifier.value);
+-    final nextIndex = (currentIndex + 1) % speeds.length;
+-    await setPlaybackSpeed(speeds[nextIndex]);
+-  }
+-
+   // ==================== Sleep Timer ====================
+ 
+   void setSleepTimer(Duration duration) {
+@@ -4742,7 +4697,6 @@ class PlayerService {
+     positionNotifier.dispose();
+     durationNotifier.dispose();
+     bufferedPositionNotifier.dispose();
+-    playbackSpeedNotifier.dispose();
+     sleepTimerRemainingNotifier.dispose();
+ 
+     for (final stagedPath in _stagedPlaybackPathCache.values) {
+diff --git a/lib/services/rust_audio_service.dart b/lib/services/rust_audio_service.dart
+index fc4bf137..1f07eb7a 100644
+--- a/lib/services/rust_audio_service.dart
++++ b/lib/services/rust_audio_service.dart
+@@ -33,7 +33,6 @@ class RustAudioService {
+   final ValueNotifier<Duration> durationNotifier = ValueNotifier(Duration.zero);
+   final ValueNotifier<double> bufferLevelNotifier = ValueNotifier(0.0);
+   final ValueNotifier<double> volumeNotifier = ValueNotifier(1.0);
+-  final ValueNotifier<double> playbackSpeedNotifier = ValueNotifier(1.0);
+ 
+   // Throttled notifier for text labels (updates slower than progress bar)
+   // Prevents unnecessary rebuilds of time labels while still providing smooth progress bar
+@@ -339,20 +338,6 @@ class RustAudioService {
+     await rust_audio.audioSkipToNext();
+   }
+ 
+-  /// Set the playback speed (0.5 to 2.0).
+-  Future<void> setPlaybackSpeed(double speed) async {
+-    if (!_initialized) return;
+-    final clampedSpeed = speed.clamp(0.5, 2.0);
+-    playbackSpeedNotifier.value = clampedSpeed;
+-    await rust_audio.audioSetPlaybackSpeed(speed: clampedSpeed);
+-  }
+-
+-  /// Get the current playback speed.
+-  double getPlaybackSpeed() {
+-    if (!_initialized) return 1.0;
+-    return rust_audio.audioGetPlaybackSpeed() ?? 1.0;
+-  }
+-
+   /// Get the sample rate of the audio engine.
+   int? getSampleRate() {
+     if (!_initialized) return null;
+@@ -561,7 +546,6 @@ class RustAudioService {
+     durationNotifier.dispose();
+     bufferLevelNotifier.dispose();
+     volumeNotifier.dispose();
+-    playbackSpeedNotifier.dispose();
+     positionLabelNotifier.dispose();
+   }
+ }
+diff --git a/lib/src/rust/api/audio_api.dart b/lib/src/rust/api/audio_api.dart
+index 4f923661..435d8a83 100644
+--- a/lib/src/rust/api/audio_api.dart
++++ b/lib/src/rust/api/audio_api.dart
+@@ -223,14 +223,6 @@ Future<void> audioSetLimiter({
+ Future<void> audioSkipToNext() =>
+     RustLib.instance.api.crateApiAudioApiAudioSkipToNext();
+ 
+-/// Set the playback speed.
+-Future<void> audioSetPlaybackSpeed({required double speed}) =>
+-    RustLib.instance.api.crateApiAudioApiAudioSetPlaybackSpeed(speed: speed);
+-
+-/// Get the current playback speed.
+-double? audioGetPlaybackSpeed() =>
+-    RustLib.instance.api.crateApiAudioApiAudioGetPlaybackSpeed();
+-
+ /// Get the current playback state.
+ String audioGetState() => RustLib.instance.api.crateApiAudioApiAudioGetState();
+ 
+diff --git a/rust/src/api/audio_api.rs b/rust/src/api/audio_api.rs
+index f422faa1..d35f851b 100644
+--- a/rust/src/api/audio_api.rs
++++ b/rust/src/api/audio_api.rs
+@@ -1197,17 +1197,6 @@ pub fn audio_skip_to_next() -> Result<(), String> {
+     with_audio_engine(|handle| handle.skip_to_next())
+ }
+ 
+-/// Set the playback speed.
+-pub fn audio_set_playback_speed(speed: f32) -> Result<(), String> {
+-    with_audio_engine(|handle| handle.set_playback_speed(speed))
+-}
+-
+-/// Get the current playback speed.
+-#[flutter_rust_bridge::frb(sync)]
+-pub fn audio_get_playback_speed() -> Option<f32> {
+-    read_audio_engine(|handle| handle.get_playback_speed())
+-}
+-
+ /// Get the current playback state.
+ #[flutter_rust_bridge::frb(sync)]
+ pub fn audio_get_state() -> String {
+diff --git a/rust/src/audio/commands.rs b/rust/src/audio/commands.rs
+index dbcca31a..5e934177 100644
+--- a/rust/src/audio/commands.rs
++++ b/rust/src/audio/commands.rs
+@@ -33,8 +33,6 @@ pub enum AudioCommand {
+     Seek { position_secs: f64 },
+     /// Set the main volume (0.0 to 1.0)
+     SetVolume { volume: f32 },
+-    /// Set playback speed (0.5 to 2.0)
+-    SetPlaybackSpeed { speed: f32 },
+     /// Set graphic EQ: enabled and 10 band gains in dB.
+     SetEqualizer { enabled: bool, gains_db: [f32; 10] },
+     /// Configure compressor settings.
+diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
+index ea2f2614..8c1ab365 100644
+--- a/rust/src/audio/engine.rs
++++ b/rust/src/audio/engine.rs
+@@ -97,7 +97,7 @@ pub struct AudioOutputRuntimeState {
+ /// Pipeline mode: set once at engine creation time, never toggled at runtime.
+ ///
+ /// Like USB direct, when the engine runs in Passthrough mode the audio
+-/// callback skips ALL DSP (EQ, dynamics, speed). The only
++/// callback skips ALL DSP (EQ, dynamics). The only
+ /// processing applied is gain — which is a no-op when DAC hardware
+ /// volume is available.
+ #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+@@ -115,8 +115,6 @@ pub(crate) enum PipelineMode {
+ pub struct AudioCallbackData {
+     /// Volume level (0.0 to 1.0)
+     volume: std::sync::atomic::AtomicU32, // Using AtomicU32 for f32 bit pattern
+-    /// Playback speed (0.5 to 2.0)
+-    playback_speed: std::sync::atomic::AtomicU32, // Using AtomicU32 for f32 bit pattern
+     /// Pause state
+     paused: AtomicBool,
+     /// Pipeline mode (Passthrough or Dsp) — immutable after creation.
+@@ -128,10 +126,6 @@ pub struct AudioCallbackData {
+     channels: usize,
+     /// Source provider (provides samples from current/next track)
+     sources: Mutex<SourceProvider>,
+-    /// Pre-allocated speed processing buffer
+-    speed_buffer: Mutex<Vec<f32>>,
+-    /// Fractional sample position for speed interpolation
+-    speed_frac_pos: Mutex<f64>,
+     /// Graphic EQ (10 bands). try_lock in callback to avoid blocking.
+     equalizer: Mutex<Equalizer>,
+     /// Lightweight compressor + limiter chain.
+@@ -156,19 +150,14 @@ impl AudioCallbackData {
+         // for any platform's output callback (cpal can deliver up to 8k
+         // frames; Oboe typically ~1k).
+         let buffer_size = sample_rate as usize * channels;
+-        // Speed buffer needs to be larger to handle 2x speed (need 2x input for 1x output)
+-        let speed_buffer_size = buffer_size * 3;
+ 
+         Self {
+             volume: std::sync::atomic::AtomicU32::new(1.0f32.to_bits()),
+-            playback_speed: std::sync::atomic::AtomicU32::new(1.0f32.to_bits()),
+             paused: AtomicBool::new(false),
+             pipeline_mode: AtomicU8::new(pipeline_mode as u8),
+             base_pipeline_mode: AtomicU8::new(pipeline_mode as u8),
+             channels,
+             sources: Mutex::new(SourceProvider::new(sample_rate, channels)),
+-            speed_buffer: Mutex::new(vec![0.0; speed_buffer_size]),
+-            speed_frac_pos: Mutex::new(0.0),
+             equalizer: Mutex::new(Equalizer::new()),
+             dynamics: Mutex::new(DynamicsChain::new(sample_rate)),
+             finished_tracks,
+@@ -202,17 +191,6 @@ impl AudioCallbackData {
+         self.volume.store(volume.to_bits(), Ordering::Relaxed);
+     }
+ 
+-    #[inline]
+-    pub fn get_playback_speed(&self) -> f32 {
+-        f32::from_bits(self.playback_speed.load(Ordering::Relaxed))
+-    }
+-
+-    #[inline]
+-    pub fn set_playback_speed(&self, speed: f32) {
+-        self.playback_speed
+-            .store(speed.clamp(0.5, 2.0).to_bits(), Ordering::Relaxed);
+-    }
+-
+     #[inline]
+     pub fn is_paused(&self) -> bool {
+         self.paused.load(Ordering::Relaxed)
+@@ -257,11 +235,8 @@ impl AudioCallbackData {
+ 
+     pub fn reconfigure_sample_rate(&self, sample_rate: u32) {
+         let buffer_size = (sample_rate as usize / 10) * self.channels;
+-        let speed_buffer_size = buffer_size * 3;
+ 
+         *self.sources.lock() = SourceProvider::new(sample_rate, self.channels);
+-        *self.speed_buffer.lock() = vec![0.0; speed_buffer_size];
+-        *self.speed_frac_pos.lock() = 0.0;
+         *self.dynamics.lock() = DynamicsChain::new(sample_rate);
+     }
+ }
+@@ -385,11 +360,6 @@ impl AudioEngineHandle {
+         self.send_command(AudioCommand::SkipToNext)
+     }
+ 
+-    /// Set playback speed (0.5 to 2.0).
+-    pub fn set_playback_speed(&self, speed: f32) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetPlaybackSpeed { speed })
+-    }
+-
+     /// Switch pipeline mode at runtime (used when Bit-perfect (DAP Internal) is toggled).
+     pub fn set_pipeline_mode_passthrough(&self, passthrough: bool) -> Result<(), String> {
+         self.send_command(AudioCommand::SetPipelineMode { passthrough })
+@@ -440,11 +410,6 @@ impl AudioEngineHandle {
+         })
+     }
+ 
+-    /// Get the current playback speed.
+-    pub fn get_playback_speed(&self) -> f32 {
+-        self.callback_data.get_playback_speed()
+-    }
+-
+     /// Get the current playback state.
+     pub fn state(&self) -> PlaybackState {
+         match self.state.load(Ordering::Relaxed) {
+@@ -2307,7 +2272,6 @@ pub(crate) fn audio_callback(
+     // --- DSP path: full processing chain ---
+ 
+     let volume = data.get_gain();
+-    let speed = data.get_playback_speed();
+     let channels = data.channels();
+ 
+     let mut sources = match data.sources.try_lock() {
+@@ -2318,7 +2282,6 @@ pub(crate) fn audio_callback(
+         }
+     };
+ 
+-        if (speed - 1.0).abs() < 0.001 {
+             let (read, old_source) = sources.read(output);
+ 
+             if let Some(source) = old_source {
+@@ -2328,67 +2291,6 @@ pub(crate) fn audio_callback(
+             if read < output.len() {
+                 output[read..].fill(0.0);
+             }
+-        } else {
+-            let mut speed_buf = match data.speed_buffer.try_lock() {
+-                Some(b) => b,
+-                None => {
+-                    output.fill(0.0);
+-                    return;
+-                }
+-            };
+-            let mut frac_pos = match data.speed_frac_pos.try_lock() {
+-                Some(p) => p,
+-                None => {
+-                    output.fill(0.0);
+-                    return;
+-                }
+-            };
+-
+-            let output_frames = output.len() / channels;
+-            let input_samples_needed =
+-                ((output_frames as f64 * speed as f64) + 2.0) as usize * channels;
+-
+-            if speed_buf.len() < input_samples_needed {
+-                output.fill(0.0);
+-                return;
+-            }
+-
+-            let (read, old_source) = sources.read(&mut speed_buf[..input_samples_needed]);
+-
+-            if let Some(source) = old_source {
+-                let _ = data.finished_tracks.try_send(source);
+-            }
+-
+-            if read < channels {
+-                output.fill(0.0);
+-                return;
+-            }
+-
+-            let input_frames = read / channels;
+-
+-            for out_frame in 0..output_frames {
+-                let in_pos = *frac_pos;
+-                let in_frame = in_pos as usize;
+-                let frac = (in_pos - in_frame as f64) as f32;
+-
+-                if in_frame + 1 >= input_frames {
+-                    for ch in 0..channels {
+-                        output[out_frame * channels + ch] = 0.0;
+-                    }
+-                } else {
+-                    for ch in 0..channels {
+-                        let s0 = speed_buf[in_frame * channels + ch];
+-                        let s1 = speed_buf[(in_frame + 1) * channels + ch];
+-                        output[out_frame * channels + ch] = s0 + (s1 - s0) * frac;
+-                    }
+-                }
+-
+-                *frac_pos += speed as f64;
+-            }
+-
+-            let consumed_frames = (*frac_pos) as usize;
+-            *frac_pos -= consumed_frames as f64;
+-        }
+ 
+     if let Some(mut eq) = data.equalizer.try_lock() {
+         eq.process(output, channels);
+@@ -2525,10 +2427,6 @@ fn command_processing_loop(
+                     AudioCommand::SetVolume { volume } => {
+                         callback_data.set_volume(volume.clamp(0.0, 1.0));
+                     }
+-                    AudioCommand::SetPlaybackSpeed { speed } => {
+-                        callback_data.set_playback_speed(speed);
+-                        *callback_data.speed_frac_pos.lock() = 0.0;
+-                    }
+                     AudioCommand::SetEqualizer { enabled, gains_db } => {
+                         if let Some(mut eq) = callback_data.equalizer.try_lock() {
+                             eq.set(enabled, &gains_db, sample_rate);
+@@ -2818,7 +2716,6 @@ fn handle_seek(
+     let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Buffering));
+ 
+     callback_data.sources.lock().stop();
+-    *callback_data.speed_frac_pos.lock() = 0.0;
+ 
+     {
+         let mut active_decoders = decoders.lock();
+-- 
+2.55.0
+

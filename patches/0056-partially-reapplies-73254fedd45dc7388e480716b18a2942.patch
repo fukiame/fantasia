@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 12 Aug 2026 00:02:29 +0700
+Subject: [PATCH] partially reapplies 73254fedd45dc7388e480716b18a294258014c2e
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 07b9b966..1ac42127 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -4141,7 +4141,9 @@ class PlayerService {
+         normalized.contains('android usb direct') ||
+         normalized.contains('usb dac disconnected') ||
+         normalized.contains('usb session already active') ||
+-        normalized.contains('failed to claim usb interface');
++        normalized.contains('failed to claim usb interface') ||
++        normalized.contains('android managed output stream') ||
++        normalized.contains('sending on a disconnected channel');
+   }
+ 
+   bool _isDirectUsbClockSetupFailure(String message) {
+-- 
+2.55.0
+

@@ -1,0 +1,2686 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 11:27:01 +0700
+Subject: [PATCH] lyrics
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+index d2718549..b6b8de74 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+@@ -343,40 +343,6 @@ class MainActivity: FlutterActivity() {
+                         result.error("INVALID_ARGUMENT", "URI is required", null)
+                     }
+                 }
+-                "readSiblingLyrics" -> {
+-                    val audioUri = call.argument<String>("audioUri")
+-                    if (audioUri != null) {
+-                        mainScope.launch {
+-                            try {
+-                                val lyrics = withContext(Dispatchers.IO) {
+-                                    readSiblingLyrics(audioUri)
+-                                }
+-                                result.success(lyrics)
+-                            } catch (e: Exception) {
+-                                result.error("LYRICS_READ_ERROR", "Failed to read lyrics: ${e.message}", null)
+-                            }
+-                        }
+-                    } else {
+-                        result.error("INVALID_ARGUMENT", "audioUri is required", null)
+-                    }
+-                }
+-                "readEmbeddedLyrics" -> {
+-                    val audioUri = call.argument<String>("audioUri")
+-                    if (audioUri != null) {
+-                        mainScope.launch {
+-                            try {
+-                                val lyrics = withContext(Dispatchers.IO) {
+-                                    readEmbeddedLyrics(audioUri)
+-                                }
+-                                result.success(lyrics)
+-                            } catch (e: Exception) {
+-                                result.error("LYRICS_EMBEDDED_ERROR", "Failed to read embedded lyrics: ${e.message}", null)
+-                            }
+-                        }
+-                    } else {
+-                        result.error("INVALID_ARGUMENT", "audioUri is required", null)
+-                    }
+-                }
+                 "getDocumentDisplayName" -> {
+                     val uri = call.argument<String>("uri")
+                     if (uri != null) {
+@@ -2139,192 +2105,6 @@ class MainActivity: FlutterActivity() {
+         }
+     }
+ 
+-    private fun readSiblingLyrics(audioUriString: String): Map<String, String>? {
+-        return try {
+-            val audioUri = Uri.parse(audioUriString)
+-            when (audioUri.scheme) {
+-                "content" -> readSiblingLyricsFromContentUri(audioUri)
+-                "file" -> readSiblingLyricsFromFilePath(audioUri.path)
+-                null, "" -> readSiblingLyricsFromFilePath(audioUriString)
+-                else -> null
+-            }
+-        } catch (e: Exception) {
+-            android.util.Log.w("FlickLyrics", "readSiblingLyrics failed for $audioUriString: ${e.message}")
+-            null
+-        }
+-    }
+-
+-    private fun readEmbeddedLyrics(audioUriString: String): Map<String, String>? {
+-        val retriever = MediaMetadataRetriever()
+-        return try {
+-            val uri = Uri.parse(audioUriString)
+-
+-            val handledByUri = when (uri.scheme) {
+-                "content", "file" -> {
+-                    retriever.setDataSource(this, uri)
+-                    true
+-                }
+-                else -> false
+-            }
+-
+-            if (!handledByUri) {
+-                retriever.setDataSource(audioUriString)
+-            }
+-
+-            val lyricKey = try {
+-                MediaMetadataRetriever::class.java.getField("METADATA_KEY_LYRIC").getInt(null)
+-            } catch (_: Exception) {
+-                null
+-            }
+-
+-            val lyricText = lyricKey?.let { retriever.extractMetadata(it) }
+-            if (lyricText.isNullOrBlank()) {
+-                val id3Lyrics = parseId3EmbeddedLyrics(audioUriString)
+-                if (!id3Lyrics.isNullOrBlank()) {
+-                    mapOf(
+-                        "content" to id3Lyrics,
+-                        "source" to "embedded:id3",
+-                    )
+-                } else {
+-                    val flacVorbisLyrics = parseFlacVorbisLyrics(audioUriString)
+-                    if (!flacVorbisLyrics.isNullOrBlank()) {
+-                        mapOf(
+-                            "content" to flacVorbisLyrics,
+-                            "source" to "embedded:vorbis",
+-                        )
+-                    } else {
+-                        null
+-                    }
+-                }
+-            } else {
+-                mapOf(
+-                    "content" to lyricText,
+-                    "source" to "embedded",
+-                )
+-            }
+-        } catch (_: Exception) {
+-            null
+-        } finally {
+-            try {
+-                retriever.release()
+-            } catch (_: Exception) {
+-            }
+-        }
+-    }
+-
+-    private fun parseId3EmbeddedLyrics(audioUriString: String): String? {
+-        return openAudioInputStream(audioUriString)?.use { input ->
+-            val header = ByteArray(10)
+-            if (!readExact(input, header)) return@use null
+-            if (header[0] != 'I'.code.toByte() ||
+-                header[1] != 'D'.code.toByte() ||
+-                header[2] != '3'.code.toByte()
+-            ) {
+-                return@use null
+-            }
+-
+-            val version = header[3].toInt() and 0xFF
+-            val flags = header[5].toInt() and 0xFF
+-            val tagSize = readSynchsafeInt(header, 6)
+-            if (tagSize <= 0) return@use null
+-
+-            val tagBody = ByteArray(tagSize)
+-            if (!readExact(input, tagBody)) return@use null
+-
+-            val unsyncFlagSet = (flags and 0x80) != 0
+-            val data = if (unsyncFlagSet) deUnsynchronize(tagBody) else tagBody
+-
+-            when (version) {
+-                2 -> parseId3v22Lyrics(data)
+-                3, 4 -> parseId3v23Or24Lyrics(data, version, flags)
+-                else -> null
+-            }
+-        }
+-    }
+-
+-    private fun parseId3v22Lyrics(data: ByteArray): String? {
+-        var pos = 0
+-        var bestSync: String? = null
+-        var bestUnsync: String? = null
+-
+-        while (pos + 6 <= data.size) {
+-            val id = String(data, pos, 3, Charsets.ISO_8859_1)
+-            if (id.all { it == '\u0000' }) break
+-
+-            val frameSize =
+-                ((data[pos + 3].toInt() and 0xFF) shl 16) or
+-                ((data[pos + 4].toInt() and 0xFF) shl 8) or
+-                (data[pos + 5].toInt() and 0xFF)
+-            pos += 6
+-            if (frameSize <= 0 || pos + frameSize > data.size) break
+-
+-            val frameData = data.copyOfRange(pos, pos + frameSize)
+-            when (id) {
+-                "SLT" -> {
+-                    val parsed = parseSyltFrame(frameData)
+-                    if (!parsed.isNullOrBlank()) bestSync = parsed
+-                }
+-                "ULT" -> {
+-                    val parsed = parseUsltFrame(frameData)
+-                    if (!parsed.isNullOrBlank() && bestUnsync == null) {
+-                        bestUnsync = parsed
+-                    }
+-                }
+-            }
+-            pos += frameSize
+-        }
+-
+-        return bestSync ?: bestUnsync
+-    }
+-
+-    private fun parseId3v23Or24Lyrics(data: ByteArray, version: Int, flags: Int): String? {
+-        var pos = 0
+-        val extendedHeaderFlagSet = (flags and 0x40) != 0
+-        if (extendedHeaderFlagSet && data.size >= 4) {
+-            val extSize = if (version == 4) {
+-                readSynchsafeInt(data, 0)
+-            } else {
+-                readBigEndianInt(data, 0)
+-            }
+-            if (extSize > 0 && extSize < data.size) {
+-                pos = if (version == 3) 4 + extSize else extSize
+-            }
+-        }
+-
+-        var bestSync: String? = null
+-        var bestUnsync: String? = null
+-
+-        while (pos + 10 <= data.size) {
+-            val id = String(data, pos, 4, Charsets.ISO_8859_1)
+-            if (id.all { it == '\u0000' }) break
+-
+-            val frameSize = if (version == 4) {
+-                readSynchsafeInt(data, pos + 4)
+-            } else {
+-                readBigEndianInt(data, pos + 4)
+-            }
+-            pos += 10
+-            if (frameSize <= 0 || pos + frameSize > data.size) break
+-
+-            val frameData = data.copyOfRange(pos, pos + frameSize)
+-            when (id) {
+-                "SYLT" -> {
+-                    val parsed = parseSyltFrame(frameData)
+-                    if (!parsed.isNullOrBlank()) bestSync = parsed
+-                }
+-                "USLT" -> {
+-                    val parsed = parseUsltFrame(frameData)
+-                    if (!parsed.isNullOrBlank() && bestUnsync == null) {
+-                        bestUnsync = parsed
+-                    }
+-                }
+-            }
+-            pos += frameSize
+-        }
+-
+-        return bestSync ?: bestUnsync
+-    }
+-
+     private fun parseUsltFrame(frameData: ByteArray): String? {
+         if (frameData.size < 4) return null
+ 
+@@ -2379,80 +2159,6 @@ class MainActivity: FlutterActivity() {
+         return lines.joinToString(separator = "\n")
+     }
+ 
+-    private fun parseFlacVorbisLyrics(audioUriString: String): String? {
+-        return openAudioInputStream(audioUriString)?.use { input ->
+-            val signature = ByteArray(4)
+-            if (!readExact(input, signature)) return@use null
+-            if (!signature.contentEquals(byteArrayOf('f'.code.toByte(), 'L'.code.toByte(), 'a'.code.toByte(), 'C'.code.toByte()))) {
+-                return@use null
+-            }
+-
+-            var isLastBlock = false
+-            while (!isLastBlock) {
+-                val header = input.read()
+-                if (header < 0) break
+-
+-                isLastBlock = (header and 0x80) != 0
+-                val blockType = header and 0x7F
+-                val lengthBytes = ByteArray(3)
+-                if (!readExact(input, lengthBytes)) break
+-                val blockLength =
+-                    ((lengthBytes[0].toInt() and 0xFF) shl 16) or
+-                    ((lengthBytes[1].toInt() and 0xFF) shl 8) or
+-                    (lengthBytes[2].toInt() and 0xFF)
+-
+-                if (blockLength < 0) break
+-
+-                if (blockType == 4) {
+-                    val commentData = ByteArray(blockLength)
+-                    if (!readExact(input, commentData)) break
+-                    return@use parseVorbisCommentLyrics(commentData)
+-                } else {
+-                    if (!skipFully(input, blockLength)) break
+-                }
+-            }
+-            null
+-        }
+-    }
+-
+-    private fun parseVorbisCommentLyrics(data: ByteArray): String? {
+-        if (data.size < 8) return null
+-        val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
+-
+-        val vendorLength = readLeIntSafe(buffer) ?: return null
+-        if (vendorLength < 0 || vendorLength > buffer.remaining()) return null
+-        buffer.position(buffer.position() + vendorLength)
+-
+-        val commentCount = readLeIntSafe(buffer) ?: return null
+-        if (commentCount < 0) return null
+-
+-        val wantedKeys = listOf(
+-            "LYRICS",
+-            "UNSYNCEDLYRICS",
+-            "UNSYNCED_LYRICS",
+-        )
+-
+-        repeat(commentCount) {
+-            val len = readLeIntSafe(buffer) ?: return null
+-            if (len < 0 || len > buffer.remaining()) return null
+-
+-            val bytes = ByteArray(len)
+-            buffer.get(bytes)
+-            val entry = bytes.toString(Charsets.UTF_8)
+-            val sep = entry.indexOf('=')
+-            if (sep <= 0) return@repeat
+-
+-            val key = entry.substring(0, sep).uppercase()
+-            val value = entry.substring(sep + 1).trim()
+-            if (value.isBlank()) return@repeat
+-            if (wantedKeys.contains(key)) {
+-                return value
+-            }
+-        }
+-
+-        return null
+-    }
+-
+     private fun openAudioInputStream(audioUriString: String): InputStream? {
+         return try {
+             val uri = Uri.parse(audioUriString)
+@@ -2578,129 +2284,6 @@ class MainActivity: FlutterActivity() {
+         return "[${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${hundredths.toString().padStart(2, '0')}]"
+     }
+ 
+-    private fun readSiblingLyricsFromContentUri(audioUri: Uri): Map<String, String>? {
+-        val audioName = DocumentFile.fromSingleUri(this, audioUri)?.name ?: return null
+-        val stem = audioName.substringBeforeLast('.', audioName)
+-        val candidateNames = listOf("$stem.lrc", "$stem.txt", "$stem.xml")
+-        val candidateSet = candidateNames.map { it.lowercase() }.toSet()
+-
+-        val authority = audioUri.authority ?: return null
+-        val documentId = try {
+-            DocumentsContract.getDocumentId(audioUri)
+-        } catch (e: Exception) {
+-            return null
+-        }
+-        val slashIndex = documentId.lastIndexOf('/')
+-        if (slashIndex <= 0) return null
+-        val parentDocumentId = documentId.substring(0, slashIndex)
+-
+-        // Fast path: build candidate URIs directly using parent document id.
+-        for (candidateName in candidateNames) {
+-            val candidateDocumentId = "$parentDocumentId/$candidateName"
+-            val directUri = DocumentsContract.buildDocumentUri(authority, candidateDocumentId)
+-            val directContent = readTextFromUri(directUri)
+-            if (!directContent.isNullOrBlank()) {
+-                return mapOf(
+-                    "content" to directContent,
+-                    "uri" to directUri.toString(),
+-                    "name" to candidateName,
+-                )
+-            }
+-
+-            val treeUri = try {
+-                DocumentsContract.buildDocumentUriUsingTree(audioUri, candidateDocumentId)
+-            } catch (_: Exception) {
+-                null
+-            }
+-            if (treeUri != null) {
+-                val treeContent = readTextFromUri(treeUri)
+-                if (!treeContent.isNullOrBlank()) {
+-                    return mapOf(
+-                        "content" to treeContent,
+-                        "uri" to treeUri.toString(),
+-                        "name" to candidateName,
+-                    )
+-                }
+-            }
+-        }
+-
+-        // Fallback: list siblings from parent and match candidate names case-insensitively.
+-        val childrenUri = try {
+-            DocumentsContract.buildChildDocumentsUri(authority, parentDocumentId)
+-        } catch (e: Exception) {
+-            return null
+-        }
+-
+-        contentResolver.query(
+-            childrenUri,
+-            arrayOf(
+-                DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+-                DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+-            ),
+-            null,
+-            null,
+-            null,
+-        )?.use { cursor ->
+-            val idIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
+-            val nameIndex = cursor.getColumnIndex(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+-            if (idIndex == -1 || nameIndex == -1) {
+-                return null
+-            }
+-
+-            while (cursor.moveToNext()) {
+-                val displayName = cursor.getString(nameIndex) ?: continue
+-                if (!candidateSet.contains(displayName.lowercase())) continue
+-
+-                val childDocumentId = cursor.getString(idIndex) ?: continue
+-                val childUri = DocumentsContract.buildDocumentUri(authority, childDocumentId)
+-                val content = readTextFromUri(childUri)
+-                if (!content.isNullOrBlank()) {
+-                    return mapOf(
+-                        "content" to content,
+-                        "uri" to childUri.toString(),
+-                        "name" to displayName,
+-                    )
+-                }
+-            }
+-        }
+-
+-        return null
+-    }
+-
+-    private fun readSiblingLyricsFromFilePath(audioPath: String?): Map<String, String>? {
+-        if (audioPath.isNullOrBlank()) return null
+-
+-        val audioFile = java.io.File(audioPath)
+-        val parent = audioFile.parentFile ?: return null
+-        val stem = audioFile.name.substringBeforeLast('.', audioFile.name)
+-        val candidateNames = listOf("$stem.lrc", "$stem.txt", "$stem.xml", "$stem.LRC", "$stem.TXT", "$stem.XML")
+-
+-        for (candidateName in candidateNames) {
+-            val candidateFile = java.io.File(parent, candidateName)
+-            if (!candidateFile.exists() || !candidateFile.isFile) continue
+-
+-            val text = try {
+-                candidateFile.readText(Charsets.UTF_8)
+-            } catch (_: Exception) {
+-                try {
+-                    candidateFile.readText(Charsets.ISO_8859_1)
+-                } catch (_: Exception) {
+-                    null
+-                }
+-            }
+-
+-            if (!text.isNullOrBlank()) {
+-                return mapOf(
+-                    "content" to text,
+-                    "uri" to candidateFile.absolutePath,
+-                    "name" to candidateFile.name,
+-                )
+-            }
+-        }
+-
+-        return null
+-    }
+-
+     private fun readTextFromUri(uri: Uri): String? {
+         return try {
+             val inputStream = contentResolver.openInputStream(uri) ?: return null
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index 3f0f64a8..3c0766e0 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -20,7 +20,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/services/external_playback_service.dart';
+ import 'package:flick/services/favorites_service.dart';
+-import 'package:flick/services/lyrics_service.dart';
+ import 'package:flick/services/player_screen_mode_preference_service.dart';
+ 
+ import 'package:flick/widgets/uac2/iso_volume_popup.dart';
+@@ -40,7 +39,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+   final ExternalPlaybackService _externalPlaybackService =
+       ExternalPlaybackService();
+   final FavoritesService _favoritesService = FavoritesService();
+-  final LyricsService _lyricsService = LyricsService();
+   final PlayerScreenModePreferenceService _playerScreenModePreferenceService =
+       PlayerScreenModePreferenceService();
+   final SongRepository _songRepository = SongRepository();
+@@ -78,7 +76,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+   String? _cachedTopBarText;
+   double? _cachedTopBarFontSize;
+   double _cachedTopBarTextWidth = 0;
+-  bool _isLyricsMode = false;
+   bool _isVinylRotationActive = false;
+   bool _isVinylMode = false;
+   bool _isImmersiveFullView = false;
+@@ -197,7 +194,7 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+   }
+ 
+   bool get _canUseImmersiveFullView =>
+-      _playerScreenMode == PlayerScreenMode.immersive && !_isLyricsMode;
++      _playerScreenMode == PlayerScreenMode.immersive;
+ 
+   void _refreshImmersiveFullViewTimer() {
+     _immersiveFullViewTimer?.cancel();
+@@ -226,23 +223,8 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     _refreshImmersiveFullViewTimer();
+   }
+ 
+-  void _setLyricsMode(bool value) {
+-    final nextImmersiveFullView = value ? false : _isImmersiveFullView;
+-    if (_isLyricsMode == value &&
+-        _isImmersiveFullView == nextImmersiveFullView) {
+-      return;
+-    }
+-
+-    setState(() {
+-      _isLyricsMode = value;
+-      _isImmersiveFullView = nextImmersiveFullView;
+-    });
+-    _refreshImmersiveFullViewTimer();
+-  }
+-
+   void _handleImmersiveSceneTap() {
+     if (_playerScreenMode != PlayerScreenMode.immersive) return;
+-    if (_isLyricsMode) return;
+ 
+     setState(() {
+       _isImmersiveFullView = !_isImmersiveFullView;
+@@ -419,7 +401,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                   },
+                   child: AnimatedSongScene(
+                     song: song,
+-                    lyricsMode: _isLyricsMode,
+                     immersiveFullView: _isImmersiveFullView,
+                     playerScreenMode: _playerScreenMode,
+                     albumColorMode: colorMode,
+@@ -429,18 +410,15 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                     topBarTextFontWeight: _topBarTextFontWeight,
+                     cachedTopBarTextWidth: _cachedTopBarTextWidth,
+                     playerService: _playerService,
+-                    lyricsService: _lyricsService,
+                     throttledPositionNotifier: _throttledPositionNotifier,
+                     formatDuration: formatDuration,
+                     onClose: () => _close(context),
+                     onOpenQueue: () => _navigation.openQueue(context),
+-                    onToggleLyrics: () => _setLyricsMode(!_isLyricsMode),
+                     onQueueSwipe: () => _navigation.queueSong(context, song),
+                     onShowSongActions: () => SongActionsSheet.show(
+                       context,
+                       playerService: _playerService,
+                       song: song,
+-                      onShowLyrics: () => _setLyricsMode(true),
+                       navigation: _navigation,
+                     ),
+                     onPrevious: _animateToPreviousSong,
+@@ -449,10 +427,9 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                         _navigation.openArtistFromSong(context, song),
+                     onNavigateToAlbumDetail: (song) =>
+                         _navigation.openAlbumFromSong(context, song),
+-                    buildFileInfoRow: (song, lyricsMode, mode) =>
++                    buildFileInfoRow: (song, mode) =>
+                         PlayerActionButtonRow(
+                           song: song,
+-                          lyricsMode: lyricsMode,
+                           playerScreenMode: mode,
+                           albumColor: albumColor,
+                           albumColorMode: colorMode,
+@@ -470,8 +447,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                           ),
+                           playerService: _playerService,
+                           favoritesService: _favoritesService,
+-                          onToggleLyrics: () =>
+-                              setState(() => _isLyricsMode = !lyricsMode),
+                           onOpenQueue: (ctx) => _navigation.openQueue(ctx),
+                           usbVolumeButtonKey: _usbVolumeButtonKey,
+                           onShowUsbVolumePopup: (ctx) =>
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 14217d70..db098e76 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -12,7 +12,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/models/album_color_mode.dart';
+ import 'package:flick/models/player_screen_mode.dart';
+ import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/lyrics_service.dart';
+ import 'package:flick/features/player/widgets/album_color_helpers.dart';
+ import 'package:flick/features/player/widgets/ambient_background.dart';
+ import 'package:flick/features/player/widgets/bit_perfect_capsule.dart';
+@@ -22,14 +21,11 @@ import 'package:flick/features/player/widgets/album_art_box.dart';
+ import 'package:flick/features/player/widgets/waveform_layer.dart';
+ import 'package:flick/features/player/widgets/player_controls.dart';
+ import 'package:flick/features/player/widgets/compact_player_info_layout.dart';
+-import 'package:flick/features/player/widgets/inline_lyrics_panel.dart';
+-import 'package:flick/features/player/widgets/lyrics_mode_waveform_strip.dart';
+ 
+ class AnimatedSongScene extends StatelessWidget {
+   static const double _shortHeightThreshold = 620.0;
+ 
+   final Song song;
+-  final bool lyricsMode;
+   final bool immersiveFullView;
+   final PlayerScreenMode playerScreenMode;
+   final AlbumColorMode albumColorMode;
+@@ -40,19 +36,17 @@ class AnimatedSongScene extends StatelessWidget {
+   final FontWeight topBarTextFontWeight;
+   final double cachedTopBarTextWidth;
+   final PlayerService playerService;
+-  final LyricsService lyricsService;
+   final ValueNotifier<Duration> throttledPositionNotifier;
+   final String Function(Duration) formatDuration;
+   final VoidCallback onClose;
+   final VoidCallback onOpenQueue;
+-  final VoidCallback onToggleLyrics;
+   final Future<void> Function() onQueueSwipe;
+   final VoidCallback onShowSongActions;
+   final Future<void> Function() onPrevious;
+   final Future<void> Function() onNext;
+   final void Function(Song song) onNavigateToArtistDetail;
+   final void Function(Song song) onNavigateToAlbumDetail;
+-  final Widget Function(Song song, bool lyricsMode, PlayerScreenMode mode)
++  final Widget Function(Song song, PlayerScreenMode mode)
+   buildFileInfoRow;
+   final double artworkCardArtworkScale;
+   final double artworkCardTextScale;
+@@ -76,7 +70,6 @@ class AnimatedSongScene extends StatelessWidget {
+   const AnimatedSongScene({
+     super.key,
+     required this.song,
+-    required this.lyricsMode,
+     required this.immersiveFullView,
+     required this.playerScreenMode,
+     required this.albumColorMode,
+@@ -86,12 +79,10 @@ class AnimatedSongScene extends StatelessWidget {
+     required this.topBarTextFontWeight,
+     required this.cachedTopBarTextWidth,
+     required this.playerService,
+-    required this.lyricsService,
+     required this.throttledPositionNotifier,
+     required this.formatDuration,
+     required this.onClose,
+     required this.onOpenQueue,
+-    required this.onToggleLyrics,
+     required this.onQueueSwipe,
+     required this.onShowSongActions,
+     required this.onPrevious,
+@@ -536,44 +527,8 @@ class AnimatedSongScene extends StatelessWidget {
+   }
+ 
+   Widget _buildImmersiveLayout(BuildContext context) {
+-    final layout = lyricsMode
+-        ? KeyedSubtree(
+-            key: const ValueKey('immersive-lyrics-layout'),
+-            child: Column(
+-              children: [
+-                SizedBox(height: context.responsive(8.0, 10.0, 12.0)),
+-                Expanded(
+-                  child: Padding(
+-                    padding: EdgeInsets.symmetric(
+-                      horizontal: context.responsive(20.0, 28.0, 36.0),
+-                    ),
+-                    child: Stack(
+-                      children: [
+-                        Positioned.fill(
+-                          child: InlineLyricsPanel(
+-                            song: song,
+-                            playerService: playerService,
+-                            lyricsService: lyricsService,
+-                            albumColor: albumColor,
+-                          ),
+-                        ),
+-                      ],
+-                    ),
+-                  ),
+-                ),
+-                SizedBox(height: context.responsive(10.0, 12.0, 14.0)),
+-                LyricsModeWaveformStrip(
+-                  playerService: playerService,
+-                  positionNotifier: throttledPositionNotifier,
+-                  currentSong: song,
+-                  formatDuration: formatDuration,
+-                  horizontalPadding: context.responsive(18.0, 24.0, 30.0),
+-                  onSwipeUp: onToggleLyrics,
+-                ),
+-              ],
+-            ),
+-          )
+-        : KeyedSubtree(
++    final layout = 
++        KeyedSubtree(
+             key: const ValueKey('immersive-default-layout'),
+             child: Column(
+               children: [
+@@ -661,7 +616,6 @@ class AnimatedSongScene extends StatelessWidget {
+                                   ),
+                                   child: buildFileInfoRow(
+                                     song,
+-                                    lyricsMode,
+                                     playerScreenMode,
+                                   ),
+                                 ),
+@@ -698,10 +652,8 @@ class AnimatedSongScene extends StatelessWidget {
+         );
+       },
+       transitionBuilder: (child, animation) {
+-        final isLyricsChild =
+-            child.key == const ValueKey('immersive-lyrics-layout');
+         final offsetAnimation = Tween<Offset>(
+-          begin: isLyricsChild ? const Offset(0, -0.04) : const Offset(0, 0.05),
++          begin: const Offset(0, 0.05),
+           end: Offset.zero,
+         ).animate(animation);
+ 
+@@ -908,9 +860,6 @@ class AnimatedSongScene extends StatelessWidget {
+             : isShortHeight
+             ? 12.0
+             : context.responsive(18.0, 20.0, 22.0);
+-        final lyricsSpacing = isVeryShortHeight
+-            ? 12.0
+-            : context.responsive(16.0, 18.0, 20.0);
+         final playbackSpacing = isVeryShortHeight
+             ? 10.0
+             : context.responsive(14.0, 16.0, 18.0);
+@@ -943,13 +892,9 @@ class AnimatedSongScene extends StatelessWidget {
+                     );
+                   },
+                   transitionBuilder: (child, animation) {
+-                    final isLyrics =
+-                        child.key == const ValueKey('artwork-lyrics');
+                     final slide =
+                         Tween<Offset>(
+-                          begin: isLyrics
+-                              ? const Offset(0, -0.06)
+-                              : const Offset(0, 0.06),
++                          begin: const Offset(0, 0.06),
+                           end: Offset.zero,
+                         ).animate(
+                           CurvedAnimation(
+@@ -965,18 +910,7 @@ class AnimatedSongScene extends StatelessWidget {
+                       child: SlideTransition(position: slide, child: child),
+                     );
+                   },
+-                  child: lyricsMode
+-                      ? Padding(
+-                          key: const ValueKey('artwork-lyrics'),
+-                          padding: EdgeInsets.only(bottom: lyricsSpacing),
+-                          child: InlineLyricsPanel(
+-                            song: song,
+-                            playerService: playerService,
+-                            lyricsService: lyricsService,
+-                            albumColor: albumColor,
+-                          ),
+-                        )
+-                      : KeyedSubtree(
++                  child: KeyedSubtree(
+                           key: const ValueKey('artwork-default'),
+                           child: isVeryShortHeight
+                               ? Center(
+@@ -1036,7 +970,7 @@ class AnimatedSongScene extends StatelessWidget {
+                 ),
+               ),
+               if (artworkCardShowFileInfo)
+-                buildFileInfoRow(song, lyricsMode, playerScreenMode),
++                buildFileInfoRow(song, playerScreenMode),
+               if (artworkCardShowFileInfo) SizedBox(height: playbackSpacing),
+               _buildPlaybackStack(context),
+               SizedBox(height: directorySpacing),
+diff --git a/lib/features/player/widgets/inline_lyrics_panel.dart b/lib/features/player/widgets/inline_lyrics_panel.dart
+deleted file mode 100644
+index 3ed86804..00000000
+--- a/lib/features/player/widgets/inline_lyrics_panel.dart
++++ /dev/null
+@@ -1,654 +0,0 @@
+-import 'dart:async';
+-import 'dart:convert';
+-import 'dart:io';
+-import 'dart:typed_data';
+-
+-import 'package:flutter/material.dart';
+-import 'package:flutter/rendering.dart';
+-import 'package:file_picker/file_picker.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/lyrics_service.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/features/player/widgets/album_color_helpers.dart';
+-class InlineLyricsPanel extends StatefulWidget {
+-  final PlayerService playerService;
+-  final LyricsService lyricsService;
+-  final Song song;
+-  final Color? albumColor;
+-
+-  const InlineLyricsPanel({super.key,
+-    required this.playerService,
+-    required this.lyricsService,
+-    required this.song,
+-    this.albumColor,
+-  });
+-
+-  @override
+-  State<InlineLyricsPanel> createState() => _InlineLyricsPanelState();
+-}
+-
+-class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+-  static const double _lineHeight = 116;
+-  static const double _centerFactor = 0.35;
+-
+-  final ScrollController _scrollController = ScrollController();
+-  LyricsData? _lyricsData;
+-  bool _isLoading = true;
+-  bool _hasManualLyricsSelection = false;
+-  int _activeLineIndex = -1;
+-  bool _isMetaCollapsed = false;
+-  bool _isScrollAnimating = false;
+-  double? _pendingScrollTarget;
+-  Duration _lastTrackedPosition = Duration.zero;
+-  static const int _seekBackThresholdMs = 500;
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    widget.playerService.positionNotifier.addListener(_onPositionChanged);
+-    _loadLyricsForSong(widget.song);
+-  }
+-
+-  @override
+-  void didUpdateWidget(covariant InlineLyricsPanel oldWidget) {
+-    super.didUpdateWidget(oldWidget);
+-    if (oldWidget.song.id != widget.song.id) {
+-      _loadLyricsForSong(widget.song);
+-    }
+-  }
+-
+-  @override
+-  void dispose() {
+-    widget.playerService.positionNotifier.removeListener(_onPositionChanged);
+-    _scrollController.dispose();
+-    super.dispose();
+-  }
+-
+-  void _onPositionChanged() {
+-    final data = _lyricsData;
+-    if (data == null || !data.isSynchronized || data.lines.isEmpty) return;
+-
+-    final position = widget.playerService.positionNotifier.value;
+-    final newIndex = widget.lyricsService.findCurrentLineIndex(data, position);
+-    if (newIndex == _activeLineIndex) {
+-      _lastTrackedPosition = position;
+-      return;
+-    }
+-
+-    // Forward playback only ever advances the active line. The audio engine
+-    // occasionally reports a transiently lower position (post-seek/buffer dip,
+-    // rounding), which would make the list scroll up then snap back. Treat a
+-    // backward change as jitter unless the position dropped by a real amount.
+-    final isSeekBack =
+-        position.inMilliseconds <
+-        _lastTrackedPosition.inMilliseconds - _seekBackThresholdMs;
+-    _lastTrackedPosition = position;
+-
+-    if (newIndex < _activeLineIndex && !isSeekBack) return;
+-
+-    _activeLineIndex = newIndex;
+-    _scrollToActiveLine(newIndex);
+-    setState(() {});
+-  }
+-
+-  Future<void> _loadLyricsForSong(Song song) async {
+-    if (!mounted) return;
+-    setState(() {
+-      _isLoading = true;
+-      _lyricsData = null;
+-      _activeLineIndex = -1;
+-      _lastTrackedPosition = Duration.zero;
+-    });
+-
+-    final loaded = await widget.lyricsService.loadLyricsForSong(
+-      song,
+-      forceRefresh: true,
+-    );
+-    final manualSource = await widget.lyricsService.getManualLyricsPathForSong(
+-      song,
+-    );
+-    if (!mounted) return;
+-    if (widget.song.id != song.id) return;
+-
+-    setState(() {
+-      _lyricsData = loaded;
+-      _hasManualLyricsSelection =
+-          manualSource != null && manualSource.isNotEmpty;
+-      _isLoading = false;
+-    });
+-
+-    _onPositionChanged();
+-  }
+-
+-  void _scrollToActiveLine(int index) {
+-    if (!_scrollController.hasClients || index < 0) return;
+-
+-    final maxScroll = _scrollController.position.maxScrollExtent;
+-    final target = (index * _lineHeight) + (_lineHeight / 2);
+-    final clampedTarget = target.clamp(0.0, maxScroll);
+-
+-    _pendingScrollTarget = clampedTarget;
+-
+-    if (!_isScrollAnimating) {
+-      _performScroll();
+-    }
+-  }
+-
+-  void _performScroll() {
+-    if (!_scrollController.hasClients || _pendingScrollTarget == null) {
+-      _isScrollAnimating = false;
+-      return;
+-    }
+-
+-    final target = _pendingScrollTarget!;
+-    _pendingScrollTarget = null;
+-
+-    final delta = (_scrollController.offset - target).abs();
+-    if (delta < _lineHeight * 0.08) {
+-      _performScroll();
+-      return;
+-    }
+-
+-    _isScrollAnimating = true;
+-    _scrollController
+-        .animateTo(
+-          target,
+-          duration: AppConstants.animationNormal,
+-          curve: Curves.easeOutCubic,
+-        )
+-        .then((_) {
+-          _isScrollAnimating = false;
+-          _performScroll();
+-        });
+-  }
+-
+-  Future<void> _seekToLyricLine(int index) async {
+-    final lyrics = _lyricsData;
+-    if (lyrics == null || !lyrics.isSynchronized || index < 0) return;
+-
+-    final target = lyrics.lines[index].timestamp;
+-    widget.playerService.positionNotifier.value = target;
+-
+-    if (mounted && _activeLineIndex != index) {
+-      setState(() {
+-        _activeLineIndex = index;
+-      });
+-    }
+-
+-    _isScrollAnimating = false;
+-    _pendingScrollTarget = null;
+-    _scrollToActiveLine(index);
+-    await widget.playerService.seek(target);
+-  }
+-
+-  String? _lyricsSourceLabel(String? source) {
+-    if (source == null || source.isEmpty) return null;
+-    final normalized = source.replaceAll('\\', '/');
+-    return normalized.split('/').last;
+-  }
+-
+-  void _showMessage(String message) {
+-    ScaffoldMessenger.of(context)
+-      ..hideCurrentSnackBar()
+-      ..showSnackBar(
+-        SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+-      );
+-  }
+-
+-  Future<void> _importLyricsFile() async {
+-    try {
+-      final result = await FilePicker.pickFiles(
+-        type: FileType.custom,
+-        allowedExtensions: const ['lrc', 'txt', 'xml'],
+-        withData: true,
+-      );
+-      final pickedFile = result?.files.single;
+-      if (pickedFile == null) return;
+-
+-      final content = await readTextFromPickedLyricsFile(pickedFile);
+-      if (content == null || content.trim().isEmpty) {
+-        _showMessage('Could not read the selected lyrics file.');
+-        return;
+-      }
+-
+-      await widget.lyricsService.importLyricsForSong(
+-        song: widget.song,
+-        fileName: pickedFile.name,
+-        content: content,
+-      );
+-      if (!mounted) return;
+-      await _loadLyricsForSong(widget.song);
+-      _showMessage('Linked "${pickedFile.name}" to this song.');
+-    } catch (_) {
+-      _showMessage('Could not use the selected lyrics file.');
+-    }
+-  }
+-
+-  Future<void> _resetManualLyricsSource() async {
+-    await widget.lyricsService.clearManualLyricsPathForSong(widget.song);
+-    if (!mounted) return;
+-    await _loadLyricsForSong(widget.song);
+-    if (!mounted) return;
+-    _showMessage('Switched back to the automatic lyrics source.');
+-  }
+-
+-  Widget _buildActionButtons() {
+-    Widget action({
+-      required IconData icon,
+-      required String label,
+-      required VoidCallback onPressed,
+-      bool emphasized = false,
+-    }) {
+-      final fillColor = emphasized
+-          ? Colors.white.withValues(alpha: 0.16)
+-          : Colors.white.withValues(alpha: 0.08);
+-      return TextButton.icon(
+-        onPressed: onPressed,
+-        style: TextButton.styleFrom(
+-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+-          backgroundColor: fillColor,
+-          foregroundColor: Colors.white.withValues(alpha: 0.92),
+-          shape: RoundedRectangleBorder(
+-            borderRadius: BorderRadius.circular(999),
+-            side: BorderSide(color: Colors.white.withValues(alpha: 0.10)),
+-          ),
+-        ),
+-        icon: Icon(icon, size: 16),
+-        label: Text(
+-          label,
+-          style: const TextStyle(
+-            fontFamily: 'ProductSans',
+-            fontSize: 12,
+-            fontWeight: FontWeight.w600,
+-          ),
+-        ),
+-      );
+-    }
+-
+-    return Padding(
+-      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+-      child: Wrap(
+-        alignment: WrapAlignment.center,
+-        spacing: 8,
+-        runSpacing: 8,
+-        children: [
+-          action(
+-            icon: LucideIcons.filePlus,
+-            label: 'Use Existing File',
+-            onPressed: () => unawaited(_importLyricsFile()),
+-          ),
+-          if (_hasManualLyricsSelection)
+-            action(
+-              icon: LucideIcons.refreshCcw,
+-              label: 'Use Auto Source',
+-              onPressed: () => unawaited(_resetManualLyricsSource()),
+-            ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildLyricsMeta(LyricsData lyrics) {
+-    final sourceLabel = _lyricsSourceLabel(lyrics.source);
+-    final textColor = Colors.white.withValues(alpha: 0.82);
+-
+-    Widget chip(IconData icon, String label, {bool accent = false}) {
+-      return Container(
+-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+-        decoration: BoxDecoration(
+-          color: accent
+-              ? AppColors.accent.withValues(alpha: 0.14)
+-              : Colors.white.withValues(alpha: 0.08),
+-          borderRadius: BorderRadius.circular(999),
+-          border: Border.all(
+-            color: accent
+-                ? AppColors.accent.withValues(alpha: 0.3)
+-                : Colors.white.withValues(alpha: 0.08),
+-          ),
+-        ),
+-        child: Row(
+-          mainAxisSize: MainAxisSize.min,
+-          children: [
+-            Icon(icon, size: 14, color: accent ? AppColors.accent : textColor),
+-            const SizedBox(width: 6),
+-            Text(
+-              label,
+-              style: TextStyle(
+-                fontFamily: 'ProductSans',
+-                fontSize: 11,
+-                fontWeight: FontWeight.w600,
+-                color: accent ? AppColors.accent : textColor,
+-              ),
+-            ),
+-          ],
+-        ),
+-      );
+-    }
+-
+-    return Column(
+-      mainAxisSize: MainAxisSize.min,
+-      children: [
+-        GestureDetector(
+-          onTap: () => setState(() => _isMetaCollapsed = !_isMetaCollapsed),
+-          behavior: HitTestBehavior.opaque,
+-          child: Padding(
+-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+-            child: Row(
+-              mainAxisAlignment: MainAxisAlignment.center,
+-              children: [
+-                chip(
+-                  lyrics.isSynchronized
+-                      ? LucideIcons.clock3
+-                      : LucideIcons.fileText,
+-                  lyrics.isSynchronized ? 'Synced' : 'Plain',
+-                  accent: lyrics.isSynchronized,
+-                ),
+-                const SizedBox(width: 8),
+-                if (sourceLabel != null) ...[
+-                  chip(LucideIcons.badgeInfo, sourceLabel),
+-                  const SizedBox(width: 8),
+-                ],
+-                AnimatedRotation(
+-                  turns: _isMetaCollapsed ? 0.0 : 0.5,
+-                  duration: AppConstants.animationFast,
+-                  child: Icon(
+-                    LucideIcons.chevronDown,
+-                    size: 14,
+-                    color: Colors.white.withValues(alpha: 0.6),
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-        ),
+-        AnimatedCrossFade(
+-          duration: AppConstants.animationFast,
+-          crossFadeState: _isMetaCollapsed
+-              ? CrossFadeState.showFirst
+-              : CrossFadeState.showSecond,
+-          firstChild: const SizedBox(width: double.infinity),
+-          secondChild: Column(
+-            mainAxisSize: MainAxisSize.min,
+-            children: [
+-              Padding(
+-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+-                child: Wrap(
+-                  alignment: WrapAlignment.center,
+-                  spacing: 8,
+-                  runSpacing: 8,
+-                  children: [
+-                    chip(
+-                      lyrics.isSynchronized
+-                          ? LucideIcons.touchpad
+-                          : Icons.notes_rounded,
+-                      lyrics.isSynchronized
+-                          ? 'Tap any line to seek'
+-                          : 'Static lyrics — no timestamps',
+-                    ),
+-                    if (lyrics.lines.isNotEmpty)
+-                      chip(
+-                        Icons.format_align_left,
+-                        '${lyrics.lines.length} lines',
+-                      ),
+-                  ],
+-                ),
+-              ),
+-              _buildActionButtons(),
+-            ],
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-
+-  Widget _buildPlainLyricsView(LyricsData lyrics) {
+-    return Align(
+-      alignment: Alignment.center,
+-      child: SingleChildScrollView(
+-        controller: _scrollController,
+-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
+-        child: Text(
+-          lyrics.lines.map((line) => line.text).join('\n'),
+-          textAlign: TextAlign.center,
+-          style: TextStyle(
+-            fontFamily: 'ProductSans',
+-            fontSize: 18,
+-            height: 1.9,
+-            color: Colors.white.withValues(alpha: 0.92),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-
+-  double _lyricOpacityForIndex(int index) {
+-    if (_activeLineIndex < 0) return 0.72;
+-
+-    final distance = (index - _activeLineIndex).abs();
+-    switch (distance) {
+-      case 0:
+-        return 1;
+-      case 1:
+-        return 0.56;
+-      case 2:
+-        return 0.36;
+-      case 3:
+-        return 0.24;
+-      default:
+-        return 0.18;
+-    }
+-  }
+-
+-  TextStyle _lyricTextStyle(bool isActive, double opacity) {
+-    return TextStyle(
+-      fontFamily: 'ProductSans',
+-      fontSize: isActive ? 22 : 17,
+-      height: isActive ? 1.18 : 1.24,
+-      fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+-      color: Colors.white.withValues(alpha: opacity),
+-    );
+-  }
+-
+-  StrutStyle _lyricStrutStyle(bool isActive) {
+-    return StrutStyle(
+-      fontFamily: 'ProductSans',
+-      fontSize: isActive ? 22 : 17,
+-      height: isActive ? 1.18 : 1.24,
+-      forceStrutHeight: true,
+-    );
+-  }
+-
+-  Widget _buildSynchronizedLyricsView(LyricsData lyrics) {
+-    return Expanded(
+-      child: LayoutBuilder(
+-        builder: (context, constraints) {
+-          final centerPadding = constraints.maxHeight * _centerFactor;
+-          return ListView.builder(
+-            scrollCacheExtent: ScrollCacheExtent.pixels(_lineHeight * 8),
+-            controller: _scrollController,
+-            padding: EdgeInsets.fromLTRB(10, centerPadding, 10, centerPadding),
+-            itemCount: lyrics.lines.length,
+-            itemExtent: _lineHeight,
+-            itemBuilder: (context, index) {
+-              final line = lyrics.lines[index];
+-              final isActive = index == _activeLineIndex;
+-              final lineOpacity = _lyricOpacityForIndex(index);
+-
+-              return RepaintBoundary(
+-                child: Padding(
+-                  padding: const EdgeInsets.symmetric(vertical: 6),
+-                  child: Material(
+-                    color: Colors.transparent,
+-                    child: InkWell(
+-                      borderRadius: BorderRadius.circular(22),
+-                      onTap: () => unawaited(_seekToLyricLine(index)),
+-                      child: Center(
+-                        child: isActive
+-                            ? AnimatedContainer(
+-                                duration: AppConstants.animationFast,
+-                                curve: Curves.easeOutCubic,
+-                                alignment: Alignment.center,
+-                                padding: const EdgeInsets.symmetric(
+-                                  horizontal: 18,
+-                                  vertical: 12,
+-                                ),
+-                                decoration: BoxDecoration(
+-                                  borderRadius: BorderRadius.circular(22),
+-                                  color: widget.albumColor != null
+-                                      ? albumAccent(
+-                                          widget.albumColor!,
+-                                          0.3,
+-                                        ).withValues(alpha: 0.16)
+-                                      : Colors.white.withValues(alpha: 0.16),
+-                                  border: Border.all(
+-                                    color: widget.albumColor != null
+-                                        ? albumAccent(
+-                                            widget.albumColor!,
+-                                            0.3,
+-                                          ).withValues(alpha: 0.22)
+-                                        : Colors.white.withValues(alpha: 0.22),
+-                                  ),
+-                                ),
+-                                child: Text(
+-                                  line.text,
+-                                  maxLines: 3,
+-                                  overflow: TextOverflow.fade,
+-                                  textAlign: TextAlign.center,
+-                                  style: _lyricTextStyle(true, lineOpacity),
+-                                  strutStyle: _lyricStrutStyle(true),
+-                                ),
+-                              )
+-                            : Padding(
+-                                padding: const EdgeInsets.symmetric(
+-                                  horizontal: 12,
+-                                  vertical: 10,
+-                                ),
+-                                child: Text(
+-                                  line.text,
+-                                  maxLines: 2,
+-                                  overflow: TextOverflow.fade,
+-                                  textAlign: TextAlign.center,
+-                                  style: _lyricTextStyle(false, lineOpacity),
+-                                  strutStyle: _lyricStrutStyle(false),
+-                                ),
+-                              ),
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              );
+-            },
+-          );
+-        },
+-      ),
+-    );
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return _buildBody(context);
+-  }
+-
+-  Widget _buildBody(BuildContext context) {
+-    if (_isLoading) {
+-      return const Center(
+-        child: CircularProgressIndicator(color: AppColors.accent),
+-      );
+-    }
+-
+-    final lyrics = _lyricsData;
+-    if (lyrics == null || lyrics.lines.isEmpty) {
+-      return Center(
+-        child: Padding(
+-          padding: const EdgeInsets.symmetric(horizontal: 32),
+-          child: Column(
+-            mainAxisSize: MainAxisSize.min,
+-            children: [
+-              Container(
+-                width: 56,
+-                height: 56,
+-                decoration: BoxDecoration(
+-                  color: Colors.white.withValues(alpha: 0.06),
+-                  shape: BoxShape.circle,
+-                  border: Border.all(
+-                    color: Colors.white.withValues(alpha: 0.1),
+-                  ),
+-                ),
+-                child: Icon(
+-                  LucideIcons.fileText,
+-                  size: 24,
+-                  color: Colors.white.withValues(alpha: 0.5),
+-                ),
+-              ),
+-              const SizedBox(height: 18),
+-              Text(
+-                'No lyrics yet',
+-                textAlign: TextAlign.center,
+-                style: TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 18,
+-                  fontWeight: FontWeight.w700,
+-                  color: Colors.white.withValues(alpha: 0.9),
+-                ),
+-              ),
+-              const SizedBox(height: 8),
+-              Text(
+-                'Search online, create your own synced lyrics, or import an existing file.',
+-                textAlign: TextAlign.center,
+-                style: TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 13,
+-                  height: 1.5,
+-                  color: Colors.white.withValues(alpha: 0.56),
+-                ),
+-              ),
+-              _buildActionButtons(),
+-            ],
+-          ),
+-        ),
+-      );
+-    }
+-
+-    return Column(
+-      children: [
+-        _buildLyricsMeta(lyrics),
+-        if (lyrics.isSynchronized)
+-          _buildSynchronizedLyricsView(lyrics)
+-        else
+-          Expanded(child: _buildPlainLyricsView(lyrics)),
+-      ],
+-    );
+-  }
+-}
+-
+-Future<String?> readTextFromPickedLyricsFile(PlatformFile file) async {
+-  if (file.bytes != null) {
+-    return _decodeLyricsBytes(file.bytes!);
+-  }
+-
+-  final path = file.path;
+-  if (path == null || path.isEmpty) return null;
+-  final diskFile = File(path);
+-  if (!await diskFile.exists()) return null;
+-  final bytes = await diskFile.readAsBytes();
+-  return _decodeLyricsBytes(bytes);
+-}
+-
+-String? _decodeLyricsBytes(Uint8List bytes) {
+-  try {
+-    return utf8.decode(bytes);
+-  } catch (_) {
+-    try {
+-      return latin1.decode(bytes);
+-    } catch (_) {
+-      return null;
+-    }
+-  }
+-}
+-
+-/// Extracted waveform layer widget.
+-/// Owns a ValueListenableBuilder on [positionNotifier] so that 50ms position
+-/// ticks **never** cause the parent [_FullPlayerScreenState] to rebuild.
+diff --git a/lib/features/player/widgets/lyrics_mode_waveform_strip.dart b/lib/features/player/widgets/lyrics_mode_waveform_strip.dart
+deleted file mode 100644
+index 287fc3ca..00000000
+--- a/lib/features/player/widgets/lyrics_mode_waveform_strip.dart
++++ /dev/null
+@@ -1,159 +0,0 @@
+-import 'dart:math' as math;
+-import 'package:flutter/material.dart';
+-import 'package:flick/services/player_service.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/features/player/widgets/waveform_layer.dart';
+-import 'package:flick/features/player/widgets/player_controls.dart';
+-
+-class _PlaybackTimeRow extends StatelessWidget {
+-  final PlayerService playerService;
+-  final String Function(Duration) formatDuration;
+-  final Song? currentSong;
+-  final double horizontalPadding;
+-
+-  const _PlaybackTimeRow({
+-    required this.playerService,
+-    required this.formatDuration,
+-    required this.currentSong,
+-    this.horizontalPadding = 0,
+-  });
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return ValueListenableBuilder<Duration>(
+-      valueListenable: playerService.positionNotifier,
+-      builder: (context, position, _) {
+-        return ValueListenableBuilder<Duration>(
+-          valueListenable: playerService.durationNotifier,
+-          builder: (context, engineDuration, _) {
+-            final duration = engineDuration.inMilliseconds > 0
+-                ? engineDuration
+-                : (currentSong?.duration ?? Duration.zero);
+-
+-            return PlaybackTimeLabels(
+-              position: position,
+-              duration: duration,
+-              formatDuration: formatDuration,
+-              horizontalPadding: horizontalPadding,
+-            );
+-          },
+-        );
+-      },
+-    );
+-  }
+-}
+-
+-class LyricsModeWaveformStrip extends StatefulWidget {
+-  final PlayerService playerService;
+-  final ValueNotifier<Duration> positionNotifier;
+-  final Song? currentSong;
+-  final String Function(Duration) formatDuration;
+-  final double horizontalPadding;
+-  final VoidCallback onSwipeUp;
+-
+-  const LyricsModeWaveformStrip({super.key,
+-    required this.playerService,
+-    required this.positionNotifier,
+-    required this.currentSong,
+-    required this.formatDuration,
+-    required this.horizontalPadding,
+-    required this.onSwipeUp,
+-  });
+-
+-  @override
+-  State<LyricsModeWaveformStrip> createState() =>
+-      _LyricsModeWaveformStripState();
+-}
+-
+-class _LyricsModeWaveformStripState extends State<LyricsModeWaveformStrip>
+-    with SingleTickerProviderStateMixin {
+-  Offset? _pointerDownPosition;
+-  bool _didTriggerSwipe = false;
+-
+-  late final AnimationController _arrowAnimController = AnimationController(
+-    vsync: this,
+-    duration: const Duration(milliseconds: 1000),
+-  )..repeat(reverse: true);
+-
+-  @override
+-  void dispose() {
+-    _arrowAnimController.dispose();
+-    super.dispose();
+-  }
+-
+-  void _resetPointerTracking() {
+-    _pointerDownPosition = null;
+-    _didTriggerSwipe = false;
+-  }
+-
+-  void _handlePointerMove(PointerMoveEvent event) {
+-    final start = _pointerDownPosition;
+-    if (start == null || _didTriggerSwipe) {
+-      return;
+-    }
+-
+-    final delta = event.position - start;
+-    final isSwipeUp = delta.dy <= -28;
+-    final isPrimarilyVertical = delta.dy.abs() > (delta.dx.abs() * 1.2);
+-
+-    if (isSwipeUp && isPrimarilyVertical) {
+-      _didTriggerSwipe = true;
+-      widget.onSwipeUp();
+-    }
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Listener(
+-      behavior: HitTestBehavior.translucent,
+-      onPointerDown: (event) {
+-        _pointerDownPosition = event.position;
+-        _didTriggerSwipe = false;
+-      },
+-      onPointerMove: _handlePointerMove,
+-      onPointerUp: (_) => _resetPointerTracking(),
+-      onPointerCancel: (_) => _resetPointerTracking(),
+-      child: Column(
+-        mainAxisSize: MainAxisSize.min,
+-        children: [
+-          AnimatedBuilder(
+-            animation: _arrowAnimController,
+-            builder: (context, child) {
+-              final t = _arrowAnimController.value;
+-              final bounce = -4.0 * math.sin(t * math.pi);
+-              final opacity = 0.72 + 0.28 * math.sin(t * math.pi);
+-              return Transform.translate(
+-                offset: Offset(0, bounce),
+-                child: Opacity(opacity: opacity, child: child!),
+-              );
+-            },
+-            child: Icon(
+-              Icons.keyboard_double_arrow_up_rounded,
+-              color: Colors.white,
+-              size: context.responsive(18.0, 20.0, 22.0),
+-            ),
+-          ),
+-          SizedBox(height: context.responsive(2.0, 4.0, 6.0)),
+-          Padding(
+-            padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
+-            child: WaveformLayer(
+-              playerService: widget.playerService,
+-              positionNotifier: widget.positionNotifier,
+-              currentSong: widget.currentSong,
+-            ),
+-          ),
+-          SizedBox(height: context.responsive(4.0, 6.0, 8.0)),
+-          _PlaybackTimeRow(
+-            playerService: widget.playerService,
+-            formatDuration: widget.formatDuration,
+-            currentSong: widget.currentSong,
+-            horizontalPadding: widget.horizontalPadding,
+-          ),
+-          SizedBox(height: context.responsive(14.0, 18.0, 22.0)),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
+index d3ab70dd..2e242ac4 100644
+--- a/lib/features/player/widgets/player_action_button_row.dart
++++ b/lib/features/player/widgets/player_action_button_row.dart
+@@ -20,7 +20,6 @@ import 'package:flick/features/player/widgets/volume_bottom_sheet.dart';
+ 
+ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   final Song song;
+-  final bool lyricsMode;
+   final PlayerScreenMode playerScreenMode;
+   final Color? albumColor;
+   final AlbumColorMode albumColorMode;
+@@ -30,7 +29,6 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   final PlayerActionButton rightAction;
+   final PlayerService playerService;
+   final FavoritesService favoritesService;
+-  final VoidCallback onToggleLyrics;
+   final void Function(BuildContext) onOpenQueue;
+   final GlobalKey usbVolumeButtonKey;
+   final void Function(BuildContext) onShowUsbVolumePopup;
+@@ -38,7 +36,6 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   const PlayerActionButtonRow({
+     super.key,
+     required this.song,
+-    required this.lyricsMode,
+     required this.playerScreenMode,
+     required this.albumColor,
+     required this.albumColorMode,
+@@ -48,7 +45,6 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+     required this.rightAction,
+     required this.playerService,
+     required this.favoritesService,
+-    required this.onToggleLyrics,
+     required this.onOpenQueue,
+     required this.usbVolumeButtonKey,
+     required this.onShowUsbVolumePopup,
+@@ -63,7 +59,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+   @override
+   Widget build(BuildContext context) {
+     final song = widget.song;
+-    final lyricsMode = widget.lyricsMode;
+     final playerScreenMode = widget.playerScreenMode;
+     final albumColor = widget.albumColor;
+     final albumColorMode = widget.albumColorMode;
+@@ -113,7 +108,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           accentBlend: accentBlend,
+           hasAlbumTint: hasAlbumTint,
+           immersiveActions: immersiveActions,
+-          lyricsMode: lyricsMode,
+         ),
+         Flexible(
+           child: Row(
+@@ -182,7 +176,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           accentBlend: accentBlend,
+           hasAlbumTint: hasAlbumTint,
+           immersiveActions: immersiveActions,
+-          lyricsMode: lyricsMode,
+         ),
+       ],
+     );
+@@ -223,7 +216,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+     required double accentBlend,
+     required bool hasAlbumTint,
+     required bool immersiveActions,
+-    required bool lyricsMode,
+   }) {
+     final buttons = <Widget>[];
+     for (final action in [topAction, bottomAction]) {
+@@ -245,7 +237,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+           accentBlend: accentBlend,
+           hasAlbumTint: hasAlbumTint,
+           immersiveActions: immersiveActions,
+-          lyricsMode: lyricsMode,
+         ),
+       );
+     }
+@@ -270,25 +261,11 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+     required double accentBlend,
+     required bool hasAlbumTint,
+     required bool immersiveActions,
+-    required bool lyricsMode,
+   }) {
+     switch (action) {
+       // ponytail: none is filtered out by _buildSideButtons; unreachable here.
+       case PlayerActionButton.none:
+         return const SizedBox.shrink();
+-      case PlayerActionButton.lyrics:
+-        return _buildLyricsButton(
+-          context: context,
+-          actionPadding: actionPadding,
+-          actionRadius: actionRadius,
+-          actionIconSize: actionIconSize,
+-          inactiveBg: inactiveBg,
+-          inactiveBorder: inactiveBorder,
+-          albumColor: albumColor,
+-          accentBlend: accentBlend,
+-          hasAlbumTint: hasAlbumTint,
+-          lyricsMode: lyricsMode,
+-        );
+       case PlayerActionButton.favorites:
+         if (song.isExternal) {
+           return SizedBox(
+@@ -355,56 +332,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+     }
+   }
+ 
+-  Widget _buildLyricsButton({
+-    required BuildContext context,
+-    required EdgeInsets actionPadding,
+-    required double actionRadius,
+-    required double actionIconSize,
+-    required Color inactiveBg,
+-    required Color inactiveBorder,
+-    required Color? albumColor,
+-    required double accentBlend,
+-    required bool hasAlbumTint,
+-    required bool lyricsMode,
+-  }) {
+-    final lyricsActiveBg = hasAlbumTint
+-        ? albumAccent(
+-            albumColor!,
+-            accentBlend,
+-          ).withValues(alpha: 0.28)
+-        : AppColors.accent.withValues(alpha: 0.28);
+-    final lyricsActiveBorder = hasAlbumTint
+-        ? albumAccent(
+-            albumColor!,
+-            accentBlend,
+-          ).withValues(alpha: 0.45)
+-        : AppColors.accent.withValues(alpha: 0.45);
+-
+-    return Tooltip(
+-      message: lyricsMode ? 'Hide lyrics' : 'Show lyrics',
+-      child: GestureDetector(
+-        onTap: () => widget.onToggleLyrics(),
+-        child: Container(
+-          padding: actionPadding,
+-          decoration: BoxDecoration(
+-            color: lyricsMode ? lyricsActiveBg : inactiveBg,
+-            borderRadius: BorderRadius.circular(actionRadius),
+-            border: Border.all(
+-              color: lyricsMode ? lyricsActiveBorder : inactiveBorder,
+-            ),
+-          ),
+-          child: Icon(
+-            lyricsMode
+-                ? Icons.keyboard_arrow_down_rounded
+-                : LucideIcons.fileText,
+-            color: Colors.white.withValues(alpha: 0.96),
+-            size: actionIconSize,
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-
+   Widget _buildFavoritesButton({
+     required Song song,
+     required EdgeInsets actionPadding,
+diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
+index 4842a2a0..c277b2ad 100644
+--- a/lib/features/player/widgets/song_actions_sheet.dart
++++ b/lib/features/player/widgets/song_actions_sheet.dart
+@@ -17,7 +17,6 @@ class SongActionsSheet extends ConsumerWidget {
+   final BuildContext parentContext;
+   final PlayerService playerService;
+   final Song song;
+-  final VoidCallback onShowLyrics;
+   final PlayerNavigation navigation;
+ 
+   const SongActionsSheet({
+@@ -25,7 +24,6 @@ class SongActionsSheet extends ConsumerWidget {
+     required this.parentContext,
+     required this.playerService,
+     required this.song,
+-    required this.onShowLyrics,
+     required this.navigation,
+   });
+ 
+@@ -33,7 +31,6 @@ class SongActionsSheet extends ConsumerWidget {
+     BuildContext context, {
+     required PlayerService playerService,
+     required Song song,
+-    required VoidCallback onShowLyrics,
+     required PlayerNavigation navigation,
+   }) {
+     return showModalBottomSheet(
+@@ -44,7 +41,6 @@ class SongActionsSheet extends ConsumerWidget {
+         parentContext: context,
+         playerService: playerService,
+         song: song,
+-        onShowLyrics: onShowLyrics,
+         navigation: navigation,
+       ),
+     );
+@@ -222,15 +218,6 @@ class SongActionsSheet extends ConsumerWidget {
+                               SongMetadataSheet.show(context, activeSong);
+                             },
+                           ),
+-                          _buildSongActionTile(
+-                            context: sheetContext,
+-                            icon: LucideIcons.fileText,
+-                            label: 'Lyrics',
+-                            onTap: () {
+-                              Navigator.pop(sheetContext);
+-                              onShowLyrics();
+-                            },
+-                          ),
+                           _buildSongActionTile(
+                             context: sheetContext,
+                             icon: LucideIcons.user,
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index d5097f83..8dfbf6f1 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -1496,24 +1496,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Lyrics Saving'),
+-          SettingsCard(
+-            children: [
+-              ToggleSetting(
+-                icon: LucideIcons.fileText,
+-                title: 'Match Audio Filename',
+-                subtitle:
+-                    'Use the current audio file\'s name when saving lyrics internally',
+-                value: appPreferences.lyricsMatchAudioFilename,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setLyricsMatchAudioFilename(value);
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SizedBox(height: AppConstants.navBarHeight + 40),
+         ],
+       ),
+diff --git a/lib/models/player_action_button.dart b/lib/models/player_action_button.dart
+index d6f148ce..732b5ecb 100644
+--- a/lib/models/player_action_button.dart
++++ b/lib/models/player_action_button.dart
+@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
+ 
+ enum PlayerActionButton {
+   none,
+-  lyrics,
+   favorites,
+   ratings,
+   queue,
+@@ -16,8 +15,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (this) {
+       case PlayerActionButton.none:
+         return 'none';
+-      case PlayerActionButton.lyrics:
+-        return 'lyrics';
+       case PlayerActionButton.favorites:
+         return 'favorites';
+       case PlayerActionButton.ratings:
+@@ -35,8 +32,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (this) {
+       case PlayerActionButton.none:
+         return 'None';
+-      case PlayerActionButton.lyrics:
+-        return 'Lyrics';
+       case PlayerActionButton.favorites:
+         return 'Favorites';
+       case PlayerActionButton.ratings:
+@@ -54,8 +49,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (this) {
+       case PlayerActionButton.none:
+         return Icons.block_rounded;
+-      case PlayerActionButton.lyrics:
+-        return LucideIcons.fileText;
+       case PlayerActionButton.favorites:
+         return Icons.favorite_border;
+       case PlayerActionButton.ratings:
+@@ -79,13 +72,11 @@ extension PlayerActionButtonX on PlayerActionButton {
+         return PlayerActionButton.ratings;
+       case 'queue':
+         return PlayerActionButton.queue;
+-      case 'usb_volume':
+-        return PlayerActionButton.usbVolume;
+       case 'volume':
+         return PlayerActionButton.volume;
+-      case 'lyrics':
++      case 'usb_volume':
+       default:
+-        return PlayerActionButton.lyrics;
++        return PlayerActionButton.usbVolume;
+     }
+   }
+ }
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index b2db997a..2abdd374 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -215,14 +215,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setImmersiveShowFileInfo(value);
+   }
+ 
+-  Future<void> setLyricsMatchAudioFilename(bool value) async {
+-    if (state.lyricsMatchAudioFilename == value) return;
+-    state = state.copyWith(lyricsMatchAudioFilename: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setLyricsMatchAudioFilename(value);
+-  }
+-
+   Future<void> setLeftActionButton(String value) async {
+     if (state.leftActionButton == value) return;
+     state = state.copyWith(leftActionButton: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 2e9d7580..92bc4550 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -40,7 +40,6 @@ class AppPreferences {
+   final double widgetTextScale;
+   final double widgetFlagshipTextScale;
+   final double widgetCompactTextScale;
+-  final bool lyricsMatchAudioFilename;
+   final String leftActionButton;
+   final String rightActionButton;
+   final String leftTopActionButton;
+@@ -111,8 +110,7 @@ class AppPreferences {
+     this.widgetTextScale = 1.0,
+     this.widgetFlagshipTextScale = 1.0,
+     this.widgetCompactTextScale = 1.0,
+-    this.lyricsMatchAudioFilename = false,
+-    this.leftActionButton = 'lyrics',
++    this.leftActionButton = 'usb_volume',
+     this.rightActionButton = 'favorites',
+     this.leftTopActionButton = 'none',
+     this.rightTopActionButton = 'none',
+@@ -183,7 +181,6 @@ class AppPreferences {
+     double? widgetTextScale,
+     double? widgetFlagshipTextScale,
+     double? widgetCompactTextScale,
+-    bool? lyricsMatchAudioFilename,
+     String? leftActionButton,
+     String? rightActionButton,
+     String? leftTopActionButton,
+@@ -271,8 +268,6 @@ class AppPreferences {
+           widgetFlagshipTextScale ?? this.widgetFlagshipTextScale,
+       widgetCompactTextScale:
+           widgetCompactTextScale ?? this.widgetCompactTextScale,
+-      lyricsMatchAudioFilename:
+-          lyricsMatchAudioFilename ?? this.lyricsMatchAudioFilename,
+       leftActionButton: leftActionButton ?? this.leftActionButton,
+       rightActionButton: rightActionButton ?? this.rightActionButton,
+       leftTopActionButton: leftTopActionButton ?? this.leftTopActionButton,
+@@ -351,7 +346,6 @@ class AppPreferencesService {
+   static const _immersiveShowTitleKey = 'immersive_show_title';
+   static const _immersiveShowArtistKey = 'immersive_show_artist';
+   static const _immersiveShowFileInfoKey = 'immersive_show_file_info';
+-  static const _lyricsMatchAudioFilenameKey = 'lyrics_match_audio_filename';
+   static const _leftActionButtonKey = 'left_action_button';
+   static const _rightActionButtonKey = 'right_action_button';
+   static const _leftTopActionButtonKey = 'left_top_action_button';
+@@ -427,9 +421,7 @@ class AppPreferencesService {
+       immersiveShowTitle: prefs.getBool(_immersiveShowTitleKey) ?? true,
+       immersiveShowArtist: prefs.getBool(_immersiveShowArtistKey) ?? true,
+       immersiveShowFileInfo: prefs.getBool(_immersiveShowFileInfoKey) ?? true,
+-      lyricsMatchAudioFilename:
+-          prefs.getBool(_lyricsMatchAudioFilenameKey) ?? false,
+-      leftActionButton: prefs.getString(_leftActionButtonKey) ?? 'lyrics',
++      leftActionButton: prefs.getString(_leftActionButtonKey) ?? 'usb_volume',
+       rightActionButton: prefs.getString(_rightActionButtonKey) ?? 'favorites',
+       leftTopActionButton:
+           prefs.getString(_leftTopActionButtonKey) ?? 'none',
+@@ -699,19 +691,9 @@ class AppPreferencesService {
+     await prefs.setBool(_immersiveShowFileInfoKey, value);
+   }
+ 
+-  Future<bool> getLyricsMatchAudioFilename() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_lyricsMatchAudioFilenameKey) ?? false;
+-  }
+-
+-  Future<void> setLyricsMatchAudioFilename(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_lyricsMatchAudioFilenameKey, value);
+-  }
+-
+   Future<String> getLeftActionButton() async {
+     final prefs = await SharedPreferences.getInstance();
+-    return prefs.getString(_leftActionButtonKey) ?? 'lyrics';
++    return prefs.getString(_leftActionButtonKey) ?? 'usb_volume';
+   }
+ 
+   Future<void> setLeftActionButton(String value) async {
+diff --git a/lib/services/lyrics_service.dart b/lib/services/lyrics_service.dart
+deleted file mode 100644
+index a8591af2..00000000
+--- a/lib/services/lyrics_service.dart
++++ /dev/null
+@@ -1,704 +0,0 @@
+-import 'dart:convert';
+-import 'dart:io';
+-
+-import 'package:flutter/foundation.dart';
+-import 'package:flutter/services.dart';
+-import 'package:path_provider/path_provider.dart';
+-import 'package:shared_preferences/shared_preferences.dart';
+-
+-import 'package:flick/models/song.dart';
+-
+-/// A single lyric line, optionally timestamped for synchronized display.
+-class LyricsLine {
+-  final Duration timestamp;
+-  final String text;
+-
+-  const LyricsLine({required this.timestamp, required this.text});
+-}
+-
+-/// Parsed lyrics payload.
+-class LyricsData {
+-  final List<LyricsLine> lines;
+-  final bool isSynchronized;
+-  final String? source;
+-  final String rawContent;
+-
+-  const LyricsData({
+-    required this.lines,
+-    required this.isSynchronized,
+-    this.source,
+-    required this.rawContent,
+-  });
+-}
+-
+-class LyricsSaveResult {
+-  final LyricsData data;
+-  final String path;
+-  final bool savedBesideSong;
+-
+-  const LyricsSaveResult({
+-    required this.data,
+-    required this.path,
+-    required this.savedBesideSong,
+-  });
+-}
+-
+-class LyricsService {
+-  static const MethodChannel _storageChannel = MethodChannel(
+-    'com.mossapps.flick/storage',
+-  );
+-  static const String _manualLyricsOverridesKey = 'lyrics_manual_overrides_v1';
+-  static const String _managedLyricsDirectoryName = 'lyrics';
+-
+-  final Map<String, LyricsData?> _cache = {};
+-
+-  Future<LyricsData?> loadLyricsForSong(
+-    Song song, {
+-    bool forceRefresh = false,
+-  }) async {
+-    final filePath = song.filePath;
+-    if (filePath == null || filePath.isEmpty) return null;
+-
+-    if (forceRefresh) {
+-      _cache.remove(filePath);
+-    }
+-
+-    if (!forceRefresh && _cache.containsKey(filePath)) {
+-      return _cache[filePath];
+-    }
+-
+-    final manualPath = await getManualLyricsPathForSong(song);
+-    if (manualPath != null && manualPath.isNotEmpty) {
+-      final manualLoaded = await _loadLyricsFromAbsolutePath(manualPath);
+-      if (manualLoaded != null && manualLoaded.content.trim().isNotEmpty) {
+-        final parsed = _parseLyrics(manualLoaded.content, source: manualLoaded.source);
+-        _cache[filePath] = parsed;
+-        return parsed;
+-      }
+-
+-      await clearManualLyricsPathForSong(song);
+-    }
+-
+-    final embedded = await _loadEmbeddedLyricsText(filePath);
+-    if (embedded != null && embedded.content.trim().isNotEmpty) {
+-      final parsed = _parseLyrics(embedded.content, source: embedded.source);
+-      _cache[filePath] = parsed;
+-      return parsed;
+-    }
+-
+-    final loaded = await _loadLyricsText(filePath);
+-    if (loaded == null || loaded.content.trim().isEmpty) {
+-      _cache[filePath] = null;
+-      return null;
+-    }
+-
+-    final parsed = _parseLyrics(loaded.content, source: loaded.source);
+-    _cache[filePath] = parsed;
+-    return parsed;
+-  }
+-
+-  Future<String?> getManualLyricsPathForSong(Song song) async {
+-    final filePath = song.filePath;
+-    if (filePath == null || filePath.isEmpty) return null;
+-
+-    final prefs = await SharedPreferences.getInstance();
+-    final raw = prefs.getString(_manualLyricsOverridesKey);
+-    if (raw == null || raw.isEmpty) return null;
+-
+-    try {
+-      final decoded = jsonDecode(raw);
+-      if (decoded is! Map) return null;
+-      final value = decoded[filePath];
+-      if (value is String && value.isNotEmpty) {
+-        return value;
+-      }
+-    } catch (_) {
+-      // Ignore malformed preference payload and fall back to auto lookup.
+-    }
+-
+-    return null;
+-  }
+-
+-  Future<void> clearManualLyricsPathForSong(Song song) async {
+-    await _setManualLyricsPath(song, null);
+-  }
+-
+-  Future<LyricsSaveResult> importLyricsForSong({
+-    required Song song,
+-    required String fileName,
+-    required String content,
+-  }) async {
+-    final extension = _preferredLyricsExtension(fileName);
+-    final savedPath = await _writeManagedLyricsCopy(
+-      song: song,
+-      extension: extension,
+-      content: content,
+-    );
+-    await _setManualLyricsPath(song, savedPath);
+-    final data = (await loadLyricsForSong(song, forceRefresh: true)) ??
+-        _parseLyrics(content, source: savedPath);
+-    return LyricsSaveResult(
+-      data: data,
+-      path: savedPath,
+-      savedBesideSong: false,
+-    );
+-  }
+-
+-  Future<LyricsSaveResult> saveLyricsForSong({
+-    required Song song,
+-    required String content,
+-  }) async {
+-    final sidecarPath = suggestSidecarLrcPath(song);
+-    var savedBesideSong = false;
+-    late final String savedPath;
+-
+-    if (sidecarPath != null) {
+-      try {
+-        final file = File(sidecarPath);
+-        await file.parent.create(recursive: true);
+-        await file.writeAsString(content);
+-        await _setManualLyricsPath(song, null);
+-        savedBesideSong = true;
+-        savedPath = file.path;
+-      } catch (_) {
+-        savedPath = await _writeManagedLyricsCopy(
+-          song: song,
+-          extension: 'lrc',
+-          content: content,
+-        );
+-        await _setManualLyricsPath(song, savedPath);
+-      }
+-    } else {
+-      savedPath = await _writeManagedLyricsCopy(
+-        song: song,
+-        extension: 'lrc',
+-        content: content,
+-      );
+-      await _setManualLyricsPath(song, savedPath);
+-    }
+-
+-    final data = (await loadLyricsForSong(song, forceRefresh: true)) ??
+-        _parseLyrics(content, source: savedPath);
+-    return LyricsSaveResult(
+-      data: data,
+-      path: savedPath,
+-      savedBesideSong: savedBesideSong,
+-    );
+-  }
+-
+-  Future<LyricsSaveResult> saveLyricsToPath({
+-    required Song song,
+-    required String content,
+-    required String path,
+-  }) async {
+-    final file = File(path);
+-    final alreadyExists = await file.exists();
+-    if (!alreadyExists) {
+-      await file.parent.create(recursive: true);
+-      await file.writeAsString(content);
+-    }
+-    await _setManualLyricsPath(song, path);
+-    final data = (await loadLyricsForSong(song, forceRefresh: true)) ??
+-        _parseLyrics(content, source: path);
+-    return LyricsSaveResult(
+-      data: data,
+-      path: path,
+-      savedBesideSong: false,
+-    );
+-  }
+-
+-  Future<LyricsSaveResult> saveLyricsToManaged({
+-    required Song song,
+-    required String content,
+-  }) async {
+-    final path = await _writeManagedLyricsCopy(
+-      song: song,
+-      extension: 'lrc',
+-      content: content,
+-    );
+-    await _setManualLyricsPath(song, path);
+-    final data = (await loadLyricsForSong(song, forceRefresh: true)) ??
+-        _parseLyrics(content, source: path);
+-    return LyricsSaveResult(
+-      data: data,
+-      path: path,
+-      savedBesideSong: false,
+-    );
+-  }
+-
+-  int findCurrentLineIndex(LyricsData lyrics, Duration position) {
+-    if (!lyrics.isSynchronized || lyrics.lines.isEmpty) return -1;
+-
+-    final targetMs = position.inMilliseconds;
+-    int left = 0;
+-    int right = lyrics.lines.length - 1;
+-    int result = -1;
+-
+-    while (left <= right) {
+-      final mid = left + ((right - left) ~/ 2);
+-      final lineMs = lyrics.lines[mid].timestamp.inMilliseconds;
+-      if (lineMs <= targetMs) {
+-        result = mid;
+-        left = mid + 1;
+-      } else {
+-        right = mid - 1;
+-      }
+-    }
+-
+-    return result;
+-  }
+-
+-  LyricsData parseLyricsText(String raw, {String? source}) {
+-    return _parseLyrics(raw, source: source);
+-  }
+-
+-  Duration? parseTimestamp(String timestamp) {
+-    return _parseTimestamp(timestamp);
+-  }
+-
+-  String formatTimestamp(Duration duration) {
+-    final totalMinutes = duration.inMinutes;
+-    final seconds = duration.inSeconds.remainder(60);
+-    final centiseconds = (duration.inMilliseconds.remainder(1000) ~/ 10);
+-    return '[${totalMinutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${centiseconds.toString().padLeft(2, '0')}]';
+-  }
+-
+-  String formatLengthTag(Duration duration) {
+-    final totalMinutes = duration.inMinutes;
+-    final seconds = duration.inSeconds.remainder(60);
+-    final centiseconds = (duration.inMilliseconds.remainder(1000) ~/ 10);
+-    return '[length:${totalMinutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}.${centiseconds.toString().padLeft(2, '0')}]';
+-  }
+-
+-  String buildLrcContent({
+-    required List<LyricsLine> lines,
+-    Song? song,
+-    Duration? length,
+-  }) {
+-    final buffer = StringBuffer();
+-    if (song?.title case final title? when title.trim().isNotEmpty) {
+-      buffer.writeln('[ti:${title.trim()}]');
+-    }
+-    if (song?.artist case final artist? when artist.trim().isNotEmpty) {
+-      buffer.writeln('[ar:${artist.trim()}]');
+-    }
+-    if (song?.album case final album? when album.trim().isNotEmpty) {
+-      buffer.writeln('[al:${album.trim()}]');
+-    }
+-    if (length != null) {
+-      buffer.writeln(formatLengthTag(length));
+-    }
+-    if (buffer.isNotEmpty) {
+-      buffer.writeln();
+-    }
+-
+-    for (final line in lines) {
+-      buffer.writeln('${formatTimestamp(line.timestamp)}${line.text}');
+-    }
+-    return buffer.toString().trimRight();
+-  }
+-
+-  String? suggestSidecarLrcPath(Song song) {
+-    final filePath = song.filePath;
+-    if (filePath == null || filePath.isEmpty) return null;
+-    final localPath = _resolveLocalPath(filePath);
+-    if (localPath == null || localPath.isEmpty) return null;
+-
+-    final audioFile = File(localPath);
+-    final parent = audioFile.parent;
+-    final stem = _basenameWithoutExtension(audioFile.path);
+-    return '${parent.path}${Platform.pathSeparator}$stem.lrc';
+-  }
+-
+-  Future<_LoadedLyrics?> _loadEmbeddedLyricsText(String filePath) async {
+-    try {
+-      final result = await _storageChannel.invokeMapMethod<String, dynamic>(
+-        'readEmbeddedLyrics',
+-        {'audioUri': filePath},
+-      );
+-      final content = result?['content'] as String?;
+-      if (content != null && content.trim().isNotEmpty) {
+-        return _LoadedLyrics(
+-          content: content,
+-          source: result?['source'] as String? ?? 'embedded',
+-        );
+-      }
+-    } catch (_) {
+-      // Best-effort lookup. Fall back to sidecar lookup.
+-    }
+-    return null;
+-  }
+-
+-  Future<_LoadedLyrics?> _loadLyricsFromAbsolutePath(String absolutePath) async {
+-    final file = File(absolutePath);
+-    if (!await file.exists()) return null;
+-    final content = await _readTextFile(file);
+-    if (content == null || content.trim().isEmpty) return null;
+-    return _LoadedLyrics(content: content, source: file.path);
+-  }
+-
+-  Future<_LoadedLyrics?> _loadLyricsText(String filePath) async {
+-    final parsedUri = Uri.tryParse(filePath);
+-    final isAndroidContentUri =
+-        !kIsWeb &&
+-        defaultTargetPlatform == TargetPlatform.android &&
+-        parsedUri?.scheme == 'content';
+-
+-    if (isAndroidContentUri) {
+-      try {
+-        final result = await _storageChannel.invokeMapMethod<String, dynamic>(
+-          'readSiblingLyrics',
+-          {'audioUri': filePath},
+-        );
+-        final content = result?['content'] as String?;
+-        if (content != null && content.trim().isNotEmpty) {
+-          return _LoadedLyrics(
+-            content: content,
+-            source: result?['name'] as String? ?? result?['uri'] as String?,
+-          );
+-        }
+-      } catch (_) {
+-        // Best-effort only. Fall back to local path resolution.
+-      }
+-    }
+-
+-    final localPath = _resolveLocalPath(filePath);
+-    if (localPath == null || localPath.isEmpty) return null;
+-
+-    final audioFile = File(localPath);
+-    final parent = audioFile.parent;
+-    final stem = _basenameWithoutExtension(audioFile.path);
+-    final sep = Platform.pathSeparator;
+-
+-    final candidates = <String>[
+-      '${parent.path}$sep$stem.lrc',
+-      '${parent.path}$sep$stem.txt',
+-      '${parent.path}$sep$stem.xml',
+-      '${parent.path}$sep$stem.LRC',
+-      '${parent.path}$sep$stem.TXT',
+-      '${parent.path}$sep$stem.XML',
+-    ];
+-
+-    for (final candidatePath in candidates) {
+-      final file = File(candidatePath);
+-      if (!await file.exists()) continue;
+-
+-      final content = await _readTextFile(file);
+-      if (content != null && content.trim().isNotEmpty) {
+-        return _LoadedLyrics(content: content, source: file.path);
+-      }
+-    }
+-
+-    return null;
+-  }
+-
+-  String? _resolveLocalPath(String filePath) {
+-    if (RegExp(r'^[a-zA-Z]:\\').hasMatch(filePath)) {
+-      return filePath;
+-    }
+-
+-    final parsed = Uri.tryParse(filePath);
+-    if (parsed != null && parsed.scheme == 'file') {
+-      return parsed.toFilePath();
+-    }
+-
+-    if (parsed != null && parsed.scheme.isNotEmpty) {
+-      return null;
+-    }
+-
+-    return filePath;
+-  }
+-
+-  String _basenameWithoutExtension(String path) {
+-    final normalized = path.replaceAll('\\', '/');
+-    final filename = normalized.split('/').last;
+-    final dotIndex = filename.lastIndexOf('.');
+-    if (dotIndex <= 0) return filename;
+-    return filename.substring(0, dotIndex);
+-  }
+-
+-  Future<String?> _readTextFile(File file) async {
+-    try {
+-      return await file.readAsString();
+-    } catch (_) {
+-      try {
+-        return await file.readAsString(encoding: latin1);
+-      } catch (_) {
+-        return null;
+-      }
+-    }
+-  }
+-
+-  LyricsData _parseLyrics(String raw, {String? source}) {
+-    final trimmed = raw.trim();
+-    if (trimmed.startsWith('<?xml') || trimmed.startsWith('<')) {
+-      final xmlData = _parseXmlLyrics(trimmed, source: source);
+-      if (xmlData != null) return xmlData;
+-    }
+-
+-    final normalized = raw
+-        .replaceAll('\r\n', '\n')
+-        .replaceAll('\r', '\n')
+-        .replaceFirst(RegExp(r'^\uFEFF'), '');
+-    final rows = normalized.split('\n');
+-
+-    final timestampPattern = RegExp(r'\[(\d{1,2}:\d{2}(?::\d{2})?(?:\.\d{1,3})?)\]');
+-    final wordTimestampPattern = RegExp(r'<(\d{1,2}:\d{2}(?::\d{2})?(?:\.\d{1,3})?)>');
+-    final offsetPattern = RegExp(
+-      r'^\s*\[offset:([+-]?\d+)\]\s*$',
+-      caseSensitive: false,
+-    );
+-    final metadataPattern = RegExp(r'^\s*\[[a-zA-Z]+:.*\]\s*$');
+-
+-    var offsetMs = 0;
+-    var hasTimestamps = false;
+-    final parsedLines = <LyricsLine>[];
+-
+-    for (final row in rows) {
+-      final line = row.trimRight();
+-      if (line.trim().isEmpty) continue;
+-
+-      final offsetMatch = offsetPattern.firstMatch(line);
+-      if (offsetMatch != null) {
+-        offsetMs = int.tryParse(offsetMatch.group(1) ?? '') ?? offsetMs;
+-        continue;
+-      }
+-
+-      final matches = timestampPattern.allMatches(line).toList();
+-      if (matches.isNotEmpty) {
+-        hasTimestamps = true;
+-        final lyricText = line
+-            .replaceAll(timestampPattern, '')
+-            .replaceAll(wordTimestampPattern, '')
+-            .trim();
+-        for (final match in matches) {
+-          final parsedTime = _parseTimestamp(match.group(1) ?? '');
+-          if (parsedTime == null) continue;
+-
+-          final adjustedMs = parsedTime.inMilliseconds + offsetMs;
+-          final clamped = Duration(
+-            milliseconds: adjustedMs < 0 ? 0 : adjustedMs,
+-          );
+-          if (lyricText.isEmpty) continue;
+-          parsedLines.add(LyricsLine(timestamp: clamped, text: lyricText));
+-        }
+-        continue;
+-      }
+-
+-      if (metadataPattern.hasMatch(line)) {
+-        continue;
+-      }
+-
+-      parsedLines.add(LyricsLine(timestamp: Duration.zero, text: line.trim()));
+-    }
+-
+-    if (hasTimestamps) {
+-      parsedLines.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+-      return LyricsData(
+-        lines: parsedLines,
+-        isSynchronized: true,
+-        source: source,
+-        rawContent: raw,
+-      );
+-    }
+-
+-    return LyricsData(
+-      lines: parsedLines.where((line) => line.text.isNotEmpty).toList(),
+-      isSynchronized: false,
+-      source: source,
+-      rawContent: raw,
+-    );
+-  }
+-
+-  LyricsData? _parseXmlLyrics(String xml, {String? source}) {
+-    try {
+-      final linePattern = RegExp(
+-        r'<line\s+start="(\d+)"\s*>([^<]*)</line>',
+-        caseSensitive: false,
+-      );
+-      final altPattern = RegExp(
+-        r'<line\s+start="(\d{1,2}):(\d{2})\.(\d{2})"\s*>([^<]*)</line>',
+-        caseSensitive: false,
+-      );
+-
+-      final lines = <LyricsLine>[];
+-      var hasTimestamps = false;
+-
+-      for (final match in linePattern.allMatches(xml)) {
+-        hasTimestamps = true;
+-        final ms = int.tryParse(match.group(1) ?? '') ?? 0;
+-        final text = match.group(2)?.trim() ?? '';
+-        if (text.isNotEmpty) {
+-          lines.add(LyricsLine(timestamp: Duration(milliseconds: ms), text: text));
+-        }
+-      }
+-
+-      if (lines.isEmpty) {
+-        for (final match in altPattern.allMatches(xml)) {
+-          hasTimestamps = true;
+-          final minutes = int.tryParse(match.group(1) ?? '0') ?? 0;
+-          final seconds = int.tryParse(match.group(2) ?? '0') ?? 0;
+-          final centis = int.tryParse(match.group(3) ?? '0') ?? 0;
+-          final ms = (minutes * 60 + seconds) * 1000 + centis * 10;
+-          final text = match.group(4)?.trim() ?? '';
+-          if (text.isNotEmpty) {
+-            lines.add(LyricsLine(timestamp: Duration(milliseconds: ms), text: text));
+-          }
+-        }
+-      }
+-
+-      if (lines.isNotEmpty) {
+-        lines.sort((a, b) => a.timestamp.compareTo(b.timestamp));
+-        return LyricsData(
+-          lines: lines,
+-          isSynchronized: hasTimestamps,
+-          source: source,
+-          rawContent: xml,
+-        );
+-      }
+-    } catch (_) {
+-      // Fall through to plain-text parser
+-    }
+-    return null;
+-  }
+-
+-  Duration? _parseTimestamp(String timestamp) {
+-    final trimmed = timestamp.trim();
+-
+-    var match = RegExp(
+-      r'^(\d{1,2}):(\d{2}):(\d{2})(?:\.(\d{1,3}))?$',
+-    ).firstMatch(trimmed);
+-    if (match != null) {
+-      final hours = int.tryParse(match.group(1) ?? '') ?? 0;
+-      final minutes = int.tryParse(match.group(2) ?? '') ?? 0;
+-      final seconds = int.tryParse(match.group(3) ?? '') ?? 0;
+-      return Duration(
+-        hours: hours,
+-        minutes: minutes,
+-        seconds: seconds,
+-        milliseconds: _parseFraction(match.group(4)),
+-      );
+-    }
+-
+-    match = RegExp(
+-      r'^(\d{1,2}):(\d{2})(?:\.(\d{1,3}))?$',
+-    ).firstMatch(trimmed);
+-    if (match == null) return null;
+-
+-    final minutes = int.tryParse(match.group(1) ?? '');
+-    final seconds = int.tryParse(match.group(2) ?? '');
+-    if (minutes == null || seconds == null) return null;
+-
+-    return Duration(
+-      minutes: minutes,
+-      seconds: seconds,
+-      milliseconds: _parseFraction(match.group(3)),
+-    );
+-  }
+-
+-  int _parseFraction(String? fractionRaw) {
+-    if (fractionRaw == null || fractionRaw.isEmpty) return 0;
+-    if (fractionRaw.length == 1) return int.parse(fractionRaw) * 100;
+-    if (fractionRaw.length == 2) return int.parse(fractionRaw) * 10;
+-    return int.parse(fractionRaw.substring(0, 3));
+-  }
+-
+-  Future<void> _setManualLyricsPath(Song song, String? manualPath) async {
+-    final filePath = song.filePath;
+-    if (filePath == null || filePath.isEmpty) return;
+-
+-    final prefs = await SharedPreferences.getInstance();
+-    final existingRaw = prefs.getString(_manualLyricsOverridesKey);
+-    final map = <String, String>{};
+-    if (existingRaw != null && existingRaw.isNotEmpty) {
+-      try {
+-        final decoded = jsonDecode(existingRaw);
+-        if (decoded is Map) {
+-          for (final entry in decoded.entries) {
+-            if (entry.key is String && entry.value is String) {
+-              map[entry.key as String] = entry.value as String;
+-            }
+-          }
+-        }
+-      } catch (_) {
+-        // Reset malformed preferences payload.
+-      }
+-    }
+-
+-    if (manualPath == null || manualPath.isEmpty) {
+-      map.remove(filePath);
+-    } else {
+-      map[filePath] = manualPath;
+-    }
+-
+-    if (map.isEmpty) {
+-      await prefs.remove(_manualLyricsOverridesKey);
+-    } else {
+-      await prefs.setString(_manualLyricsOverridesKey, jsonEncode(map));
+-    }
+-    _cache.remove(filePath);
+-  }
+-
+-  Future<String> _writeManagedLyricsCopy({
+-    required Song song,
+-    required String extension,
+-    required String content,
+-  }) async {
+-    final documentsDirectory = await getApplicationDocumentsDirectory();
+-    final lyricsDirectory = Directory(
+-      '${documentsDirectory.path}${Platform.pathSeparator}$_managedLyricsDirectoryName',
+-    );
+-    await lyricsDirectory.create(recursive: true);
+-
+-    final prefs = await SharedPreferences.getInstance();
+-    final matchAudioFilename =
+-        prefs.getBool('lyrics_match_audio_filename') ?? false;
+-
+-    final String safeStem;
+-    if (matchAudioFilename) {
+-      final filePath = song.filePath;
+-      if (filePath != null && filePath.isNotEmpty) {
+-        final localPath = _resolveLocalPath(filePath);
+-        if (localPath != null && localPath.isNotEmpty) {
+-          safeStem = _basenameWithoutExtension(localPath);
+-        } else {
+-          safeStem = _safeLyricsStem(song);
+-        }
+-      } else {
+-        safeStem = _safeLyricsStem(song);
+-      }
+-    } else {
+-      safeStem = _safeLyricsStem(song);
+-    }
+-
+-    final file = File(
+-      '${lyricsDirectory.path}${Platform.pathSeparator}$safeStem.$extension',
+-    );
+-    await file.writeAsString(content);
+-    return file.path;
+-  }
+-
+-  String _preferredLyricsExtension(String fileName) {
+-    final normalized = fileName.toLowerCase();
+-    if (normalized.endsWith('.txt')) return 'txt';
+-    if (normalized.endsWith('.xml')) return 'xml';
+-    return 'lrc';
+-  }
+-
+-  String _safeLyricsStem(Song song) {
+-    final parts = [
+-      if (song.artist.trim().isNotEmpty) song.artist.trim(),
+-      if (song.title.trim().isNotEmpty) song.title.trim(),
+-      song.id,
+-    ];
+-    final stem = parts.join('_');
+-    return stem.replaceAll(RegExp(r'[^a-zA-Z0-9._-]+'), '_');
+-  }
+-}
+-
+-class _LoadedLyrics {
+-  final String content;
+-  final String? source;
+-
+-  const _LoadedLyrics({required this.content, this.source});
+-}
+-- 
+2.55.0
+

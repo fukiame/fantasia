@@ -1,0 +1,74 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 13 Aug 2026 12:21:47 +0700
+Subject: [PATCH] playe
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index f8ea7abe..2733ea30 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -183,56 +183,11 @@ class AnimatedSongScene extends StatelessWidget {
+   }
+ 
+   Widget _buildBackground(BuildContext context) {
+-    final bgBlend = albumColorMode.backgroundBlend;
+-    final hasAlbumTint = albumColor != null && bgBlend > 0;
+-
+-      return Stack(
+-        children: [
+-          Positioned.fill(
+-            child: (song.albumArt != null || song.filePath != null)
+-                ? AmbientBackground(song: song)
+-                : Container(
+-                    decoration: const BoxDecoration(
+-                      gradient: LinearGradient(
+-                        begin: Alignment.topCenter,
+-                        end: Alignment.bottomCenter,
+-                        colors: [Color(0xFF181818), AppColors.background],
+-                      ),
+-                    ),
+-                    child: Icon(
+-                      LucideIcons.music,
+-                      size: 120,
+-                      color: AppColors.textTertiary.withValues(alpha: 0.2),
+-                    ),
+-                  ),
+-          ),
+-          Positioned.fill(
++      return Positioned.fill(
+             child: DecoratedBox(
+-              decoration: BoxDecoration(
+-                gradient: LinearGradient(
+-                  begin: Alignment.topCenter,
+-                  end: Alignment.bottomCenter,
+-                  colors: [
+-                    (hasAlbumTint
+-                            ? albumSurface(albumColor!, bgBlend)
+-                            : const Color(0xFF080808))
+-                        .withValues(alpha: 0.5),
+-                    (hasAlbumTint
+-                            ? albumSurface(albumColor!, bgBlend * 0.6)
+-                            : const Color(0xFF0E0E0E))
+-                        .withValues(alpha: 0.32),
+-                    (hasAlbumTint
+-                            ? albumSurface(albumColor!, bgBlend)
+-                            : const Color(0xFF0A0A0A))
+-                        .withValues(alpha: 0.94),
+-                  ],
+-                  stops: const [0.0, 0.5, 1.0],
+-                ),
+-              ),
++              decoration: BoxDecoration(color: Color(0xFF000000)),
+             ),
+-          ),
+-        ],
+-      );
++          );
+   }
+ 
+   Widget _buildQueueSummaryBadge(
+-- 
+2.55.0
+

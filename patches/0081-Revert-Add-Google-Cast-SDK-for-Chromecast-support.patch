@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:28:00 +0700
+Subject: [PATCH] Revert "Add Google Cast SDK for Chromecast support"
+
+This reverts commit 866fd3bc3807f6bc755d0fa849b2282ee07a2ebe.
+
+diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
+index 725d5dd7..535a4b19 100644
+--- a/android/app/build.gradle.kts
++++ b/android/app/build.gradle.kts
+@@ -218,8 +218,4 @@ dependencies {
+     val glanceVersion = "1.2.0-rc01"
+     implementation("androidx.glance:glance-appwidget:$glanceVersion")
+     implementation("androidx.glance:glance-material3:$glanceVersion")
+-
+-    // Google Cast SDK for Chromecast casting
+-    implementation("com.google.android.gms:play-services-cast-framework:21.5.0")
+-    implementation("com.google.android.gms:play-services-cast:21.5.0")
+ }
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index 821185e8..4622bc67 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -30,9 +30,6 @@
+         android:label="Flick"
+         android:name="${applicationName}"
+         android:icon="@mipmap/launcher_icon">
+-        <meta-data
+-            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+-            android:value="com.mossapps.flick.CastOptionsProvider" />
+         <activity
+             android:name=".MainActivity"
+             android:exported="true"
+-- 
+2.55.0
+

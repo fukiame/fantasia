@@ -1,0 +1,137 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 07:59:18 +0700
+Subject: [PATCH] lib: assc: bye queue pill entirely
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index 2193e1ff..ee4961da 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -364,23 +364,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                     artworkCardShowAlbum: appPrefs.artworkCardShowAlbum,
+                     artworkCardShowFileInfo: appPrefs.artworkCardShowFileInfo,
+                     artworkCardShowFrame: appPrefs.artworkCardShowFrame,
+-                    hideQueueBadge:
+-                        PlayerActionButtonX.fromStorageValue(
+-                              appPrefs.leftActionButton,
+-                            ) ==
+-                            PlayerActionButton.queue ||
+-                        PlayerActionButtonX.fromStorageValue(
+-                              appPrefs.rightActionButton,
+-                            ) ==
+-                            PlayerActionButton.queue ||
+-                        PlayerActionButtonX.fromStorageValue(
+-                              appPrefs.leftTopActionButton,
+-                            ) ==
+-                            PlayerActionButton.queue ||
+-                        PlayerActionButtonX.fromStorageValue(
+-                              appPrefs.rightTopActionButton,
+-                            ) ==
+-                            PlayerActionButton.queue,
+                     onRotationEnabledChanged: (enabled) {
+                       _isVinylRotationActive = enabled;
+                     },
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index e9e2a2a8..3cd541f3 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -48,7 +48,6 @@ class AnimatedSongScene extends StatelessWidget {
+   final bool artworkCardShowAlbum;
+   final bool artworkCardShowFileInfo;
+   final bool artworkCardShowFrame;
+-  final bool hideQueueBadge;
+   final void Function(bool enabled)? onRotationEnabledChanged;
+   final bool vinylMode;
+   final ValueChanged<bool>? onVinylChanged;
+@@ -82,7 +81,6 @@ class AnimatedSongScene extends StatelessWidget {
+     this.artworkCardShowAlbum = true,
+     this.artworkCardShowFileInfo = true,
+     this.artworkCardShowFrame = true,
+-    this.hideQueueBadge = false,
+     this.onRotationEnabledChanged,
+     this.vinylMode = false,
+     this.onVinylChanged,
+@@ -257,77 +255,7 @@ class AnimatedSongScene extends StatelessWidget {
+           ),
+           SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+           Expanded(
+-            child: GestureDetector(
+-              onTap: onOpenQueue,
+-              onHorizontalDragEnd: (details) async {
+-                      if (details.primaryVelocity != null &&
+-                          details.primaryVelocity! < -400) {
+-                        await onQueueSwipe();
+-                      }
+-                    },
+-              child: ValueListenableBuilder<List<Song>>(
+-                valueListenable: playerService.upNextNotifier,
+-                builder: (context, upNext, _) {
+-                  final hasQueue = upNext.isNotEmpty;
+-                  final nowPlayingContent = Column(
+-                    mainAxisSize: MainAxisSize.min,
+-                    children: [
+-                      Text(
+-                        'now playing',
+-                        style: TextStyle(
+-                          fontFamily: 'ProductSans',
+-                          fontSize: context.responsive(12.0, 13.0, 14.0),
+-                          fontWeight: FontWeight.w600,
+-                          color: Colors.white.withValues(alpha: 0.9),
+-                          letterSpacing: 0.8,
+-                        ),
+-                      ),
+-                    ],
+-                  );
+-
+-                  final chip = AnimatedContainer(
+-                    duration: AppConstants.animationFast,
+-                    padding: EdgeInsets.fromLTRB(
+-                      context.responsive(12.0, 14.0, 16.0),
+-                      context.responsive(6.0, 7.0, 8.0),
+-                      (!hideQueueBadge)
+-                          ? context.responsive(10.0, 11.0, 12.0)
+-                          : context.responsive(12.0, 14.0, 16.0),
+-                      context.responsive(6.0, 7.0, 8.0),
+-                    ),
+-                    decoration: BoxDecoration(
+-                      color: const Color(0xFF121212).withValues(alpha: 0.72),
+-                      borderRadius: BorderRadius.circular(20),
+-                      border: Border.all(
+-                        color: hasQueue
+-                            ? Colors.white.withValues(alpha: 0.18)
+-                            : Colors.white.withValues(alpha: 0.08),
+-                      ),
+-                    ),
+-                    child: Row(
+-                      mainAxisSize: MainAxisSize.min,
+-                      children: [
+-                        nowPlayingContent,
+-                        if (!hideQueueBadge) ...[
+-                          SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+-                          _buildQueueSummaryBadge(
+-                            context,
+-                            count: upNext.length,
+-                            highlighted: hasQueue,
+-                          ),
+-                        ],
+-                      ],
+-                    ),
+-                  );
+-
+-                  return Align(
+-                    alignment: Alignment.center,
+-                    widthFactor: 1.0,
+-                    child: chip,
+-                  );
+-                },
+-              ),
+-            ),
++            child: const SizedBox.shrink(),
+           ),
+           SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+           Row(
+-- 
+2.55.0
+
