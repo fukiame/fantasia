@@ -22,8 +22,8 @@ case "$1" in
         cd $downstream
         # build commands here
         flutter pub get
-	rm -f pubspec.lock
-        flutter pub upgrade --major-versions
+	# rm -f pubspec.lock
+        # flutter pub upgrade --major-versions # file-picker 12.0.0
 	sed -i "s/FLICK_SED_HERE/$(git -C ../Flick rev-parse --short HEAD)/" \
 		lib/core/constants/app_constants.dart
 	sed -i "s/FANTASIA_SED_HERE/$(git rev-parse --short HEAD)/" \
