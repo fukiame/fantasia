@@ -1,0 +1,2351 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 13:40:56 +0700
+Subject: [PATCH] crossfah
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/audio_settings_screen.dart b/lib/features/settings/screens/audio_settings_screen.dart
+index 1ac83509..f211e388 100644
+--- a/lib/features/settings/screens/audio_settings_screen.dart
++++ b/lib/features/settings/screens/audio_settings_screen.dart
+@@ -84,413 +84,9 @@ class _AudioSettingsScreenState extends ConsumerState<AudioSettingsScreen> {
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const _CrossfadeSection(),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SizedBox(height: AppConstants.navBarHeight + 40),
+         ],
+       ),
+     );
+   }
+ }
+-
+-class _CrossfadeSection extends ConsumerWidget {
+-  const _CrossfadeSection();
+-
+-  static const _curveLabels = <String>[
+-    'Equal Power',
+-    'Linear',
+-    'Square Root',
+-    'S-Curve',
+-  ];
+-
+-  Future<void> _setEnabled(
+-    WidgetRef ref,
+-    PlayerService playerService,
+-    bool value,
+-  ) async {
+-    final prefs = ref.read(appPreferencesProvider);
+-    await ref.read(appPreferencesProvider.notifier).setCrossfadeEnabled(value);
+-    await playerService.applyCrossfadeSettings(
+-      enabled: value,
+-      durationSecs: prefs.crossfadeDurationSecs,
+-    );
+-  }
+-
+-  Future<void> _setDuration(
+-    WidgetRef ref,
+-    PlayerService playerService,
+-    double value,
+-  ) async {
+-    final prefs = ref.read(appPreferencesProvider);
+-    await ref
+-        .read(appPreferencesProvider.notifier)
+-        .setCrossfadeDurationSecs(value);
+-    await playerService.applyCrossfadeSettings(
+-      enabled: prefs.crossfadeEnabled,
+-      durationSecs: value,
+-    );
+-  }
+-
+-  Future<void> _setCurve(
+-    WidgetRef ref,
+-    PlayerService playerService,
+-    int index,
+-  ) async {
+-    final prefs = ref.read(appPreferencesProvider);
+-    await ref
+-        .read(appPreferencesProvider.notifier)
+-        .setCrossfadeCurveIndex(index);
+-    await playerService.applyCrossfadeSettings(
+-      enabled: prefs.crossfadeEnabled,
+-      durationSecs: prefs.crossfadeDurationSecs,
+-    );
+-  }
+-
+-  @override
+-  Widget build(BuildContext context, WidgetRef ref) {
+-    final prefs = ref.watch(appPreferencesProvider);
+-    final playerService = ref.read(playerServiceProvider);
+-
+-    return ListenableBuilder(
+-      listenable: playerService.bitPerfectProcessingLockedNotifier,
+-      builder: (context, _) {
+-        final locked = playerService.bitPerfectProcessingLockedNotifier.value;
+-        final is432Hz = Uac2PreferencesService.is432HzTuningEnabledSync;
+-        final effectiveEnabled = !locked && prefs.crossfadeEnabled;
+-        final controlsEnabled = !locked;
+-
+-        final disabledHint = is432Hz
+-            ? 'Turn off 432 Hz tuning to use crossfade'
+-            : 'Not available in bit-perfect mode';
+-
+-        return Column(
+-          crossAxisAlignment: CrossAxisAlignment.start,
+-          children: [
+-            const SettingsSectionHeader('Crossfade', tag: 'Experimental'),
+-            SettingsCard(
+-              children: [
+-                ToggleSetting(
+-                  icon: LucideIcons.shuffle,
+-                  title: 'Crossfade',
+-                  subtitle: locked
+-                      ? disabledHint
+-                      : 'Overlap the end of a track with the next',
+-                  value: effectiveEnabled,
+-                  onChanged: locked
+-                      ? (_) {}
+-                      : (v) => _setEnabled(ref, playerService, v),
+-                ),
+-                const SettingsDivider(),
+-                SliderSetting(
+-                  icon: LucideIcons.timer,
+-                  title: 'Duration',
+-                  subtitle: 'Length of the overlap',
+-                  value: prefs.crossfadeDurationSecs.clamp(0.5, 12.0),
+-                  displayValue:
+-                      '${prefs.crossfadeDurationSecs.toStringAsFixed(1)} s',
+-                  min: 0.5,
+-                  max: 12.0,
+-                  divisions: 23,
+-                  onChanged: controlsEnabled
+-                      ? (v) => _setDuration(ref, playerService, v)
+-                      : null,
+-                ),
+-                const SettingsDivider(),
+-                _CrossfadeCurvePicker(
+-                  selectedIndex: prefs.crossfadeCurveIndex,
+-                  enabled: controlsEnabled,
+-                  onSelect: controlsEnabled
+-                      ? (i) => _setCurve(ref, playerService, i)
+-                      : null,
+-                ),
+-                const SettingsDivider(),
+-                _CrossfadePreview(
+-                  curveIndex: prefs.crossfadeCurveIndex,
+-                  curveName: _curveLabels[prefs.crossfadeCurveIndex],
+-                  durationSecs: prefs.crossfadeDurationSecs,
+-                  enabled: effectiveEnabled,
+-                ),
+-              ],
+-            ),
+-          ],
+-        );
+-      },
+-    );
+-  }
+-}
+-
+-class _CrossfadeCurvePicker extends StatelessWidget {
+-  const _CrossfadeCurvePicker({
+-    required this.selectedIndex,
+-    required this.enabled,
+-    this.onSelect,
+-  });
+-
+-  final int selectedIndex;
+-  final bool enabled;
+-  final ValueChanged<int>? onSelect;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Padding(
+-      padding: const EdgeInsets.fromLTRB(
+-        AppConstants.spacingLg,
+-        AppConstants.spacingMd,
+-        AppConstants.spacingLg,
+-        AppConstants.spacingLg,
+-      ),
+-      child: Column(
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          Padding(
+-            padding: const EdgeInsets.only(left: AppConstants.spacingXs),
+-            child: Text(
+-              'Curve',
+-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                color: enabled
+-                    ? context.adaptiveTextPrimary
+-                    : context.adaptiveTextTertiary,
+-              ),
+-            ),
+-          ),
+-          const SizedBox(height: AppConstants.spacingMd),
+-          Row(
+-            children: [
+-              for (
+-                var i = 0;
+-                i < _CrossfadeSection._curveLabels.length;
+-                i++
+-              ) ...[
+-                if (i > 0) const SizedBox(width: AppConstants.spacingSm),
+-                Expanded(
+-                  child: _CurveChip(
+-                    label: _CrossfadeSection._curveLabels[i],
+-                    selected: i == selectedIndex,
+-                    enabled: enabled,
+-                    onTap: enabled ? () => onSelect?.call(i) : null,
+-                  ),
+-                ),
+-              ],
+-            ],
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+-class _CurveChip extends StatelessWidget {
+-  const _CurveChip({
+-    required this.label,
+-    required this.selected,
+-    required this.enabled,
+-    this.onTap,
+-  });
+-
+-  final String label;
+-  final bool selected;
+-  final bool enabled;
+-  final VoidCallback? onTap;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Opacity(
+-      opacity: enabled ? 1.0 : 0.45,
+-      child: GestureDetector(
+-        onTap: onTap,
+-        child: AnimatedContainer(
+-          duration: AppConstants.animationFast,
+-          width: double.infinity,
+-          padding: const EdgeInsets.symmetric(
+-            horizontal: AppConstants.spacingMd,
+-            vertical: AppConstants.spacingSm,
+-          ),
+-          decoration: BoxDecoration(
+-            color: selected
+-                ? AppColors.textPrimary.withValues(alpha: 0.12)
+-                : AppColors.glassBackgroundStrong,
+-            borderRadius: BorderRadius.circular(AppConstants.radiusRound),
+-            border: Border.all(
+-              color: selected
+-                  ? AppColors.textPrimary.withValues(alpha: 0.6)
+-                  : AppColors.glassBorder,
+-            ),
+-          ),
+-          child: Text(
+-            label,
+-            textAlign: TextAlign.center,
+-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+-              color: selected
+-                  ? context.adaptiveTextPrimary
+-                  : context.adaptiveTextSecondary,
+-              fontWeight: FontWeight.w600,
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+-class _CrossfadePreview extends StatelessWidget {
+-  const _CrossfadePreview({
+-    required this.curveIndex,
+-    required this.curveName,
+-    required this.durationSecs,
+-    required this.enabled,
+-  });
+-
+-  final int curveIndex;
+-  final String curveName;
+-  final double durationSecs;
+-  final bool enabled;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Padding(
+-      padding: const EdgeInsets.fromLTRB(
+-        AppConstants.spacingLg,
+-        AppConstants.spacingMd,
+-        AppConstants.spacingLg,
+-        AppConstants.spacingLg,
+-      ),
+-      child: Column(
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          Row(
+-            children: [
+-              Text(
+-                'Preview',
+-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                  color: enabled
+-                      ? context.adaptiveTextPrimary
+-                      : context.adaptiveTextTertiary,
+-                ),
+-              ),
+-              const Spacer(),
+-              Text(
+-                curveName,
+-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+-                  color: context.adaptiveTextSecondary,
+-                  fontWeight: FontWeight.w600,
+-                ),
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingMd),
+-          ClipRRect(
+-            borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-            child: Container(
+-              height: 100,
+-              width: double.infinity,
+-              color: AppColors.glassBackgroundStrong,
+-              child: CustomPaint(
+-                painter: _CrossfadeCurvePainter(
+-                  curveIndex: curveIndex,
+-                  trackAColor: AppColors.textPrimary.withValues(
+-                    alpha: enabled ? 0.18 : 0.07,
+-                  ),
+-                  trackBColor: AppColors.textSecondary.withValues(
+-                    alpha: enabled ? 0.30 : 0.12,
+-                  ),
+-                ),
+-              ),
+-            ),
+-          ),
+-          const SizedBox(height: AppConstants.spacingSm),
+-          Row(
+-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-            children: [
+-              Text(
+-                '0 s',
+-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  color: context.adaptiveTextTertiary,
+-                ),
+-              ),
+-              Text(
+-                '${durationSecs.toStringAsFixed(1)} s',
+-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  color: context.adaptiveTextTertiary,
+-                ),
+-              ),
+-            ],
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+-class _CrossfadeCurvePainter extends CustomPainter {
+-  _CrossfadeCurvePainter({
+-    required this.curveIndex,
+-    required this.trackAColor,
+-    required this.trackBColor,
+-  });
+-
+-  final int curveIndex;
+-  final Color trackAColor;
+-  final Color trackBColor;
+-
+-  (double, double) _gains(double t) {
+-    switch (curveIndex) {
+-      case 0: // Equal power
+-        final angle = t * pi / 2;
+-        return (cos(angle), sin(angle));
+-      case 1: // Linear
+-        return (1.0 - t, t);
+-      case 2: // Square root
+-        return (sqrt(1.0 - t), sqrt(t));
+-      case 3: // S-Curve (smoothstep)
+-        final s = t * t * (3.0 - 2.0 * t);
+-        return (1.0 - s, s);
+-      default:
+-        return (1.0 - t, t);
+-    }
+-  }
+-
+-  @override
+-  void paint(Canvas canvas, Size size) {
+-    final midY = size.height / 2;
+-    const steps = 60;
+-
+-    final pathA = Path()..moveTo(0, midY);
+-    final pathB = Path()..moveTo(0, midY);
+-
+-    for (var i = 0; i <= steps; i++) {
+-      final t = i / steps;
+-      final (gainA, gainB) = _gains(t);
+-      final x = t * size.width;
+-      pathA.lineTo(x, midY - gainA * midY);
+-      pathB.lineTo(x, midY + gainB * midY);
+-    }
+-
+-    pathA
+-      ..lineTo(size.width, midY)
+-      ..close();
+-    pathB
+-      ..lineTo(size.width, midY)
+-      ..close();
+-
+-    canvas
+-      ..drawPath(pathA, Paint()..color = trackAColor)
+-      ..drawPath(pathB, Paint()..color = trackBColor);
+-
+-    // Centre reference line.
+-    canvas.drawLine(
+-      Offset(0, midY),
+-      Offset(size.width, midY),
+-      Paint()
+-        ..color = AppColors.textPrimary.withValues(alpha: 0.08)
+-        ..strokeWidth = 1,
+-    );
+-  }
+-
+-  @override
+-  bool shouldRepaint(covariant _CrossfadeCurvePainter oldDelegate) {
+-    return oldDelegate.curveIndex != curveIndex ||
+-        oldDelegate.trackAColor != trackAColor ||
+-        oldDelegate.trackBColor != trackBColor;
+-  }
+-}
+-
+diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
+index 60810fbb..c7238e4c 100644
+--- a/lib/features/settings/screens/uac2_preferences_screen.dart
++++ b/lib/features/settings/screens/uac2_preferences_screen.dart
+@@ -428,7 +428,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+                 icon: LucideIcons.headphones,
+                 title: 'Bit-perfect (DAP Internal)',
+                 subtitle:
+-                    'Bypass all DSP (EQ, dynamics, crossfade, speed) on the native DAP internal high-res path. Disable to use software effects. Turning off Bit-perfect (USB DAC) also disables this.',
++                    'Bypass all DSP (EQ, dynamics, speed) on the native DAP internal high-res path. Disable to use software effects. Turning off Bit-perfect (USB DAC) also disables this.',
+                 value: enabled,
+                 onChanged: (value) async {
+                   await PlayerService().setDapBitPerfectEnabled(value);
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index bfb90609..b2db997a 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -69,26 +69,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setShowUsbVolumeOnSettings(value);
+   }
+ 
+-  Future<void> setCrossfadeEnabled(bool value) async {
+-    if (state.crossfadeEnabled == value) return;
+-    state = state.copyWith(crossfadeEnabled: value);
+-    await ref.read(appPreferencesServiceProvider).setCrossfadeEnabled(value);
+-  }
+-
+-  Future<void> setCrossfadeDurationSecs(double value) async {
+-    if (state.crossfadeDurationSecs == value) return;
+-    state = state.copyWith(crossfadeDurationSecs: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setCrossfadeDurationSecs(value);
+-  }
+-
+-  Future<void> setCrossfadeCurveIndex(int value) async {
+-    if (state.crossfadeCurveIndex == value) return;
+-    state = state.copyWith(crossfadeCurveIndex: value);
+-    await ref.read(appPreferencesServiceProvider).setCrossfadeCurveIndex(value);
+-  }
+-
+   Future<void> setSwipeActionsEnabled(bool value) async {
+     if (state.swipeActionsEnabled == value) return;
+     state = state.copyWith(swipeActionsEnabled: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 78ee0be6..2e9d7580 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -7,9 +7,6 @@ class AppPreferences {
+   final bool showQuickAccess;
+   final bool showUsbVolumeOnMenu;
+   final bool showUsbVolumeOnSettings;
+-  final bool crossfadeEnabled;
+-  final double crossfadeDurationSecs;
+-  final int crossfadeCurveIndex;
+   final bool swipeActionsEnabled;
+   final String favoriteRemovalMode; // 'swipe' or 'longpress'
+   final bool fastIndexEnabled;
+@@ -81,9 +78,6 @@ class AppPreferences {
+     this.showQuickAccess = true,
+     this.showUsbVolumeOnMenu = true,
+     this.showUsbVolumeOnSettings = false,
+-    this.crossfadeEnabled = false,
+-    this.crossfadeDurationSecs = 3.0,
+-    this.crossfadeCurveIndex = 0,
+     this.swipeActionsEnabled = false,
+     this.favoriteRemovalMode = 'longpress',
+     this.fastIndexEnabled = true,
+@@ -156,9 +150,6 @@ class AppPreferences {
+     bool? showQuickAccess,
+     bool? showUsbVolumeOnMenu,
+     bool? showUsbVolumeOnSettings,
+-    bool? crossfadeEnabled,
+-    double? crossfadeDurationSecs,
+-    int? crossfadeCurveIndex,
+     bool? swipeActionsEnabled,
+     String? favoriteRemovalMode,
+     bool? fastIndexEnabled,
+@@ -232,10 +223,6 @@ class AppPreferences {
+           showUsbVolumeOnMenu ?? this.showUsbVolumeOnMenu,
+       showUsbVolumeOnSettings:
+           showUsbVolumeOnSettings ?? this.showUsbVolumeOnSettings,
+-      crossfadeEnabled: crossfadeEnabled ?? this.crossfadeEnabled,
+-      crossfadeDurationSecs:
+-          crossfadeDurationSecs ?? this.crossfadeDurationSecs,
+-      crossfadeCurveIndex: crossfadeCurveIndex ?? this.crossfadeCurveIndex,
+       swipeActionsEnabled: swipeActionsEnabled ?? this.swipeActionsEnabled,
+       favoriteRemovalMode: favoriteRemovalMode ?? this.favoriteRemovalMode,
+       fastIndexEnabled: fastIndexEnabled ?? this.fastIndexEnabled,
+@@ -345,9 +332,6 @@ class AppPreferencesService {
+   static const _showQuickAccessKey = 'menu_show_quick_access';
+   static const _showUsbVolumeOnMenuKey = 'menu_show_usb_volume';
+   static const _showUsbVolumeOnSettingsKey = 'settings_show_usb_volume';
+-  static const _crossfadeEnabledKey = 'audio_crossfade_enabled';
+-  static const _crossfadeDurationKey = 'audio_crossfade_duration_secs';
+-  static const _crossfadeCurveKey = 'audio_crossfade_curve_index';
+   static const _swipeActionsEnabledKey = 'swipe_actions_enabled';
+   static const _favoriteRemovalModeKey = 'favorite_removal_mode';
+   static const _fastIndexEnabledKey = 'fast_index_enabled';
+@@ -417,9 +401,6 @@ class AppPreferencesService {
+       showUsbVolumeOnMenu: prefs.getBool(_showUsbVolumeOnMenuKey) ?? true,
+       showUsbVolumeOnSettings:
+           prefs.getBool(_showUsbVolumeOnSettingsKey) ?? false,
+-      crossfadeEnabled: prefs.getBool(_crossfadeEnabledKey) ?? false,
+-      crossfadeDurationSecs: prefs.getDouble(_crossfadeDurationKey) ?? 3.0,
+-      crossfadeCurveIndex: prefs.getInt(_crossfadeCurveKey) ?? 0,
+       swipeActionsEnabled: prefs.getBool(_swipeActionsEnabledKey) ?? false,
+       favoriteRemovalMode:
+           prefs.getString(_favoriteRemovalModeKey) ?? 'longpress',
+@@ -558,36 +539,6 @@ class AppPreferencesService {
+     await prefs.setBool(_showUsbVolumeOnSettingsKey, value);
+   }
+ 
+-  Future<bool> getCrossfadeEnabled() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_crossfadeEnabledKey) ?? false;
+-  }
+-
+-  Future<void> setCrossfadeEnabled(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_crossfadeEnabledKey, value);
+-  }
+-
+-  Future<double> getCrossfadeDurationSecs() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getDouble(_crossfadeDurationKey) ?? 3.0;
+-  }
+-
+-  Future<void> setCrossfadeDurationSecs(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_crossfadeDurationKey, value);
+-  }
+-
+-  Future<int> getCrossfadeCurveIndex() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getInt(_crossfadeCurveKey) ?? 0;
+-  }
+-
+-  Future<void> setCrossfadeCurveIndex(int value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setInt(_crossfadeCurveKey, value);
+-  }
+-
+   Future<bool> getSwipeActionsEnabled() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_swipeActionsEnabledKey) ?? false;
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 43011daf..f7e5f88a 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -307,9 +307,6 @@ class PlayerService {
+   }
+ 
+   just_audio.AudioPlayer? _justAudioPlayer;
+-  // Cached crossfade curve index (0..3) for synchronous reads inside the
+-  // just_audio engine's config provider; refreshed from prefs on load/change.
+-  int _crossfadeCurveIndex = 0;
+ 
+   final NotificationService _notificationService = NotificationService();
+   bool _appInForeground = true;
+@@ -565,7 +562,6 @@ class PlayerService {
+     _uac2Service.addStatusListener(_mirrorUsbVolumeFromUac2Status);
+     _notifyQueueChanged();
+     unawaited(_loadGaplessPlaybackPreference());
+-    unawaited(_loadCrossfadePreferences());
+     unawaited(_loadPriorityAnchorPreference());
+     _initBluetoothReconnectHandling();
+     _initUsbDacDisconnectHandling();
+@@ -682,15 +678,6 @@ class PlayerService {
+     _maybeResumeOnBluetoothReconnect();
+   }
+ 
+-  Future<void> _loadCrossfadePreferences() async {
+-    final enabled = await _appPreferencesService.getCrossfadeEnabled();
+-    final duration = await _appPreferencesService.getCrossfadeDurationSecs();
+-    _crossfadeCurveIndex = await _appPreferencesService
+-        .getCrossfadeCurveIndex();
+-    _rustAudioService.crossfadeEnabledNotifier.value = enabled;
+-    _rustAudioService.crossfadeDurationNotifier.value = duration;
+-  }
+-
+   /// When the DAC/route reports a new volume level, keep [_currentVolume]
+   /// aligned and propagate to the Rust engine.
+   ///
+@@ -775,65 +762,6 @@ class PlayerService {
+     await _preferencesService.setGaplessPlaybackEnabled(enabled);
+   }
+ 
+-  /// Push the current crossfade preferences to the Rust engine.
+-  ///
+-  /// Called by the settings UI after persisting the new values. The actual
+-  /// engine command is routed through [_applyRustPlaybackProcessingPolicy],
+-  /// which suppresses crossfade in bit-perfect mode and under 432 Hz tuning.
+-  Future<void> applyCrossfadeSettings({
+-    required bool enabled,
+-    required double durationSecs,
+-  }) async {
+-    final wasEnabled = _rustAudioService.crossfadeEnabledNotifier.value;
+-    _rustAudioService.crossfadeEnabledNotifier.value = enabled;
+-    _rustAudioService.crossfadeDurationNotifier.value = durationSecs;
+-    _crossfadeCurveIndex = await _appPreferencesService
+-        .getCrossfadeCurveIndex();
+-
+-    if (_usingRustBackend) {
+-      await _applyRustPlaybackProcessingPolicy(currentEngineType);
+-      // Only (re)queue the next track when crossfade transitions to on.
+-      // Re-queueing on every duration-slider drag spawns redundant decoders
+-      // and can race the engine's source provider.
+-      if (!wasEnabled &&
+-          enabled &&
+-          _isCrossfadeActive &&
+-          currentSongNotifier.value != null &&
+-          isPlayingNotifier.value) {
+-        try {
+-          await _queueNextTrackForGapless();
+-        } catch (e) {
+-          _debugLog('[crossfade] re-queue on enable failed: $e');
+-        }
+-      }
+-      return;
+-    }
+-
+-    // just_audio (standard) engine: crossfade runs in-engine, but a track loaded
+-    // while crossfade was off used a ConcatenatingAudioSource (hard cut). On the
+-    // on-transition, reload the current track as a single source at the same
+-    // position so the engine can intercept the tail and crossfade.
+-    if (currentEngineType == AudioEngineType.normalAndroid &&
+-        !wasEnabled &&
+-        enabled &&
+-        currentSongNotifier.value != null &&
+-        isPlayingNotifier.value) {
+-      final song = currentSongNotifier.value!;
+-      final position = positionNotifier.value;
+-      try {
+-        await _runWithSuppressedSequenceStateUpdates(() async {
+-          await _playbackManager.load(song);
+-          if (position > Duration.zero) {
+-            await _playbackManager.seek(position);
+-          }
+-          await _playbackManager.play();
+-        });
+-      } catch (e) {
+-        _debugLog('[crossfade] reload on enable failed: $e');
+-      }
+-    }
+-  }
+-
+   Future<void> onAppPaused() async {
+     if (!Platform.isAndroid) return;
+     _appInForeground = false;
+@@ -858,16 +786,10 @@ class PlayerService {
+       !isBitPerfectModeEnabled &&
+       loopModeNotifier.value != LoopMode.one;
+ 
+-  bool get _isCrossfadeActive =>
+-      _usingRustBackend &&
+-      _rustAudioService.crossfadeEnabledNotifier.value &&
+-      !isBitPerfectProcessingLocked &&
+-      loopModeNotifier.value != LoopMode.one;
+-
+   bool get _shouldQueueNextTrack =>
+       _usingRustBackend &&
+       !isBitPerfectModeEnabled &&
+-      (_isGaplessActive || _isCrossfadeActive);
++      _isGaplessActive;
+ 
+   void _notifyQueueChanged() {
+     queueNotifier.value = List.unmodifiable(
+@@ -1393,19 +1315,6 @@ class PlayerService {
+       shouldIgnoreTrack: (track) => track.filePath == null,
+       shouldFastStartCurrentTrackOnly: () =>
+           loopModeNotifier.value != LoopMode.all,
+-      crossfadeConfigProvider: () {
+-        final curves = AndroidCrossfadeCurve.values;
+-        final curve = curves[_crossfadeCurveIndex.clamp(0, curves.length - 1)];
+-        return AndroidCrossfadeConfig(
+-          enabled:
+-              _rustAudioService.crossfadeEnabledNotifier.value &&
+-              !isBitPerfectProcessingLocked,
+-          durationSecs: _rustAudioService.crossfadeDurationNotifier.value,
+-          curve: curve,
+-        );
+-      },
+-      onNextSong: _resolveAndroidCrossfadeNext,
+-      onTrackAdvanced: _onAndroidTrackAdvanced,
+     );
+     engine.onTrackEnded = () {
+       if (_usingRustBackend) return;
+@@ -1676,7 +1585,7 @@ class PlayerService {
+ 
+   /// Prefer [primary], then the current-song notifier, then the last engine
+   /// playback snapshot so USB focus stays latched when Rust is ahead of or
+-  /// behind the notifier during gapless / crossfade / buffering.
++  /// behind the notifier during gapless / buffering.
+   Song? _songForUac2Sync(Song? primary) =>
+       primary ??
+       currentSongNotifier.value ??
+@@ -2214,7 +2123,6 @@ class PlayerService {
+       // stream and surfaces as libusb I/O errors.
+       final pipelineActive =
+           rustState == RustPlaybackState.playing ||
+-          rustState == RustPlaybackState.crossfading ||
+           rustState == RustPlaybackState.buffering;
+ 
+       unawaited(
+@@ -2251,9 +2159,6 @@ class PlayerService {
+       if (!_usingRustBackend) return;
+       unawaited(_onSongFinished(endedPath: endedPath));
+     };
+-    _rustAudioService.onCrossfadeStarted = (fromPath, toPath) {
+-      _debugLog('[crossfade] ENGINE TRIGGERED: $fromPath -> $toPath');
+-    };
+     _rustAudioService.onError = (message) {
+       _debugLog('[PlayerService] Rust backend error: $message');
+       if (Platform.isAndroid &&
+@@ -2504,7 +2409,7 @@ class PlayerService {
+       '_onSongFinished: loopMode=${loopModeNotifier.value}, currentIndex=$_currentIndex, playlistLength=${_playlist.length}, usingRustBackend=$_usingRustBackend, endedPath=$endedPath',
+     );
+ 
+-    if (_isGaplessActive || _isCrossfadeActive) {
++    if (_isGaplessActive) {
+       await _handleGaplessTrackEnded();
+       return;
+     }
+@@ -3176,35 +3081,9 @@ class PlayerService {
+     } else if (playbackMode == AudioEngineType.usbDacExperimental) {
+       await _rustAudioService.setVolume(_currentVolume);
+       await _rustAudioService.setPlaybackSpeed(1.0);
+-      await _rustAudioService.setCrossfade(
+-        enabled: false,
+-        durationSecs: _rustAudioService.crossfadeDurationNotifier.value,
+-      );
+     } else {
+       await _rustAudioService.setVolume(_currentVolume);
+       await _rustAudioService.setPlaybackSpeed(playbackSpeedNotifier.value);
+-      // Crossfade is suppressed whenever DSP processing is locked out — this
+-      // includes 432 Hz tuning, where the crossfade mix bypasses speed
+-      // resampling and would emit audio at the wrong pitch.
+-      final crossfadeOn =
+-          !isBitPerfectProcessingLocked &&
+-          _rustAudioService.crossfadeEnabledNotifier.value;
+-      await _rustAudioService.setCrossfade(
+-        enabled: crossfadeOn,
+-        durationSecs: _rustAudioService.crossfadeDurationNotifier.value,
+-      );
+-    }
+-
+-    if (!isBitPerfectProcessingLocked) {
+-      final curveIndex = await _appPreferencesService.getCrossfadeCurveIndex();
+-      final curves = <rust_audio.CrossfadeCurveType>[
+-        rust_audio.CrossfadeCurveType.equalPower,
+-        rust_audio.CrossfadeCurveType.linear,
+-        rust_audio.CrossfadeCurveType.squareRoot,
+-        rust_audio.CrossfadeCurveType.sCurve,
+-      ];
+-      final curve = curves[curveIndex.clamp(0, curves.length - 1)];
+-      await _rustAudioService.setCrossfadeCurve(curve);
+     }
+ 
+     await reapplyEqualizer();
+@@ -3775,21 +3654,6 @@ class PlayerService {
+     }
+   }
+ 
+-  /// Resolves the next song for the just_audio crossfade engine. Mirrors the
+-  /// linear-next rule used by the Rust gapless path (shuffle is honoured
+-  /// because [_playlist] is pre-shuffled at play time). Returns null when there
+-  /// is no successor so the engine lets the track end naturally.
+-  Song? _resolveAndroidCrossfadeNext() {
+-    if (_playlist.isEmpty) return null;
+-    if (loopModeNotifier.value == LoopMode.one) return null;
+-    final isLastTrack = _currentIndex >= _playlist.length - 1;
+-    if (isLastTrack) {
+-      if (loopModeNotifier.value != LoopMode.all) return null;
+-      return _playlist[0];
+-    }
+-    return _playlist[_currentIndex + 1];
+-  }
+-
+   /// Called by the just_audio engine after a crossfade swap completes. The
+   /// engine's emitted PlaybackState already drives currentSongNotifier, index
+   /// sync, notification, replay tracking and position save via
+diff --git a/lib/services/rust_audio_engine.dart b/lib/services/rust_audio_engine.dart
+index d706d17a..ee29ae76 100644
+--- a/lib/services/rust_audio_engine.dart
++++ b/lib/services/rust_audio_engine.dart
+@@ -74,7 +74,6 @@ class RustAudioEngine implements AudioEngine {
+       final rustState = _rustAudioService.stateNotifier.value;
+       final isPlaying =
+           rustState == RustPlaybackState.playing ||
+-          rustState == RustPlaybackState.crossfading ||
+           rustState == RustPlaybackState.buffering;
+       _emit(_state.copyWith(isPlaying: isPlaying));
+     });
+@@ -196,8 +195,7 @@ class RustAudioEngine implements AudioEngine {
+     final canSeekImmediately =
+         rustState == RustPlaybackState.playing ||
+         rustState == RustPlaybackState.paused ||
+-        rustState == RustPlaybackState.buffering ||
+-        rustState == RustPlaybackState.crossfading;
++        rustState == RustPlaybackState.buffering;
+     if (!canSeekImmediately) {
+       return;
+     }
+diff --git a/lib/services/rust_audio_service.dart b/lib/services/rust_audio_service.dart
+index 95a08090..fc4bf137 100644
+--- a/lib/services/rust_audio_service.dart
++++ b/lib/services/rust_audio_service.dart
+@@ -11,14 +11,13 @@ enum RustPlaybackState {
+   playing,
+   paused,
+   buffering,
+-  crossfading,
+   stopped,
+ }
+ 
+ /// Service that wraps the Rust audio engine API.
+ ///
+ /// This provides a clean Dart interface for the native Rust audio engine
+-/// which supports gapless playback and crossfade.
++/// which supports gapless playback.
+ class RustAudioService {
+   static final RustAudioService _instance = RustAudioService._internal();
+ 
+@@ -34,8 +33,6 @@ class RustAudioService {
+   final ValueNotifier<Duration> durationNotifier = ValueNotifier(Duration.zero);
+   final ValueNotifier<double> bufferLevelNotifier = ValueNotifier(0.0);
+   final ValueNotifier<double> volumeNotifier = ValueNotifier(1.0);
+-  final ValueNotifier<bool> crossfadeEnabledNotifier = ValueNotifier(false);
+-  final ValueNotifier<double> crossfadeDurationNotifier = ValueNotifier(3.0);
+   final ValueNotifier<double> playbackSpeedNotifier = ValueNotifier(1.0);
+ 
+   // Throttled notifier for text labels (updates slower than progress bar)
+@@ -47,7 +44,6 @@ class RustAudioService {
+ 
+   // Event callbacks
+   void Function(String path)? onTrackEnded;
+-  void Function(String fromPath, String toPath)? onCrossfadeStarted;
+   void Function(String path)? onNextTrackReady;
+   void Function(String message)? onError;
+ 
+@@ -215,8 +211,7 @@ class RustAudioService {
+ 
+   /// Get whether audio is currently playing.
+   bool get isPlaying =>
+-      stateNotifier.value == RustPlaybackState.playing ||
+-      stateNotifier.value == RustPlaybackState.crossfading;
++      stateNotifier.value == RustPlaybackState.playing;
+ 
+   /// Get the current track path.
+   String? get currentPath {
+@@ -338,30 +333,6 @@ class RustAudioService {
+     }
+   }
+ 
+-  /// Enable or disable crossfade.
+-  Future<void> setCrossfade({
+-    required bool enabled,
+-    double? durationSecs,
+-  }) async {
+-    if (!_initialized) return;
+-
+-    crossfadeEnabledNotifier.value = enabled;
+-    if (durationSecs != null) {
+-      crossfadeDurationNotifier.value = durationSecs;
+-    }
+-
+-    await rust_audio.audioSetCrossfade(
+-      enabled: enabled,
+-      durationSecs: crossfadeDurationNotifier.value,
+-    );
+-  }
+-
+-  /// Set the crossfade curve type.
+-  Future<void> setCrossfadeCurve(rust_audio.CrossfadeCurveType curve) async {
+-    if (!_initialized) return;
+-    await rust_audio.audioSetCrossfadeCurve(curve: curve);
+-  }
+-
+   /// Skip to the next queued track (with crossfade if enabled).
+   Future<void> skipToNext() async {
+     if (!_initialized) return;
+@@ -490,8 +461,6 @@ class RustAudioService {
+         return RustPlaybackState.paused;
+       case 'buffering':
+         return RustPlaybackState.buffering;
+-      case 'crossfading':
+-        return RustPlaybackState.crossfading;
+       case 'stopped':
+         return RustPlaybackState.stopped;
+       default:
+@@ -572,9 +541,6 @@ class RustAudioService {
+           }
+           onTrackEnded?.call(path);
+         },
+-        crossfadeStarted: (fromPath, toPath) {
+-          onCrossfadeStarted?.call(fromPath, toPath);
+-        },
+         error: (message) {
+           devLog('Rust audio error: $message');
+           onError?.call(message);
+@@ -595,8 +561,6 @@ class RustAudioService {
+     durationNotifier.dispose();
+     bufferLevelNotifier.dispose();
+     volumeNotifier.dispose();
+-    crossfadeEnabledNotifier.dispose();
+-    crossfadeDurationNotifier.dispose();
+     playbackSpeedNotifier.dispose();
+     positionLabelNotifier.dispose();
+   }
+diff --git a/rust/src/api/audio_api.rs b/rust/src/api/audio_api.rs
+index f4a09ae0..faa5d194 100644
+--- a/rust/src/api/audio_api.rs
++++ b/rust/src/api/audio_api.rs
+@@ -215,43 +215,6 @@ pub fn last_volume() -> f32 {
+     f32::from_bits(LAST_VOLUME.load(Ordering::Relaxed))
+ }
+ 
+-pub fn set_pending_crossfade(enabled: bool, duration_secs: f32) {
+-    PENDING_XF_ENABLED.store(if enabled { 1 } else { 0 }, Ordering::Relaxed);
+-    PENDING_XF_DURATION.store(duration_secs.to_bits(), Ordering::Relaxed);
+-}
+-
+-pub fn set_pending_crossfade_curve(curve: crate::audio::crossfader::CrossfadeCurve) {
+-    let raw = match curve {
+-        crate::audio::crossfader::CrossfadeCurve::EqualPower => 0,
+-        crate::audio::crossfader::CrossfadeCurve::Linear => 1,
+-        crate::audio::crossfader::CrossfadeCurve::SquareRoot => 2,
+-        crate::audio::crossfader::CrossfadeCurve::SCurve => 3,
+-    };
+-    PENDING_XF_CURVE.store(raw, Ordering::Relaxed);
+-}
+-
+-pub fn take_pending_crossfade() -> Option<(bool, f32, crate::audio::crossfader::CrossfadeCurve)> {
+-    let enabled_raw = PENDING_XF_ENABLED.swap(u8::MAX, Ordering::Relaxed);
+-    if enabled_raw == u8::MAX {
+-        return None;
+-    }
+-    let enabled = enabled_raw == 1;
+-    let dur_bits = PENDING_XF_DURATION.swap(0xFFFF_FFFF, Ordering::Relaxed);
+-    let duration_secs = if dur_bits == 0xFFFF_FFFF {
+-        3.0
+-    } else {
+-        f32::from_bits(dur_bits)
+-    };
+-    let curve_raw = PENDING_XF_CURVE.swap(u8::MAX, Ordering::Relaxed);
+-    let curve = match curve_raw {
+-        1 => crate::audio::crossfader::CrossfadeCurve::Linear,
+-        2 => crate::audio::crossfader::CrossfadeCurve::SquareRoot,
+-        3 => crate::audio::crossfader::CrossfadeCurve::SCurve,
+-        _ => crate::audio::crossfader::CrossfadeCurve::EqualPower,
+-    };
+-    Some((enabled, duration_secs, curve))
+-}
+-
+ fn with_audio_engine<T>(
+     f: impl FnOnce(&crate::audio::engine::AudioEngineHandle) -> Result<T, String>,
+ ) -> Result<T, String> {
+@@ -544,10 +507,6 @@ pub enum AudioEventType {
+     TrackEnded {
+         path: String,
+     },
+-    CrossfadeStarted {
+-        from_path: String,
+-        to_path: String,
+-    },
+     Error {
+         message: String,
+     },
+@@ -556,15 +515,6 @@ pub enum AudioEventType {
+     },
+ }
+ 
+-/// Crossfade curve type for Dart.
+-#[derive(Debug, Clone, Copy)]
+-pub enum CrossfadeCurveType {
+-    EqualPower,
+-    Linear,
+-    SquareRoot,
+-    SCurve,
+-}
+-
+ /// The currently available output capability classes for engine selection.
+ #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+ pub enum AudioCapabilityType {
+@@ -1249,17 +1199,6 @@ pub fn audio_set_limiter(
+     with_audio_engine(|handle| handle.set_limiter(enabled, input_gain_db, ceiling_db, release_ms))
+ }
+ 
+-/// Configure crossfade settings.
+-///
+-/// The engine's own `is_crossfade_allowed()` trigger gate (plus the Dart-side
+-/// processing policy) authoritatively decide whether crossfade runs; the old
+-/// passthrough guard here was redundant and self-defeating — it blocked the
+-/// very `crossfade_forces_dsp` flip that lets crossfade escape passthrough.
+-pub fn audio_set_crossfade(enabled: bool, duration_secs: f32) -> Result<(), String> {
+-    set_pending_crossfade(enabled, duration_secs);
+-    with_audio_engine(|handle| handle.set_crossfade(enabled, duration_secs))
+-}
+-
+ /// Skip to the next queued track.
+ pub fn audio_skip_to_next() -> Result<(), String> {
+     with_audio_engine(|handle| handle.skip_to_next())
+@@ -1287,7 +1226,6 @@ pub fn audio_get_state() -> String {
+         PlaybackState::Playing => "playing".to_string(),
+         PlaybackState::Paused => "paused".to_string(),
+         PlaybackState::Buffering => "buffering".to_string(),
+-        PlaybackState::Crossfading => "crossfading".to_string(),
+         PlaybackState::Stopped => "stopped".to_string(),
+     }
+ }
+@@ -1315,7 +1253,6 @@ pub fn audio_poll_event() -> Option<AudioEventType> {
+                 PlaybackState::Playing => "playing".to_string(),
+                 PlaybackState::Paused => "paused".to_string(),
+                 PlaybackState::Buffering => "buffering".to_string(),
+-                PlaybackState::Crossfading => "crossfading".to_string(),
+                 PlaybackState::Stopped => "stopped".to_string(),
+             },
+         },
+@@ -1325,26 +1262,11 @@ pub fn audio_poll_event() -> Option<AudioEventType> {
+             buffer_level: p.buffer_level,
+         },
+         AudioEvent::TrackEnded { path } => AudioEventType::TrackEnded { path },
+-        AudioEvent::CrossfadeStarted { from_path, to_path } => {
+-            AudioEventType::CrossfadeStarted { from_path, to_path }
+-        }
+         AudioEvent::Error { message } => AudioEventType::Error { message },
+         AudioEvent::NextTrackReady { path } => AudioEventType::NextTrackReady { path },
+     })
+ }
+ 
+-/// Set the crossfade curve type.
+-pub fn audio_set_crossfade_curve(curve: CrossfadeCurveType) -> Result<(), String> {
+-    let curve = match curve {
+-        CrossfadeCurveType::EqualPower => crate::audio::crossfader::CrossfadeCurve::EqualPower,
+-        CrossfadeCurveType::Linear => crate::audio::crossfader::CrossfadeCurve::Linear,
+-        CrossfadeCurveType::SquareRoot => crate::audio::crossfader::CrossfadeCurve::SquareRoot,
+-        CrossfadeCurveType::SCurve => crate::audio::crossfader::CrossfadeCurve::SCurve,
+-    };
+-    set_pending_crossfade_curve(curve);
+-    with_audio_engine(|handle| handle.set_crossfade_curve(curve))
+-}
+-
+ /// Get the audio engine's sample rate.
+ #[flutter_rust_bridge::frb(sync)]
+ pub fn audio_get_sample_rate() -> Option<u32> {
+@@ -1369,43 +1291,3 @@ pub fn audio_get_channels() -> Option<usize> {
+ pub fn audio_shutdown() -> Result<(), String> {
+     ENGINE_MANAGER.shutdown()
+ }
+-
+-#[cfg(test)]
+-mod tests {
+-    use super::*;
+-    use crate::audio::crossfader::CrossfadeCurve;
+-
+-    #[test]
+-    fn pending_crossfade_round_trip() {
+-        let _ = take_pending_crossfade();
+-
+-        set_pending_crossfade(true, 5.0);
+-        set_pending_crossfade_curve(CrossfadeCurve::Linear);
+-        let (enabled, dur, curve) = take_pending_crossfade().expect("pending set");
+-        assert!(enabled);
+-        assert!((dur - 5.0).abs() < 1e-6);
+-        assert_eq!(curve, CrossfadeCurve::Linear);
+-        assert!(take_pending_crossfade().is_none(), "take must clear");
+-
+-        set_pending_crossfade(false, 12.5);
+-        let (enabled, dur, _) = take_pending_crossfade().unwrap();
+-        assert!(!enabled, "disabled state must round-trip");
+-        assert!((dur - 12.5).abs() < 1e-6);
+-    }
+-
+-    #[test]
+-    fn pending_crossfade_all_curves() {
+-        for (curve, expect) in [
+-            (CrossfadeCurve::EqualPower, CrossfadeCurve::EqualPower),
+-            (CrossfadeCurve::Linear, CrossfadeCurve::Linear),
+-            (CrossfadeCurve::SquareRoot, CrossfadeCurve::SquareRoot),
+-            (CrossfadeCurve::SCurve, CrossfadeCurve::SCurve),
+-        ] {
+-            let _ = take_pending_crossfade();
+-            set_pending_crossfade(true, 3.0);
+-            set_pending_crossfade_curve(curve);
+-            let (_, _, got) = take_pending_crossfade().unwrap();
+-            assert_eq!(got, expect, "curve {:?} did not round-trip", curve);
+-        }
+-    }
+-}
+diff --git a/rust/src/audio/commands.rs b/rust/src/audio/commands.rs
+index 241c4902..dbcca31a 100644
+--- a/rust/src/audio/commands.rs
++++ b/rust/src/audio/commands.rs
+@@ -33,12 +33,6 @@ pub enum AudioCommand {
+     Seek { position_secs: f64 },
+     /// Set the main volume (0.0 to 1.0)
+     SetVolume { volume: f32 },
+-    /// Enable/disable crossfade and set duration
+-    SetCrossfade { enabled: bool, duration_secs: f32 },
+-    /// Set the crossfade curve type
+-    SetCrossfadeCurve {
+-        curve: crate::audio::crossfader::CrossfadeCurve,
+-    },
+     /// Set playback speed (0.5 to 2.0)
+     SetPlaybackSpeed { speed: f32 },
+     /// Set graphic EQ: enabled and 10 band gains in dB.
+@@ -63,8 +57,6 @@ pub enum AudioCommand {
+     SetPipelineMode { passthrough: bool },
+     /// Override pipeline to Dop for DoP DSD playback, or restore base mode.
+     SetDopOverride { is_dop: bool },
+-    /// Trigger crossfade to next track immediately
+-    CrossfadeToNext,
+     /// Skip to the next track (with crossfade if enabled)
+     SkipToNext,
+     /// Shutdown the audio engine
+@@ -82,8 +74,6 @@ pub enum PlaybackState {
+     Paused,
+     /// Currently buffering/loading
+     Buffering,
+-    /// Crossfading between tracks
+-    Crossfading,
+     /// Playback stopped (track ended or stop called)
+     Stopped,
+ }
+@@ -114,8 +104,6 @@ pub enum AudioEvent {
+     Progress(PlaybackProgress),
+     /// Track finished naturally (not skipped)
+     TrackEnded { path: String },
+-    /// Crossfade started between tracks
+-    CrossfadeStarted { from_path: String, to_path: String },
+     /// Error occurred during playback
+     Error { message: String },
+     /// Next track is ready (for gapless)
+diff --git a/rust/src/audio/crossfader.rs b/rust/src/audio/crossfader.rs
+deleted file mode 100644
+index c82212ee..00000000
+--- a/rust/src/audio/crossfader.rs
++++ /dev/null
+@@ -1,502 +0,0 @@
+-//! Equal-power crossfade implementation.
+-//!
+-//! Uses sine/cosine curves to maintain constant perceived loudness during
+-//! the transition between tracks.
+-
+-use std::f32::consts::FRAC_PI_2;
+-
+-/// Crossfade curve types.
+-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+-pub enum CrossfadeCurve {
+-    /// Equal power using sin/cos (recommended)
+-    /// Maintains constant perceived loudness
+-    EqualPower,
+-    /// Linear fade (can sound "dipped" in the middle)
+-    Linear,
+-    /// Square root curve (alternative equal power)
+-    SquareRoot,
+-    /// S-curve for smoother transitions
+-    SCurve,
+-}
+-
+-impl Default for CrossfadeCurve {
+-    fn default() -> Self {
+-        Self::EqualPower
+-    }
+-}
+-
+-/// Crossfader state machine.
+-#[derive(Debug, Clone)]
+-pub struct Crossfader {
+-    /// Whether crossfade is enabled
+-    enabled: bool,
+-    /// Duration of crossfade in samples (the active fade length, possibly
+-    /// clamped per-track for short sources).
+-    duration_samples: usize,
+-    /// The user-configured duration in samples. Used as the end-of-track
+-    /// trigger threshold and as the unclamped fade length for long tracks.
+-    configured_duration_samples: usize,
+-    /// Current position in the crossfade (0 to duration_samples)
+-    position: usize,
+-    /// Whether a crossfade is currently in progress
+-    active: bool,
+-    /// The curve type to use
+-    curve: CrossfadeCurve,
+-    /// Sample rate for timing calculations
+-    sample_rate: u32,
+-}
+-
+-impl Crossfader {
+-    /// Create a new crossfader.
+-    ///
+-    /// # Arguments
+-    /// * `sample_rate` - Audio sample rate (e.g., 48000)
+-    /// * `duration_secs` - Crossfade duration in seconds (e.g., 3.0)
+-    pub fn new(sample_rate: u32, duration_secs: f32) -> Self {
+-        let duration_samples = (sample_rate as f32 * duration_secs) as usize;
+-        Self {
+-            enabled: true,
+-            duration_samples,
+-            configured_duration_samples: duration_samples,
+-            position: 0,
+-            active: false,
+-            curve: CrossfadeCurve::default(),
+-            sample_rate,
+-        }
+-    }
+-
+-    /// Create a disabled crossfader.
+-    pub fn disabled(sample_rate: u32) -> Self {
+-        Self {
+-            enabled: false,
+-            duration_samples: 0,
+-            configured_duration_samples: 0,
+-            position: 0,
+-            active: false,
+-            curve: CrossfadeCurve::default(),
+-            sample_rate,
+-        }
+-    }
+-
+-    /// Check if crossfade is enabled.
+-    #[inline]
+-    pub fn is_enabled(&self) -> bool {
+-        self.enabled
+-    }
+-
+-    /// Check if a crossfade is currently active.
+-    #[inline]
+-    pub fn is_active(&self) -> bool {
+-        self.active
+-    }
+-
+-    /// Current crossfade position (frame count).
+-    #[inline]
+-    pub fn position(&self) -> usize {
+-        self.position
+-    }
+-
+-    /// Crossfade duration in frames.
+-    #[inline]
+-    pub fn duration_samples(&self) -> usize {
+-        self.duration_samples
+-    }
+-
+-    /// Enable or disable crossfade.
+-    pub fn set_enabled(&mut self, enabled: bool) {
+-        self.enabled = enabled;
+-        if !enabled {
+-            self.active = false;
+-            self.position = 0;
+-        }
+-    }
+-
+-    /// Set the crossfade duration.
+-    ///
+-    /// Resets both the configured (threshold) and active (fade length)
+-    /// durations to the user preference.
+-    pub fn set_duration(&mut self, duration_secs: f32) {
+-        let samples = (self.sample_rate as f32 * duration_secs) as usize;
+-        self.duration_samples = samples;
+-        self.configured_duration_samples = samples;
+-    }
+-
+-    /// The user-configured duration in seconds. Used by the engine as the
+-    /// end-of-track trigger threshold and as the fade length when the track
+-    /// is long enough.
+-    #[inline]
+-    pub fn configured_duration_secs(&self) -> f32 {
+-        self.configured_duration_samples as f32 / self.sample_rate as f32
+-    }
+-
+-    /// Set the active fade length for the upcoming crossfade, independently of
+-    /// the configured duration. The engine clamps this to half the current
+-    /// track's length for short sources. Should only be called immediately
+-    /// before [`start`]. Leaves the configured duration untouched so the next
+-    /// track recomputes its clamp from the user preference.
+-    ///
+-    /// [`start`]: Crossfader::start
+-    pub fn set_active_duration_secs(&mut self, duration_secs: f32) {
+-        self.duration_samples = (self.sample_rate as f32 * duration_secs) as usize;
+-    }
+-
+-    /// Rebind to a new output sample rate, preserving the enabled state,
+-    /// configured duration (in seconds), and curve. Any in-progress fade is
+-    /// cancelled. Called by `reconfigure_sample_rate` so a mid-session
+-    /// output-rate change (e.g. 48k → 44.1k during Oboe stream open) does not
+-    /// silently wipe the user's crossfade preference.
+-    pub fn rebind_sample_rate(&mut self, sample_rate: u32) {
+-        let configured_secs = self.configured_duration_secs();
+-        self.sample_rate = sample_rate;
+-        let samples = (sample_rate as f32 * configured_secs) as usize;
+-        self.configured_duration_samples = samples;
+-        self.duration_samples = samples;
+-        self.active = false;
+-        self.position = 0;
+-    }
+-
+-    /// Get the crossfade duration in seconds.
+-    pub fn duration_secs(&self) -> f32 {
+-        self.duration_samples as f32 / self.sample_rate as f32
+-    }
+-
+-    /// Get remaining crossfade time in seconds.
+-    pub fn remaining_secs(&self) -> f32 {
+-        if !self.active {
+-            return 0.0;
+-        }
+-        let remaining_samples = self.duration_samples.saturating_sub(self.position);
+-        remaining_samples as f32 / self.sample_rate as f32
+-    }
+-
+-    /// Set the curve type.
+-    pub fn set_curve(&mut self, curve: CrossfadeCurve) {
+-        self.curve = curve;
+-    }
+-
+-    /// Start a crossfade transition.
+-    pub fn start(&mut self) {
+-        if self.enabled && self.duration_samples > 0 {
+-            self.active = true;
+-            self.position = 0;
+-        }
+-    }
+-
+-    /// Reset the crossfader (cancel any active crossfade).
+-    pub fn reset(&mut self) {
+-        self.active = false;
+-        self.position = 0;
+-    }
+-
+-    /// Calculate gains for the current position.
+-    ///
+-    /// Returns (gain_a, gain_b) where:
+-    /// - gain_a is the fading-out track's volume
+-    /// - gain_b is the fading-in track's volume
+-    #[inline]
+-    pub fn current_gains(&self) -> (f32, f32) {
+-        if !self.active || self.duration_samples == 0 {
+-            // No crossfade: track A at full volume, track B silent
+-            return (1.0, 0.0);
+-        }
+-
+-        let progress = (self.position as f32 / self.duration_samples as f32).clamp(0.0, 1.0);
+-        self.calculate_gains(progress)
+-    }
+-
+-    /// Calculate gains for a given progress value (0.0 to 1.0).
+-    #[inline]
+-    fn calculate_gains(&self, progress: f32) -> (f32, f32) {
+-        match self.curve {
+-            CrossfadeCurve::EqualPower => {
+-                // Equal power crossfade using sin/cos
+-                // At progress=0: A=1, B=0
+-                // At progress=0.5: A≈0.707, B≈0.707 (constant power)
+-                // At progress=1: A=0, B=1
+-                let angle = progress * FRAC_PI_2;
+-                let gain_a = angle.cos();
+-                let gain_b = angle.sin();
+-                (gain_a, gain_b)
+-            }
+-            CrossfadeCurve::Linear => {
+-                // Simple linear crossfade
+-                let gain_a = 1.0 - progress;
+-                let gain_b = progress;
+-                (gain_a, gain_b)
+-            }
+-            CrossfadeCurve::SquareRoot => {
+-                // Square root curve (alternative equal power)
+-                let gain_a = (1.0 - progress).sqrt();
+-                let gain_b = progress.sqrt();
+-                (gain_a, gain_b)
+-            }
+-            CrossfadeCurve::SCurve => {
+-                // S-curve (smooth start and end)
+-                // Using smoothstep: 3x² - 2x³
+-                let s = progress * progress * (3.0 - 2.0 * progress);
+-                let gain_a = 1.0 - s;
+-                let gain_b = s;
+-                (gain_a, gain_b)
+-            }
+-        }
+-    }
+-
+-    /// Advance the crossfade by one sample.
+-    /// Returns true if the crossfade just completed.
+-    #[inline]
+-    pub fn advance(&mut self) -> bool {
+-        if !self.active {
+-            return false;
+-        }
+-
+-        self.position += 1;
+-        if self.position >= self.duration_samples {
+-            self.active = false;
+-            self.position = 0;
+-            return true;
+-        }
+-        false
+-    }
+-
+-    /// Advance the crossfade by multiple samples.
+-    /// Returns true if the crossfade completed during this advance.
+-    #[inline]
+-    pub fn advance_by(&mut self, samples: usize) -> bool {
+-        if !self.active {
+-            return false;
+-        }
+-
+-        self.position += samples;
+-        if self.position >= self.duration_samples {
+-            self.active = false;
+-            self.position = 0;
+-            return true;
+-        }
+-        false
+-    }
+-
+-    /// Mix two audio buffers according to current crossfade state.
+-    ///
+-    /// This is the main mixing function called during crossfade.
+-    /// It advances the crossfade position automatically.
+-    ///
+-    /// # Arguments
+-    /// * `source_a` - Samples from the outgoing track
+-    /// * `source_b` - Samples from the incoming track
+-    /// * `output` - Pre-allocated output buffer
+-    /// * `channels` - Number of audio channels (for proper gain application)
+-    ///
+-    /// # Returns
+-    /// * `Ok(true)` if crossfade completed during this mix
+-    /// * `Ok(false)` if crossfade is still in progress
+-    pub fn mix(
+-        &mut self,
+-        source_a: &[f32],
+-        source_b: &[f32],
+-        output: &mut [f32],
+-        channels: usize,
+-    ) -> Result<bool, String> {
+-        let samples = source_a.len().min(source_b.len()).min(output.len());
+-        let frames = samples / channels;
+-
+-        if frames == 0 {
+-            return Ok(false);
+-        }
+-
+-        let mut completed = false;
+-
+-        // Process frame by frame for smooth gain transitions
+-        for frame in 0..frames {
+-            let (gain_a, gain_b) = self.current_gains();
+-
+-            for ch in 0..channels {
+-                let idx = frame * channels + ch;
+-                if idx < samples {
+-                    // Mix with gains: output = (A * gainA) + (B * gainB)
+-                    let sample_a = source_a.get(idx).copied().unwrap_or(0.0);
+-                    let sample_b = source_b.get(idx).copied().unwrap_or(0.0);
+-                    output[idx] = sample_a * gain_a + sample_b * gain_b;
+-                }
+-            }
+-
+-            if self.advance() {
+-                completed = true;
+-            }
+-        }
+-
+-        Ok(completed)
+-    }
+-
+-    /// Apply fade-out to a single buffer (no mixing, just gain reduction).
+-    pub fn apply_fadeout(&mut self, buffer: &mut [f32], channels: usize) {
+-        if !self.active {
+-            return;
+-        }
+-
+-        let frames = buffer.len() / channels;
+-        for frame in 0..frames {
+-            let (gain_a, _) = self.current_gains();
+-            for ch in 0..channels {
+-                let idx = frame * channels + ch;
+-                if idx < buffer.len() {
+-                    buffer[idx] *= gain_a;
+-                }
+-            }
+-            self.advance();
+-        }
+-    }
+-
+-    /// Apply fade-in to a single buffer (no mixing, just gain increase).
+-    pub fn apply_fadein(&mut self, buffer: &mut [f32], channels: usize) {
+-        if !self.active {
+-            return;
+-        }
+-
+-        let frames = buffer.len() / channels;
+-        for frame in 0..frames {
+-            let (_, gain_b) = self.current_gains();
+-            for ch in 0..channels {
+-                let idx = frame * channels + ch;
+-                if idx < buffer.len() {
+-                    buffer[idx] *= gain_b;
+-                }
+-            }
+-            self.advance();
+-        }
+-    }
+-}
+-
+-/// SIMD-optimized mixing for larger buffers.
+-///
+-/// This function processes samples in chunks for better cache utilization
+-/// and potential auto-vectorization.
+-#[inline]
+-pub fn mix_buffers_with_gains(
+-    source_a: &[f32],
+-    gain_a: f32,
+-    source_b: &[f32],
+-    gain_b: f32,
+-    output: &mut [f32],
+-) {
+-    let len = source_a.len().min(source_b.len()).min(output.len());
+-
+-    // Process in chunks of 8 for potential SIMD optimization
+-    let chunks = len / 8;
+-    let remainder = len % 8;
+-
+-    for i in 0..chunks {
+-        let base = i * 8;
+-        for j in 0..8 {
+-            let idx = base + j;
+-            output[idx] = source_a[idx] * gain_a + source_b[idx] * gain_b;
+-        }
+-    }
+-
+-    // Handle remaining samples
+-    let base = chunks * 8;
+-    for j in 0..remainder {
+-        let idx = base + j;
+-        output[idx] = source_a[idx] * gain_a + source_b[idx] * gain_b;
+-    }
+-}
+-
+-#[cfg(test)]
+-mod tests {
+-    use super::*;
+-
+-    #[test]
+-    fn test_equal_power_at_midpoint() {
+-        let crossfader = Crossfader::new(48000, 1.0);
+-
+-        // At midpoint (progress = 0.5), both gains should be ~0.707
+-        let (gain_a, gain_b) = crossfader.calculate_gains(0.5);
+-
+-        // Equal power means A² + B² = 1
+-        let power_sum = gain_a * gain_a + gain_b * gain_b;
+-        assert!((power_sum - 1.0).abs() < 0.01, "Power sum: {}", power_sum);
+-    }
+-
+-    #[test]
+-    fn test_crossfade_start_end() {
+-        let crossfader = Crossfader::new(48000, 1.0);
+-
+-        // At start: A=1, B=0
+-        let (gain_a, gain_b) = crossfader.calculate_gains(0.0);
+-        assert!((gain_a - 1.0).abs() < 0.001);
+-        assert!(gain_b.abs() < 0.001);
+-
+-        // At end: A=0, B=1
+-        let (gain_a, gain_b) = crossfader.calculate_gains(1.0);
+-        assert!(gain_a.abs() < 0.001);
+-        assert!((gain_b - 1.0).abs() < 0.001);
+-    }
+-
+-    #[test]
+-    fn test_crossfade_progression() {
+-        let mut crossfader = Crossfader::new(48000, 1.0);
+-        crossfader.start();
+-
+-        assert!(crossfader.is_active());
+-
+-        // Advance through the entire crossfade
+-        for _ in 0..48000 {
+-            if crossfader.advance() {
+-                break;
+-            }
+-        }
+-
+-        assert!(!crossfader.is_active());
+-    }
+-
+-    #[test]
+-    fn test_configured_duration_independent_of_active_clamp() {
+-        let mut crossfader = Crossfader::new(48000, 5.0);
+-        // Configured duration reflects the user preference.
+-        assert!((crossfader.configured_duration_secs() - 5.0).abs() < 0.01);
+-
+-        // Engine clamps the active fade to 1.0s for a short track.
+-        crossfader.set_active_duration_secs(1.0);
+-        assert!((crossfader.duration_secs() - 1.0).abs() < 0.01);
+-        // Configured duration must be untouched so the next track recomputes.
+-        assert!((crossfader.configured_duration_secs() - 5.0).abs() < 0.01);
+-
+-        crossfader.start();
+-        assert!(crossfader.is_active());
+-        // Active fade runs for the clamped 1s (48000 samples), not 5s.
+-        for _ in 0..48000 {
+-            if crossfader.advance() {
+-                break;
+-            }
+-        }
+-        assert!(!crossfader.is_active());
+-    }
+-
+-    #[test]
+-    fn test_set_duration_resets_configured_and_active() {
+-        let mut crossfader = Crossfader::new(48000, 1.0);
+-        crossfader.set_active_duration_secs(0.5);
+-        crossfader.set_duration(3.0);
+-        assert!((crossfader.configured_duration_secs() - 3.0).abs() < 0.01);
+-        assert!((crossfader.duration_secs() - 3.0).abs() < 0.01);
+-    }
+-
+-    #[test]
+-    fn test_rebind_sample_rate_preserves_state() {
+-        let mut crossfader = Crossfader::new(48000, 4.0);
+-        crossfader.set_curve(CrossfadeCurve::Linear);
+-        crossfader.start();
+-        assert!(crossfader.is_active());
+-
+-        // A mid-session output-rate change (e.g. 48k -> 44.1k) must NOT wipe
+-        // the user's enabled/duration/curve preference.
+-        crossfader.rebind_sample_rate(44100);
+-
+-        assert!(crossfader.is_enabled());
+-        // Configured duration in seconds is preserved across the rate change.
+-        assert!((crossfader.configured_duration_secs() - 4.0).abs() < 0.05);
+-        // Sample counts are recomputed at the new rate.
+-        assert_eq!(crossfader.duration_samples(), (44100.0 * 4.0) as usize);
+-        // An in-progress fade is cancelled.
+-        assert!(!crossfader.is_active());
+-    }
+-}
+diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
+index ba874e6e..52cf9b5e 100644
+--- a/rust/src/audio/engine.rs
++++ b/rust/src/audio/engine.rs
+@@ -1,12 +1,11 @@
+ //! Core audio engine with cpal output and lock-free architecture.
+ //!
+ //! The engine manages the audio output stream, handles commands from Dart,
+-//! and coordinates decoding, resampling, and crossfading.
++//! and coordinates decoding, resampling.
+ 
+ use crate::dev_eprintln;
+ 
+ use crate::audio::commands::{AudioCommand, AudioEvent, PlaybackProgress, PlaybackState};
+-use crate::audio::crossfader::Crossfader;
+ use crate::audio::decoder::DecoderThread;
+ use crate::audio::decoder_handle::{detect_file_type, DecoderHandle, FileType};
+ #[cfg(target_os = "android")]
+@@ -104,7 +103,7 @@ pub struct AudioOutputRuntimeState {
+ /// Pipeline mode: set once at engine creation time, never toggled at runtime.
+ ///
+ /// Like USB direct, when the engine runs in Passthrough mode the audio
+-/// callback skips ALL DSP (EQ, dynamics, speed, crossfade). The only
++/// callback skips ALL DSP (EQ, dynamics, speed). The only
+ /// processing applied is gain — which is a no-op when DAC hardware
+ /// volume is available.
+ #[derive(Clone, Copy, PartialEq, Eq, Debug)]
+@@ -133,13 +132,8 @@ pub struct AudioCallbackData {
+     base_pipeline_mode: AtomicU8,
+     /// Output channel count
+     channels: usize,
+-    /// Crossfader state
+-    crossfader: Mutex<Crossfader>,
+     /// Source provider (provides samples from current/next track)
+     sources: Mutex<SourceProvider>,
+-    /// Pre-allocated mix buffer for crossfading
+-    mix_buffer_a: Mutex<Vec<f32>>,
+-    mix_buffer_b: Mutex<Vec<f32>>,
+     /// Pre-allocated speed processing buffer
+     speed_buffer: Mutex<Vec<f32>>,
+     /// Fractional sample position for speed interpolation
+@@ -153,17 +147,6 @@ pub struct AudioCallbackData {
+     /// Experimental 432 Hz tuning override. When enabled the callback leaves
+     /// passthrough and uses the DSP path at 432/440 speed.
+     tuning_432hz_enabled: AtomicBool,
+-    /// Set when crossfade is enabled. Forces the callback out of passthrough so
+-    /// the DSP/crossfade mix path runs — even when the engine verified a
+-    /// bit-perfect output (e.g. MixerBitPerfect on a phone whose speaker
+-    /// natively supports the track rate). Without this, crossfade is silently
+-    /// skipped because is_passthrough() returns true.
+-    crossfade_forces_dsp: AtomicBool,
+-    /// Lock-free mirror of `crossfader.is_active()`. The command thread polls
+-    /// this instead of locking the crossfader so the real-time callback's
+-    /// `try_lock` never collides mid-fade (a collision drops the fade gains and
+-    /// emits the outgoing track at full volume = audible chopping).
+-    crossfade_active: AtomicBool,
+     /// Set by the Oboe error callback when the output stream is disconnected
+     /// (audio focus loss, phone call, route change). The command loop reopens
+     /// the stream so playback resumes at the interrupted position instead of
+@@ -199,18 +182,13 @@ impl AudioCallbackData {
+             pipeline_mode: AtomicU8::new(pipeline_mode as u8),
+             base_pipeline_mode: AtomicU8::new(pipeline_mode as u8),
+             channels,
+-            crossfader: Mutex::new(Crossfader::disabled(sample_rate)),
+             sources: Mutex::new(SourceProvider::new(sample_rate, channels)),
+-            mix_buffer_a: Mutex::new(vec![0.0; buffer_size]),
+-            mix_buffer_b: Mutex::new(vec![0.0; buffer_size]),
+             speed_buffer: Mutex::new(vec![0.0; speed_buffer_size]),
+             speed_frac_pos: Mutex::new(0.0),
+             equalizer: Mutex::new(Equalizer::new()),
+             dynamics: Mutex::new(DynamicsChain::new(sample_rate)),
+             finished_tracks,
+             tuning_432hz_enabled: AtomicBool::new(tuning_enabled),
+-            crossfade_forces_dsp: AtomicBool::new(false),
+-            crossfade_active: AtomicBool::new(false),
+             stream_needs_restart: AtomicBool::new(false),
+         }
+     }
+@@ -261,12 +239,6 @@ impl AudioCallbackData {
+         self.playback_speed
+             .store(speed.to_bits(), Ordering::Relaxed);
+         *self.speed_frac_pos.lock() = 0.0;
+-        // The crossfade mix bypasses speed resampling, so an in-progress fade
+-        // would emit audio at the wrong pitch under the pinned 432/440 speed.
+-        if enabled {
+-            self.crossfader.lock().reset();
+-            self.crossfade_active.store(false, Ordering::Relaxed);
+-        }
+     }
+ 
+     #[inline]
+@@ -300,17 +272,7 @@ impl AudioCallbackData {
+     pub fn is_passthrough(&self) -> bool {
+         let mode = self.pipeline_mode.load(Ordering::Relaxed);
+         let tuning = self.tuning_432hz_enabled.load(Ordering::Relaxed);
+-        let crossfade = self.crossfade_forces_dsp.load(Ordering::Relaxed);
+-        mode == PipelineMode::Passthrough as u8 && !tuning && !crossfade
+-    }
+-
+-    /// Whether crossfade may run. Crossfade requires the DSP path (not
+-    /// passthrough) AND must be suppressed under 432 Hz tuning, because the
+-    /// crossfade mix branch bypasses the speed resampler and would emit audio
+-    /// at the wrong pitch while the engine is pinned to 432/440.
+-    #[inline]
+-    pub fn is_crossfade_allowed(&self) -> bool {
+-        !self.is_passthrough() && !self.tuning_432hz_enabled.load(Ordering::Relaxed)
++        mode == PipelineMode::Passthrough as u8 && !tuning
+     }
+ 
+     #[inline]
+@@ -327,11 +289,7 @@ impl AudioCallbackData {
+         let buffer_size = (sample_rate as usize / 10) * self.channels;
+         let speed_buffer_size = buffer_size * 3;
+ 
+-        self.crossfader.lock().rebind_sample_rate(sample_rate);
+-        self.crossfade_active.store(false, Ordering::Relaxed);
+         *self.sources.lock() = SourceProvider::new(sample_rate, self.channels);
+-        *self.mix_buffer_a.lock() = vec![0.0; buffer_size];
+-        *self.mix_buffer_b.lock() = vec![0.0; buffer_size];
+         *self.speed_buffer.lock() = vec![0.0; speed_buffer_size];
+         *self.speed_frac_pos.lock() = 0.0;
+         *self.dynamics.lock() = DynamicsChain::new(sample_rate);
+@@ -442,22 +400,6 @@ impl AudioEngineHandle {
+         self.send_command(AudioCommand::SetVolume { volume })
+     }
+ 
+-    /// Configure crossfade.
+-    pub fn set_crossfade(&self, enabled: bool, duration_secs: f32) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetCrossfade {
+-            enabled,
+-            duration_secs,
+-        })
+-    }
+-
+-    /// Set the crossfade curve type.
+-    pub fn set_crossfade_curve(
+-        &self,
+-        curve: crate::audio::crossfader::CrossfadeCurve,
+-    ) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetCrossfadeCurve { curve })
+-    }
+-
+     /// Check if the engine is currently in passthrough (bit-perfect) mode.
+     pub fn is_passthrough(&self) -> bool {
+         self.callback_data.is_passthrough()
+@@ -545,7 +487,6 @@ impl AudioEngineHandle {
+             1 => PlaybackState::Playing,
+             2 => PlaybackState::Paused,
+             3 => PlaybackState::Buffering,
+-            4 => PlaybackState::Crossfading,
+             5 => PlaybackState::Stopped,
+             _ => PlaybackState::Idle,
+         }
+@@ -2974,80 +2915,6 @@ pub(crate) fn audio_callback(
+         }
+     };
+ 
+-    let mut crossfader = match data.crossfader.try_lock() {
+-        Some(c) => c,
+-        None => {
+-            let (read, old_source) = sources.read(output);
+-
+-            if let Some(source) = old_source {
+-                let _ = data.finished_tracks.try_send(source);
+-            }
+-
+-            if read < output.len() {
+-                output[read..].fill(0.0);
+-            }
+-            if let Some(mut eq) = data.equalizer.try_lock() {
+-                eq.process(output, channels);
+-            }
+-            if let Some(mut dynamics) = data.dynamics.try_lock() {
+-                dynamics.process(output, channels);
+-            }
+-            // Volume is always applied last, after all DSP processing.
+-            for sample in output.iter_mut() {
+-                *sample *= volume;
+-            }
+-            return;
+-        }
+-    };
+-
+-    if crossfader.is_active() && sources.next_mut().is_some() {
+-        let mut buf_a = match data.mix_buffer_a.try_lock() {
+-            Some(b) => b,
+-            None => {
+-                output.fill(0.0);
+-                return;
+-            }
+-        };
+-        let mut buf_b = match data.mix_buffer_b.try_lock() {
+-            Some(b) => b,
+-            None => {
+-                output.fill(0.0);
+-                return;
+-            }
+-        };
+-
+-        let needed = output.len();
+-        if buf_a.len() < needed {
+-            output.fill(0.0);
+-            return;
+-        }
+-
+-        let read_a = sources
+-            .current_mut()
+-            .map(|s| s.read(&mut buf_a[..needed]))
+-            .unwrap_or(0);
+-        let read_b = sources
+-            .next_mut()
+-            .map(|s| s.read(&mut buf_b[..needed]))
+-            .unwrap_or(0);
+-
+-        if read_a < needed {
+-            buf_a[read_a..needed].fill(0.0);
+-        }
+-        if read_b < needed {
+-            buf_b[read_b..needed].fill(0.0);
+-        }
+-
+-        let _ = crossfader.mix(&buf_a[..needed], &buf_b[..needed], output, channels);
+-
+-        if !crossfader.is_active() {
+-            data.crossfade_active.store(false, Ordering::Relaxed);
+-            drop(crossfader);
+-            if let Some(source) = sources.advance_to_next() {
+-                let _ = data.finished_tracks.try_send(source);
+-            }
+-        }
+-    } else {
+         if (speed - 1.0).abs() < 0.001 {
+             let (read, old_source) = sources.read(output);
+ 
+@@ -3119,7 +2986,6 @@ pub(crate) fn audio_callback(
+             let consumed_frames = (*frac_pos) as usize;
+             *frac_pos -= consumed_frames as f64;
+         }
+-    }
+ 
+     if let Some(mut eq) = data.equalizer.try_lock() {
+         eq.process(output, channels);
+@@ -3167,13 +3033,6 @@ fn command_processing_loop(
+             let path = source.info.path.to_string_lossy().to_string();
+             let _ = event_tx.try_send(AudioEvent::TrackEnded { path });
+ 
+-            // Crossfade completed — restore Playing state. This is the
+-            // natural bookend: a crossfade always ends with advance_to_next()
+-            // pushing the old source through finished_tracks.
+-            if state.load(Ordering::Relaxed) == PlaybackState::Crossfading as u8 {
+-                state.store(PlaybackState::Playing as u8, Ordering::Relaxed);
+-                let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Playing));
+-            } else {
+                 // If no next source was queued for gapless transition,
+                 // the engine is outputting silence. Mark as stopped so
+                 // the Dart layer can detect the failure and fall back.
+@@ -3183,7 +3042,6 @@ fn command_processing_loop(
+                     state.store(PlaybackState::Stopped as u8, Ordering::Relaxed);
+                     let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Stopped));
+                 }
+-            }
+         }
+ 
+         match command_rx.recv_timeout(std::time::Duration::from_millis(50)) {
+@@ -3248,8 +3106,6 @@ fn command_processing_loop(
+                     }
+                     AudioCommand::Stop => {
+                         callback_data.sources.lock().stop();
+-                        callback_data.crossfader.lock().reset();
+-                        callback_data.crossfade_active.store(false, Ordering::Relaxed);
+                         state.store(PlaybackState::Stopped as u8, Ordering::Relaxed);
+                         let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Stopped));
+                     }
+@@ -3266,34 +3122,6 @@ fn command_processing_loop(
+                     AudioCommand::SetVolume { volume } => {
+                         callback_data.set_volume(volume.clamp(0.0, 1.0));
+                     }
+-                    AudioCommand::SetCrossfade {
+-                        enabled,
+-                        duration_secs,
+-                    } => {
+-                        let mut crossfader = callback_data.crossfader.lock();
+-                        crossfader.set_enabled(enabled);
+-                        crossfader.set_duration(duration_secs);
+-                        let still_active = crossfader.is_active();
+-                        drop(crossfader);
+-                        callback_data
+-                            .crossfade_active
+-                            .store(still_active, Ordering::Relaxed);
+-                        // Crossfade needs the DSP path. Force out of passthrough
+-                        // when enabled so the mix runs even on a verified
+-                        // bit-perfect output (e.g. phone speaker at native rate).
+-                        callback_data
+-                            .crossfade_forces_dsp
+-                            .store(enabled, Ordering::Relaxed);
+-                        log::info!(
+-                            "[crossfade] set enabled={} duration={:.1}s forces_dsp={}",
+-                            enabled,
+-                            duration_secs,
+-                            enabled
+-                        );
+-                    }
+-                    AudioCommand::SetCrossfadeCurve { curve } => {
+-                        callback_data.crossfader.lock().set_curve(curve);
+-                    }
+                     AudioCommand::SetPlaybackSpeed { speed } => {
+                         callback_data.set_playback_speed(speed);
+                         *callback_data.speed_frac_pos.lock() = 0.0;
+@@ -3360,7 +3188,7 @@ fn command_processing_loop(
+                             callback_data.pipeline_mode.store(base, Ordering::Relaxed);
+                         }
+                     }
+-                    AudioCommand::CrossfadeToNext | AudioCommand::SkipToNext => {
++                    AudioCommand::SkipToNext => {
+                         handle_skip_to_next(&callback_data, &state, &event_tx);
+                     }
+                     AudioCommand::Shutdown => {
+@@ -3382,72 +3210,6 @@ fn command_processing_loop(
+             }
+         }
+ 
+-        // Auto-crossfade: start when the current track is near its end.
+-        // Both locks are held across the entire check+start to prevent the
+-        // audio callback from doing a hard gapless transition between the
+-        // remaining check and the crossfader.start() call.
+-        // Skipped entirely in passthrough (bit-perfect) and under 432 Hz
+-        // tuning (the mix bypasses speed resampling — see is_crossfade_allowed).
+-        if callback_data.is_crossfade_allowed() {
+-            // Fast path: if a crossfade is already in flight there is nothing
+-            // to trigger. Read the lock-free mirror so the real-time callback's
+-            // `crossfader` try_lock is never contended during the fade (a failed
+-            // try_lock drops the fade gains and emits the outgoing track at full
+-            // volume = audible chopping).
+-            if callback_data.crossfade_active.load(Ordering::Relaxed) {
+-                // Nothing to do; no locks taken.
+-            } else {
+-                let mut sources = callback_data.sources.lock();
+-                let mut crossfader = callback_data.crossfader.lock();
+-                let configured = crossfader.configured_duration_secs();
+-                if crossfader.is_enabled()
+-                    && !crossfader.is_active()
+-                    && sources.has_next()
+-                    && configured > 0.0
+-                {
+-                    if let Some(current) = sources.current() {
+-                        let remaining = current.remaining_secs();
+-                        // Clamp the fade to at most half the track so a short
+-                        // source does not have its start eaten by the fade-in.
+-                        let effective =
+-                            clamp_crossfade_secs(configured, current.info.duration_secs);
+-                        if effective > 0.0 && remaining > 0.0 && remaining <= effective as f64 {
+-                            // Only start crossfade if next track has buffered data.
+-                            // Require any data (≥0s) — the decoder has been running
+-                            // since the next track was pre-queued, so the buffer
+-                            // should be full by now.
+-                            if sources.next_has_enough_buffer(0.0) {
+-                                crossfader.set_active_duration_secs(effective);
+-                                crossfader.start();
+-                                callback_data
+-                                    .crossfade_active
+-                                    .store(true, Ordering::Relaxed);
+-                                state.store(
+-                                    PlaybackState::Crossfading as u8,
+-                                    Ordering::Relaxed,
+-                                );
+-                                let _ = event_tx.try_send(AudioEvent::StateChanged(
+-                                    PlaybackState::Crossfading,
+-                                ));
+-                                let from = sources
+-                                    .current()
+-                                    .map(|s| s.info.path.to_string_lossy().to_string());
+-                                let to = sources
+-                                    .next_mut()
+-                                    .map(|s| s.info.path.to_string_lossy().to_string());
+-                                if let (Some(from_path), Some(to_path)) = (from, to) {
+-                                    let _ = event_tx.try_send(AudioEvent::CrossfadeStarted {
+-                                        from_path,
+-                                        to_path,
+-                                    });
+-                                }
+-                            }
+-                        }
+-                    }
+-                }
+-            }
+-        }
+-
+         // Clean up finished decoders
+         decoders.lock().retain(|d| d.is_running());
+     }
+@@ -3508,8 +3270,6 @@ fn handle_play(
+     let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Buffering));
+ 
+     callback_data.sources.lock().stop();
+-    callback_data.crossfader.lock().reset();
+-    callback_data.crossfade_active.store(false, Ordering::Relaxed);
+ 
+     match spawn_decoder(path.clone(), sample_rate, callback_data.channels(), None) {
+         Ok((source, handle)) => {
+@@ -3536,8 +3296,6 @@ fn handle_play_prepared(
+     let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Buffering));
+ 
+     callback_data.sources.lock().stop();
+-    callback_data.crossfader.lock().reset();
+-    callback_data.crossfade_active.store(false, Ordering::Relaxed);
+ 
+     start_playback_source(
+         source,
+@@ -3613,75 +3371,20 @@ fn queue_playback_source(
+     let _ = event_tx.try_send(AudioEvent::NextTrackReady { path: queued_path });
+ }
+ 
+-/// Clamp the crossfade duration for a track of `track_total_secs`.
+-///
+-/// The fade is capped at half the track length so the fade-in never eats more
+-/// than the first half of a short source. Tracks whose duration is unknown
+-/// (`<= 0.0`) use the configured duration unchanged. The caller must skip
+-/// crossfade when the returned value is `<= 0.0` (only possible when
+-/// `configured` itself is `<= 0.0`).
+-fn clamp_crossfade_secs(configured: f32, track_total_secs: f64) -> f32 {
+-    if track_total_secs <= 0.0 {
+-        return configured;
+-    }
+-    let half = (track_total_secs * 0.5) as f32;
+-    configured.min(half)
+-}
+-
+ fn handle_skip_to_next(
+     callback_data: &AudioCallbackData,
+     state: &Arc<AtomicU8>,
+     event_tx: &Sender<AudioEvent>,
+ ) {
+     let mut sources = callback_data.sources.lock();
+-    let mut crossfader = callback_data.crossfader.lock();
+ 
+     if !sources.has_next() {
+         return;
+     }
+ 
+-    // Manual skip crossfades when allowed (DSP path, no 432 Hz tuning) and the
+-    // fade length is sane for the incoming track; otherwise hard-cut.
+-    let started = if callback_data.is_crossfade_allowed()
+-        && crossfader.is_enabled()
+-        && !crossfader.is_active()
+-    {
+-        let configured = crossfader.configured_duration_secs();
+-        let next_total = sources.next().map(|s| s.info.duration_secs).unwrap_or(0.0);
+-        let effective = clamp_crossfade_secs(configured, next_total);
+-        if configured > 0.0 && effective > 0.0 {
+-            let from_path = sources
+-                .current()
+-                .map(|s| s.info.path.to_string_lossy().to_string());
+-            let to_path = sources
+-                .next_mut()
+-                .map(|s| s.info.path.to_string_lossy().to_string());
+-            crossfader.set_active_duration_secs(effective);
+-            crossfader.start();
+-            callback_data
+-                .crossfade_active
+-                .store(crossfader.is_active(), Ordering::Relaxed);
+-            state.store(PlaybackState::Crossfading as u8, Ordering::Relaxed);
+-            let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Crossfading));
+-            if let (Some(from), Some(to)) = (from_path, to_path) {
+-                let _ = event_tx.try_send(AudioEvent::CrossfadeStarted {
+-                    from_path: from,
+-                    to_path: to,
+-                });
+-            }
+-            true
+-        } else {
+-            false
+-        }
+-    } else {
+-        false
+-    };
+-
+-    if !started {
+         // Immediate transition
+         sources.advance_to_next();
+         state.store(PlaybackState::Playing as u8, Ordering::Relaxed);
+-    }
+ }
+ 
+ fn handle_seek(
+@@ -3712,8 +3415,6 @@ fn handle_seek(
+     let _ = event_tx.try_send(AudioEvent::StateChanged(PlaybackState::Buffering));
+ 
+     callback_data.sources.lock().stop();
+-    callback_data.crossfader.lock().reset();
+-    callback_data.crossfade_active.store(false, Ordering::Relaxed);
+     *callback_data.speed_frac_pos.lock() = 0.0;
+ 
+     {
+diff --git a/rust/src/audio/manager.rs b/rust/src/audio/manager.rs
+index 3fea1175..a751a7ab 100644
+--- a/rust/src/audio/manager.rs
++++ b/rust/src/audio/manager.rs
+@@ -369,14 +369,6 @@ impl EngineManager {
+                 let _ = handle.set_volume(volume);
+             }
+         }
+-        if let Some((enabled, duration_secs, curve)) =
+-            crate::api::audio_api::take_pending_crossfade()
+-        {
+-            if let Some(handle) = state.rust_handle.as_ref() {
+-                let _ = handle.set_crossfade(enabled, duration_secs);
+-                let _ = handle.set_crossfade_curve(curve);
+-            }
+-        }
+         Ok(())
+     }
+ 
+diff --git a/rust/src/audio/mod.rs b/rust/src/audio/mod.rs
+index f67e337b..3a8b1945 100644
+--- a/rust/src/audio/mod.rs
++++ b/rust/src/audio/mod.rs
+@@ -10,13 +10,11 @@
+ //! - `engine`: Core audio engine managing the output stream and mixing
+ //! - `decoder`: Background thread decoder using symphonia
+ //! - `resampler`: Sample rate conversion using rubato
+-//! - `crossfader`: Equal-power crossfade implementation
+ //! - `source`: Audio source abstraction for gapless playback
+ 
+ pub mod alac_converter;
+ pub mod backend;
+ pub mod commands;
+-pub mod crossfader;
+ pub mod decoder;
+ pub mod decoder_handle;
+ pub mod device;
+diff --git a/rust/src/audio/source.rs b/rust/src/audio/source.rs
+index 83b7cae6..e50d9304 100644
+--- a/rust/src/audio/source.rs
++++ b/rust/src/audio/source.rs
+@@ -332,20 +332,6 @@ impl SourceProvider {
+         self.next.as_ref()
+     }
+ 
+-    /// Check if the next source has enough buffered data for crossfade.
+-    pub fn next_has_enough_buffer(&self, min_secs: f64) -> bool {
+-        if let Some(next) = &self.next {
+-            if next.decoder_finished.load(Ordering::Acquire) {
+-                return true;
+-            }
+-            let buffered_secs = next.consumer.occupied_len() as f64
+-                / (next.info.output_sample_rate as f64 * next.info.channels as f64);
+-            buffered_secs >= min_secs
+-        } else {
+-            false
+-        }
+-    }
+-
+     /// Get a reference to the current source.
+     pub fn current(&self) -> Option<&AudioSource> {
+         self.current.as_ref()
+diff --git a/test/services/android_audio_engine_crossfade_test.dart b/test/services/android_audio_engine_crossfade_test.dart
+deleted file mode 100644
+index 864fa57a..00000000
+--- a/test/services/android_audio_engine_crossfade_test.dart
++++ /dev/null
+@@ -1,120 +0,0 @@
+-import 'dart:math' as math;
+-
+-import 'package:flutter_test/flutter_test.dart';
+-import 'package:flick/services/android_audio_engine.dart';
+-
+-void main() {
+-  group('crossfadeInVolume', () {
+-    test('endpoints are 0 at start and 1 at end for every curve', () {
+-      for (final curve in AndroidCrossfadeCurve.values) {
+-        expect(crossfadeInVolume(curve, 0), closeTo(0.0, 1e-9));
+-        expect(crossfadeInVolume(curve, 1), closeTo(1.0, 1e-9));
+-      }
+-    });
+-
+-    test('outgoing fraction is the symmetric complement (1 - p)', () {
+-      // out(p) == in(1 - p) keeps each curve symmetric; for equal-power this is
+-      // exactly cos/sin so out^2 + in^2 == 1 throughout.
+-      for (final curve in AndroidCrossfadeCurve.values) {
+-        for (final p in [0.0, 0.1, 0.25, 0.5, 0.73, 0.9, 1.0]) {
+-          final incoming = crossfadeInVolume(curve, p);
+-          final outgoing = crossfadeInVolume(curve, 1 - p);
+-          expect(incoming, inInclusiveRange(0.0, 1.0));
+-          expect(outgoing, inInclusiveRange(0.0, 1.0));
+-          if (curve == AndroidCrossfadeCurve.equalPower) {
+-            expect(
+-              incoming * incoming + outgoing * outgoing,
+-              closeTo(1.0, 1e-9),
+-            );
+-          }
+-        }
+-      }
+-    });
+-
+-    test('linear maps progress directly; sqrt and s-curve differ', () {
+-      expect(crossfadeInVolume(AndroidCrossfadeCurve.linear, 0.5), 0.5);
+-      expect(
+-        crossfadeInVolume(AndroidCrossfadeCurve.squareRoot, 0.5),
+-        closeTo(math.sqrt(0.5), 1e-9),
+-      );
+-      // smoothstep: p*p*(3 - 2p) at 0.5 == 0.5, but shaped differently.
+-      expect(
+-        crossfadeInVolume(AndroidCrossfadeCurve.sCurve, 0.5),
+-        closeTo(0.5, 1e-9),
+-      );
+-      // At 0.25 linear=0.25 but s-curve is lower (ease-in).
+-      expect(
+-        crossfadeInVolume(AndroidCrossfadeCurve.sCurve, 0.25),
+-        closeTo(0.15625, 1e-9),
+-      );
+-    });
+-
+-    test('clamps progress outside 0..1', () {
+-      for (final curve in AndroidCrossfadeCurve.values) {
+-        expect(crossfadeInVolume(curve, -0.5), closeTo(0.0, 1e-9));
+-        expect(crossfadeInVolume(curve, 1.5), closeTo(1.0, 1e-9));
+-      }
+-    });
+-  });
+-
+-  group('shouldArmCrossfade', () {
+-    const dur = Duration(minutes: 3);
+-
+-    test('never arms when disabled', () {
+-      expect(
+-        shouldArmCrossfade(
+-          enabled: false,
+-          duration: dur,
+-          position: dur - const Duration(seconds: 1),
+-          fadeSecs: 3,
+-        ),
+-        isFalse,
+-      );
+-    });
+-
+-    test('arms exactly inside the fade window', () {
+-      expect(
+-        shouldArmCrossfade(
+-          enabled: true,
+-          duration: dur,
+-          position: dur - const Duration(seconds: 3),
+-          fadeSecs: 3,
+-        ),
+-        isTrue,
+-      );
+-      expect(
+-        shouldArmCrossfade(
+-          enabled: true,
+-          duration: dur,
+-          position: dur - const Duration(seconds: 4),
+-          fadeSecs: 3,
+-        ),
+-        isFalse,
+-      );
+-    });
+-
+-    test('does not arm for tracks shorter than the fade', () {
+-      expect(
+-        shouldArmCrossfade(
+-          enabled: true,
+-          duration: const Duration(seconds: 2),
+-          position: Duration.zero,
+-          fadeSecs: 3,
+-        ),
+-        isFalse,
+-      );
+-    });
+-
+-    test('does not arm when duration is unknown', () {
+-      expect(
+-        shouldArmCrossfade(
+-          enabled: true,
+-          duration: Duration.zero,
+-          position: Duration.zero,
+-          fadeSecs: 3,
+-        ),
+-        isFalse,
+-      );
+-    });
+-  });
+-}
+-- 
+2.55.0
+

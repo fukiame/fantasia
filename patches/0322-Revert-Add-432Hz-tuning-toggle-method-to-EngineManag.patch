@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 15:24:51 +0700
+Subject: [PATCH] Revert "Add 432Hz tuning toggle method to EngineManager"
+
+This reverts commit 1069ff0d947aeb98123864acd62dbe1aa155a0a1.
+
+diff --git a/rust/src/audio/manager.rs b/rust/src/audio/manager.rs
+index a751a7ab..b3dcfc3e 100644
+--- a/rust/src/audio/manager.rs
++++ b/rust/src/audio/manager.rs
+@@ -1,6 +1,5 @@
+ use crate::audio::engine::{
+     create_audio_engine, desired_output_signature, AudioApiPreference, AudioEngineHandle,
+-    TUNING_432HZ_ENABLED,
+ };
+ use crate::audio::strategy::OutputStrategy;
+ use parking_lot::Mutex;
+@@ -177,14 +176,6 @@ impl EngineManager {
+         self.state.lock().audio_api_preference
+     }
+ 
+-    pub fn set_432hz_tuning_enabled(&self, enabled: bool) {
+-        TUNING_432HZ_ENABLED.store(enabled, std::sync::atomic::Ordering::Relaxed);
+-        let _ = self.with_rust_handle(|handle| {
+-            handle.set_432hz_tuning_enabled(enabled);
+-            Ok(())
+-        });
+-    }
+-
+     pub fn capability_route_type(&self) -> String {
+         self.state.lock().capability_snapshot.route_type.clone()
+     }
+-- 
+2.55.0
+

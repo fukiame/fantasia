@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Add smb_api module and equalizer support"
+
+This reverts commit 5863c730dfc18d4ea25688c63c89dc2c2f7b4c53.
+
+diff --git a/rust/src/api/mod.rs b/rust/src/api/mod.rs
+index d8721c5d..15eca388 100644
+--- a/rust/src/api/mod.rs
++++ b/rust/src/api/mod.rs
+@@ -4,6 +4,5 @@ pub mod audio_api;
+ pub mod logging;
+ pub mod metadata_editor;
+ pub mod scanner;
+-pub mod smb_api;
+ pub mod simple;
+ pub mod uac2_api;
+diff --git a/rust/src/audio/manager.rs b/rust/src/audio/manager.rs
+index 630989be..4adaaaa4 100644
+--- a/rust/src/audio/manager.rs
++++ b/rust/src/audio/manager.rs
+@@ -379,11 +379,6 @@ impl EngineManager {
+                 let _ = handle.set_crossfade_curve(curve);
+             }
+         }
+-        if let Some((enabled, specs)) = crate::api::audio_api::take_pending_equalizer() {
+-            if let Some(handle) = state.rust_handle.as_ref() {
+-                let _ = handle.set_equalizer(enabled, specs);
+-            }
+-        }
+         Ok(())
+     }
+ 
+-- 
+2.55.0
+

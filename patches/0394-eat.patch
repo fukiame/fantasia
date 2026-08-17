@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 21:08:56 +0700
+Subject: [PATCH] eat
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
+index 6e4b62d4..43e32495 100644
+--- a/lib/features/settings/screens/uac2_preferences_screen.dart
++++ b/lib/features/settings/screens/uac2_preferences_screen.dart
+@@ -483,17 +483,19 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+     final effectiveSubtitle =
+         !enabled && disabledSubtitle != null ? disabledSubtitle : subtitle;
+     final tile = Padding(
+-      padding: const EdgeInsets.all(AppConstants.spacingMd),
++      padding: const EdgeInsets.symmetric(
++        vertical: AppConstants.spacingXs,
++        horizontal: AppConstants.spacingMd,
++      ),
+       child: Row(
+         children: [
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+                   title,
+-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                     color: context.adaptiveTextPrimary,
+                     fontWeight: FontWeight.w500,
+                   ),
+@@ -837,7 +839,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+                           Expanded(
+                             child: Text(
+                               title,
+-                              style: Theme.of(context).textTheme.bodyMedium
++                              style: Theme.of(context).textTheme.bodySmall
+                                   ?.copyWith(
+                                     color: context.adaptiveTextPrimary,
+                                     fontWeight: FontWeight.w600,
+@@ -963,7 +965,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+               children: [
+                 Text(
+                   'Current Playback Mode',
+-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                     color: context.adaptiveTextPrimary,
+                     fontWeight: FontWeight.w500,
+                   ),
+@@ -1020,7 +1022,7 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+                     children: [
+                       Text(
+                         title,
+-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
++                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                           color: isDestructive
+                               ? Colors.red.shade400
+                               : context.adaptiveTextPrimary,
+-- 
+2.55.0
+

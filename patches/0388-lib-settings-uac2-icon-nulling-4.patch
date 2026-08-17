@@ -1,0 +1,233 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 19:37:32 +0700
+Subject: [PATCH] lib: settings: uac2: icon nulling 4
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
+index 358abda0..6e4b62d4 100644
+--- a/lib/features/settings/screens/uac2_preferences_screen.dart
++++ b/lib/features/settings/screens/uac2_preferences_screen.dart
+@@ -197,7 +197,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+           audioFormatAsync.when(
+             data: (enabled) => _buildSwitchTile(
+               context,
+-              icon: LucideIcons.settings,
+               title: 'Audio Format',
+               subtitle: enabled
+                   ? 'Format strategy and custom format controls are active.'
+@@ -215,7 +214,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+           formatPrefAsync.when(
+             data: (formatPref) => _buildNavigationTile(
+               context,
+-              icon: LucideIcons.slidersHorizontal,
+               title: 'Format Strategy',
+               subtitle: formatBlocked
+                   ? 'Disabled in Bit-perfect (USB DAC) mode (exact rate required)'
+@@ -248,7 +246,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+           preferredFormatAsync.when(
+             data: (format) => _buildNavigationTile(
+               context,
+-              icon: LucideIcons.music,
+               title: 'Custom Format',
+               subtitle: formatBlocked
+                   ? isBitPerfectEnabled
+@@ -307,7 +304,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+           audioEngineAsync.when(
+             data: (engine) => _buildNavigationTile(
+               context,
+-              icon: LucideIcons.audioLines,
+               title: 'Playback Engine',
+               subtitle: _audioEnginePreferenceSubtitle(engine),
+                onTap: () => _showAudioEngineDialog(
+@@ -329,7 +325,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+             androidAudioApiAsync.when(
+               data: (pref) => _buildNavigationTile(
+                 context,
+-                icon: LucideIcons.circuitBoard,
+                 title: 'Android Audio API',
+                 subtitle: _androidAudioApiSubtitle(pref),
+                 onTap: () => _showAndroidAudioApiDialog(context, service, pref),
+@@ -342,7 +337,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+           developerModeAsync.when(
+             data: (enabled) => _buildSwitchTile(
+               context,
+-              icon: LucideIcons.badgeInfo,
+               title: 'Developer Mode',
+               subtitle:
+                   'Show verbose audio diagnostics and engine/session trace logs.',
+@@ -361,7 +355,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+                     _buildDivider(),
+                     _buildNavigationTile(
+                       context,
+-                      icon: LucideIcons.terminal,
+                       title: 'Logs',
+                       subtitle: 'Verbose Dart, Rust, and crash logs',
+                       onTap: () => Navigator.of(context).push(
+@@ -380,7 +373,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+           bitPerfectAsync.when(
+             data: (enabled) => _buildSwitchTile(
+               context,
+-              icon: LucideIcons.lock,
+               title: 'Bit-perfect (USB DAC)',
+               subtitle:
+                   'Use the verified direct USB path and disable software DSP controls that would break bit-perfect playback on an external USB DAC.',
+@@ -421,7 +413,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+             dapBitPerfectAsync.when(
+               data: (enabled) => _buildSwitchTile(
+                 context,
+-                icon: LucideIcons.headphones,
+                 title: 'Bit-perfect (DAP Internal)',
+                 subtitle:
+                     'Bypass all DSP (EQ) on the native DAP internal high-res path. Disable to use software effects. Turning off Bit-perfect (USB DAC) also disables this.',
+@@ -453,7 +444,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+           killIsochronousUsbOnQuitAsync.when(
+             data: (killOnQuit) => _buildSwitchTile(
+               context,
+-              icon: LucideIcons.power,
+               title: 'Stop USB on Quit',
+               subtitle: killOnQuit
+                   ? 'The Isochronous USB engine will be stopped when the app quits.'
+@@ -471,7 +461,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+           _buildDivider(),
+           _buildNavigationTile(
+             context,
+-            icon: LucideIcons.trash2,
+             title: 'Reset Preferences',
+             subtitle: 'Clear all UAC2 settings',
+             onTap: () => _showResetConfirmation(context, service),
+@@ -484,7 +473,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+ 
+   Widget _buildSwitchTile(
+     BuildContext context, {
+-    required IconData icon,
+     required String title,
+     required String subtitle,
+     required bool value,
+@@ -498,14 +486,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+       padding: const EdgeInsets.all(AppConstants.spacingMd),
+       child: Row(
+         children: [
+-          Container(
+-            padding: const EdgeInsets.all(8),
+-            decoration: BoxDecoration(
+-              color: AppColors.glassBackground,
+-              borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-            ),
+-            child: Icon(icon, color: context.adaptiveTextSecondary, size: 20),
+-          ),
+           const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Column(
+@@ -792,12 +772,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+       child: Row(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+-          Icon(
+-            LucideIcons.lock,
+-            color: AppColors.accent,
+-            size: 18,
+-          ),
+-          const SizedBox(width: AppConstants.spacingSm),
+           Expanded(
+             child: Text(
+               'Both bit-perfect options are off on this DAP, so the standard engine is unavailable. You can still use Rust via Oboe or Isochronous USB.',
+@@ -945,12 +919,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+       child: Row(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+-          Icon(
+-            Icons.warning_amber_rounded,
+-            color: Colors.amber.shade300,
+-            size: 18,
+-          ),
+-          const SizedBox(width: AppConstants.spacingSm),
+           Expanded(
+             child: Text(
+               message,
+@@ -989,19 +957,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+       padding: const EdgeInsets.all(AppConstants.spacingMd),
+       child: Row(
+         children: [
+-          Container(
+-            padding: const EdgeInsets.all(8),
+-            decoration: BoxDecoration(
+-              color: AppColors.glassBackground,
+-              borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-            ),
+-            child: Icon(
+-              LucideIcons.badgeInfo,
+-              color: context.adaptiveTextSecondary,
+-              size: 20,
+-            ),
+-          ),
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+@@ -1042,7 +997,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+ 
+   Widget _buildNavigationTile(
+     BuildContext context, {
+-    required IconData icon,
+     required String title,
+     required String subtitle,
+     required VoidCallback onTap,
+@@ -1060,23 +1014,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+             padding: const EdgeInsets.all(AppConstants.spacingMd),
+             child: Row(
+               children: [
+-                Container(
+-                  padding: const EdgeInsets.all(8),
+-                  decoration: BoxDecoration(
+-                    color: isDestructive
+-                        ? Colors.red.withValues(alpha: 0.1)
+-                        : AppColors.glassBackground,
+-                    borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-                  ),
+-                  child: Icon(
+-                    icon,
+-                    color: isDestructive
+-                        ? Colors.red.shade400
+-                        : context.adaptiveTextSecondary,
+-                    size: 20,
+-                  ),
+-                ),
+-                const SizedBox(width: AppConstants.spacingMd),
+                 Expanded(
+                   child: Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+@@ -1483,12 +1420,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+         ),
+         title: Row(
+           children: [
+-            Icon(
+-              Icons.warning_amber_rounded,
+-              color: Colors.amber.shade300,
+-              size: 24,
+-            ),
+-            const SizedBox(width: AppConstants.spacingSm),
+             Expanded(
+               child: Text(
+                 '$featureName Unavailable',
+@@ -1527,7 +1458,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+           outputModeAsync.when(
+             data: (mode) => _buildNavigationTile(
+               context,
+-              icon: LucideIcons.radio,
+               title: 'DSD Output Mode',
+               subtitle: _dsdOutputModeSubtitle(mode),
+               onTap: () => _showDsdOutputModeDialog(context, service, mode),
+@@ -1558,8 +1488,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+         ),
+         child: Row(
+           children: [
+-            Icon(Icons.warning_amber_rounded, size: 16, color: warnColor),
+-            const SizedBox(width: AppConstants.spacingSm),
+             Expanded(
+               child: Text(
+                 'Not recommended for normal usage. DSD playback is unstable and may cause audio glitches.',
+-- 
+2.55.0
+

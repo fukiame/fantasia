@@ -1,0 +1,2038 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 11:34:32 +0700
+Subject: [PATCH] creativefx,convolver
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/equalizer_screen.dart b/lib/features/settings/screens/equalizer_screen.dart
+index c0225f78..10aa6680 100644
+--- a/lib/features/settings/screens/equalizer_screen.dart
++++ b/lib/features/settings/screens/equalizer_screen.dart
+@@ -124,7 +124,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
+                               parametricGraphKey: _parametricGraphKey,
+                             ),
+                             const _DynamicsPage(),
+-                            const _FxPage(),
+                           ],
+                         ),
+                       ),
+@@ -151,7 +150,7 @@ class _EffectsTabBar extends StatelessWidget {
+ 
+   @override
+   Widget build(BuildContext context) {
+-    const tabs = ['EQ', 'Dynamics', 'FX'];
++    const tabs = ['EQ', 'Dynamics'];
+     return Padding(
+       padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
+       child: Row(
+@@ -277,27 +276,6 @@ class _DynamicsPage extends ConsumerWidget {
+   }
+ }
+ 
+-class _FxPage extends ConsumerWidget {
+-  const _FxPage();
+-
+-  @override
+-  Widget build(BuildContext context, WidgetRef ref) {
+-    return NotificationListener<ScrollNotification>(
+-      onNotification: (_) => true,
+-      child: SingleChildScrollView(
+-        padding: const EdgeInsets.symmetric(horizontal: AppConstants.spacingMd),
+-        child: Column(
+-          crossAxisAlignment: CrossAxisAlignment.start,
+-          children: [
+-            const _CreativeFxSection(),
+-            SizedBox(height: AppConstants.navBarHeight + 120),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _LabeledKnob extends StatelessWidget {
+   final IconData icon;
+   final String label;
+@@ -486,7 +464,6 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
+       ),
+       compressor: s.compressor,
+       limiter: s.limiter,
+-      fx: s.fx,
+     );
+   }
+ 
+@@ -505,7 +482,6 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
+           trebleDb: preset.trebleDb,
+           compressor: preset.compressor,
+           limiter: preset.limiter,
+-          fx: preset.fx,
+         );
+     if (mounted) Navigator.of(context).pop();
+   }
+@@ -582,7 +558,6 @@ class _PresetsSheetState extends ConsumerState<_PresetsSheet> {
+             trebleDb: preset.trebleDb,
+             compressor: preset.compressor,
+             limiter: preset.limiter,
+-            fx: preset.fx,
+           );
+       _showMessage('Imported "${preset.name}"');
+     } on FormatException catch (error) {
+@@ -3498,376 +3473,6 @@ class _DynamicsSection extends ConsumerWidget {
+   }
+ }
+ 
+-class _CreativeFxSection extends ConsumerWidget {
+-  const _CreativeFxSection();
+-
+-  static const double _filterMinHz = EqualizerNotifier.fxFilterMinHz;
+-  static const double _filterMaxHz = EqualizerNotifier.fxFilterMaxHz;
+-
+-  double _hzToT(double hz) {
+-    final clamped = hz.clamp(_filterMinHz, _filterMaxHz).toDouble();
+-    final logMin = math.log(_filterMinHz);
+-    final logMax = math.log(_filterMaxHz);
+-    return (math.log(clamped) - logMin) / (logMax - logMin);
+-  }
+-
+-  double _tToHz(double t) {
+-    final logMin = math.log(_filterMinHz);
+-    final logMax = math.log(_filterMaxHz);
+-    final value = logMin + (logMax - logMin) * t.clamp(0.0, 1.0);
+-    return math.exp(value);
+-  }
+-
+-  String _hzLabel(double hz) {
+-    if (hz >= 1000.0) {
+-      final k = hz / 1000.0;
+-      return '${k.toStringAsFixed(k >= 10 ? 0 : 1)} kHz';
+-    }
+-    return '${hz.toStringAsFixed(0)} Hz';
+-  }
+-
+-  String _percentLabel(double value) => '${(value * 100).round()}%';
+-
+-  String _balanceLabel(double balance) {
+-    if (balance.abs() < 0.01) return 'Center';
+-    final side = balance > 0 ? 'R' : 'L';
+-    final amount = (balance.abs() * 100).round();
+-    return '$side $amount%';
+-  }
+-
+-  String _widthLabel(double width) {
+-    final amount = (width * 100).round();
+-    if ((width - 1.0).abs() < 0.01) return '$amount% neutral';
+-    return width > 1.0 ? '$amount% wide' : '$amount% narrow';
+-  }
+-
+-  @override
+-  Widget build(BuildContext context, WidgetRef ref) {
+-    final enabled = ref.watch(eqEnabledProvider);
+-    final fx = ref.watch(eqFxProvider);
+-    final editable = enabled && fx.enabled;
+-
+-    return Column(
+-      crossAxisAlignment: CrossAxisAlignment.start,
+-      children: [
+-        _SectionHeader(title: 'Creative FX'),
+-        const SizedBox(height: AppConstants.spacingSm),
+-        _ModeSummaryRow(
+-          children: [
+-            _StatPill(
+-              icon: fx.enabled ? LucideIcons.sparkles : LucideIcons.circleOff,
+-              label: fx.enabled ? 'FX on' : 'FX off',
+-            ),
+-            _StatPill(
+-              icon: LucideIcons.slidersHorizontal,
+-              label: 'Balance ${_balanceLabel(fx.balance)}',
+-            ),
+-            _StatPill(
+-              icon: LucideIcons.timer,
+-              label: 'Tempo ${fx.tempo.toStringAsFixed(2)}x',
+-            ),
+-            _StatPill(
+-              icon: LucideIcons.audioLines,
+-              label: 'Mix ${_percentLabel(fx.mix)}',
+-            ),
+-          ],
+-        ),
+-        const SizedBox(height: AppConstants.spacingSm),
+-        Align(
+-          alignment: Alignment.centerRight,
+-          child: TextButton.icon(
+-            onPressed: () => ref.read(equalizerProvider.notifier).resetFx(),
+-            icon: const Icon(LucideIcons.rotateCcw, size: 18),
+-            label: const Text(
+-              'Reset FX',
+-              style: TextStyle(
+-                fontFamily: 'ProductSans',
+-                fontWeight: FontWeight.w600,
+-              ),
+-            ),
+-            style: TextButton.styleFrom(
+-              foregroundColor: context.adaptiveTextPrimary,
+-            ),
+-          ),
+-        ),
+-        const SizedBox(height: AppConstants.spacingMd),
+-        _DynamicsCard(
+-          icon: LucideIcons.sparkles,
+-          title: 'Spatial & Time',
+-          subtitle:
+-              'Balance, tempo, damp, filter, delays, size, mix, and extra spread controls.',
+-          active: enabled && fx.enabled,
+-          toggleValue: fx.enabled,
+-          onToggleChanged: (value) =>
+-              ref.read(equalizerProvider.notifier).setFxEnabled(value),
+-          children: [
+-            Wrap(
+-              spacing: AppConstants.spacingMd,
+-              runSpacing: AppConstants.spacingLg,
+-              alignment: WrapAlignment.center,
+-              children: [
+-                _LabeledKnob(
+-                  icon: LucideIcons.slidersHorizontal,
+-                  label: 'Balance',
+-                  valueLabel: _balanceLabel(fx.balance),
+-                  value: fx.balance,
+-                  min: EqualizerNotifier.fxBalanceMin,
+-                  max: EqualizerNotifier.fxBalanceMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxBalance(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.timer,
+-                  label: 'Tempo',
+-                  valueLabel: '${fx.tempo.toStringAsFixed(2)}x',
+-                  value: fx.tempo,
+-                  min: EqualizerNotifier.fxTempoMin,
+-                  max: EqualizerNotifier.fxTempoMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxTempo(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.activity,
+-                  label: 'Damp',
+-                  valueLabel: _percentLabel(fx.damp),
+-                  value: fx.damp,
+-                  min: EqualizerNotifier.fxDampMin,
+-                  max: EqualizerNotifier.fxDampMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxDamp(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.funnel,
+-                  label: 'Filter',
+-                  valueLabel: _hzLabel(fx.filterHz),
+-                  value: _hzToT(fx.filterHz),
+-                  min: 0.0,
+-                  max: 1.0,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxFilterHz(_tToHz(value))
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.timerReset,
+-                  label: 'Delays',
+-                  valueLabel: '${fx.delayMs.toStringAsFixed(0)} ms',
+-                  value: fx.delayMs,
+-                  min: EqualizerNotifier.fxDelayMinMs,
+-                  max: EqualizerNotifier.fxDelayMaxMs,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxDelayMs(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.scanSearch,
+-                  label: 'Size',
+-                  valueLabel: _percentLabel(fx.size),
+-                  value: fx.size,
+-                  min: EqualizerNotifier.fxSizeMin,
+-                  max: EqualizerNotifier.fxSizeMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxSize(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.audioLines,
+-                  label: 'Mix',
+-                  valueLabel: _percentLabel(fx.mix),
+-                  value: fx.mix,
+-                  min: EqualizerNotifier.fxMixMin,
+-                  max: EqualizerNotifier.fxMixMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxMix(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.rotateCcw,
+-                  label: 'Feedback',
+-                  valueLabel: _percentLabel(fx.feedback),
+-                  value: fx.feedback,
+-                  min: EqualizerNotifier.fxFeedbackMin,
+-                  max: EqualizerNotifier.fxFeedbackMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxFeedback(value)
+-                      : null,
+-                ),
+-                _LabeledKnob(
+-                  icon: LucideIcons.gitBranchPlus,
+-                  label: 'Width',
+-                  valueLabel: _widthLabel(fx.width),
+-                  value: fx.width,
+-                  min: EqualizerNotifier.fxWidthMin,
+-                  max: EqualizerNotifier.fxWidthMax,
+-                  onChanged: editable
+-                      ? (value) => ref
+-                          .read(equalizerProvider.notifier)
+-                          .setFxWidth(value)
+-                      : null,
+-                ),
+-              ],
+-            ),
+-          ],
+-        ),
+-        const SizedBox(height: AppConstants.spacingLg),
+-        const _ConvolverSection(),
+-      ],
+-    );
+-  }
+-}
+-
+-class _ConvolverSection extends ConsumerWidget {
+-  const _ConvolverSection();
+-
+-  Future<void> _pickIr(BuildContext context, WidgetRef ref) async {
+-    final result = await FilePicker.pickFiles(
+-      type: FileType.custom,
+-      allowedExtensions: const ['wav', 'flac', 'aiff', 'mp3', 'ogg'],
+-    );
+-    final picked = result?.files.singleOrNull;
+-    if (picked == null) return;
+-    final srcPath = picked.path;
+-    final displayName = picked.name;
+-    if (srcPath == null) return;
+-    try {
+-      final docs = await getApplicationDocumentsDirectory();
+-      final dir = Directory('${docs.path}/irs');
+-      if (!dir.existsSync()) dir.createSync(recursive: true);
+-      final stamp = DateTime.now().millisecondsSinceEpoch;
+-      final ext = displayName.contains('.') ? '' : '.wav';
+-      final storedName = '${stamp}_$displayName$ext';
+-      final storedPath = '${dir.path}/$storedName';
+-      await File(srcPath).copy(storedPath);
+-      ref
+-          .read(equalizerProvider.notifier)
+-          .setConvolverIr(storedPath, displayName);
+-      await loadConvolverIr(storedPath);
+-      if (context.mounted) {
+-        ScaffoldMessenger.of(context).showSnackBar(
+-          SnackBar(content: Text('Loaded IR: $displayName')),
+-        );
+-      }
+-    } catch (e) {
+-      if (context.mounted) {
+-        ScaffoldMessenger.of(context).showSnackBar(
+-          SnackBar(content: Text('Could not load IR: $e')),
+-        );
+-      }
+-    }
+-  }
+-
+-  Future<void> _clearIr(BuildContext context, WidgetRef ref) async {
+-    ref.read(equalizerProvider.notifier).clearConvolverIr();
+-    try {
+-      await clearConvolverIr();
+-    } catch (_) {}
+-  }
+-
+-  String _percentLabel(double value) => '${(value * 100).round()}%';
+-
+-  @override
+-  Widget build(BuildContext context, WidgetRef ref) {
+-    final enabled = ref.watch(eqEnabledProvider);
+-    final convolver = ref.watch(eqConvolverProvider);
+-    final editable = enabled && convolver.enabled;
+-    final hasIr = convolver.irPath != null && convolver.irPath!.isNotEmpty;
+-
+-    return _DynamicsCard(
+-      icon: LucideIcons.audioWaveform,
+-      title: 'Convolver / Impulse Response',
+-      subtitle:
+-          'Load an impulse response for room reverb, crossfeed, cabinet, or correction.',
+-      active: editable,
+-      toggleValue: convolver.enabled,
+-      onToggleChanged: (value) =>
+-          ref.read(equalizerProvider.notifier).setConvolverEnabled(value),
+-      children: [
+-        Row(
+-          children: [
+-            Expanded(
+-              child: Column(
+-                crossAxisAlignment: CrossAxisAlignment.start,
+-                children: [
+-                  Text(
+-                    'Impulse response',
+-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+-                      color: context.adaptiveTextTertiary,
+-                    ),
+-                  ),
+-                  const SizedBox(height: 2),
+-                  Text(
+-                    convolver.irDisplayName ?? 'None',
+-                    maxLines: 1,
+-                    overflow: TextOverflow.ellipsis,
+-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                      color: hasIr
+-                          ? context.adaptiveTextPrimary
+-                          : context.adaptiveTextTertiary,
+-                    ),
+-                  ),
+-                ],
+-              ),
+-            ),
+-            const SizedBox(width: AppConstants.spacingSm),
+-            TextButton.icon(
+-              onPressed: enabled
+-                  ? () => _pickIr(context, ref)
+-                  : null,
+-              icon: const Icon(LucideIcons.folderOpen, size: 18),
+-              label: const Text('Load IR'),
+-              style: TextButton.styleFrom(
+-                foregroundColor: context.adaptiveTextPrimary,
+-              ),
+-            ),
+-            if (hasIr)
+-              TextButton.icon(
+-                onPressed: () => _clearIr(context, ref),
+-                icon: const Icon(LucideIcons.trash2, size: 18),
+-                label: const Text('Clear'),
+-                style: TextButton.styleFrom(
+-                  foregroundColor: context.adaptiveTextPrimary,
+-                ),
+-              ),
+-          ],
+-        ),
+-        const SizedBox(height: AppConstants.spacingLg),
+-        Center(
+-          child: _LabeledKnob(
+-            icon: LucideIcons.audioLines,
+-            label: 'Mix',
+-            valueLabel: _percentLabel(convolver.mix),
+-            value: convolver.mix,
+-            min: EqualizerNotifier.convolverMixMin,
+-            max: EqualizerNotifier.convolverMixMax,
+-            onChanged: editable
+-                ? (value) =>
+-                    ref.read(equalizerProvider.notifier).setConvolverMix(value)
+-                : null,
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-}
+-
+ class _DynamicsCard extends StatelessWidget {
+   final IconData icon;
+   final String title;
+@@ -3956,7 +3561,7 @@ class _ProcessingSupportNote extends StatelessWidget {
+           const SizedBox(width: AppConstants.spacingSm),
+           Expanded(
+             child: Text(
+-              'On Android, the standard just_audio playback path now applies native counterparts for EQ, dynamics, balance, and spatial FX on supported devices. The Rust engine still delivers the most exact version of these controls, so some Android results are approximate.',
++              'On Android, the standard just_audio playback path now applies native counterparts for EQ, dynamics, balance on supported devices. The Rust engine still delivers the most exact version of these controls, so some Android results are approximate.',
+               style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                 color: context.adaptiveTextSecondary,
+               ),
+diff --git a/lib/providers/equalizer_provider.dart b/lib/providers/equalizer_provider.dart
+index 051fd3df..ff91f93b 100644
+--- a/lib/providers/equalizer_provider.dart
++++ b/lib/providers/equalizer_provider.dart
+@@ -174,132 +174,6 @@ class LimiterSettings {
+       );
+ }
+ 
+-@immutable
+-class FxSettings {
+-  final bool enabled;
+-  final double balance;
+-  final double tempo;
+-  final double damp;
+-  final double filterHz;
+-  final double delayMs;
+-  final double size;
+-  final double mix;
+-  final double feedback;
+-  final double width;
+-
+-  const FxSettings({
+-    this.enabled = false,
+-    this.balance = 0.0,
+-    this.tempo = 1.0,
+-    this.damp = 0.35,
+-    this.filterHz = 6800.0,
+-    this.delayMs = 240.0,
+-    this.size = 0.55,
+-    this.mix = 0.25,
+-    this.feedback = 0.35,
+-    this.width = 1.0,
+-  });
+-
+-  FxSettings copyWith({
+-    bool? enabled,
+-    double? balance,
+-    double? tempo,
+-    double? damp,
+-    double? filterHz,
+-    double? delayMs,
+-    double? size,
+-    double? mix,
+-    double? feedback,
+-    double? width,
+-  }) {
+-    return FxSettings(
+-      enabled: enabled ?? this.enabled,
+-      balance: balance ?? this.balance,
+-      tempo: tempo ?? this.tempo,
+-      damp: damp ?? this.damp,
+-      filterHz: filterHz ?? this.filterHz,
+-      delayMs: delayMs ?? this.delayMs,
+-      size: size ?? this.size,
+-      mix: mix ?? this.mix,
+-      feedback: feedback ?? this.feedback,
+-      width: width ?? this.width,
+-    );
+-  }
+-
+-  Map<String, dynamic> toJson() => {
+-    'enabled': enabled,
+-    'balance': balance,
+-    'tempo': tempo,
+-    'damp': damp,
+-    'filterHz': filterHz,
+-    'delayMs': delayMs,
+-    'size': size,
+-    'mix': mix,
+-    'feedback': feedback,
+-    'width': width,
+-  };
+-
+-  factory FxSettings.fromJson(Map<String, dynamic> json) => FxSettings(
+-    enabled: (json['enabled'] as bool?) ?? false,
+-    balance: (json['balance'] as num?)?.toDouble() ?? 0.0,
+-    tempo: (json['tempo'] as num?)?.toDouble() ?? 1.0,
+-    damp: (json['damp'] as num?)?.toDouble() ?? 0.35,
+-    filterHz: (json['filterHz'] as num?)?.toDouble() ?? 6800.0,
+-    delayMs: (json['delayMs'] as num?)?.toDouble() ?? 240.0,
+-    size: (json['size'] as num?)?.toDouble() ?? 0.55,
+-    mix: (json['mix'] as num?)?.toDouble() ?? 0.25,
+-    feedback: (json['feedback'] as num?)?.toDouble() ?? 0.35,
+-    width: (json['width'] as num?)?.toDouble() ?? 1.0,
+-  );
+-}
+-
+-@immutable
+-class ConvolverSettings {
+-  final bool enabled;
+-  final double mix; // 0..1 (wet amount)
+-  final String? irPath; // stable path inside app docs dir, null = none loaded
+-  final String? irDisplayName;
+-
+-  const ConvolverSettings({
+-    this.enabled = false,
+-    this.mix = 1.0,
+-    this.irPath,
+-    this.irDisplayName,
+-  });
+-
+-  ConvolverSettings copyWith({
+-    bool? enabled,
+-    double? mix,
+-    String? irPath,
+-    String? irDisplayName,
+-    bool clearIrPath = false,
+-    bool clearIrDisplayName = false,
+-  }) {
+-    return ConvolverSettings(
+-      enabled: enabled ?? this.enabled,
+-      mix: mix ?? this.mix,
+-      irPath: clearIrPath ? null : (irPath ?? this.irPath),
+-      irDisplayName:
+-          clearIrDisplayName ? null : (irDisplayName ?? this.irDisplayName),
+-    );
+-  }
+-
+-  Map<String, dynamic> toJson() => {
+-    'enabled': enabled,
+-    'mix': mix,
+-    'irPath': irPath,
+-    'irDisplayName': irDisplayName,
+-  };
+-
+-  factory ConvolverSettings.fromJson(Map<String, dynamic> json) =>
+-      ConvolverSettings(
+-        enabled: (json['enabled'] as bool?) ?? false,
+-        mix: (json['mix'] as num?)?.toDouble() ?? 1.0,
+-        irPath: json['irPath'] as String?,
+-        irDisplayName: json['irDisplayName'] as String?,
+-      );
+-}
+-
+ @immutable
+ class ParametricBand {
+   final bool enabled;
+@@ -437,8 +311,6 @@ class EqualizerState {
+ 
+   final CompressorSettings compressor;
+   final LimiterSettings limiter;
+-  final FxSettings fx;
+-  final ConvolverSettings convolver;
+ 
+   const EqualizerState({
+     this.enabled = true,
+@@ -452,8 +324,6 @@ class EqualizerState {
+     this.trebleDb = 0.0,
+     this.compressor = const CompressorSettings(),
+     this.limiter = const LimiterSettings(),
+-    this.fx = const FxSettings(),
+-    this.convolver = const ConvolverSettings(),
+   });
+ 
+   EqualizerState copyWith({
+@@ -468,8 +338,6 @@ class EqualizerState {
+     double? trebleDb,
+     CompressorSettings? compressor,
+     LimiterSettings? limiter,
+-    FxSettings? fx,
+-    ConvolverSettings? convolver,
+     bool clearActivePresetName = false,
+   }) {
+     return EqualizerState(
+@@ -486,8 +354,6 @@ class EqualizerState {
+       trebleDb: trebleDb ?? this.trebleDb,
+       compressor: compressor ?? this.compressor,
+       limiter: limiter ?? this.limiter,
+-      fx: fx ?? this.fx,
+-      convolver: convolver ?? this.convolver,
+     );
+   }
+ 
+@@ -526,7 +392,6 @@ class EqualizerState {
+       activePresetName: null,
+       compressor: const CompressorSettings(),
+       limiter: const LimiterSettings(),
+-      fx: const FxSettings(),
+     );
+   }
+ 
+@@ -542,8 +407,6 @@ class EqualizerState {
+     'trebleDb': trebleDb,
+     'compressor': compressor.toJson(),
+     'limiter': limiter.toJson(),
+-    'fx': fx.toJson(),
+-    'convolver': convolver.toJson(),
+   };
+ 
+   factory EqualizerState.fromJson(Map<String, dynamic> json) {
+@@ -564,8 +427,6 @@ class EqualizerState {
+ 
+     final compJson = (json['compressor'] as Map<String, dynamic>?);
+     final limJson = (json['limiter'] as Map<String, dynamic>?);
+-    final fxJson = (json['fx'] as Map<String, dynamic>?);
+-    final convolverJson = (json['convolver'] as Map<String, dynamic>?);
+ 
+     return EqualizerState(
+       enabled: (json['enabled'] as bool?) ?? true,
+@@ -593,10 +454,6 @@ class EqualizerState {
+       limiter: limJson != null
+           ? LimiterSettings.fromJson(limJson)
+           : const LimiterSettings(),
+-      fx: fxJson != null ? FxSettings.fromJson(fxJson) : const FxSettings(),
+-      convolver: convolverJson != null
+-          ? ConvolverSettings.fromJson(convolverJson)
+-          : const ConvolverSettings(),
+     );
+   }
+ }
+@@ -633,26 +490,6 @@ class EqualizerNotifier extends Notifier<EqualizerState> {
+   static const double limiterCeilingMaxDb = 0.0;
+   static const double limiterReleaseMinMs = 20.0;
+   static const double limiterReleaseMaxMs = 300.0;
+-  static const double fxBalanceMin = -1.0;
+-  static const double fxBalanceMax = 1.0;
+-  static const double fxTempoMin = 0.5;
+-  static const double fxTempoMax = 2.0;
+-  static const double fxDampMin = 0.0;
+-  static const double fxDampMax = 1.0;
+-  static const double fxFilterMinHz = 200.0;
+-  static const double fxFilterMaxHz = 18000.0;
+-  static const double fxDelayMinMs = 10.0;
+-  static const double fxDelayMaxMs = 1600.0;
+-  static const double fxSizeMin = 0.0;
+-  static const double fxSizeMax = 1.0;
+-  static const double fxMixMin = 0.0;
+-  static const double fxMixMax = 1.0;
+-  static const double fxFeedbackMin = 0.0;
+-  static const double fxFeedbackMax = 0.95;
+-  static const double fxWidthMin = 0.0;
+-  static const double fxWidthMax = 2.0;
+-  static const double convolverMixMin = 0.0;
+-  static const double convolverMixMax = 1.0;
+   static const int maxParametricBands = 31;
+ 
+   static const String _eqStateKey = 'eq_state_v1';
+@@ -666,12 +503,6 @@ class EqualizerNotifier extends Notifier<EqualizerState> {
+         state = saved;
+       }
+       await applyEqualizer(state);
+-      final ir = state.convolver.irPath;
+-      if (ir != null && ir.isNotEmpty) {
+-        try {
+-          await loadConvolverIr(ir);
+-        } catch (_) {}
+-      }
+       ref.read(eqGraphRepaintControllerProvider).bump();
+     });
+     return initialState;
+@@ -948,143 +779,6 @@ class EqualizerNotifier extends Notifier<EqualizerState> {
+     _syncToAudio();
+   }
+ 
+-  void setFxEnabled(bool enabled) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(enabled: enabled),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxBalance(double balance) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(
+-        balance: balance.clamp(fxBalanceMin, fxBalanceMax).toDouble(),
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxTempo(double tempo) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(
+-        tempo: tempo.clamp(fxTempoMin, fxTempoMax).toDouble(),
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxDamp(double damp) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(damp: damp.clamp(fxDampMin, fxDampMax).toDouble()),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxFilterHz(double filterHz) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(
+-        filterHz: filterHz.clamp(fxFilterMinHz, fxFilterMaxHz).toDouble(),
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxDelayMs(double delayMs) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(
+-        delayMs: delayMs.clamp(fxDelayMinMs, fxDelayMaxMs).toDouble(),
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxSize(double size) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(size: size.clamp(fxSizeMin, fxSizeMax).toDouble()),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxMix(double mix) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(mix: mix.clamp(fxMixMin, fxMixMax).toDouble()),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxFeedback(double feedback) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(
+-        feedback: feedback.clamp(fxFeedbackMin, fxFeedbackMax).toDouble(),
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setFxWidth(double width) {
+-    state = state.copyWith(
+-      fx: state.fx.copyWith(
+-        width: width.clamp(fxWidthMin, fxWidthMax).toDouble(),
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void resetFx() {
+-    state = state.copyWith(fx: const FxSettings(), clearActivePresetName: true);
+-    _syncToAudio();
+-  }
+-
+-  void setConvolverEnabled(bool enabled) {
+-    state = state.copyWith(
+-      convolver: state.convolver.copyWith(enabled: enabled),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setConvolverMix(double mix) {
+-    final clamped = mix.clamp(convolverMixMin, convolverMixMax);
+-    state = state.copyWith(
+-      convolver: state.convolver.copyWith(mix: clamped),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void setConvolverIr(String path, String displayName) {
+-    state = state.copyWith(
+-      convolver: state.convolver.copyWith(
+-        irPath: path,
+-        irDisplayName: displayName,
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+-  void clearConvolverIr() {
+-    state = state.copyWith(
+-      convolver: state.convolver.copyWith(
+-        enabled: false,
+-        clearIrPath: true,
+-        clearIrDisplayName: true,
+-      ),
+-      clearActivePresetName: true,
+-    );
+-    _syncToAudio();
+-  }
+-
+   void addParametricBand() {
+     if (state.parametricBands.length >= maxParametricBands) {
+       return;
+@@ -1123,7 +817,6 @@ class EqualizerNotifier extends Notifier<EqualizerState> {
+     double trebleDb = 0.0,
+     CompressorSettings compressor = const CompressorSettings(),
+     LimiterSettings limiter = const LimiterSettings(),
+-    FxSettings fx = const FxSettings(),
+   }) {
+     state = state.copyWith(
+       enabled: enabled,
+@@ -1140,7 +833,6 @@ class EqualizerNotifier extends Notifier<EqualizerState> {
+       trebleDb: trebleDb.clamp(gainMinDb, gainMaxDb).toDouble(),
+       compressor: compressor,
+       limiter: limiter,
+-      fx: fx,
+     );
+     ref.read(eqGraphRepaintControllerProvider).bump();
+     _syncToAudio();
+@@ -1198,11 +890,3 @@ final eqCompressorProvider = Provider<CompressorSettings>((ref) {
+ final eqLimiterProvider = Provider<LimiterSettings>((ref) {
+   return ref.watch(equalizerProvider.select((s) => s.limiter));
+ });
+-
+-final eqFxProvider = Provider<FxSettings>((ref) {
+-  return ref.watch(equalizerProvider.select((s) => s.fx));
+-});
+-
+-final eqConvolverProvider = Provider<ConvolverSettings>((ref) {
+-  return ref.watch(equalizerProvider.select((s) => s.convolver));
+-});
+diff --git a/lib/services/eq_preset_service.dart b/lib/services/eq_preset_service.dart
+index 9e07876e..ab04d198 100644
+--- a/lib/services/eq_preset_service.dart
++++ b/lib/services/eq_preset_service.dart
+@@ -17,7 +17,6 @@ class EqPreset {
+   final double trebleDb;
+   final CompressorSettings compressor;
+   final LimiterSettings limiter;
+-  final FxSettings fx;
+ 
+   const EqPreset({
+     required this.id,
+@@ -32,7 +31,6 @@ class EqPreset {
+     this.trebleDb = 0.0,
+     this.compressor = const CompressorSettings(),
+     this.limiter = const LimiterSettings(),
+-    this.fx = const FxSettings(),
+   });
+ 
+   EqPreset copyWith({
+@@ -48,7 +46,6 @@ class EqPreset {
+     double? trebleDb,
+     CompressorSettings? compressor,
+     LimiterSettings? limiter,
+-    FxSettings? fx,
+   }) {
+     return EqPreset(
+       id: id ?? this.id,
+@@ -63,7 +60,6 @@ class EqPreset {
+       trebleDb: trebleDb ?? this.trebleDb,
+       compressor: compressor ?? this.compressor,
+       limiter: limiter ?? this.limiter,
+-      fx: fx ?? this.fx,
+     );
+   }
+ 
+@@ -102,18 +98,6 @@ class EqPreset {
+       'ceilingDb': limiter.ceilingDb,
+       'releaseMs': limiter.releaseMs,
+     },
+-    'fx': {
+-      'enabled': fx.enabled,
+-      'balance': fx.balance,
+-      'tempo': fx.tempo,
+-      'damp': fx.damp,
+-      'filterHz': fx.filterHz,
+-      'delayMs': fx.delayMs,
+-      'size': fx.size,
+-      'mix': fx.mix,
+-      'feedback': fx.feedback,
+-      'width': fx.width,
+-    },
+   };
+ 
+   factory EqPreset.fromJson(Map<String, dynamic> json) {
+@@ -150,7 +134,6 @@ class EqPreset {
+     final compressorJson = (json['compressor'] as Map?)
+         ?.cast<String, dynamic>();
+     final limiterJson = (json['limiter'] as Map?)?.cast<String, dynamic>();
+-    final fxJson = (json['fx'] as Map?)?.cast<String, dynamic>();
+ 
+     return EqPreset(
+       id: (json['id'] as String?) ?? '',
+@@ -189,18 +172,6 @@ class EqPreset {
+         ceilingDb: (limiterJson?['ceilingDb'] as num?)?.toDouble() ?? -0.8,
+         releaseMs: (limiterJson?['releaseMs'] as num?)?.toDouble() ?? 80.0,
+       ),
+-      fx: FxSettings(
+-        enabled: (fxJson?['enabled'] as bool?) ?? false,
+-        balance: (fxJson?['balance'] as num?)?.toDouble() ?? 0.0,
+-        tempo: (fxJson?['tempo'] as num?)?.toDouble() ?? 1.0,
+-        damp: (fxJson?['damp'] as num?)?.toDouble() ?? 0.35,
+-        filterHz: (fxJson?['filterHz'] as num?)?.toDouble() ?? 6800.0,
+-        delayMs: (fxJson?['delayMs'] as num?)?.toDouble() ?? 240.0,
+-        size: (fxJson?['size'] as num?)?.toDouble() ?? 0.55,
+-        mix: (fxJson?['mix'] as num?)?.toDouble() ?? 0.25,
+-        feedback: (fxJson?['feedback'] as num?)?.toDouble() ?? 0.35,
+-        width: (fxJson?['width'] as num?)?.toDouble() ?? 1.0,
+-      ),
+     );
+   }
+ }
+@@ -259,7 +230,6 @@ class BuiltInEqPresets {
+     required List<ParametricBand> parametricBands,
+     CompressorSettings compressor = const CompressorSettings(),
+     LimiterSettings limiter = const LimiterSettings(),
+-    FxSettings fx = const FxSettings(),
+   }) {
+     return EqPreset(
+       id: id,
+@@ -270,7 +240,6 @@ class BuiltInEqPresets {
+       parametricBands: List<ParametricBand>.unmodifiable(parametricBands),
+       compressor: compressor,
+       limiter: limiter,
+-      fx: fx,
+     );
+   }
+ 
+diff --git a/lib/services/equalizer_service.dart b/lib/services/equalizer_service.dart
+index 8f67eb58..97d18801 100644
+--- a/lib/services/equalizer_service.dart
++++ b/lib/services/equalizer_service.dart
+@@ -6,7 +6,7 @@ import 'package:flick/src/rust/api/audio_api.dart' as rust_audio;
+ EqualizerState _lastRequestedState = EqualizerState.initial();
+ 
+ /// Applies EQ and processing state to the active audio backend.
+-/// Rust engine: graphic EQ, dynamics, and creative FX are applied natively.
++/// Rust engine: graphic EQ, dynamics are applied natively.
+ /// just_audio on Android: uses native AudioEffect counterparts where available.
+ Future<void> applyEqualizer(EqualizerState state) async {
+   _lastRequestedState = _snapshotState(state);
+@@ -63,22 +63,6 @@ Future<void> applyEqualizer(EqualizerState state) async {
+         ceilingDb: state.limiter.ceilingDb,
+         releaseMs: state.limiter.releaseMs,
+       );
+-      await rust_audio.audioSetFx(
+-        enabled: false,
+-        balance: state.fx.balance,
+-        tempo: state.fx.tempo,
+-        damp: state.fx.damp,
+-        filterHz: state.fx.filterHz,
+-        delayMs: state.fx.delayMs,
+-        size: state.fx.size,
+-        mix: state.fx.mix,
+-        feedback: state.fx.feedback,
+-        width: state.fx.width,
+-      );
+-      await rust_audio.audioSetConvolver(
+-        enabled: false,
+-        mix: state.convolver.mix,
+-      );
+       return;
+     }
+ 
+@@ -100,51 +84,11 @@ Future<void> applyEqualizer(EqualizerState state) async {
+       ceilingDb: state.limiter.ceilingDb,
+       releaseMs: state.limiter.releaseMs,
+     );
+-    await rust_audio.audioSetFx(
+-      enabled: state.enabled && state.fx.enabled,
+-      balance: state.fx.balance,
+-      tempo: state.fx.tempo,
+-      damp: state.fx.damp,
+-      filterHz: state.fx.filterHz,
+-      delayMs: state.fx.delayMs,
+-      size: state.fx.size,
+-      mix: state.fx.mix,
+-      feedback: state.fx.feedback,
+-      width: state.fx.width,
+-    );
+-    await rust_audio.audioSetConvolver(
+-      enabled: state.enabled && state.convolver.enabled,
+-      mix: state.convolver.mix,
+-    );
+   } catch (_) {}
+ }
+ 
+ Future<void> reapplyEqualizer() async {
+   await applyEqualizer(_lastRequestedState);
+-  final ir = _lastRequestedState.convolver.irPath;
+-  if (ir != null && ir.isNotEmpty) {
+-    try {
+-      await rust_audio.audioLoadIr(path: ir);
+-    } catch (_) {}
+-  }
+-}
+-
+-/// Loads (decodes + resamples) an impulse response into the native convolver.
+-Future<void> loadConvolverIr(String path) async {
+-  if (!rust_audio.audioIsNativeAvailable() ||
+-      !rust_audio.audioIsInitialized()) {
+-    return;
+-  }
+-  await rust_audio.audioLoadIr(path: path);
+-}
+-
+-/// Clears the loaded impulse response from the native convolver.
+-Future<void> clearConvolverIr() async {
+-  if (!rust_audio.audioIsNativeAvailable() ||
+-      !rust_audio.audioIsInitialized()) {
+-    return;
+-  }
+-  await rust_audio.audioClearIr();
+ }
+ 
+ /// Map parametric bands to 10-band gains for Rust engine (graphic-only).
+@@ -167,8 +111,6 @@ EqualizerState _snapshotState(EqualizerState state) {
+     ),
+     compressor: state.compressor.copyWith(),
+     limiter: state.limiter.copyWith(),
+-    fx: state.fx.copyWith(),
+-    convolver: state.convolver.copyWith(),
+   );
+ }
+ 
+diff --git a/lib/src/rust/api/audio_api.dart b/lib/src/rust/api/audio_api.dart
+index 81d1ec7e..c4bb5d99 100644
+--- a/lib/src/rust/api/audio_api.dart
++++ b/lib/src/rust/api/audio_api.dart
+@@ -239,49 +239,6 @@ Future<void> audioSetLimiter({
+   releaseMs: releaseMs,
+ );
+ 
+-/// Configure spatial/time FX settings for the native audio engine.
+-Future<void> audioSetFx({
+-  required bool enabled,
+-  required double balance,
+-  required double tempo,
+-  required double damp,
+-  required double filterHz,
+-  required double delayMs,
+-  required double size,
+-  required double mix,
+-  required double feedback,
+-  required double width,
+-}) => RustLib.instance.api.crateApiAudioApiAudioSetFx(
+-  enabled: enabled,
+-  balance: balance,
+-  tempo: tempo,
+-  damp: damp,
+-  filterHz: filterHz,
+-  delayMs: delayMs,
+-  size: size,
+-  mix: mix,
+-  feedback: feedback,
+-  width: width,
+-);
+-
+-/// Enable/disable the impulse-response convolver and set its wet/dry mix
+-/// (0.0 = dry, 1.0 = full IR).
+-Future<void> audioSetConvolver({required bool enabled, required double mix}) =>
+-    RustLib.instance.api.crateApiAudioApiAudioSetConvolver(
+-      enabled: enabled,
+-      mix: mix,
+-    );
+-
+-/// Decode an impulse-response file, resample it to the engine rate and load it
+-/// into the convolver. Decoding runs on this thread (not the audio callback);
+-/// a failure leaves the previously-loaded IR untouched.
+-Future<void> audioLoadIr({required String path}) =>
+-    RustLib.instance.api.crateApiAudioApiAudioLoadIr(path: path);
+-
+-/// Drop any loaded IR and disable the convolver.
+-Future<void> audioClearIr() =>
+-    RustLib.instance.api.crateApiAudioApiAudioClearIr();
+-
+ /// Configure crossfade settings.
+ ///
+ /// The engine's own `is_crossfade_allowed()` trigger gate (plus the Dart-side
+diff --git a/rust/src/api/audio_api.rs b/rust/src/api/audio_api.rs
+index ba8abc65..f4a09ae0 100644
+--- a/rust/src/api/audio_api.rs
++++ b/rust/src/api/audio_api.rs
+@@ -1249,47 +1249,6 @@ pub fn audio_set_limiter(
+     with_audio_engine(|handle| handle.set_limiter(enabled, input_gain_db, ceiling_db, release_ms))
+ }
+ 
+-/// Configure spatial/time FX settings for the native audio engine.
+-#[allow(clippy::too_many_arguments)]
+-pub fn audio_set_fx(
+-    enabled: bool,
+-    balance: f32,
+-    tempo: f32,
+-    damp: f32,
+-    filter_hz: f32,
+-    delay_ms: f32,
+-    size: f32,
+-    mix: f32,
+-    feedback: f32,
+-    width: f32,
+-) -> Result<(), String> {
+-    with_audio_engine(|handle| {
+-        handle.set_fx(
+-            enabled, balance, tempo, damp, filter_hz, delay_ms, size, mix, feedback, width,
+-        )
+-    })
+-}
+-
+-/// Enable/disable the impulse-response convolver and set its wet/dry mix
+-/// (0.0 = dry, 1.0 = full IR).
+-pub fn audio_set_convolver(enabled: bool, mix: f32) -> Result<(), String> {
+-    with_audio_engine(|handle| handle.set_convolver(enabled, mix))
+-}
+-
+-/// Decode an impulse-response file, resample it to the engine rate and load it
+-/// into the convolver. Decoding runs on this thread (not the audio callback);
+-/// a failure leaves the previously-loaded IR untouched.
+-pub fn audio_load_ir(path: String) -> Result<(), String> {
+-    let rate = with_audio_engine(|handle| Ok(handle.sample_rate()))?;
+-    let coeffs = crate::audio::ir_loader::load_ir(std::path::Path::new(&path), rate)?;
+-    with_audio_engine(|handle| handle.set_convolver_ir(coeffs))
+-}
+-
+-/// Drop any loaded IR and disable the convolver.
+-pub fn audio_clear_ir() -> Result<(), String> {
+-    with_audio_engine(|handle| handle.send_command(crate::audio::commands::AudioCommand::ClearConvolverIr))
+-}
+-
+ /// Configure crossfade settings.
+ ///
+ /// The engine's own `is_crossfade_allowed()` trigger gate (plus the Dart-side
+diff --git a/rust/src/audio/commands.rs b/rust/src/audio/commands.rs
+index c1d1298c..241c4902 100644
+--- a/rust/src/audio/commands.rs
++++ b/rust/src/audio/commands.rs
+@@ -59,26 +59,6 @@ pub enum AudioCommand {
+         ceiling_db: f32,
+         release_ms: f32,
+     },
+-    /// Configure spatial/time FX settings.
+-    SetFx {
+-        enabled: bool,
+-        balance: f32,
+-        tempo: f32,
+-        damp: f32,
+-        filter_hz: f32,
+-        delay_ms: f32,
+-        size: f32,
+-        mix: f32,
+-        feedback: f32,
+-        width: f32,
+-    },
+-    /// Enable/disable the impulse-response convolver and set its wet/dry mix.
+-    SetConvolver { enabled: bool, mix: f32 },
+-    /// Load pre-decoded IR coefficients into the convolver (off-callback).
+-    /// `coeffs` is 1 (mono) or 2 (stereo L/R) tap vectors.
+-    SetConvolverIr { coeffs: Vec<Vec<f32>> },
+-    /// Remove the current IR (frees taps; convolver becomes no-op).
+-    ClearConvolverIr,
+     /// Switch pipeline mode at runtime (e.g. when Bit-perfect (DAP Internal) is toggled).
+     SetPipelineMode { passthrough: bool },
+     /// Override pipeline to Dop for DoP DSD playback, or restore base mode.
+diff --git a/rust/src/audio/convolver.rs b/rust/src/audio/convolver.rs
+deleted file mode 100644
+index 5a6a67a9..00000000
+--- a/rust/src/audio/convolver.rs
++++ /dev/null
+@@ -1,224 +0,0 @@
+-//! Direct (time-domain) convolution for impulse-response processing.
+-//!
+-//! Textbook FIR: `y[n] = Σ h[k]·x[n−k]`. Input history is held in a per-channel
+-//! ring buffer so the realtime callback allocates nothing after `load_ir`.
+-//!
+-//! The convolver only runs in `PipelineMode::Dsp` — passthrough/DoP branches
+-//! return before reaching it (it would break bit-perfect delivery).
+-//!
+-//! `XRUN_COUNT` climbs.
+-
+-/// Maximum number of taps kept from an IR. Anything longer is truncated
+-/// (keeps the direct/early response). At 48 kHz this is ~341 ms of tail —
+-/// enough for room reverb, crossfeed, cabinet sims and correction IRs.
+-pub const IR_TAP_CAP: usize = 16_384;
+-
+-pub struct Convolver {
+-    sample_rate: u32,
+-    enabled: bool,
+-    /// Wet/dry mix. 1.0 = full IR, 0.0 = dry passthrough.
+-    mix: f32,
+-    /// IR coefficients. Always length 2 after `load_ir` (mono IR is replicated
+-    /// to both slots); empty when no IR is loaded.
+-    ir: Vec<Vec<f32>>,
+-    /// Per-slot input-history ring buffer (length = taps). Two slots so a mono
+-    /// IR can still track L and R independently under stereo engine output.
+-    history: Vec<Vec<f32>>,
+-    /// Per-slot write index into `history` (next slot to overwrite = oldest).
+-    write_pos: Vec<usize>,
+-}
+-
+-impl Convolver {
+-    pub fn new(sample_rate: u32) -> Self {
+-        Self {
+-            sample_rate,
+-            enabled: false,
+-            mix: 1.0,
+-            ir: Vec::new(),
+-            history: Vec::new(),
+-            write_pos: Vec::new(),
+-        }
+-    }
+-
+-    pub fn reconfigure_sample_rate(&mut self, sample_rate: u32) {
+-        // Taps are count-rate-independent, but zero the history so a stale tail
+-        // from the old rate doesn't smear the first block at the new rate. The
+-        // IR itself is retained; a re-sample at the new rate is encouraged but
+-        // not forced here (cheap fallback until the loader re-runs).
+-        for h in &mut self.history {
+-            h.fill(0.0);
+-        }
+-        self.sample_rate = sample_rate;
+-    }
+-
+-    pub fn set(&mut self, enabled: bool, mix: f32) {
+-        self.enabled = enabled;
+-        self.mix = mix.clamp(0.0, 1.0);
+-        if !enabled {
+-            self.reset_state();
+-        }
+-    }
+-
+-    /// Load pre-decoded, pre-resampled, peak-normalised IR coefficients.
+-    /// `coeffs.len()` is 1 (mono, applied to both channels) or 2 (stereo L/R).
+-    /// Each inner vec is already capped to `IR_TAP_CAP` by the loader.
+-    pub fn load_ir(&mut self, coeffs: Vec<Vec<f32>>) {
+-        if coeffs.is_empty() || coeffs[0].is_empty() {
+-            return;
+-        }
+-        let taps = coeffs[0].len();
+-        let (l, r) = match coeffs.len() {
+-            1 => {
+-                let c = coeffs.into_iter().next().unwrap();
+-                (c.clone(), c)
+-            }
+-            _ => {
+-                let mut it = coeffs.into_iter();
+-                let l = it.next().unwrap_or_default();
+-                let r = it.next().unwrap_or_else(|| l.clone());
+-                (l, r)
+-            }
+-        };
+-        self.ir = vec![l, r];
+-        self.history = vec![vec![0.0; taps]; 2];
+-        self.write_pos = vec![0, 0];
+-    }
+-
+-    pub fn clear_ir(&mut self) {
+-        self.ir.clear();
+-        self.history.clear();
+-        self.write_pos.clear();
+-        self.enabled = false;
+-    }
+-
+-    fn reset_state(&mut self) {
+-        for h in &mut self.history {
+-            h.fill(0.0);
+-        }
+-        for w in &mut self.write_pos {
+-            *w = 0;
+-        }
+-    }
+-
+-    pub fn process(&mut self, buf: &mut [f32], channels: usize) {
+-        if channels == 0 || !self.enabled || self.ir.is_empty() {
+-            return;
+-        }
+-        let taps = self.ir[0].len();
+-        if taps == 0 || self.history.len() < 2 {
+-            return;
+-        }
+-
+-        let dry = 1.0 - self.mix;
+-        let wet = self.mix;
+-
+-        for frame in buf.chunks_exact_mut(channels) {
+-            for ch in 0..channels {
+-                let slot = if ch > 0 { 1 } else { 0 };
+-                let dry_s = frame[ch];
+-                let hist = &mut self.history[slot];
+-                let ir = &self.ir[slot];
+-                let pos = self.write_pos[slot];
+-
+-                // Write current sample into the ring (overwrites oldest).
+-                hist[pos] = dry_s;
+-
+-                // y = Σ h[k]·x[n-k], walking backwards through the ring in two
+-                // contiguous segments to avoid a per-tap modulo.
+-                let mut acc = 0.0f32;
+-                for k in 0..=pos {
+-                    acc += ir[k] * hist[pos - k];
+-                }
+-                for k in (pos + 1)..taps {
+-                    acc += ir[k] * hist[taps + pos - k];
+-                }
+-
+-                self.write_pos[slot] = if pos + 1 >= taps { 0 } else { pos + 1 };
+-
+-                frame[ch] = (dry_s * dry + acc * wet).clamp(-1.0, 1.0);
+-            }
+-        }
+-    }
+-}
+-
+-#[cfg(test)]
+-mod tests {
+-    use super::*;
+-
+-    #[test]
+-    fn disabled_leaves_buffer_unchanged() {
+-        let mut c = Convolver::new(48_000);
+-        let mut buf = [0.25f32, -0.25, 0.5, -0.5];
+-        let original = buf;
+-        c.process(&mut buf, 2);
+-        assert_eq!(buf, original);
+-    }
+-
+-    #[test]
+-    fn no_ir_leaves_buffer_unchanged_even_when_enabled() {
+-        let mut c = Convolver::new(48_000);
+-        c.set(true, 1.0);
+-        let mut buf = [0.25f32, -0.25, 0.5, -0.5];
+-        let original = buf;
+-        c.process(&mut buf, 2);
+-        assert_eq!(buf, original);
+-    }
+-
+-    #[test]
+-    fn impulse_ir_reproduces_input() {
+-        // A unit-impulse IR convolved at full mix is identity.
+-        let mut c = Convolver::new(48_000);
+-        c.load_ir(vec![vec![1.0, 0.0, 0.0, 0.0]]);
+-        c.set(true, 1.0);
+-
+-        let mut buf = [0.4f32, -0.2, 0.9, 0.1, -0.7, 0.3];
+-        let original = buf;
+-        c.process(&mut buf, 2);
+-        for (a, b) in buf.iter().zip(original.iter()) {
+-            assert!((a - b).abs() < 1e-5, "{} != {}", a, b);
+-        }
+-    }
+-
+-    #[test]
+-    fn two_tap_fir_matches_definition() {
+-        // y[n] = a·x[n] + b·x[n-1]
+-        let mut c = Convolver::new(48_000);
+-        c.load_ir(vec![vec![0.5, 0.25]]);
+-        c.set(true, 1.0);
+-
+-        // An impulse input reproduces the IR: y[n]=a·x[n]+b·x[n-1] over
+-        // x=[1,0,0,0] gives [a, b, 0, 0] = [0.5, 0.25, 0, 0].
+-        let mut buf = [1.0f32, 0.0, 0.0, 0.0];
+-        c.process(&mut buf, 1);
+-        assert!((buf[0] - 0.5).abs() < 1e-5);
+-        assert!((buf[1] - 0.25).abs() < 1e-5);
+-        assert!(buf[2].abs() < 1e-5);
+-        assert!(buf[3].abs() < 1e-5);
+-    }
+-
+-    #[test]
+-    fn mono_ir_applied_to_both_channels() {
+-        let mut c = Convolver::new(48_000);
+-        c.load_ir(vec![vec![1.0, 0.0]]);
+-        c.set(true, 1.0);
+-
+-        let mut buf = [0.8f32, 0.8, 0.0, 0.0];
+-        c.process(&mut buf, 2);
+-        // Both channels should carry the impulse response of their own signal.
+-        assert!((buf[0] - 0.8).abs() < 1e-5);
+-        assert!((buf[1] - 0.8).abs() < 1e-5);
+-    }
+-
+-    #[test]
+-    fn stereo_ir_routes_channels_independently() {
+-        let mut c = Convolver::new(48_000);
+-        // L IR scales by 0.5, R IR scales by 0.25 — full mix, impulse.
+-        c.load_ir(vec![vec![0.5, 0.0], vec![0.25, 0.0]]);
+-        c.set(true, 1.0);
+-
+-        let mut buf = [1.0f32, 1.0];
+-        c.process(&mut buf, 2);
+-        assert!((buf[0] - 0.5).abs() < 1e-5);
+-        assert!((buf[1] - 0.25).abs() < 1e-5);
+-    }
+-}
+diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
+index 7f547e7d..ba874e6e 100644
+--- a/rust/src/audio/engine.rs
++++ b/rust/src/audio/engine.rs
+@@ -6,7 +6,6 @@
+ use crate::dev_eprintln;
+ 
+ use crate::audio::commands::{AudioCommand, AudioEvent, PlaybackProgress, PlaybackState};
+-use crate::audio::convolver::Convolver;
+ use crate::audio::crossfader::Crossfader;
+ use crate::audio::decoder::DecoderThread;
+ use crate::audio::decoder_handle::{detect_file_type, DecoderHandle, FileType};
+@@ -15,7 +14,6 @@ use crate::audio::device::current_device_profile;
+ use crate::audio::dsd_engine::DsdDecoderThread;
+ use crate::audio::dynamics::DynamicsChain;
+ use crate::audio::equalizer::Equalizer;
+-use crate::audio::fx::SpatialFx;
+ use crate::audio::source::{AudioSource, SourceProvider};
+ use crate::audio::strategy::OutputStrategy;
+ #[cfg(target_os = "android")]
+@@ -148,11 +146,6 @@ pub struct AudioCallbackData {
+     speed_frac_pos: Mutex<f64>,
+     /// Graphic EQ (10 bands). try_lock in callback to avoid blocking.
+     equalizer: Mutex<Equalizer>,
+-    /// Creative spatial/time FX.
+-    fx: Mutex<SpatialFx>,
+-    /// Impulse-response convolver (room reverb, crossfeed, cabinet/correction
+-    /// IRs). Loaded off-callback; runs only in Dsp mode like the other FX.
+-    convolver: Mutex<Convolver>,
+     /// Lightweight compressor + limiter chain.
+     dynamics: Mutex<DynamicsChain>,
+     /// Channel for sending finished tracks to command thread
+@@ -213,8 +206,6 @@ impl AudioCallbackData {
+             speed_buffer: Mutex::new(vec![0.0; speed_buffer_size]),
+             speed_frac_pos: Mutex::new(0.0),
+             equalizer: Mutex::new(Equalizer::new()),
+-            fx: Mutex::new(SpatialFx::new(sample_rate)),
+-            convolver: Mutex::new(Convolver::new(sample_rate)),
+             dynamics: Mutex::new(DynamicsChain::new(sample_rate)),
+             finished_tracks,
+             tuning_432hz_enabled: AtomicBool::new(tuning_enabled),
+@@ -343,8 +334,6 @@ impl AudioCallbackData {
+         *self.mix_buffer_b.lock() = vec![0.0; buffer_size];
+         *self.speed_buffer.lock() = vec![0.0; speed_buffer_size];
+         *self.speed_frac_pos.lock() = 0.0;
+-        self.fx.lock().reconfigure_sample_rate(sample_rate);
+-        self.convolver.lock().reconfigure_sample_rate(sample_rate);
+         *self.dynamics.lock() = DynamicsChain::new(sample_rate);
+     }
+ }
+@@ -544,51 +533,6 @@ impl AudioEngineHandle {
+         })
+     }
+ 
+-    /// Configure spatial/time FX settings.
+-    #[allow(clippy::too_many_arguments)]
+-    pub fn set_fx(
+-        &self,
+-        enabled: bool,
+-        balance: f32,
+-        tempo: f32,
+-        damp: f32,
+-        filter_hz: f32,
+-        delay_ms: f32,
+-        size: f32,
+-        mix: f32,
+-        feedback: f32,
+-        width: f32,
+-    ) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetFx {
+-            enabled,
+-            balance,
+-            tempo,
+-            damp,
+-            filter_hz,
+-            delay_ms,
+-            size,
+-            mix,
+-            feedback,
+-            width,
+-        })
+-    }
+-
+-    /// Enable/disable the impulse-response convolver and set its wet/dry mix.
+-    pub fn set_convolver(&self, enabled: bool, mix: f32) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetConvolver { enabled, mix })
+-    }
+-
+-    /// Load pre-decoded, pre-resampled IR coefficients into the convolver.
+-    /// `coeffs` is 1 (mono) or 2 (stereo L/R) tap vectors.
+-    pub fn set_convolver_ir(&self, coeffs: Vec<Vec<f32>>) -> Result<(), String> {
+-        self.send_command(AudioCommand::SetConvolverIr { coeffs })
+-    }
+-
+-    /// Remove the current IR; convolver becomes a no-op until a new IR loads.
+-    pub fn clear_convolver_ir(&self) -> Result<(), String> {
+-        self.send_command(AudioCommand::ClearConvolverIr)
+-    }
+-
+     /// Get the current playback speed.
+     pub fn get_playback_speed(&self) -> f32 {
+         self.callback_data.get_playback_speed()
+@@ -3045,12 +2989,6 @@ pub(crate) fn audio_callback(
+             if let Some(mut eq) = data.equalizer.try_lock() {
+                 eq.process(output, channels);
+             }
+-            if let Some(mut fx) = data.fx.try_lock() {
+-                fx.process(output, channels);
+-            }
+-            if let Some(mut convolver) = data.convolver.try_lock() {
+-                convolver.process(output, channels);
+-            }
+             if let Some(mut dynamics) = data.dynamics.try_lock() {
+                 dynamics.process(output, channels);
+             }
+@@ -3186,12 +3124,6 @@ pub(crate) fn audio_callback(
+     if let Some(mut eq) = data.equalizer.try_lock() {
+         eq.process(output, channels);
+     }
+-    if let Some(mut fx) = data.fx.try_lock() {
+-        fx.process(output, channels);
+-    }
+-    if let Some(mut convolver) = data.convolver.try_lock() {
+-        convolver.process(output, channels);
+-    }
+     if let Some(mut dynamics) = data.dynamics.try_lock() {
+         dynamics.process(output, channels);
+     }
+@@ -3428,32 +3360,6 @@ fn command_processing_loop(
+                             callback_data.pipeline_mode.store(base, Ordering::Relaxed);
+                         }
+                     }
+-                    AudioCommand::SetFx {
+-                        enabled,
+-                        balance,
+-                        tempo,
+-                        damp,
+-                        filter_hz,
+-                        delay_ms,
+-                        size,
+-                        mix,
+-                        feedback,
+-                        width,
+-                    } => {
+-                        callback_data.fx.lock().set(
+-                            enabled, balance, tempo, damp, filter_hz, delay_ms, size, mix,
+-                            feedback, width,
+-                        );
+-                    }
+-                    AudioCommand::SetConvolver { enabled, mix } => {
+-                        callback_data.convolver.lock().set(enabled, mix);
+-                    }
+-                    AudioCommand::SetConvolverIr { coeffs } => {
+-                        callback_data.convolver.lock().load_ir(coeffs);
+-                    }
+-                    AudioCommand::ClearConvolverIr => {
+-                        callback_data.convolver.lock().clear_ir();
+-                    }
+                     AudioCommand::CrossfadeToNext | AudioCommand::SkipToNext => {
+                         handle_skip_to_next(&callback_data, &state, &event_tx);
+                     }
+diff --git a/rust/src/audio/fx.rs b/rust/src/audio/fx.rs
+deleted file mode 100644
+index b460062b..00000000
+--- a/rust/src/audio/fx.rs
++++ /dev/null
+@@ -1,252 +0,0 @@
+-//! Lightweight stereo spatial and time FX for the realtime callback.
+-//!
+-//! The implementation is intentionally simple and deterministic:
+-//! - fixed-size delay buffers allocated outside the audio callback
+-//! - one-pole damping/filtering for the wet path
+-//! - stereo width and balance applied in place on interleaved buffers
+-
+-use std::f32::consts::PI;
+-
+-const MAX_DELAY_MS: f32 = 1600.0;
+-const MIN_DELAY_MS: f32 = 10.0;
+-
+-#[derive(Debug, Clone, Copy)]
+-pub struct FxSettings {
+-    pub enabled: bool,
+-    pub balance: f32,
+-    pub tempo: f32,
+-    pub damp: f32,
+-    pub filter_hz: f32,
+-    pub delay_ms: f32,
+-    pub size: f32,
+-    pub mix: f32,
+-    pub feedback: f32,
+-    pub width: f32,
+-}
+-
+-impl FxSettings {
+-    pub const fn disabled() -> Self {
+-        Self {
+-            enabled: false,
+-            balance: 0.0,
+-            tempo: 1.0,
+-            damp: 0.35,
+-            filter_hz: 6800.0,
+-            delay_ms: 240.0,
+-            size: 0.55,
+-            mix: 0.25,
+-            feedback: 0.35,
+-            width: 1.0,
+-        }
+-    }
+-}
+-
+-pub struct SpatialFx {
+-    sample_rate: u32,
+-    settings: FxSettings,
+-    delay_l: Vec<f32>,
+-    delay_r: Vec<f32>,
+-    write_frame: usize,
+-    filter_l: f32,
+-    filter_r: f32,
+-}
+-
+-impl SpatialFx {
+-    pub fn new(sample_rate: u32) -> Self {
+-        let delay_len = delay_capacity_frames(sample_rate);
+-        Self {
+-            sample_rate,
+-            settings: FxSettings::disabled(),
+-            delay_l: vec![0.0; delay_len],
+-            delay_r: vec![0.0; delay_len],
+-            write_frame: 0,
+-            filter_l: 0.0,
+-            filter_r: 0.0,
+-        }
+-    }
+-
+-    pub fn reconfigure_sample_rate(&mut self, sample_rate: u32) {
+-        let settings = self.settings;
+-        *self = Self::new(sample_rate);
+-        self.settings = settings;
+-    }
+-
+-    #[allow(clippy::too_many_arguments)]
+-    pub fn set(
+-        &mut self,
+-        enabled: bool,
+-        balance: f32,
+-        tempo: f32,
+-        damp: f32,
+-        filter_hz: f32,
+-        delay_ms: f32,
+-        size: f32,
+-        mix: f32,
+-        feedback: f32,
+-        width: f32,
+-    ) {
+-        self.settings = FxSettings {
+-            enabled,
+-            balance: balance.clamp(-1.0, 1.0),
+-            tempo: tempo.clamp(0.5, 2.0),
+-            damp: damp.clamp(0.0, 1.0),
+-            filter_hz: filter_hz.clamp(200.0, 18_000.0),
+-            delay_ms: delay_ms.clamp(MIN_DELAY_MS, MAX_DELAY_MS),
+-            size: size.clamp(0.0, 1.0),
+-            mix: mix.clamp(0.0, 1.0),
+-            feedback: feedback.clamp(0.0, 0.95),
+-            width: width.clamp(0.0, 2.0),
+-        };
+-
+-        if !enabled {
+-            self.reset_state();
+-        }
+-    }
+-
+-    pub fn process(&mut self, buf: &mut [f32], channels: usize) {
+-        if channels == 0 || !self.settings.enabled {
+-            return;
+-        }
+-
+-        let stereo = channels > 1;
+-        let delay_len = self.delay_l.len();
+-        if delay_len < 2 {
+-            return;
+-        }
+-
+-        let delay_frames = (((self.settings.delay_ms / self.settings.tempo) / 1000.0)
+-            * self.sample_rate as f32)
+-            .round()
+-            .clamp(1.0, (delay_len - 1) as f32) as usize;
+-        let spread_frames = ((delay_frames as f32 * (0.1 + self.settings.size * 0.35)).round()
+-            as usize)
+-            .clamp(1, delay_frames.max(1));
+-        let shorter_delay = delay_frames.saturating_sub(spread_frames).max(1);
+-        let filter_alpha = lowpass_alpha(self.settings.filter_hz, self.sample_rate);
+-        let crossfeed = 0.12 + (self.settings.size * 0.58);
+-        let feedback = self.settings.feedback * (1.0 - self.settings.damp * 0.25);
+-
+-        for frame in buf.chunks_exact_mut(channels) {
+-            let dry_l = frame[0];
+-            let dry_r = if stereo { frame[1] } else { dry_l };
+-
+-            let read_primary = wrap_sub(self.write_frame, delay_frames, delay_len);
+-            let read_secondary = wrap_sub(self.write_frame, shorter_delay, delay_len);
+-
+-            let delayed_l = self.delay_l[read_primary];
+-            let delayed_r = self.delay_r[read_primary];
+-            let spread_l = self.delay_r[read_secondary];
+-            let spread_r = self.delay_l[read_secondary];
+-
+-            let raw_wet_l = delayed_l + spread_l * crossfeed;
+-            let raw_wet_r = delayed_r + spread_r * crossfeed;
+-
+-            self.filter_l += filter_alpha * (raw_wet_l - self.filter_l);
+-            self.filter_r += filter_alpha * (raw_wet_r - self.filter_r);
+-
+-            let wet_l = raw_wet_l * (1.0 - self.settings.damp) + self.filter_l * self.settings.damp;
+-            let wet_r = raw_wet_r * (1.0 - self.settings.damp) + self.filter_r * self.settings.damp;
+-
+-            self.delay_l[self.write_frame] =
+-                (dry_l + (wet_l + wet_r * crossfeed) * feedback).clamp(-1.5, 1.5);
+-            self.delay_r[self.write_frame] =
+-                (dry_r + (wet_r + wet_l * crossfeed) * feedback).clamp(-1.5, 1.5);
+-            self.write_frame += 1;
+-            if self.write_frame == delay_len {
+-                self.write_frame = 0;
+-            }
+-
+-            let mut out_l = dry_l * (1.0 - self.settings.mix) + wet_l * self.settings.mix;
+-            let mut out_r = dry_r * (1.0 - self.settings.mix) + wet_r * self.settings.mix;
+-
+-            if stereo {
+-                let mid = 0.5 * (out_l + out_r);
+-                let side = 0.5 * (out_l - out_r) * self.settings.width;
+-                out_l = mid + side;
+-                out_r = mid - side;
+-            }
+-
+-            let (left_gain, right_gain) = balance_gains(self.settings.balance);
+-            out_l *= left_gain;
+-            out_r *= right_gain;
+-
+-            frame[0] = out_l.clamp(-1.0, 1.0);
+-            if stereo {
+-                frame[1] = out_r.clamp(-1.0, 1.0);
+-            }
+-        }
+-    }
+-
+-    fn reset_state(&mut self) {
+-        self.delay_l.fill(0.0);
+-        self.delay_r.fill(0.0);
+-        self.write_frame = 0;
+-        self.filter_l = 0.0;
+-        self.filter_r = 0.0;
+-    }
+-}
+-
+-fn delay_capacity_frames(sample_rate: u32) -> usize {
+-    (((MAX_DELAY_MS / 1000.0) * sample_rate as f32).ceil() as usize).max(1) + 2
+-}
+-
+-fn wrap_sub(index: usize, amount: usize, len: usize) -> usize {
+-    (index + len - (amount % len)) % len
+-}
+-
+-fn lowpass_alpha(cutoff_hz: f32, sample_rate: u32) -> f32 {
+-    let cutoff = cutoff_hz.clamp(20.0, sample_rate as f32 * 0.45);
+-    let x = (-2.0 * PI * cutoff / sample_rate as f32).exp();
+-    1.0 - x
+-}
+-
+-fn balance_gains(balance: f32) -> (f32, f32) {
+-    let clamped = balance.clamp(-1.0, 1.0);
+-    if clamped >= 0.0 {
+-        (1.0 - clamped, 1.0)
+-    } else {
+-        (1.0, 1.0 + clamped)
+-    }
+-}
+-
+-#[cfg(test)]
+-mod tests {
+-    use super::SpatialFx;
+-
+-    #[test]
+-    fn disabled_fx_leaves_buffer_unchanged() {
+-        let mut fx = SpatialFx::new(48_000);
+-        let mut buffer = [0.25f32, -0.25, 0.5, -0.5];
+-        let original = buffer;
+-
+-        fx.process(&mut buffer, 2);
+-
+-        assert_eq!(buffer, original);
+-    }
+-
+-    #[test]
+-    fn enabled_fx_changes_stereo_signal() {
+-        let mut fx = SpatialFx::new(48_000);
+-        fx.set(true, 0.2, 1.0, 0.4, 5000.0, 30.0, 0.8, 0.7, 0.6, 1.5);
+-
+-        let mut buffer = vec![0.0f32; 4096 * 2];
+-        buffer[0] = 1.0;
+-
+-        fx.process(&mut buffer, 2);
+-        fx.process(&mut buffer, 2);
+-
+-        assert!(buffer.iter().any(|sample| sample.abs() > 0.0001));
+-    }
+-
+-    #[test]
+-    fn balance_reduces_left_channel_when_panned_right() {
+-        let mut fx = SpatialFx::new(48_000);
+-        fx.set(true, 1.0, 1.0, 0.0, 18_000.0, 10.0, 0.0, 0.0, 0.0, 1.0);
+-
+-        let mut buffer = [0.8f32, 0.8f32];
+-        fx.process(&mut buffer, 2);
+-
+-        assert!(buffer[0].abs() < 0.01);
+-        assert!(buffer[1] > 0.79);
+-    }
+-}
+diff --git a/rust/src/audio/ir_loader.rs b/rust/src/audio/ir_loader.rs
+deleted file mode 100644
+index a55c5e4d..00000000
+--- a/rust/src/audio/ir_loader.rs
++++ /dev/null
+@@ -1,139 +0,0 @@
+-//! Offline impulse-response loader.
+-//!
+-//! Decodes an IR file with Symphonia, resamples it to the engine's output rate
+-//! with rubato (both already dependencies), caps it to `convolver::IR_TAP_CAP`
+-//! taps, peak-normalises it, and returns per-channel coefficient vectors ready
+-//! for `Convolver::load_ir`. Runs on the command thread, never the audio
+-//! callback — decoding and resampling allocate freely here.
+-
+-use std::path::Path;
+-
+-use symphonia::core::errors::Error as SymphoniaError;
+-
+-use crate::audio::convolver::IR_TAP_CAP;
+-use crate::audio::decoder::{convert_to_interleaved_f32, probe_file};
+-use crate::audio::resampler::AudioResampler;
+-
+-const IR_CHUNK: usize = 1024;
+-
+-/// Decode, resample, cap and normalise an IR file into per-channel taps.
+-///
+-/// Returns 1 vector (mono) or 2 vectors (stereo L/R).
+-pub fn load_ir(path: &Path, target_rate: u32) -> Result<Vec<Vec<f32>>, String> {
+-    let probe = probe_file(path).map_err(|e| format!("IR probe failed: {}", e))?;
+-    let src_rate = probe.source_info.original_sample_rate;
+-    let src_channels = probe.source_info.channels.max(1);
+-
+-    let mut format = probe.format;
+-    let mut decoder = probe.decoder;
+-    let track_id = probe.track_id;
+-
+-    // 1. Decode to interleaved f32 at the source rate.
+-    let mut decoded: Vec<f32> = Vec::new();
+-    let mut buf = Vec::with_capacity(IR_CHUNK * src_channels);
+-    loop {
+-        let packet = match format.next_packet() {
+-            Ok(p) => p,
+-            Err(SymphoniaError::IoError(ref e))
+-                if e.kind() == std::io::ErrorKind::UnexpectedEof =>
+-            {
+-                break;
+-            }
+-            Err(SymphoniaError::ResetRequired) => {
+-                decoder.reset();
+-                continue;
+-            }
+-            Err(e) => return Err(format!("IR decode failed: {}", e)),
+-        };
+-        if packet.track_id() != track_id {
+-            continue;
+-        }
+-        let decoded_buf = match decoder.decode(&packet) {
+-            Ok(d) => d,
+-            Err(SymphoniaError::DecodeError(_)) => continue,
+-            Err(e) => return Err(format!("IR decode failed: {}", e)),
+-        };
+-        buf.clear();
+-        convert_to_interleaved_f32(&decoded_buf, &mut buf);
+-        decoded.extend_from_slice(&buf);
+-    }
+-
+-    if decoded.is_empty() {
+-        return Err("IR file contained no audio samples".to_string());
+-    }
+-
+-    // 2. Resample to the engine rate so the convolved spectrum isn't pitch-shifted.
+-    let resampled: Vec<f32> = if src_rate == target_rate {
+-        decoded
+-    } else {
+-        resample_interleaved(&decoded, src_rate, target_rate, src_channels)?
+-    };
+-
+-    // 3. Deinterleave into per-channel vectors (cap at 2: mono or stereo).
+-    let out_channels = src_channels.min(2).max(1);
+-    let frames = resampled.len() / src_channels;
+-    let mut per_channel: Vec<Vec<f32>> = (0..out_channels).map(|_| Vec::with_capacity(frames)).collect();
+-    for f in 0..frames {
+-        for ch in 0..out_channels {
+-            per_channel[ch].push(resampled[f * src_channels + ch]);
+-        }
+-    }
+-
+-    // 4. Cap to IR_TAP_CAP — truncate the tail, keeping the direct/early response.
+-    for c in &mut per_channel {
+-        c.truncate(IR_TAP_CAP);
+-    }
+-
+-    // 5. Peak-normalise so a hot recording can't clip the convolver output.
+-    let mut peak = 0.0f32;
+-    for c in &per_channel {
+-        for &s in c.iter() {
+-            let a = s.abs();
+-            if a > peak {
+-                peak = a;
+-            }
+-        }
+-    }
+-    if peak > 0.0 {
+-        let norm = 1.0 / peak;
+-        for c in &mut per_channel {
+-            for s in c.iter_mut() {
+-                *s *= norm;
+-            }
+-        }
+-    }
+-
+-    Ok(per_channel)
+-}
+-
+-fn resample_interleaved(
+-    input: &[f32],
+-    src_rate: u32,
+-    dst_rate: u32,
+-    channels: usize,
+-) -> Result<Vec<f32>, String> {
+-    let mut resampler = AudioResampler::new(src_rate, dst_rate, channels, IR_CHUNK)?;
+-    let mut out: Vec<f32> = Vec::with_capacity(
+-        (input.len() as f64 * dst_rate as f64 / src_rate as f64 * 1.2) as usize + 256,
+-    );
+-    let mut tmp = vec![0.0f32; IR_CHUNK * channels * 2 + 256];
+-
+-    let samples_per_chunk = IR_CHUNK * channels;
+-    let mut offset = 0;
+-    while offset < input.len() {
+-        let take = (input.len() - offset).min(samples_per_chunk);
+-        let written = resampler.process_interleaved(&input[offset..offset + take], &mut tmp)?;
+-        out.extend_from_slice(&tmp[..written]);
+-        offset += take;
+-    }
+-
+-    loop {
+-        let written = resampler.flush(&mut tmp)?;
+-        if written == 0 {
+-            break;
+-        }
+-        out.extend_from_slice(&tmp[..written]);
+-    }
+-
+-    Ok(out)
+-}
+diff --git a/rust/src/audio/mod.rs b/rust/src/audio/mod.rs
+index 26a9092a..f67e337b 100644
+--- a/rust/src/audio/mod.rs
++++ b/rust/src/audio/mod.rs
+@@ -16,7 +16,6 @@
+ pub mod alac_converter;
+ pub mod backend;
+ pub mod commands;
+-pub mod convolver;
+ pub mod crossfader;
+ pub mod decoder;
+ pub mod decoder_handle;
+@@ -28,8 +27,6 @@ pub mod dsd_native_jni;
+ pub mod dynamics;
+ pub mod engine;
+ pub mod equalizer;
+-pub mod fx;
+-pub mod ir_loader;
+ pub mod manager;
+ pub mod opus_decoder;
+ pub mod audiotrack_direct;
+-- 
+2.55.0
+
