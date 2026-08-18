@@ -6,10 +6,16 @@ Subject: [PATCH] lib: settings: move playback prefs to queue
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
-index e22e182a..c7850691 100644
+index e22e182a..b25a7bca 100644
 --- a/lib/features/settings/screens/playback_display_settings_screen.dart
 +++ b/lib/features/settings/screens/playback_display_settings_screen.dart
-@@ -24,45 +24,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+@@ -1,5 +1,3 @@
+-import 'dart:io';
+-
+ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+@@ -24,45 +22,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
        body: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
@@ -55,10 +61,11 @@ index e22e182a..c7850691 100644
            const SizedBox(height: AppConstants.spacingLg),
            const SettingsSectionHeader('Fast Index Scrolling'),
            SettingsCard(
-@@ -107,31 +68,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+@@ -106,57 +65,3 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+     );
    }
  }
- 
+-
 -class _DuckOnInterruptionTile extends StatelessWidget {
 -  const _DuckOnInterruptionTile({required this.playerService});
 -
@@ -84,14 +91,45 @@ index e22e182a..c7850691 100644
 -  }
 -}
 -
- class _GaplessPlaybackTile extends StatelessWidget {
-   const _GaplessPlaybackTile({required this.playerService});
- 
+-class _GaplessPlaybackTile extends StatelessWidget {
+-  const _GaplessPlaybackTile({required this.playerService});
+-
+-  final PlayerService playerService;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return ListenableBuilder(
+-      listenable: Listenable.merge([
+-        playerService.gaplessPlaybackEnabledNotifier,
+-        playerService.bitPerfectProcessingLockedNotifier,
+-      ]),
+-      builder: (context, _) {
+-        final enabled = playerService.gaplessPlaybackEnabledNotifier.value;
+-        final isBitPerfect = playerService.isBitPerfectModeEnabled;
+-        return ToggleSetting(
+-          icon: LucideIcons.repeat,
+-          title: 'Gapless Playback',
+-          subtitle: isBitPerfect
+-              ? 'Disabled in bit-perfect mode'
+-              : 'Seamless transition between tracks',
+-          value: enabled,
+-          onChanged: (value) => playerService.setGaplessPlaybackEnabled(value),
+-        );
+-      },
+-    );
+-  }
+-}
 diff --git a/lib/features/settings/screens/queue_settings_screen.dart b/lib/features/settings/screens/queue_settings_screen.dart
-index df63128d..5e9d1f20 100644
+index df63128d..e56d9a87 100644
 --- a/lib/features/settings/screens/queue_settings_screen.dart
 +++ b/lib/features/settings/screens/queue_settings_screen.dart
-@@ -26,6 +26,46 @@ class QueueSettingsScreen extends ConsumerWidget {
+@@ -1,3 +1,5 @@
++import 'dart:io';
++
+ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+@@ -26,6 +28,46 @@ class QueueSettingsScreen extends ConsumerWidget {
              ],
            ),
            const SizedBox(height: AppConstants.spacingLg),
@@ -138,7 +176,7 @@ index df63128d..5e9d1f20 100644
            const SettingsSectionHeader('Search Playback'),
            SettingsCard(
              children: [
-@@ -98,3 +138,57 @@ class _WrapAroundQueueTile extends StatelessWidget {
+@@ -98,3 +140,57 @@ class _WrapAroundQueueTile extends StatelessWidget {
      );
    }
  }

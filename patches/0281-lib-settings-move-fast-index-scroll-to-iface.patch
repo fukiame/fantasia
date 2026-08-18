@@ -53,12 +53,10 @@ index a6226e85..488e6d82 100644
        ),
 diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
 deleted file mode 100644
-index c7850691..00000000
+index b25a7bca..00000000
 --- a/lib/features/settings/screens/playback_display_settings_screen.dart
 +++ /dev/null
-@@ -1,98 +0,0 @@
--import 'dart:io';
--
+@@ -1,67 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -123,35 +121,6 @@ index c7850691..00000000
 -          const SizedBox(height: AppConstants.navBarHeight + 40),
 -        ],
 -      ),
--    );
--  }
--}
--
--class _GaplessPlaybackTile extends StatelessWidget {
--  const _GaplessPlaybackTile({required this.playerService});
--
--  final PlayerService playerService;
--
--  @override
--  Widget build(BuildContext context) {
--    return ListenableBuilder(
--      listenable: Listenable.merge([
--        playerService.gaplessPlaybackEnabledNotifier,
--        playerService.bitPerfectProcessingLockedNotifier,
--      ]),
--      builder: (context, _) {
--        final enabled = playerService.gaplessPlaybackEnabledNotifier.value;
--        final isBitPerfect = playerService.isBitPerfectModeEnabled;
--        return ToggleSetting(
--          icon: LucideIcons.repeat,
--          title: 'Gapless Playback',
--          subtitle: isBitPerfect
--              ? 'Disabled in bit-perfect mode'
--              : 'Seamless transition between tracks',
--          value: enabled,
--          onChanged: (value) => playerService.setGaplessPlaybackEnabled(value),
--        );
--      },
 -    );
 -  }
 -}
