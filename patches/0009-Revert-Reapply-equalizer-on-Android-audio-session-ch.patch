@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Reapply equalizer on Android audio session change"
 This reverts commit 9820bce198c60c41f21f29ec68399f6b249663cd.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 59872535..fed2ce2b 100644
+index 8fc716f1..3e84f801 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -1451,13 +1451,6 @@ class PlayerService {
+@@ -1507,13 +1507,6 @@ class PlayerService {
      await _configureAndroidAudioSession();
      final player = just_audio.AudioPlayer();
      _justAudioPlayer = player;

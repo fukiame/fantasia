@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Detach native visualizer to preserve audio quality"
 This reverts commit 166fb7363cbbbcee5d188241155c98649a8a8c35.
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index f89705a9..ffd98427 100644
+index 635a5864..b48beae5 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -570,7 +570,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -571,7 +571,6 @@ class _MainShellState extends ConsumerState<MainShell>
      } else if (state == AppLifecycleState.inactive ||
          state == AppLifecycleState.paused) {
        _cancelIdleTimer();

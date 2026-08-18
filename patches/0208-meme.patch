@@ -6,10 +6,10 @@ Subject: [PATCH] meme
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index b7b5abda..a421b948 100644
+index 1cd76887..52a4fce8 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -221,15 +221,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -213,15 +213,15 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    }) {
      final (title, icon) = switch (engine) {
        AudioEnginePreference.exoPlayer => (
@@ -28,7 +28,7 @@ index b7b5abda..a421b948 100644
          LucideIcons.usb,
        ),
      };
-@@ -246,8 +246,10 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -238,8 +238,10 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
              gradient: LinearGradient(
                begin: Alignment.topLeft,
                end: Alignment.bottomRight,
@@ -41,7 +41,7 @@ index b7b5abda..a421b948 100644
              ),
              borderRadius: BorderRadius.circular(16),
              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-@@ -271,7 +273,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -263,7 +265,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                  const SizedBox(width: AppConstants.spacingMd),
                  Expanded(
                    child: Text(
@@ -50,7 +50,7 @@ index b7b5abda..a421b948 100644
                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
                        color: Colors.white,
                        fontWeight: FontWeight.w700,
-@@ -299,24 +301,16 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -291,24 +293,16 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
      await GlassBottomSheet.show<void>(
        context: context,
@@ -78,7 +78,7 @@ index b7b5abda..a421b948 100644
              icon: LucideIcons.smartphone,
              selected: current == AudioEnginePreference.exoPlayer,
              onTap: () => _selectEngine(
-@@ -329,9 +323,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -321,9 +315,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
            const SizedBox(height: AppConstants.spacingSm),
            _buildEngineOption(
              context,
@@ -90,7 +90,7 @@ index b7b5abda..a421b948 100644
              icon: LucideIcons.audioLines,
              selected: current == AudioEnginePreference.rustOboe,
              onTap: () => _selectEngine(
-@@ -344,9 +337,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -336,9 +329,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
            const SizedBox(height: AppConstants.spacingSm),
            _buildEngineOption(
              context,
@@ -102,7 +102,7 @@ index b7b5abda..a421b948 100644
              icon: LucideIcons.usb,
              selected: current == AudioEnginePreference.isochronousUsb,
              onTap: () => _selectEngine(
-@@ -381,43 +373,27 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -373,43 +365,27 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
            padding: const EdgeInsets.all(AppConstants.spacingMd),
            child: Row(
              children: [
@@ -150,7 +150,7 @@ index b7b5abda..a421b948 100644
                    ],
                  ),
                ),
-@@ -597,9 +573,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -590,9 +566,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                            child: _buildSection(
                              context,
                              title: 'Your Playlists',
@@ -161,7 +161,7 @@ index b7b5abda..a421b948 100644
                              trailing: TextButton(
                                onPressed: () =>
                                    _navigateTo(context, const PlaylistsScreen()),
-@@ -615,7 +589,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -608,7 +582,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                                        child: _EmptyShelfCard(
                                          title: 'No playlists yet',
                                          subtitle:
@@ -170,7 +170,7 @@ index b7b5abda..a421b948 100644
                                          icon: LucideIcons.listMusic,
                                          onTap: () => _navigateTo(
                                            context,
-@@ -658,8 +632,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -651,8 +625,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                            child: _buildSection(
                              context,
                              title: 'Browse More',
@@ -180,7 +180,7 @@ index b7b5abda..a421b948 100644
                              child: SizedBox(
                                height: 52,
                                child: ListView.separated(
-@@ -820,7 +793,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -817,7 +790,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
              ? 'Liked songs live here'
              : '$favoritesCount tracks ready to revisit',
          icon: LucideIcons.heart,
@@ -188,7 +188,7 @@ index b7b5abda..a421b948 100644
          artPath: homeData.favoriteArtPath,
          onTap: () => _navigateTo(context, const FavoritesScreen()),
        ),
-@@ -830,7 +802,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -827,7 +799,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
              ? 'Create a collection'
              : '$playlistCount saved collections',
          icon: LucideIcons.listMusic,
@@ -196,7 +196,7 @@ index b7b5abda..a421b948 100644
          artPath: homeData.playlistPreviews.firstOrNull?.coverArtPath,
          onTap: () => _navigateTo(context, const PlaylistsScreen()),
        ),
-@@ -885,21 +856,23 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -882,21 +853,23 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
                        Text(
@@ -222,7 +222,7 @@ index b7b5abda..a421b948 100644
                      ],
                    ),
                  ),
-@@ -1065,32 +1038,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1062,32 +1035,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    }
  }
  
@@ -255,7 +255,7 @@ index b7b5abda..a421b948 100644
  class _MenuLoadingState extends StatelessWidget {
    const _MenuLoadingState();
  
-@@ -1297,7 +1244,6 @@ class _QuickAccessItem {
+@@ -1294,7 +1241,6 @@ class _QuickAccessItem {
    final String title;
    final String subtitle;
    final IconData icon;
@@ -263,7 +263,7 @@ index b7b5abda..a421b948 100644
    final String? artPath;
    final VoidCallback onTap;
  
-@@ -1305,7 +1251,6 @@ class _QuickAccessItem {
+@@ -1302,7 +1248,6 @@ class _QuickAccessItem {
      required this.title,
      required this.subtitle,
      required this.icon,
@@ -271,7 +271,7 @@ index b7b5abda..a421b948 100644
      required this.artPath,
      required this.onTap,
    });
-@@ -1330,16 +1275,12 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1327,16 +1272,12 @@ class _QuickAccessCard extends StatelessWidget {
              gradient: LinearGradient(
                begin: Alignment.topLeft,
                end: Alignment.bottomRight,
@@ -292,7 +292,7 @@ index b7b5abda..a421b948 100644
            ),
            child: Stack(
              children: [
-@@ -1378,7 +1319,7 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1375,7 +1316,7 @@ class _QuickAccessCard extends StatelessWidget {
                      ),
                      const Spacer(),
                      Text(
@@ -301,7 +301,7 @@ index b7b5abda..a421b948 100644
                        maxLines: 1,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-@@ -1388,7 +1329,7 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1385,7 +1326,7 @@ class _QuickAccessCard extends StatelessWidget {
                      ),
                      const SizedBox(height: AppConstants.spacingXxs),
                      Text(
@@ -310,7 +310,7 @@ index b7b5abda..a421b948 100644
                        maxLines: 2,
                        overflow: TextOverflow.ellipsis,
                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-@@ -1705,7 +1646,7 @@ class _EmptyShelfCard extends StatelessWidget {
+@@ -1702,7 +1643,7 @@ class _EmptyShelfCard extends StatelessWidget {
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(
@@ -319,7 +319,7 @@ index b7b5abda..a421b948 100644
                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
                          color: context.adaptiveTextPrimary,
                          fontWeight: FontWeight.w700,
-@@ -1713,7 +1654,7 @@ class _EmptyShelfCard extends StatelessWidget {
+@@ -1710,7 +1651,7 @@ class _EmptyShelfCard extends StatelessWidget {
                      ),
                      const SizedBox(height: AppConstants.spacingXxs),
                      Text(
@@ -328,7 +328,7 @@ index b7b5abda..a421b948 100644
                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                          color: context.adaptiveTextTertiary,
                          height: 1.45,
-@@ -1781,7 +1722,7 @@ class _BrowseChip extends StatelessWidget {
+@@ -1778,7 +1719,7 @@ class _BrowseChip extends StatelessWidget {
                ),
                const SizedBox(width: AppConstants.spacingXs),
                Text(

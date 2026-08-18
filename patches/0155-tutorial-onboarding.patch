@@ -6,7 +6,7 @@ Subject: [PATCH] tutorial,onboarding
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 333169ae..0a778bf2 100644
+index 53c4bab2..d5dfbbdf 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -27,9 +27,6 @@ import 'package:flick/features/player/widgets/audio_visualizer.dart';
@@ -17,9 +17,9 @@ index 333169ae..0a778bf2 100644
 -import 'package:flick/features/onboarding/tutorial_targets.dart';
 -import 'package:flick/features/onboarding/widgets/tutorial_overlay.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/uac2/usb_bit_perfect_prompt.dart';
  import 'package:flick/models/song.dart';
- import 'package:flick/services/library_scanner_service.dart';
-@@ -285,12 +282,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -286,12 +283,6 @@ class _MainShellState extends ConsumerState<MainShell>
        _refreshLibraryDeletions();
        ref.read(updateCheckProvider.notifier).refreshIfOnline();
        ref.read(autoLibrarySyncServiceProvider);
@@ -32,17 +32,17 @@ index 333169ae..0a778bf2 100644
      });
  
      _playerService.playbackDesyncedNotifier.addListener(
-@@ -684,9 +675,6 @@ class _MainShellState extends ConsumerState<MainShell>
-                     ),
+@@ -686,9 +677,6 @@ class _MainShellState extends ConsumerState<MainShell>
                    ),
                  ),
--
+ 
 -                // Interactive tutorial overlay
 -                const Positioned.fill(child: TutorialOverlay()),
+-
+                 // USB DAC attach → bit-perfect switch prompt
+                 const UsbBitPerfectPrompt(),
                ],
-             ),
-           ),
-@@ -747,9 +735,7 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -753,9 +741,7 @@ class _MainShellState extends ConsumerState<MainShell>
      final currentIndex = ref.watch(navigationIndexProvider);
      final navBarConfig = ref.watch(navBarConfigProvider);
  
@@ -53,7 +53,7 @@ index 333169ae..0a778bf2 100644
          currentIndex: currentIndex,
          config: navBarConfig,
          collapsed: _isBottomBarCollapsed,
-@@ -766,13 +752,9 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -772,13 +758,9 @@ class _MainShellState extends ConsumerState<MainShell>
            );
          },
          showMiniPlayer: true,
@@ -68,7 +68,7 @@ index 333169ae..0a778bf2 100644
      );
    }
  }
-@@ -1093,16 +1075,13 @@ class _RootRouter extends ConsumerWidget {
+@@ -1099,16 +1081,13 @@ class _RootRouter extends ConsumerWidget {
  
    @override
    Widget build(BuildContext context, WidgetRef ref) {
@@ -1243,7 +1243,7 @@ index a3339c4c..1cd24c69 100644
            ),
            const SizedBox(height: AppConstants.spacingLg),
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 26d57627..533cccea 100644
+index 88a515d4..d2fc4610 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -19,7 +19,6 @@ import 'package:flick/features/songs/widgets/orbit_scroll.dart';
@@ -1254,7 +1254,7 @@ index 26d57627..533cccea 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/features/albums/screens/album_detail_screen.dart';
  import 'package:flick/providers/providers.dart';
-@@ -169,8 +168,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -170,8 +169,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                      padding: const EdgeInsets.symmetric(
                        horizontal: AppConstants.spacingLg,
                      ),
@@ -1263,7 +1263,7 @@ index 26d57627..533cccea 100644
                        child: Container(
                          decoration: BoxDecoration(
                            gradient: LinearGradient(
-@@ -210,7 +207,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -211,7 +208,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                            },
                          ),
                        ),
@@ -1271,7 +1271,7 @@ index 26d57627..533cccea 100644
                    ),
                    const SizedBox(height: AppConstants.spacingMd),
                  ],
-@@ -1932,9 +1928,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1933,9 +1929,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                  onTap: () => _shufflePlayFromLibrary(songsAsync),
                ),
                SizedBox(width: buttonGap),
@@ -1282,7 +1282,7 @@ index 26d57627..533cccea 100644
                    context: context,
                    icon: Icons.sort_rounded,
                    onTap: () {
-@@ -1963,7 +1957,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1964,7 +1958,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                      );
                    },
                  ),

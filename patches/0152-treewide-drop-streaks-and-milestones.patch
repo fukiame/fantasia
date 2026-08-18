@@ -6,10 +6,10 @@ Subject: [PATCH] treewide: drop streaks and milestones
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 9f56c8a8..333169ae 100644
+index 91e0db90..53c4bab2 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -35,12 +35,9 @@ import 'package:flick/models/song.dart';
+@@ -36,12 +36,9 @@ import 'package:flick/models/song.dart';
  import 'package:flick/services/library_scanner_service.dart';
  import 'package:flick/services/player_service.dart';
  import 'package:flick/services/app_preferences_service.dart';
@@ -22,7 +22,7 @@ index 9f56c8a8..333169ae 100644
  import 'package:flick/core/utils/dev_log.dart';
  
  /// Main application widget for Flick Player.
-@@ -200,9 +197,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -201,9 +198,6 @@ class _MainShellState extends ConsumerState<MainShell>
        _previousSong = nextSong;
      });
  
@@ -32,7 +32,7 @@ index 9f56c8a8..333169ae 100644
      ref.listenManual<NavBarConfig>(navBarConfigProvider, (previous, next) {
        if (previous == null || !mounted) return;
        final currentPageIndex = ref.read(navigationIndexProvider);
-@@ -297,7 +291,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -298,7 +292,6 @@ class _MainShellState extends ConsumerState<MainShell>
          ref.read(tutorialProvider.notifier).start();
        }
  
@@ -40,7 +40,7 @@ index 9f56c8a8..333169ae 100644
      });
  
      _playerService.playbackDesyncedNotifier.addListener(
-@@ -336,78 +329,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -337,78 +330,6 @@ class _MainShellState extends ConsumerState<MainShell>
      }
    }
  
@@ -119,7 +119,7 @@ index 9f56c8a8..333169ae 100644
    void _onPlaybackDesyncChanged() {
      if (!mounted) return;
      final desynced = _playerService.playbackDesyncedNotifier.value;
-@@ -469,8 +390,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -470,8 +391,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _playerService.playbackDesyncedNotifier.removeListener(
        _onPlaybackDesyncChanged,
      );
@@ -2517,7 +2517,7 @@ index 496f3c63..00000000
 -}
 \ No newline at end of file
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 5a69e882..5942c000 100644
+index 4062b473..95d58bf1 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -26,7 +26,6 @@ import 'package:flick/data/repositories/recently_played_repository.dart';
@@ -2528,10 +2528,10 @@ index 5a69e882..5942c000 100644
  import 'package:flick/services/android_audio_engine.dart';
  import 'package:flick/services/rust_audio_engine.dart';
  import 'package:flick/services/rust_audio_service.dart';
-@@ -361,13 +360,6 @@ class PlayerService {
-   final ValueNotifier<bool> gaplessPlaybackEnabledNotifier = ValueNotifier(
+@@ -362,13 +361,6 @@ class PlayerService {
      true,
    );
+   final ValueNotifier<bool> duckOnInterruptionNotifier = ValueNotifier(true);
 -  final ValueNotifier<MilestoneType?> pendingMilestoneNotifier = ValueNotifier(
 -    null,
 -  );
@@ -2542,7 +2542,7 @@ index 5a69e882..5942c000 100644
    bool get _usingRustBackend => usingRustBackendNotifier.value;
    set _usingRustBackend(bool value) => usingRustBackendNotifier.value = value;
    bool _rustBackendAvailable = false;
-@@ -2245,38 +2237,6 @@ class PlayerService {
+@@ -2301,38 +2293,6 @@ class PlayerService {
      _replayPlayTracker.clear();
    }
  
@@ -2581,7 +2581,7 @@ index 5a69e882..5942c000 100644
    void _trackReplayProgress(Duration position) {
      final song = currentSongNotifier.value;
      if (song == null) {
-@@ -2295,7 +2255,6 @@ class PlayerService {
+@@ -2351,7 +2311,6 @@ class PlayerService {
      );
      if (counted && _shouldPersistSong(song)) {
        unawaited(_recentlyPlayedRepository.recordPlay(song.id));

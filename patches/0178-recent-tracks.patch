@@ -6,10 +6,10 @@ Subject: [PATCH] recent tracks
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index f521faf2..9fd31e3b 100644
+index 4bb8996f..d52c452b 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -724,48 +724,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -717,48 +717,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                              ),
                            ),
                          ),
@@ -58,7 +58,7 @@ index f521faf2..9fd31e3b 100644
                        if (appPreferences.showPlaylistPreviews)
                          SliverToBoxAdapter(
                            child: _buildSection(
-@@ -998,16 +956,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -995,16 +953,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
          artPath: homeData.favoriteArtPath,
          onTap: () => _navigateTo(context, const FavoritesScreen()),
        ),
@@ -75,7 +75,7 @@ index f521faf2..9fd31e3b 100644
        _QuickAccessItem(
          title: 'Recently Added',
          subtitle: 'Your latest library scans',
-@@ -1127,17 +1075,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1124,17 +1072,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        songsByArtist[entry.key] = SongRepository.sortSongsByAlbum(entry.value);
      }
  
@@ -93,7 +93,7 @@ index f521faf2..9fd31e3b 100644
        playlistPreviews: playlistPreviews,
        favoriteArtPath: favoriteSongs.firstOrNull?.albumArt,
      );
-@@ -1681,86 +1624,6 @@ class _ArtistShelfCard extends StatelessWidget {
+@@ -1678,86 +1621,6 @@ class _ArtistShelfCard extends StatelessWidget {
    }
  }
  
@@ -180,7 +180,7 @@ index f521faf2..9fd31e3b 100644
  class _PlaylistPreviewCard extends StatelessWidget {
    final _PlaylistPreview preview;
    final VoidCallback onTap;
-@@ -2135,12 +1998,10 @@ class _InlineActionButton extends StatelessWidget {
+@@ -2072,12 +1935,10 @@ class _BrowseChip extends StatelessWidget {
  }
  
  class _MenuHomeData {

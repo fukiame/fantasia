@@ -6,22 +6,12 @@ Subject: [PATCH] quemove
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
-index f5c30836..33a0f950 100644
+index a7d2d7b2..b9909a92 100644
 --- a/lib/features/queue/screens/queue_screen.dart
 +++ b/lib/features/queue/screens/queue_screen.dart
-@@ -440,6 +440,9 @@ class _Header extends StatelessWidget {
-               ],
-             ),
-           ),
-+          if (canClear)
-+            TextButton(onPressed: onClear, child: const Text('clear all')),
-+          const SizedBox(width: AppConstants.spacingSm),
-           Container(
-             decoration: BoxDecoration(
-               color: AppColors.glassBackground,
-@@ -455,9 +458,6 @@ class _Header extends StatelessWidget {
-               onPressed: onSelectMode,
-             ),
+@@ -428,9 +428,6 @@ class _Header extends StatelessWidget {
+             onPressed: onSelectMode,
+             iconColor: context.adaptiveTextPrimary,
            ),
 -          const SizedBox(width: AppConstants.spacingSm),
 -          if (canClear)

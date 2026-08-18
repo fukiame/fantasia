@@ -6,10 +6,10 @@ Subject: [PATCH] listenbrainz,lastfm
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 0a778bf2..405d2f20 100644
+index d5dfbbdf..9ae28f3f 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -459,38 +459,12 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -460,38 +460,12 @@ class _MainShellState extends ConsumerState<MainShell>
        final song = playerState.currentSong;
        if (song != null && !song.isExternal && !playerState.isPlaying) {
          final notifier = ref.read(playerProvider.notifier);

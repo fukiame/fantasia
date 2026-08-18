@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Support separate mini player mode"
 This reverts commit 2584c46215821b566e920890c55c9226750abc25.
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 09e206a0..f89705a9 100644
+index 3a8dd0ef..635a5864 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -21,7 +21,6 @@ import 'package:flick/features/favorites/screens/favorites_screen.dart';
@@ -17,7 +17,7 @@ index 09e206a0..f89705a9 100644
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/features/player/widgets/ambient_background.dart';
  import 'package:flick/features/player/widgets/audio_visualizer.dart';
-@@ -620,14 +619,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -621,14 +620,6 @@ class _MainShellState extends ConsumerState<MainShell>
    }
  
    void _onNavBarVisibilityChanged(bool isVisible) {
@@ -32,7 +32,7 @@ index 09e206a0..f89705a9 100644
      if (isVisible) {
        _navBarAnimationController.reverse();
      } else {
-@@ -869,19 +860,13 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -875,19 +866,13 @@ class _MainShellState extends ConsumerState<MainShell>
    Widget _buildUnifiedBottomBar() {
      final currentIndex = ref.watch(navigationIndexProvider);
      final navBarConfig = ref.watch(navBarConfigProvider);
@@ -53,7 +53,7 @@ index 09e206a0..f89705a9 100644
          onTap: (index) {
            if (ref.read(navigationIndexProvider) != index) {
              ref.read(navigationIndexProvider.notifier).setIndex(index);
-@@ -895,12 +880,10 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -901,12 +886,10 @@ class _MainShellState extends ConsumerState<MainShell>
            );
          },
          showMiniPlayer: true,
@@ -67,7 +67,7 @@ index 09e206a0..f89705a9 100644
            ),
          ),
        ),
-@@ -911,12 +894,8 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -917,12 +900,8 @@ class _MainShellState extends ConsumerState<MainShell>
  /// Embedded mini player widget that uses Riverpod for state.
  class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
    final bool collapsed;
@@ -81,7 +81,7 @@ index 09e206a0..f89705a9 100644
  
    @override
    ConsumerState<_EmbeddedMiniPlayer> createState() =>
-@@ -1132,16 +1111,11 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1138,16 +1117,11 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
        onHorizontalDragStart: (_) {},
        onHorizontalDragUpdate: (_) {},
        onHorizontalDragEnd: _onHorizontalDragEnd,

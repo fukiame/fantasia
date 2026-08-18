@@ -7,10 +7,10 @@ Subject: [PATCH] Revert "Add HTTP-first playback and loading indicator for
 This reverts commit 90307f23b482ac8d913dbc4ad1f14a7ad52bac7e.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index d7016959..5f798640 100644
+index 022474a7..68762899 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -427,15 +427,6 @@ class PlayerService {
+@@ -429,15 +429,6 @@ class PlayerService {
      Duration.zero,
    );
  
@@ -26,7 +26,7 @@ index d7016959..5f798640 100644
    // ponytail: guards the engine's position write during interactive seek
    // (vinyl spin). Local drag writes to positionNotifier stick; engine ticks
    // get re-enabled on endInteractiveSeek(). Upgrade path: per-source locks if
-@@ -2782,23 +2773,6 @@ class PlayerService {
+@@ -2838,23 +2829,6 @@ class PlayerService {
    }
  
    Future<Uri> _resolvePlaybackUri(Song song) async {
@@ -50,7 +50,7 @@ index d7016959..5f798640 100644
      final resolvedPath = await _resolvePreparedPlaybackPath(song);
      if (resolvedPath == null || resolvedPath.isEmpty) {
        return Uri.parse('');
-@@ -3782,10 +3756,6 @@ class PlayerService {
+@@ -3838,10 +3812,6 @@ class PlayerService {
    }) {
      _debugLog('[UI] tap(${song.id})');
      if (context != null) setPlaybackContext(context);
@@ -61,7 +61,7 @@ index d7016959..5f798640 100644
      return _enqueuePlaybackRequest(
        () => _playInternal(song, playlist: playlist),
      );
-@@ -3822,7 +3792,6 @@ class PlayerService {
+@@ -3878,7 +3848,6 @@ class PlayerService {
  
    Future<void> _playInternal(Song song, {List<Song>? playlist}) async {
      await initAudio();
@@ -69,7 +69,7 @@ index d7016959..5f798640 100644
      try {
        _debugLog(
          '[Playback] play() called for ${song.title} '
-@@ -3922,14 +3891,6 @@ class PlayerService {
+@@ -3978,14 +3947,6 @@ class PlayerService {
        );
        debugPrintStack(stackTrace: stackTrace);
        rethrow;
@@ -84,7 +84,7 @@ index d7016959..5f798640 100644
      }
    }
  
-@@ -5206,7 +5167,6 @@ class PlayerService {
+@@ -5262,7 +5223,6 @@ class PlayerService {
      positionNotifier.dispose();
      durationNotifier.dispose();
      bufferedPositionNotifier.dispose();

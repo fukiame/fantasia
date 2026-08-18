@@ -444,7 +444,7 @@ index 0584c5ba..00000000
 -    }
 -}
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
-index 19708073..45b7d4d2 100644
+index 6b8bf748..078eb890 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 @@ -733,24 +733,6 @@ class MainActivity: FlutterActivity() {
@@ -533,7 +533,7 @@ index 2232d5ca..5db3bc42 100644
          android.os.Handler(mainLooper).post {
              try {
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index a3f072c3..909f231a 100644
+index 417a81ca..17b48760 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
 @@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
@@ -553,7 +553,7 @@ index a3f072c3..909f231a 100644
          );
        },
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 769f47f2..e3d3e7fd 100644
+index 5fbfcb60..556fd213 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
 @@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
@@ -573,18 +573,18 @@ index 769f47f2..e3d3e7fd 100644
            );
          },
 diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
-index 86573e02..a462911b 100644
+index f638fd18..dafe75ff 100644
 --- a/lib/features/folders/screens/folders_screen.dart
 +++ b/lib/features/folders/screens/folders_screen.dart
-@@ -15,7 +15,6 @@ import 'package:flick/services/music_folder_service.dart';
- import 'package:flick/providers/providers.dart';
- import 'package:flick/widgets/common/cached_image_widget.dart';
+@@ -17,7 +17,6 @@ import 'package:flick/features/player/widgets/ambient_background.dart';
  import 'package:flick/widgets/common/blurred_song_background.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
 -import 'package:flick/widgets/common/floating_mini_player.dart';
  
  /// Groups songs by immediate subfolder relative to [prefix] within [folderUri].
  ({List<FolderGroup> subfolders, List<Song> songs}) groupByImmediateFolder({
-@@ -1027,7 +1026,6 @@ class _FolderBrowserScreenState extends ConsumerState<FolderBrowserScreen> {
+@@ -1071,7 +1070,6 @@ class _FolderBrowserScreenState extends ConsumerState<FolderBrowserScreen> {
              ),
            ),
          ),
@@ -592,8 +592,28 @@ index 86573e02..a462911b 100644
        ],
      );
    }
+diff --git a/lib/features/menu/screens/smart_mix_detail_screen.dart b/lib/features/menu/screens/smart_mix_detail_screen.dart
+index ac075577..a10f0d74 100644
+--- a/lib/features/menu/screens/smart_mix_detail_screen.dart
++++ b/lib/features/menu/screens/smart_mix_detail_screen.dart
+@@ -9,7 +9,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/adaptive_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/models/playback_context.dart';
+ import 'package:flick/models/song.dart';
+@@ -339,7 +338,6 @@ class _SmartMixDetailScreenState extends ConsumerState<SmartMixDetailScreen>
+                 ),
+               ),
+               _buildOverlayTopBar(context, resolvedBg),
+-              const FloatingMiniPlayer(),
+             ],
+           );
+         },
 diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index 0c1918cd..7a742c06 100644
+index 1e206a06..2891e902 100644
 --- a/lib/features/playlists/screens/playlist_detail_screen.dart
 +++ b/lib/features/playlists/screens/playlist_detail_screen.dart
 @@ -8,7 +8,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -633,14 +653,19 @@ index 830a2c44..c0225f78 100644
      );
    }
 diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
-index 73e94425..53e242ef 100644
+index 6e5e613f..8719196b 100644
 --- a/lib/features/settings/screens/playback_display_settings_screen.dart
 +++ b/lib/features/settings/screens/playback_display_settings_screen.dart
-@@ -55,21 +55,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+@@ -57,25 +57,10 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
                        .setPriorityAnchorEnabled(value);
                  },
                ),
 -              const SettingsDivider(),
+               if (Platform.isAndroid) ...[
+-                _DuckOnInterruptionTile(playerService: playerService),
+                 const SettingsDivider(),
++                _DuckOnInterruptionTile(playerService: playerService),
+               ],
 -              ToggleSetting(
 -                icon: LucideIcons.pictureInPicture2,
 -                title: 'Floating Mini-Player',
@@ -658,7 +683,7 @@ index 73e94425..53e242ef 100644
              ],
            ),
            const SizedBox(height: AppConstants.spacingLg),
-@@ -88,20 +73,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+@@ -94,20 +79,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
                  },
                ),
                const SettingsDivider(),
@@ -679,7 +704,7 @@ index 73e94425..53e242ef 100644
                SliderSetting(
                  icon: LucideIcons.maximize,
                  title: 'Immersive Full View Timer',
-@@ -194,33 +165,3 @@ class _GaplessPlaybackTile extends StatelessWidget {
+@@ -225,33 +196,3 @@ class _GaplessPlaybackTile extends StatelessWidget {
      );
    }
  }
@@ -905,7 +930,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 5942c000..8f90bd95 100644
+index 95d58bf1..ba7c5528 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -925,15 +950,15 @@ index 5942c000..8f90bd95 100644
    bool _appInForeground = true;
    final LastPlayedService _lastPlayedService = LastPlayedService();
    final FavoritesService _favoritesService = FavoritesService();
-@@ -570,7 +567,6 @@ class PlayerService {
-     _notifyQueueChanged();
+@@ -573,7 +570,6 @@ class PlayerService {
      unawaited(_loadGaplessPlaybackPreference());
+     unawaited(_loadDuckOnInterruptionPreference());
      unawaited(_loadCrossfadePreferences());
 -    unawaited(_loadFloatingPlayerPreference());
      unawaited(_loadPriorityAnchorPreference());
      _initBluetoothReconnectHandling();
      _initUsbDacDisconnectHandling();
-@@ -839,74 +835,22 @@ class PlayerService {
+@@ -855,74 +851,22 @@ class PlayerService {
      }
    }
  
@@ -1012,7 +1037,7 @@ index 5942c000..8f90bd95 100644
    }
  
    bool get _isGaplessActive =>
-@@ -2548,8 +2492,6 @@ class PlayerService {
+@@ -2604,8 +2548,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -1021,7 +1046,7 @@ index 5942c000..8f90bd95 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -4976,7 +4918,6 @@ class PlayerService {
+@@ -5032,7 +4974,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();

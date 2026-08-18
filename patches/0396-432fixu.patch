@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 4 Aug 2026 03:08:02 +0700
+Subject: [PATCH] 432fixu
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index a2163930..7a2f104b 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -1540,7 +1540,6 @@ class PlayerService {
+     final passthrough =
+         audioOutputDiagnosticsNotifier.value?.passthroughAllowed ?? false;
+     if (!passthrough) return false;
+-    if (Uac2PreferencesService.is432HzTuningEnabledSync) return false;
+     if (gaplessPlaybackEnabledNotifier.value) return false;
+     return true;
+   }
+-- 
+2.55.0
+

@@ -6,7 +6,7 @@ Subject: [PATCH] lowerc
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index af61c35f..3a8bb00a 100644
+index 50f9e516..ab7d0749 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
 @@ -218,7 +218,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
@@ -19,7 +19,7 @@ index af61c35f..3a8bb00a 100644
                            ?.copyWith(
                              fontWeight: FontWeight.w700,
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 6c887cc7..1721321d 100644
+index d47d14f1..64c6c687 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
 @@ -247,7 +247,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
@@ -32,7 +32,7 @@ index 6c887cc7..1721321d 100644
                            ?.copyWith(
                              fontWeight: FontWeight.w700,
 diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
-index efe5e286..0a8d77d0 100644
+index b57635fc..cb95e9d1 100644
 --- a/lib/features/favorites/screens/favorites_screen.dart
 +++ b/lib/features/favorites/screens/favorites_screen.dart
 @@ -297,7 +297,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
@@ -45,18 +45,18 @@ index efe5e286..0a8d77d0 100644
                          fontWeight: FontWeight.w600,
                          color: context.adaptiveTextPrimary,
 diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
-index a462911b..0112b9a4 100644
+index dafe75ff..a47660bd 100644
 --- a/lib/features/folders/screens/folders_screen.dart
 +++ b/lib/features/folders/screens/folders_screen.dart
-@@ -269,7 +269,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
+@@ -314,7 +314,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
 -                  'Folders',
 +                  'folders',
                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                         fontWeight: FontWeight.w600,
-                         color: context.adaptiveTextPrimary,
+                     fontWeight: FontWeight.w600,
+                     color: context.adaptiveTextPrimary,
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
 index b5aa7c03..ffada77c 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
@@ -71,10 +71,10 @@ index b5aa7c03..ffada77c 100644
                      fontFamily: 'ProductSans',
                      fontSize: context.responsive(13.0, 14.0, 15.0),
 diff --git a/lib/features/playlists/screens/playlists_screen.dart b/lib/features/playlists/screens/playlists_screen.dart
-index 897b739e..341babb2 100644
+index 0269fbd0..811e3174 100644
 --- a/lib/features/playlists/screens/playlists_screen.dart
 +++ b/lib/features/playlists/screens/playlists_screen.dart
-@@ -80,16 +80,14 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -81,16 +81,14 @@ class PlaylistsScreen extends ConsumerWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -94,10 +94,10 @@ index 897b739e..341babb2 100644
                      color: context.adaptiveTextTertiary,
                    ),
 diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
-index e1b0b04a..f5c30836 100644
+index ec7b8f07..a7d2d7b2 100644
 --- a/lib/features/queue/screens/queue_screen.dart
 +++ b/lib/features/queue/screens/queue_screen.dart
-@@ -346,7 +346,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+@@ -338,7 +338,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -106,7 +106,7 @@ index e1b0b04a..f5c30836 100644
                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                          fontWeight: FontWeight.w600,
                          color: context.adaptiveTextPrimary,
-@@ -365,7 +365,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+@@ -357,7 +357,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
              TextButton(
                onPressed: _selectAll,
                child: Text(
@@ -115,7 +115,7 @@ index e1b0b04a..f5c30836 100644
                  style: TextStyle(color: context.adaptiveTextSecondary),
                ),
              ),
-@@ -425,7 +425,7 @@ class _Header extends StatelessWidget {
+@@ -408,7 +408,7 @@ class _Header extends StatelessWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -124,7 +124,7 @@ index e1b0b04a..f5c30836 100644
                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                          fontWeight: FontWeight.w600,
                          color: context.adaptiveTextPrimary,
-@@ -482,7 +482,7 @@ class _EmptyQueue extends StatelessWidget {
+@@ -455,7 +455,7 @@ class _EmptyQueue extends StatelessWidget {
              ),
              const SizedBox(height: AppConstants.spacingLg),
              Text(
@@ -133,7 +133,7 @@ index e1b0b04a..f5c30836 100644
                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                      color: context.adaptiveTextSecondary,
                      fontWeight: FontWeight.w600,
-@@ -490,7 +490,7 @@ class _EmptyQueue extends StatelessWidget {
+@@ -463,7 +463,7 @@ class _EmptyQueue extends StatelessWidget {
              ),
              const SizedBox(height: AppConstants.spacingSm),
              Text(
@@ -142,7 +142,7 @@ index e1b0b04a..f5c30836 100644
                textAlign: TextAlign.center,
                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                      color: context.adaptiveTextTertiary,
-@@ -530,7 +530,7 @@ class _EmptyUpcomingState extends StatelessWidget {
+@@ -503,7 +503,7 @@ class _EmptyUpcomingState extends StatelessWidget {
              const SizedBox(width: AppConstants.spacingSm),
              Expanded(
                child: Text(
@@ -151,7 +151,7 @@ index e1b0b04a..f5c30836 100644
                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                        color: context.adaptiveTextSecondary,
                      ),
-@@ -573,7 +573,7 @@ class _NowPlayingCard extends StatelessWidget {
+@@ -546,7 +546,7 @@ class _NowPlayingCard extends StatelessWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -160,7 +160,7 @@ index e1b0b04a..f5c30836 100644
                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                          color: AppColors.accent,
                          fontWeight: FontWeight.w700,
-@@ -866,11 +866,11 @@ class _QueueTile extends StatelessWidget {
+@@ -839,11 +839,11 @@ class _QueueTile extends StatelessWidget {
                        if (onMoveToNext != null)
                          const PopupMenuItem(
                            value: _QueueAction.playNext,
@@ -188,10 +188,10 @@ index 2466d66a..34c8902e 100644
                      fontWeight: FontWeight.w600,
                      color: context.adaptiveTextPrimary,
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index ca96f5a2..914b3fc6 100644
+index 3fbadd24..fc86f8bf 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -3183,7 +3183,7 @@ class _ContentStateWidget extends StatelessWidget {
+@@ -3149,7 +3149,7 @@ class _ContentStateWidget extends StatelessWidget {
            ),
            const SizedBox(height: AppConstants.spacingLg),
            Text(
@@ -200,7 +200,7 @@ index ca96f5a2..914b3fc6 100644
              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                color: context.adaptiveTextSecondary,
                fontWeight: FontWeight.w600,
-@@ -3191,7 +3191,7 @@ class _ContentStateWidget extends StatelessWidget {
+@@ -3157,7 +3157,7 @@ class _ContentStateWidget extends StatelessWidget {
            ),
            const SizedBox(height: AppConstants.spacingSm),
            Text(

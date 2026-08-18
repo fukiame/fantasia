@@ -32,7 +32,7 @@ index 3a9c30ed..209450eb 100644
    Future<void> upsertSong(SongEntity entity) async {
      await _isar.writeTxn(() async {
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 9fd31e3b..74ecd847 100644
+index d52c452b..f920c13d 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -21,7 +21,6 @@ import 'package:flick/features/playlists/screens/playlist_detail_screen.dart';
@@ -43,7 +43,7 @@ index 9fd31e3b..74ecd847 100644
  import 'package:flick/features/recently_played/screens/recently_played_screen.dart';
  import 'package:flick/features/songs/screens/songs_screen.dart';
  import 'package:flick/models/playlist.dart';
-@@ -956,14 +955,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -953,14 +952,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
          artPath: homeData.favoriteArtPath,
          onTap: () => _navigateTo(context, const FavoritesScreen()),
        ),
@@ -60,10 +60,10 @@ index 9fd31e3b..74ecd847 100644
          subtitle: playlistCount == 0
 diff --git a/lib/features/recently_added/screens/recently_added_screen.dart b/lib/features/recently_added/screens/recently_added_screen.dart
 deleted file mode 100644
-index 0980a8ae..00000000
+index 32714547..00000000
 --- a/lib/features/recently_added/screens/recently_added_screen.dart
 +++ /dev/null
-@@ -1,716 +0,0 @@
+@@ -1,709 +0,0 @@
 -import 'dart:async';
 -
 -import 'package:flutter/material.dart';
@@ -78,6 +78,7 @@ index 0980a8ae..00000000
 -import 'package:flick/services/player_service.dart';
 -import 'package:flick/data/repositories/song_repository.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/surface_icon_button.dart';
 -
 -/// Number of songs fetched per page.
 -const int _kPageSize = 50;
@@ -287,22 +288,14 @@ index 0980a8ae..00000000
 -      ),
 -      child: Row(
 -        children: [
--          Container(
--            decoration: BoxDecoration(
--              color: AppColors.glassBackground,
--              borderRadius: BorderRadius.circular(AppConstants.radiusMd),
--              border: Border.all(color: AppColors.glassBorder),
--            ),
--            child: IconButton(
--              icon: Icon(
--                LucideIcons.arrowLeft,
--                color: context.adaptiveTextPrimary,
--                size: context.responsiveIcon(AppConstants.iconSizeMd),
--              ),
+-          if (Navigator.of(context).canPop()) ...[
+-            SurfaceIconButton.icon(
+-              icon: LucideIcons.chevronLeft,
 -              onPressed: () => Navigator.of(context).pop(),
+-              iconColor: context.adaptiveTextPrimary,
 -            ),
--          ),
--          const SizedBox(width: AppConstants.spacingMd),
+-            const SizedBox(width: AppConstants.spacingMd),
+-          ],
 -          Expanded(
 -            child: Column(
 -              crossAxisAlignment: CrossAxisAlignment.start,

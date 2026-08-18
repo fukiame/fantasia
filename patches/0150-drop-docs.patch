@@ -29,15 +29,21 @@ index 20cff728..00000000
 -- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
 diff --git a/CHANGELOG.md b/CHANGELOG.md
 deleted file mode 100644
-index 306de6ba..00000000
+index e9f3a8d9..00000000
 --- a/CHANGELOG.md
 +++ /dev/null
-@@ -1,948 +0,0 @@
+@@ -1,961 +0,0 @@
 -# Changelog
 -
 -## Currently on Pre-release
 -
 -Changes landing on top of the current pre-release are tracked here and folded into the release notes as they ship.
+-
+-### Folders
+-- Hierarchy (tree) view now available inside folders via the grid/list toggle — matches the root Folders screen; view mode persists across screens.
+-
+-### Lyrics
+-- Embedded lyrics now read from MP4/M4A `©lyr` atoms (UTF-8 and UTF-16) and OGG/Opus Vorbis comments, joining existing ID3 (USLT/SYLT) and FLAC support.
 -
 -## 0.21.0-beta.1 (2026-07-10)
 -
@@ -48,7 +54,9 @@ index 306de6ba..00000000
 -- HTTP-first streaming with seek, gapless prefetch, and LRU download caching.
 -- Subsonic playlist sync — mirror playlists to/from your server; playlists removed with their server.
 -- Cast to **DLNA renderers and Chromecast**; Cast SDK optional for GMS-free devices.
+-- LAN media streaming — local files served to cast devices via embedded HTTP server.
 -- Server management with validation, failure banners, token error handling, password toggle.
+-- Jellyfin service timeout raised to 60s.
 -
 -### Extended Volume (up to 200%)
 -- Volume boost via LoudnessEnhancer with toggle in Audio settings.
@@ -61,10 +69,12 @@ index 306de6ba..00000000
 -- Bit-perfect passthrough API — software gain removed from path.
 -- Autoplay on queue end (optional); stuttering HAL path skipped when bit-perfect off.
 -- Earpiece excluded from auto device selection; wake lock prevents sleep dropouts.
+-- Duck-on-interruption option for Android audio focus interruptions.
+-- Direct audio backends (audiotrack_direct, PcmAlsaBackend) with S32_LE/I32/I16 PCM paths.
 -
 -### USB DAC Fixes
 -- Fosi Audio DS2 quirk (broken clock), 0 Hz readback fix, SkipClockValidation.
--- UAC1 SET_CUR failures tolerated on host-driven clock endpoints.
+-- UAC1 SET_CUR failures tolerated on host-driven clock endpoints; endpoint recipient prevents STALL.
 -- Sample-rate guards: no DAC-stored-rate overwrites or divide-by-zero.
 -
 -### Bluetooth
@@ -76,16 +86,19 @@ index 306de6ba..00000000
 -- Configurable action buttons: center, top-left/right, bottom — any slot hideable.
 -- Separate mini player from nav bar (toggle in settings).
 -- Compact layout for very short screens; resizable activity.
+-- Reusable `SurfaceIconButton` across screens; animated spinning refresh button.
 -
 -### Library & Artwork
 -- Remove All Songs option; songs deleted when their folder is removed.
 -- Artwork survives cache prune and persists after scans.
 -- Corrupt cached images auto-recover; extraction freeze on rapid scroll fixed.
+-- Ambient background added across tabs with duplicate prevention.
 -
 -### Reliability
 -- Auto-resume after interruptions; pending seek cleared after completion.
 -- Persistent WAV cache across restarts; HTTP audio source timeout.
 -- Network sync hardening: entity IDs resolved before bulk insert, Jellyfin fetches all audio tracks.
+-- Missing audio metrics handled for SMB/WebDAV songs; raw UTF-8 URI decoding fixed.
 -
 -## 0.20.5-beta.6 (2026-07-06)
 -
@@ -4118,10 +4131,10 @@ index 04e9c59a..00000000
 -10. Logs screen supports upload and save-as-text for sharing diagnostics
 diff --git a/docs/RELEASE_0.21.0-beta.1.md b/docs/RELEASE_0.21.0-beta.1.md
 deleted file mode 100644
-index f181a05a..00000000
+index e44db819..00000000
 --- a/docs/RELEASE_0.21.0-beta.1.md
 +++ /dev/null
-@@ -1,62 +0,0 @@
+@@ -1,69 +0,0 @@
 -# Flick 0.21.0-beta.1
 -
 -A major release, shipped while continuously keeping up with improvements and bug fixing across the app.
@@ -4132,7 +4145,9 @@ index f181a05a..00000000
 -- HTTP-first streaming with seek, gapless prefetch, and LRU download caching
 -- Subsonic playlist sync — mirror playlists to/from your server
 -- Cast to **DLNA renderers and Chromecast**; Cast SDK optional for GMS-free devices
+-- LAN media streaming — local files served to cast devices via embedded HTTP server
 -- Server management with validation, failure banners, token error handling, password toggle
+-- Jellyfin service timeout raised to 60s
 -
 -## Extended Volume (up to 200%)
 -
@@ -4147,11 +4162,13 @@ index f181a05a..00000000
 -- Bit-perfect passthrough API — software gain removed from path
 -- Autoplay on queue end (optional); stuttering HAL path skipped when bit-perfect off
 -- Earpiece excluded from auto device selection; wake lock prevents sleep dropouts
+-- Duck-on-interruption option for Android audio focus interruptions
+-- Direct audio backends (audiotrack_direct, PcmAlsaBackend) with S32_LE/I32/I16 PCM paths
 -
 -## USB DAC Fixes
 -
 -- Fosi Audio DS2 quirk (broken clock), 0 Hz readback fix, SkipClockValidation
--- UAC1 SET_CUR failures tolerated on host-driven clock endpoints
+-- UAC1 SET_CUR failures tolerated on host-driven clock endpoints; endpoint recipient prevents STALL
 -- Sample-rate guards: no DAC-stored-rate overwrites or divide-by-zero
 -
 -## Bluetooth
@@ -4165,18 +4182,21 @@ index f181a05a..00000000
 -- Configurable action buttons: center, top-left/right, bottom — any slot hideable
 -- Separate mini player from nav bar (toggle in settings)
 -- Compact layout for very short screens; resizable activity
+-- Reusable `SurfaceIconButton` across screens; animated spinning refresh button
 -
 -## Library & Artwork
 -
 -- Remove All Songs option; songs deleted when their folder is removed
 -- Artwork survives cache prune and persists after scans
 -- Corrupt cached images auto-recover; extraction freeze on rapid scroll fixed
+-- Ambient background added across tabs with duplicate prevention
 -
 -## Reliability
 -
 -- Auto-resume after interruptions; pending seek cleared after completion
 -- Persistent WAV cache across restarts; HTTP audio source timeout
 -- Network sync hardening: entity IDs resolved before bulk insert, Jellyfin fetches all audio tracks
+-- Missing audio metrics handled for SMB/WebDAV songs; raw UTF-8 URI decoding fixed
 -
 -## Getting Started
 -

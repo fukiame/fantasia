@@ -6,10 +6,10 @@ Subject: [PATCH] lib: menu: swap greetings for app name
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 30407113..b7b5abda 100644
+index ae4da4be..1cd76887 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -214,13 +214,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -206,13 +206,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      );
    }
  
@@ -23,7 +23,7 @@ index 30407113..b7b5abda 100644
    Widget _buildEngineSelector(
      BuildContext context,
      AudioEnginePreference engine, {
-@@ -776,7 +769,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -770,7 +763,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(

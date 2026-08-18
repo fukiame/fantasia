@@ -8,18 +8,18 @@ holy heck invasive
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index ef41d7a4..aa38c4d3 100644
+index 45c3cade..c1138b24 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -12,7 +12,6 @@ import 'package:flick/data/repositories/song_repository.dart';
- import 'package:flick/features/albums/screens/album_detail_screen.dart';
+@@ -15,7 +15,6 @@ import 'package:flick/providers/providers.dart';
  import 'package:flick/services/player_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
- import 'package:flick/providers/navigation_provider.dart';
- import 'package:flick/providers/app_preferences_provider.dart';
  
-@@ -162,8 +161,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+ enum AlbumSortOption { name, artist, tracks }
+ 
+@@ -165,8 +164,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
          }
        });
      }
@@ -27,18 +27,18 @@ index ef41d7a4..aa38c4d3 100644
 -      child: Scaffold(
 +    return Scaffold(
          backgroundColor: Colors.transparent,
-         body: SafeArea(
-           bottom: false,
-@@ -181,7 +179,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
-             ],
-           ),
+         body: Stack(
+           children: [
+@@ -191,7 +189,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+             ),
+           ],
          ),
 -      ),
      );
    }
  
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 0004a882..769f47f2 100644
+index 70af860f..5fbfcb60 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
 @@ -20,7 +20,6 @@ import 'package:flick/services/player_service.dart';
@@ -68,18 +68,18 @@ index 0004a882..769f47f2 100644
    }
  
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index cce7c103..85dc2d12 100644
+index 87848d1a..8fdf428d 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -14,7 +14,6 @@ import 'package:flick/services/player_service.dart';
+@@ -15,7 +15,6 @@ import 'package:flick/providers/providers.dart';
+ import 'package:flick/services/player_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
- import 'package:flick/providers/navigation_provider.dart';
- import 'package:flick/providers/app_preferences_provider.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
  import 'package:flick/widgets/common/glass_search_bar.dart';
  
  enum ArtistSortOption { name, songs, albums }
-@@ -191,8 +190,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -194,8 +193,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
          }
        });
      }
@@ -87,18 +87,18 @@ index cce7c103..85dc2d12 100644
 -      child: Scaffold(
 +    return Scaffold(
          backgroundColor: Colors.transparent,
-         body: SafeArea(
-           bottom: false,
-@@ -210,7 +208,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
-             ],
-           ),
+         body: Stack(
+           children: [
+@@ -220,7 +218,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+             ),
+           ],
          ),
 -      ),
      );
    }
  
 diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
-index 574aeb54..efe5e286 100644
+index 58c36891..b57635fc 100644
 --- a/lib/features/favorites/screens/favorites_screen.dart
 +++ b/lib/features/favorites/screens/favorites_screen.dart
 @@ -10,7 +10,6 @@ import 'package:flick/models/song.dart';
@@ -106,62 +106,62 @@ index 574aeb54..efe5e286 100644
  import 'package:flick/services/favorites_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
  import 'package:flick/providers/providers.dart';
- 
- class FavoritesScreen extends ConsumerStatefulWidget {
-@@ -196,8 +195,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
-     final removalMode =
+ import 'package:flick/features/player/widgets/ambient_background.dart';
+@@ -199,8 +198,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
          ref.watch(appPreferencesProvider).favoriteRemovalMode;
+     final currentSong = ref.watch(currentSongProvider);
  
 -    return DisplayModeWrapper(
 -      child: Scaffold(
 +    return Scaffold(
          backgroundColor: Colors.transparent,
-         body: SafeArea(
-           bottom: false,
-@@ -218,7 +216,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
-             ],
-           ),
+         body: Stack(
+           children: [
+@@ -228,7 +226,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+             ),
+           ],
          ),
 -      ),
      );
    }
  
 diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
-index 1ee43072..86573e02 100644
+index 539aa07d..f638fd18 100644
 --- a/lib/features/folders/screens/folders_screen.dart
 +++ b/lib/features/folders/screens/folders_screen.dart
-@@ -16,7 +16,6 @@ import 'package:flick/providers/providers.dart';
+@@ -18,7 +18,6 @@ import 'package:flick/widgets/common/blurred_song_background.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
- import 'package:flick/widgets/common/blurred_song_background.dart';
  import 'package:flick/widgets/common/floating_mini_player.dart';
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
  
  /// Groups songs by immediate subfolder relative to [prefix] within [folderUri].
  ({List<FolderGroup> subfolders, List<Song> songs}) groupByImmediateFolder({
-@@ -213,8 +212,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
- 
-   @override
+@@ -263,8 +262,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
    Widget build(BuildContext context) {
+     final currentSong = ref.watch(currentSongProvider);
+ 
 -    return DisplayModeWrapper(
 -      child: Scaffold(
 +    return Scaffold(
          backgroundColor: Colors.transparent,
-         body: SafeArea(
-           bottom: false,
-@@ -238,7 +236,6 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
-             ],
-           ),
+         body: Stack(
+           children: [
+@@ -293,7 +291,6 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
+             ),
+           ],
          ),
 -      ),
      );
    }
  
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index d9396f67..55309ab7 100644
+index cef293ba..02ae960d 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -31,7 +31,6 @@ import 'package:flick/services/color_extraction_service.dart';
+@@ -32,7 +32,6 @@ import 'package:flick/services/color_extraction_service.dart';
  import 'package:flick/services/player_service.dart';
  import 'package:flick/services/uac2_preferences_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
@@ -169,7 +169,7 @@ index d9396f67..55309ab7 100644
  import 'package:flick/widgets/common/engine_restart_notice.dart';
  import 'package:flick/widgets/common/glass_bottom_sheet.dart';
  
-@@ -604,8 +603,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -597,8 +596,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
              playlistsAsync.isLoading ||
              _isHistoryLoading);
  
@@ -179,7 +179,7 @@ index d9396f67..55309ab7 100644
          backgroundColor: Colors.transparent,
          body: Stack(
            children: [
-@@ -1010,7 +1008,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1011,7 +1009,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
              ),
            ],
          ),
@@ -187,24 +187,36 @@ index d9396f67..55309ab7 100644
      );
    }
  
-@@ -2917,8 +2914,7 @@ class _SmartMixDetailScreen extends StatelessWidget {
+diff --git a/lib/features/menu/screens/smart_mix_detail_screen.dart b/lib/features/menu/screens/smart_mix_detail_screen.dart
+index 0f4a1576..ac075577 100644
+--- a/lib/features/menu/screens/smart_mix_detail_screen.dart
++++ b/lib/features/menu/screens/smart_mix_detail_screen.dart
+@@ -21,7 +21,6 @@ import 'package:flick/providers/app_preferences_provider.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/animated_album_art.dart';
+ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
+-import 'package:flick/widgets/common/display_mode_wrapper.dart';
  
-   @override
+ /// Detail screen for generated smart mixes (On Repeat, Heavy Rotation, etc.),
+ /// styled after the playlist/album/artist detail screens.
+@@ -217,8 +216,7 @@ class _SmartMixDetailScreenState extends ConsumerState<SmartMixDetailScreen>
    Widget build(BuildContext context) {
+     final bgColor = _tintBackground(_backgroundBlend);
+ 
 -    return DisplayModeWrapper(
--      child: Scaffold(
-+    return Scaffold(
-         backgroundColor: AppColors.background,
-         body: CustomScrollView(
-           slivers: [
-@@ -3173,7 +3169,6 @@ class _SmartMixDetailScreen extends StatelessWidget {
-             ),
-           ],
-         ),
+-      child: TweenAnimationBuilder<Color?>(
++    return TweenAnimationBuilder<Color?>(
+         tween: ColorTween(begin: AppColors.background, end: bgColor),
+         duration: AppConstants.animationSlow,
+         curve: Curves.easeOut,
+@@ -345,7 +343,6 @@ class _SmartMixDetailScreenState extends ConsumerState<SmartMixDetailScreen>
+             ],
+           );
+         },
 -      ),
      );
    }
- }
+ 
 diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
 index f7e880dd..6ff189a0 100644
 --- a/lib/features/player/screens/full_player_screen.dart
@@ -266,7 +278,7 @@ index f242ce4b..47f80285 100644
    }
  
 diff --git a/lib/features/recently_added/screens/recently_added_screen.dart b/lib/features/recently_added/screens/recently_added_screen.dart
-index ac3362a4..0980a8ae 100644
+index d3f61ad7..32714547 100644
 --- a/lib/features/recently_added/screens/recently_added_screen.dart
 +++ b/lib/features/recently_added/screens/recently_added_screen.dart
 @@ -12,7 +12,6 @@ import 'package:flick/models/song.dart';
@@ -274,10 +286,10 @@ index ac3362a4..0980a8ae 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
  
  /// Number of songs fetched per page.
- const int _kPageSize = 50;
-@@ -191,8 +190,7 @@ class _RecentlyAddedScreenState extends State<RecentlyAddedScreen> {
+@@ -192,8 +191,7 @@ class _RecentlyAddedScreenState extends State<RecentlyAddedScreen> {
  
    @override
    Widget build(BuildContext context) {
@@ -287,7 +299,7 @@ index ac3362a4..0980a8ae 100644
          backgroundColor: Colors.transparent,
          body: BlurredSongBackground(
            child: SafeArea(
-@@ -212,7 +210,6 @@ class _RecentlyAddedScreenState extends State<RecentlyAddedScreen> {
+@@ -213,7 +211,6 @@ class _RecentlyAddedScreenState extends State<RecentlyAddedScreen> {
              ),
            ),
          ),
@@ -296,7 +308,7 @@ index ac3362a4..0980a8ae 100644
    }
  
 diff --git a/lib/features/recently_played/screens/recently_played_screen.dart b/lib/features/recently_played/screens/recently_played_screen.dart
-index 1451c2ed..78dbda9b 100644
+index 977e5282..2d314817 100644
 --- a/lib/features/recently_played/screens/recently_played_screen.dart
 +++ b/lib/features/recently_played/screens/recently_played_screen.dart
 @@ -12,7 +12,6 @@ import 'package:flick/models/song.dart';
@@ -305,9 +317,9 @@ index 1451c2ed..78dbda9b 100644
  import 'package:flick/widgets/common/cached_image_widget.dart';
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
  import 'package:flick/widgets/common/glass_dialog.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
  
- /// Number of history entries fetched per page.
-@@ -222,8 +221,7 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
+@@ -223,8 +222,7 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
  
    @override
    Widget build(BuildContext context) {
@@ -317,7 +329,7 @@ index 1451c2ed..78dbda9b 100644
          backgroundColor: Colors.transparent,
          body: BlurredSongBackground(
            child: SafeArea(
-@@ -243,7 +241,6 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
+@@ -244,7 +242,6 @@ class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
              ),
            ),
          ),
@@ -468,7 +480,7 @@ index 326939d5..27295a8a 100644
    }
  
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 1ea2d669..ca96f5a2 100644
+index 09932d84..3fbadd24 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -25,7 +25,6 @@ import 'package:flick/services/music_folder_service.dart';
@@ -478,8 +490,8 @@ index 1ea2d669..ca96f5a2 100644
 -import 'package:flick/widgets/common/display_mode_wrapper.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
  import 'package:flick/widgets/common/glass_bottom_sheet.dart';
- import 'package:lucide_icons_flutter/lucide_icons.dart';
-@@ -132,8 +131,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+ import 'package:flick/widgets/common/surface_icon_button.dart';
+@@ -133,8 +132,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
          songsAsync.value?.sortOption ?? SongSortOption.albumArtist;
      final isAlbumMode = sortOption == SongSortOption.album;
  
@@ -489,7 +501,7 @@ index 1ea2d669..ca96f5a2 100644
          clipBehavior: Clip.none,
          children: [
            SafeArea(
-@@ -328,7 +326,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -329,7 +327,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
              ),
            ),
          ],

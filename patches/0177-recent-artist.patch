@@ -6,10 +6,10 @@ Subject: [PATCH] recent artist
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 4d21bbc9..f521faf2 100644
+index 2feb2a7d..4bb8996f 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -724,50 +724,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -717,50 +717,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                              ),
                            ),
                          ),
@@ -60,7 +60,7 @@ index 4d21bbc9..f521faf2 100644
                        if (appPreferences.showRecentTracks &&
                            homeData.recentTracks.isNotEmpty)
                          SliverToBoxAdapter(
-@@ -1060,16 +1016,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1057,16 +1013,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
          artPath: null,
          onTap: () => _navigateTo(context, const RecentlyAddedScreen()),
        ),
@@ -77,7 +77,7 @@ index 4d21bbc9..f521faf2 100644
        _QuickAccessItem(
          title: 'Playlists',
          subtitle: playlistCount == 0
-@@ -1185,11 +1131,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1182,11 +1128,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        recentEntries.map((entry) => entry.song),
      ).take(12).toList();
  
@@ -89,7 +89,7 @@ index 4d21bbc9..f521faf2 100644
      final playlistPreviews = _buildPlaylistPreviews(
        playlists: playlists,
        songById: songById,
-@@ -1197,44 +1138,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1194,44 +1135,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
      return _MenuHomeData(
        recentTracks: recentTracks,
@@ -134,7 +134,7 @@ index 4d21bbc9..f521faf2 100644
    List<_PlaylistPreview> _buildPlaylistPreviews({
      required List<Playlist> playlists,
      required Map<String, Song> songById,
-@@ -2228,13 +2136,11 @@ class _InlineActionButton extends StatelessWidget {
+@@ -2165,13 +2073,11 @@ class _BrowseChip extends StatelessWidget {
  
  class _MenuHomeData {
    final List<Song> recentTracks;

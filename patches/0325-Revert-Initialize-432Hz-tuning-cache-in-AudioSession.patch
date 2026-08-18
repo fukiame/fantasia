@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 15:27:53 +0700
+Subject: [PATCH] Revert "Initialize 432Hz tuning cache in AudioSessionManager"
+
+This reverts commit ea38a36af76a6f05878c948f0539142a543e335b.
+
+diff --git a/lib/services/audio_session_manager.dart b/lib/services/audio_session_manager.dart
+index d2e1b6c7..7943f495 100644
+--- a/lib/services/audio_session_manager.dart
++++ b/lib/services/audio_session_manager.dart
+@@ -181,7 +181,6 @@ class AudioSessionManager {
+   Future<void> _initializeInternal() async {
+     await _preferencesService.initializeDeveloperModeCache();
+     await _preferencesService.initializeKillIsochronousUsbOnQuitCache();
+-    await _preferencesService.initialize432HzTuningCache();
+     await _preferencesService.initializeBtFlagsCache();
+     await _deviceService.initialize();
+     selectedModeNotifier.value = await _resolvePreferredMode();
+-- 
+2.55.0
+

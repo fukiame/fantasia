@@ -6,10 +6,10 @@ Subject: [PATCH] updates,patchnotes
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 405d2f20..602d3994 100644
+index 9ae28f3f..38ecf5ed 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -109,7 +109,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -110,7 +110,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _previousSong = ref.read(currentSongProvider);
      _playerService = ref.read(playerServiceProvider);
      ref.read(equalizerProvider);
@@ -17,7 +17,7 @@ index 405d2f20..602d3994 100644
      final initialConfig = ref.read(navBarConfigProvider);
      final defaultPage =
          initialConfig.orderedButtons.contains(NavBarButton.songs)
-@@ -280,7 +279,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -281,7 +280,6 @@ class _MainShellState extends ConsumerState<MainShell>
        }
        _maybeOpenExternalPlayer(ref.read(currentSongProvider));
        _refreshLibraryDeletions();
@@ -25,7 +25,7 @@ index 405d2f20..602d3994 100644
        ref.read(autoLibrarySyncServiceProvider);
      });
  
-@@ -464,7 +462,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -465,7 +463,6 @@ class _MainShellState extends ConsumerState<MainShell>
      if (state == AppLifecycleState.resumed) {
        _startIdleTimer();
        unawaited(ref.read(playerServiceProvider).onAppResumed());
@@ -34,10 +34,10 @@ index 405d2f20..602d3994 100644
      }
    }
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 8b164313..d9396f67 100644
+index 2667cfee..cef293ba 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -56,16 +56,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -57,16 +57,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    List<RecentlyPlayedEntry> _recentEntries = const [];
    Map<ListeningRecapPeriod, ListeningRecap> _recaps = const {};
    bool _isHistoryLoading = true;
@@ -51,10 +51,10 @@ index 8b164313..d9396f67 100644
 -  late final AnimationController _updateNoticeController;
 -  late final Animation<double> _updateNoticeFade;
 -  late final Animation<Offset> _updateNoticeSlide;
+   bool _isRefreshing = false;
+   late final AnimationController _refreshController;
  
-   @override
-   void initState() {
-@@ -88,24 +84,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -91,24 +87,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        ),
      );
      _welcomeCardController.forward();
@@ -76,25 +76,29 @@ index 8b164313..d9396f67 100644
 -      ),
 -    );
 -    _updateNoticeController.forward();
-     WidgetsBinding.instance.addPostFrameCallback((_) {
-       _loadHistoryData();
-       _watchHistory();
-@@ -115,7 +93,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     _refreshController = AnimationController(
+       duration: const Duration(milliseconds: 600),
+       vsync: this,
+@@ -122,7 +100,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    @override
    void dispose() {
      _welcomeCardController.dispose();
 -    _updateNoticeController.dispose();
+     _refreshController.dispose();
      _historySubscription?.cancel();
      super.dispose();
-   }
-@@ -181,41 +158,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -192,7 +169,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      ref.invalidate(songsProvider);
      ref.invalidate(favoritesProvider);
      ref.invalidate(playlistsProvider);
 -    await ref.read(updateCheckProvider.notifier).refreshIfOnline(force: true);
--    await _loadHistoryData(showLoadingState: false);
--  }
--
+     await _loadHistoryData(showLoadingState: false);
+     _refreshController.stop();
+     _refreshController.animateBack(
+@@ -203,39 +179,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     _isRefreshing = false;
+   }
+ 
 -  Future<void> _openPlayStoreListing() async {
 -    final marketUri = Uri.parse(UpdateCheckNotifier.flickPlayStoreMarketUrl);
 -    final webUri = Uri.parse(UpdateCheckNotifier.flickPlayStoreUrl);
@@ -126,10 +130,12 @@ index 8b164313..d9396f67 100644
 -        SnackBar(content: Text('Could not open the Play Store: $error')),
 -      );
 -    }
-   }
- 
+-  }
+-
    void _navigateTo(BuildContext context, Widget screen) {
-@@ -638,7 +580,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     Navigator.of(context).push(
+       MaterialPageRoute(builder: (_) => screen),
+@@ -630,7 +573,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      final playlistsAsync = ref.watch(playlistsProvider);
      final currentSong = ref.watch(currentSongProvider);
      final appPreferences = ref.watch(appPreferencesProvider);
@@ -137,7 +143,7 @@ index 8b164313..d9396f67 100644
      final enginePreferenceAsync = ref.watch(audioEnginePreferenceProvider);
  
      final allSongs = songsAsync.value?.songs ?? const <Song>[];
-@@ -728,29 +669,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -721,29 +663,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                            ),
                          ),
                        ),
@@ -167,7 +173,7 @@ index 8b164313..d9396f67 100644
                      if (isInitialLoading)
                        const SliverFillRemaining(
                          hasScrollBody: false,
-@@ -1154,111 +1072,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1157,111 +1076,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      );
    }
  

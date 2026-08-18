@@ -1,0 +1,105 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 23:12:54 +0700
+Subject: [PATCH] history
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index 3b6cf047..2a10cd14 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -39,8 +39,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     with TickerProviderStateMixin {
+   final PlayerService _playerService = PlayerService();
+ 
+-  StreamSubscription<void>? _historySubscription;
+-  bool _isHistoryLoading = true;
+   Color? _heroDominantColor;
+   String? _heroColorArtPath;
+   bool _isRefreshing = false;
+@@ -53,23 +51,14 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+       duration: const Duration(milliseconds: 600),
+       vsync: this,
+     );
+-    WidgetsBinding.instance.addPostFrameCallback((_) {
+-      _loadHistoryData();
+-      _watchHistory();
+-    });
+   }
+ 
+   @override
+   void dispose() {
+     _refreshController.dispose();
+-    _historySubscription?.cancel();
+     super.dispose();
+   }
+ 
+-  void _watchHistory() {
+-    _historySubscription?.cancel();
+-  }
+-
+   Future<void> _updateHeroColor(String? artPath, String? filePath) async {
+     final resolvedPath = artPath ?? filePath;
+     if (resolvedPath == _heroColorArtPath) return;
+@@ -85,26 +74,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     }
+   }
+ 
+-  Future<void> _loadHistoryData({bool showLoadingState = true}) async {
+-    if (showLoadingState && mounted) {
+-      setState(() {
+-        _isHistoryLoading = true;
+-      });
+-    }
+-
+-    try {
+-      if (!mounted) return;
+-      setState(() {
+-        _isHistoryLoading = false;
+-      });
+-    } catch (_) {
+-      if (!mounted) return;
+-      setState(() {
+-        _isHistoryLoading = false;
+-      });
+-    }
+-  }
+-
+   Future<void> _refreshHome() async {
+     if (_isRefreshing) return;
+     _isRefreshing = true;
+@@ -112,7 +81,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     ref.invalidate(songsProvider);
+     ref.invalidate(favoritesProvider);
+     ref.invalidate(playlistsProvider);
+-    await _loadHistoryData(showLoadingState: false);
+     _refreshController.stop();
+     _refreshController.animateBack(
+       0,
+@@ -176,8 +144,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+         playlists.isEmpty &&
+         (songsAsync.isLoading ||
+             favoritesAsync.isLoading ||
+-            playlistsAsync.isLoading ||
+-            _isHistoryLoading);
++            playlistsAsync.isLoading);
+ 
+     return Scaffold(
+         backgroundColor: Colors.transparent,
+diff --git a/lib/features/settings/screens/privacy_policy_screen.dart b/lib/features/settings/screens/privacy_policy_screen.dart
+index 1947f37b..b4a16ded 100644
+--- a/lib/features/settings/screens/privacy_policy_screen.dart
++++ b/lib/features/settings/screens/privacy_policy_screen.dart
+@@ -38,7 +38,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
+                         _Section(
+                           title: 'Local Data',
+                           content:
+-                              'All data is stored locally on your device only: music library metadata, play history, playlists, and app preferences.',
++                              'All data is stored locally on your device only: music library metadata, playlists, and app preferences.',
+                         ),
+                         _Section(
+                           title: 'Storage Permissions',
+-- 
+2.55.0
+

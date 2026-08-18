@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 15:06:47 +0700
+Subject: [PATCH] lib: albums: detail: sum with seconds
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index 195073eb..02ad5626 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -89,10 +89,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+   String get _formattedTotalDuration {
+     final hours = _totalDuration.inHours;
+     final minutes = _totalDuration.inMinutes.remainder(60);
+-    if (hours > 0) {
+-      return '${hours}h ${minutes}m';
+-    }
+-    return '${minutes}m';
++    final seconds = _totalDuration.inSeconds.remainder(60);
++    if (hours > 0) return '${hours}h ${minutes}m ${seconds}s';
++    if (minutes > 0) return '${minutes}m ${seconds}s';
++    return '${seconds}s';
+   }
+ 
+   int? get _albumYear {
+-- 
+2.55.0
+

@@ -19,7 +19,7 @@ index 24d4e149..fdeada35 100644
      <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
      <application
 diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
-index 45b7d4d2..42c3aae0 100644
+index 078eb890..3644202c 100644
 --- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 +++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
 @@ -45,7 +45,6 @@ import android.media.AudioAttributes
@@ -80,7 +80,7 @@ index 45b7d4d2..42c3aae0 100644
          // Audio converter channel
          // NOTE: FLAC to ALAC and M4A to MP3 conversion features are disabled for now
          /*
-@@ -4182,54 +4152,6 @@ class MainActivity: FlutterActivity() {
+@@ -4350,54 +4320,6 @@ class MainActivity: FlutterActivity() {
          }
      }
      
@@ -135,7 +135,7 @@ index 45b7d4d2..42c3aae0 100644
      private val btBatteryServiceUuid = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb")
      private val btBatteryCharUuid = UUID.fromString("00002a19-0000-1000-8000-00805f9b34fb")
  
-@@ -4578,7 +4500,6 @@ class MainActivity: FlutterActivity() {
+@@ -4746,7 +4668,6 @@ class MainActivity: FlutterActivity() {
          aclReceiver = null
          unregisterVolumeContentObserver()
          justAudioProcessingController.release()
@@ -144,7 +144,7 @@ index 45b7d4d2..42c3aae0 100644
          usbPermissionReceiver = null
          try {
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 602d3994..6198f0c8 100644
+index 38ecf5ed..df6a5bed 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -23,7 +23,6 @@ import 'package:flick/core/utils/navigation_helper.dart';
@@ -155,7 +155,7 @@ index 602d3994..6198f0c8 100644
  import 'package:flick/widgets/navigation/flick_nav_bar.dart';
  import 'package:flick/providers/equalizer_provider.dart';
  import 'package:flick/providers/providers.dart';
-@@ -742,7 +741,6 @@ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
+@@ -748,7 +747,6 @@ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
  }
  
  class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
@@ -163,7 +163,7 @@ index 602d3994..6198f0c8 100644
    int _songChangeDirection = 0; // 1=next, -1=previous, 0=none
    String? _currentSongId;
  
-@@ -759,10 +757,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -765,10 +763,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
          _songChangeDirection = 1;
          ref.read(playerProvider.notifier).previous();
        }
@@ -174,7 +174,7 @@ index 602d3994..6198f0c8 100644
      }
    }
  
-@@ -909,24 +903,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -915,24 +909,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
        );
    }
  
@@ -199,7 +199,7 @@ index 602d3994..6198f0c8 100644
    @override
    Widget build(BuildContext context) {
      final currentSong = ref.watch(currentSongProvider);
-@@ -1010,10 +986,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1016,10 +992,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
                  switchInCurve: Curves.easeOutCubic,
                  switchOutCurve: Curves.easeOutCubic,
                  transitionBuilder: (child, animation) {
@@ -211,7 +211,7 @@ index 602d3994..6198f0c8 100644
                    return SlideTransition(
                      position: Tween<Offset>(
                        begin: offset,
-@@ -1028,9 +1001,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1034,9 +1007,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
                      ),
                    );
                  },

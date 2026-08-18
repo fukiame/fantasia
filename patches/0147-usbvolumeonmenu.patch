@@ -6,10 +6,10 @@ Subject: [PATCH] usbvolumeonmenu
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 545263eb..8b164313 100644
+index 6fbfa208..2667cfee 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -34,7 +34,6 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
+@@ -35,7 +35,6 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
  import 'package:flick/widgets/common/display_mode_wrapper.dart';
  import 'package:flick/widgets/common/engine_restart_notice.dart';
  import 'package:flick/widgets/common/glass_bottom_sheet.dart';
@@ -17,7 +17,7 @@ index 545263eb..8b164313 100644
  
  /// Music-home menu screen inspired by streaming app landing pages.
  class MenuScreen extends ConsumerStatefulWidget {
-@@ -711,27 +710,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -704,27 +703,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                                    : const SizedBox.shrink(),
                          ),
                        ),
