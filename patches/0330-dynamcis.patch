@@ -1459,10 +1459,10 @@ index 3a8b1945..bca1ee2e 100644
  pub mod equalizer;
  pub mod manager;
 diff --git a/rust/src/uac2/android_direct.rs b/rust/src/uac2/android_direct.rs
-index 3584e2e2..2ca3e30c 100644
+index 663de82e..1b73e2fa 100644
 --- a/rust/src/uac2/android_direct.rs
 +++ b/rust/src/uac2/android_direct.rs
-@@ -2426,7 +2426,7 @@ fn direct_path_is_bit_perfect(state: &AndroidDirectUsbState) -> bool {
+@@ -2422,7 +2422,7 @@ fn direct_path_is_bit_perfect(state: &AndroidDirectUsbState) -> bool {
      };
  
      // Bit-perfect requires: matching format, verified clock, and the engine

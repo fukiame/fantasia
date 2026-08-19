@@ -6,7 +6,7 @@ Subject: [PATCH] probably
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 9a12ce79..b0cfc8ed 100644
+index 0c040f48..f5be1881 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
 @@ -957,6 +957,7 @@ class _ActionButtonPickerScreen extends ConsumerWidget {

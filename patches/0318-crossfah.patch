@@ -570,7 +570,7 @@ index 78ee0be6..2e9d7580 100644
      final prefs = await SharedPreferences.getInstance();
      return prefs.getBool(_swipeActionsEnabledKey) ?? false;
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 61cf584b..156c19b1 100644
+index 72fe7782..2aa9fd68 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -307,9 +307,6 @@ class PlayerService {
@@ -673,7 +673,7 @@ index 61cf584b..156c19b1 100644
    Future<void> onAppPaused() async {
      if (!Platform.isAndroid) return;
      _appInForeground = false;
-@@ -874,16 +802,10 @@ class PlayerService {
+@@ -912,16 +840,10 @@ class PlayerService {
        !isBitPerfectModeEnabled &&
        loopModeNotifier.value != LoopMode.one;
  
@@ -691,7 +691,7 @@ index 61cf584b..156c19b1 100644
  
    void _notifyQueueChanged() {
      queueNotifier.value = List.unmodifiable(
-@@ -1449,19 +1371,6 @@ class PlayerService {
+@@ -1495,19 +1417,6 @@ class PlayerService {
        shouldIgnoreTrack: (track) => track.filePath == null,
        shouldFastStartCurrentTrackOnly: () =>
            loopModeNotifier.value != LoopMode.all,
@@ -711,7 +711,7 @@ index 61cf584b..156c19b1 100644
      );
      engine.onTrackEnded = () {
        if (_usingRustBackend) return;
-@@ -1732,7 +1641,7 @@ class PlayerService {
+@@ -1778,7 +1687,7 @@ class PlayerService {
  
    /// Prefer [primary], then the current-song notifier, then the last engine
    /// playback snapshot so USB focus stays latched when Rust is ahead of or
@@ -720,7 +720,7 @@ index 61cf584b..156c19b1 100644
    Song? _songForUac2Sync(Song? primary) =>
        primary ??
        currentSongNotifier.value ??
-@@ -2270,7 +2179,6 @@ class PlayerService {
+@@ -2316,7 +2225,6 @@ class PlayerService {
        // stream and surfaces as libusb I/O errors.
        final pipelineActive =
            rustState == RustPlaybackState.playing ||
@@ -728,7 +728,7 @@ index 61cf584b..156c19b1 100644
            rustState == RustPlaybackState.buffering;
  
        unawaited(
-@@ -2307,9 +2215,6 @@ class PlayerService {
+@@ -2353,9 +2261,6 @@ class PlayerService {
        if (!_usingRustBackend) return;
        unawaited(_onSongFinished(endedPath: endedPath));
      };
@@ -738,7 +738,7 @@ index 61cf584b..156c19b1 100644
      _rustAudioService.onError = (message) {
        _debugLog('[PlayerService] Rust backend error: $message');
        if (Platform.isAndroid &&
-@@ -2560,7 +2465,7 @@ class PlayerService {
+@@ -2625,7 +2530,7 @@ class PlayerService {
        '_onSongFinished: loopMode=${loopModeNotifier.value}, currentIndex=$_currentIndex, playlistLength=${_playlist.length}, usingRustBackend=$_usingRustBackend, endedPath=$endedPath',
      );
  
@@ -747,7 +747,7 @@ index 61cf584b..156c19b1 100644
        await _handleGaplessTrackEnded();
        return;
      }
-@@ -3232,35 +3137,9 @@ class PlayerService {
+@@ -3297,35 +3202,9 @@ class PlayerService {
      } else if (playbackMode == AudioEngineType.usbDacExperimental) {
        await _rustAudioService.setVolume(_currentVolume);
        await _rustAudioService.setPlaybackSpeed(1.0);
@@ -783,7 +783,7 @@ index 61cf584b..156c19b1 100644
      }
  
      await reapplyEqualizer();
-@@ -3831,21 +3710,6 @@ class PlayerService {
+@@ -3896,21 +3775,6 @@ class PlayerService {
      }
    }
  

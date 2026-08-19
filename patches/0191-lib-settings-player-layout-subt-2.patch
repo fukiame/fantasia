@@ -6,7 +6,7 @@ Subject: [PATCH] lib: settings: player layout: subt 2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index a8ac4c16..458ba740 100644
+index a4e10bfa..0d3c410d 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
 @@ -122,13 +122,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {

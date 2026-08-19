@@ -6,7 +6,7 @@ Subject: [PATCH] pubspec: drop flutter_svg
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/restarting_screen.dart b/lib/features/menu/screens/restarting_screen.dart
-index fce56828..e06cf6df 100644
+index 3fad8ec3..15a6cdaa 100644
 --- a/lib/features/menu/screens/restarting_screen.dart
 +++ b/lib/features/menu/screens/restarting_screen.dart
 @@ -1,7 +1,6 @@

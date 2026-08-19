@@ -7,7 +7,7 @@ Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/restarting_screen.dart b/lib/features/menu/screens/restarting_screen.dart
 deleted file mode 100644
-index e06cf6df..00000000
+index 15a6cdaa..00000000
 --- a/lib/features/menu/screens/restarting_screen.dart
 +++ /dev/null
 @@ -1,146 +0,0 @@
@@ -91,7 +91,7 @@ index e06cf6df..00000000
 -    return PopScope(
 -      canPop: false,
 -      child: Scaffold(
--        backgroundColor: AppColors.background,
+-        backgroundColor: AppColors.backgroundBlack,
 -        body: SafeArea(
 -          child: FadeTransition(
 -            opacity: _fade,
@@ -100,7 +100,7 @@ index e06cf6df..00000000
 -                mainAxisAlignment: MainAxisAlignment.center,
 -                children: [
 -                  AnimatedBuilder(
--                    animation: _sweepController,
+-                    animation: _sweepController,  
 -                    builder: (context, child) {
 -                      return ShaderMask(
 -                        blendMode: BlendMode.srcIn,

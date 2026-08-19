@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add extended volume boost support (up to 200%)"
 This reverts commit 63d7816d4f9a168156c993a870f211bf3532eeb1.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 3e84f801..022474a7 100644
+index 9673b36e..79ffc0e3 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -20,7 +20,6 @@ import 'package:flick/services/bluetooth_service.dart';
@@ -31,7 +31,7 @@ index 3e84f801..022474a7 100644
    /// Lie-detector: set when a DAC that claimed hardware volume rejects
    /// writes or fails the GET_CUR health check.
    bool _hwVolumeFailed = false;
-@@ -1314,10 +1306,6 @@ class PlayerService {
+@@ -1352,10 +1344,6 @@ class PlayerService {
          enabled: Uac2PreferencesService.is432HzTuningEnabledSync,
        );
  
@@ -42,7 +42,7 @@ index 3e84f801..022474a7 100644
        final engineType = _sessionManager.selectedMode;
        if (engineType == AudioEngineType.usbDacExperimental ||
            engineType == AudioEngineType.dapInternalHighRes) {
-@@ -1792,55 +1780,6 @@ class PlayerService {
+@@ -1838,55 +1826,6 @@ class PlayerService {
    bool get isHardwareVolumeAuthority =>
        _determineCurrentTier() == VolumeTier.hardware;
  
@@ -98,7 +98,7 @@ index 3e84f801..022474a7 100644
    VolumeTier _determineCurrentTier() => determineVolumeTier(
      isBitPerfectVolumePath: _isBitPerfectVolumePath,
      volumeMode: _uac2Service.currentDeviceStatus?.volumeMode,
-@@ -4741,17 +4680,10 @@ class PlayerService {
+@@ -4808,17 +4747,10 @@ class PlayerService {
    // ==================== Volume ====================
  
    Future<void> setVolume(double volume) async {
@@ -119,7 +119,7 @@ index 3e84f801..022474a7 100644
        return;
      }
      _currentVolume = clampedVolume;
-@@ -4783,10 +4715,10 @@ class PlayerService {
+@@ -4850,10 +4782,10 @@ class PlayerService {
            '[VolFlow] DoP: no hardware volume available — volume unchanged',
          );
        }
@@ -131,7 +131,7 @@ index 3e84f801..022474a7 100644
      _activeTier = tier;
      switch (tier) {
        case VolumeTier.hardware:
-@@ -4799,30 +4731,23 @@ class PlayerService {
+@@ -4866,30 +4798,23 @@ class PlayerService {
            _debugLog('[VolFlow] HW write failed — falling back to engine gain');
            await _rustAudioService.setVolume(clampedVolume);
          }

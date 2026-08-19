@@ -930,7 +930,7 @@ index 2b4902e8..00000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 95d58bf1..ba7c5528 100644
+index 7215be9d..6de7f3b6 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -958,7 +958,7 @@ index 95d58bf1..ba7c5528 100644
      unawaited(_loadPriorityAnchorPreference());
      _initBluetoothReconnectHandling();
      _initUsbDacDisconnectHandling();
-@@ -855,74 +851,22 @@ class PlayerService {
+@@ -855,75 +851,23 @@ class PlayerService {
      }
    }
  
@@ -1031,13 +1031,14 @@ index 95d58bf1..ba7c5528 100644
    Future<void> onAppResumed() async {
      _appInForeground = true;
 +    /*
-     if (!_floatingPlayerActive) return;
-     await _deactivateFloatingPlayer();
+     if (_floatingPlayerActive) {
+       await _deactivateFloatingPlayer();
+     }
 +    */
+     unawaited(_restoreBitPerfectEngineAfterForeground());
    }
  
-   bool get _isGaplessActive =>
-@@ -2604,8 +2548,6 @@ class PlayerService {
+@@ -2669,8 +2613,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -1046,7 +1047,7 @@ index 95d58bf1..ba7c5528 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -5032,7 +4974,6 @@ class PlayerService {
+@@ -5099,7 +5041,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();
