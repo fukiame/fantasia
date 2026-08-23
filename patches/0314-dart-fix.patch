@@ -1,0 +1,231 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 12:13:09 +0700
+Subject: [PATCH] dart fix
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/app/app.dart b/lib/app/app.dart
+index 8f666ae8..e8116652 100644
+--- a/lib/app/app.dart
++++ b/lib/app/app.dart
+@@ -12,7 +12,6 @@ import 'package:flick/features/songs/screens/songs_screen.dart';
+ import 'package:flick/features/menu/screens/menu_screen.dart';
+ import 'package:flick/features/settings/screens/settings_screen.dart';
+ import 'package:flick/features/settings/screens/bottom_bar_settings_screen.dart';
+-import 'package:flick/features/settings/screens/support_flick_screen.dart';
+ import 'package:flick/features/albums/screens/albums_screen.dart';
+ import 'package:flick/features/artists/screens/artists_screen.dart';
+ import 'package:flick/features/folders/screens/folders_screen.dart';
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index 8baa2b95..61e330b4 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -1,5 +1,4 @@
+ import 'dart:async';
+-import 'dart:math' as math;
+ 
+ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+@@ -12,7 +11,6 @@ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/features/albums/screens/albums_screen.dart';
+-import 'package:flick/features/artists/screens/artist_detail_screen.dart';
+ import 'package:flick/features/artists/screens/artists_screen.dart';
+ import 'package:flick/features/favorites/screens/favorites_screen.dart';
+ import 'package:flick/features/folders/screens/folders_screen.dart';
+@@ -20,16 +18,13 @@ import 'package:flick/features/playlists/screens/playlist_detail_screen.dart';
+ import 'package:flick/features/playlists/screens/playlists_screen.dart';
+ import 'package:flick/features/queue/screens/queue_screen.dart';
+ import 'package:flick/features/recap/screens/listening_recap_screen.dart';
+-import 'package:flick/features/recently_played/screens/recently_played_screen.dart';
+ import 'package:flick/features/songs/screens/songs_screen.dart';
+ import 'package:flick/models/playlist.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/services/color_extraction_service.dart';
+ import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/uac2_preferences_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/glass_bottom_sheet.dart';
+ 
+ /// Music-home menu screen inspired by streaming app landing pages.
+ class MenuScreen extends ConsumerStatefulWidget {
+@@ -888,8 +883,7 @@ class _HeroActionButton extends StatelessWidget {
+     required this.label,
+     required this.icon,
+     required this.onTap,
+-    this.isPrimary = false,
+-  });
++  }) : isPrimary = false;
+ 
+   @override
+   Widget build(BuildContext context) {
+diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
+index 0617431f..3feeecac 100644
+--- a/lib/features/player/widgets/waveform_layer.dart
++++ b/lib/features/player/widgets/waveform_layer.dart
+@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:flick/services/player_service.dart';
+ import 'package:flick/models/song.dart';
+-import 'package:flick/models/progress_bar_style.dart';
+ import 'package:flick/features/player/widgets/line_seek_bar.dart';
+-import 'package:flick/features/player/widgets/waveform_seek_bar.dart';
+ import 'package:flick/providers/providers.dart';
+ 
+ class WaveformLayer extends StatefulWidget {
+diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
+index ff732ee7..8704fdb6 100644
+--- a/lib/features/recap/screens/listening_recap_screen.dart
++++ b/lib/features/recap/screens/listening_recap_screen.dart
+@@ -14,7 +14,6 @@ import 'package:flick/services/csv_export_service.dart';
+ import 'package:flick/services/gallery_save_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:permission_handler/permission_handler.dart';
+ 
+ /// Wrapped-style listening recap with daily, weekly, monthly, and yearly views.
+ class ListeningRecapScreen extends StatefulWidget {
+@@ -897,8 +896,7 @@ class _PosterBackgroundChoice extends StatelessWidget {
+     required this.mode,
+     required this.isSelected,
+     required this.onTap,
+-    this.label,
+-  });
++  }) : label = null;
+ 
+   @override
+   Widget build(BuildContext context) {
+diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
+index 13daf05c..28f3d063 100644
+--- a/lib/features/settings/screens/app_info_settings_screen.dart
++++ b/lib/features/settings/screens/app_info_settings_screen.dart
+@@ -1,18 +1,14 @@
+-import 'dart:convert';
+ 
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:url_launcher/url_launcher.dart';
+-import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/features/settings/screens/privacy_policy_screen.dart';
+ import 'package:flick/features/settings/screens/support_flick_screen.dart';
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+-import 'package:flick/providers/providers.dart';
+ import 'package:flick/widgets/common/glass_bottom_sheet.dart';
+ 
+ class AppInfoSettingsScreen extends ConsumerStatefulWidget {
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index f81f1f84..fdc7205d 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/models/player_screen_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/models/song.dart';
+diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
+index d517a76e..444ee008 100644
+--- a/lib/features/settings/screens/settings_screen.dart
++++ b/lib/features/settings/screens/settings_screen.dart
+@@ -9,7 +9,6 @@ import 'package:flick/features/settings/screens/library_settings_screen.dart';
+ import 'package:flick/features/settings/screens/queue_settings_screen.dart';
+ import 'package:flick/features/settings/screens/ui_customization_settings_screen.dart';
+ import 'package:flick/features/settings/screens/player_layout_settings_screen.dart';
+-import 'package:flick/features/settings/screens/support_flick_screen.dart';
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+ 
+ class SettingsScreen extends StatefulWidget {
+diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
+index 3bf38fff..8807b632 100644
+--- a/lib/features/settings/widgets/settings_widgets.dart
++++ b/lib/features/settings/widgets/settings_widgets.dart
+@@ -538,7 +538,7 @@ class SliderSetting extends StatelessWidget {
+ 
+ /// Small icon container used by every settings tile.
+ class _SettingsIcon extends StatelessWidget {
+-  const _SettingsIcon({required this.icon, this.color});
++  const _SettingsIcon({required this.icon}) : color = null;
+ 
+   final IconData icon;
+   final Color? color;
+diff --git a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
+index 7d5841e2..b6bd53b2 100644
+--- a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
++++ b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
+@@ -55,10 +55,10 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+   final AlbumArtImportService _service = AlbumArtImportService.instance;
+   final PlayerService _playerService = PlayerService();
+ 
+-  List<AlbumArtCandidate> _candidates = const [];
++  final List<AlbumArtCandidate> _candidates = const [];
+   String? _searchError;
+-  int _selectedCandidateIndex = 0;
+-  bool _isSearching = false;
++  final int _selectedCandidateIndex = 0;
++  final bool _isSearching = false;
+   bool _isWorking = false;
+   late bool _hasCustomArtwork;
+   AlbumArtScope _scope = AlbumArtScope.wholeAlbum;
+diff --git a/lib/providers/player_provider.dart b/lib/providers/player_provider.dart
+index 5b20e9fc..2905a5c6 100644
+--- a/lib/providers/player_provider.dart
++++ b/lib/providers/player_provider.dart
+@@ -7,7 +7,6 @@ import '../models/playback_context.dart';
+ import '../models/shuffle_mode.dart';
+ import '../models/song.dart';
+ import '../services/player_service.dart';
+-import 'package:flick/core/utils/dev_log.dart';
+ 
+ // Re-export LoopMode from player_service
+ export '../services/player_service.dart' show LoopMode;
+diff --git a/lib/services/autoeq_catalog_service.dart b/lib/services/autoeq_catalog_service.dart
+index 557e53e3..ab776428 100644
+--- a/lib/services/autoeq_catalog_service.dart
++++ b/lib/services/autoeq_catalog_service.dart
+@@ -4,7 +4,6 @@ import 'dart:convert';
+ import 'package:flutter/services.dart' show rootBundle;
+ 
+ import 'package:flick/providers/equalizer_provider.dart';
+-import 'package:flick/services/eq_preset_file_service.dart';
+ import 'package:flick/services/eq_preset_service.dart';
+ 
+ const Map<String, ParametricBandType> _kCodeToBandType = {
+diff --git a/lib/services/external_playback_service.dart b/lib/services/external_playback_service.dart
+index 77def882..6c8d173d 100644
+--- a/lib/services/external_playback_service.dart
++++ b/lib/services/external_playback_service.dart
+@@ -72,7 +72,7 @@ class ExternalPlaybackService {
+       final displayName = payload['displayName'] as String?;
+       final mimeType = payload['mimeType'] as String?;
+       final sourcePackage =
+-          (payload['sourcePackage'] as String?) ?? null;
++          (payload['sourcePackage'] as String?);
+       final song = Song(
+         id: 'external:${DateTime.now().microsecondsSinceEpoch}:$uri',
+         title: _resolveTitle(metadata?.title, displayName, uri),
+diff --git a/lib/widgets/navigation/flick_nav_bar.dart b/lib/widgets/navigation/flick_nav_bar.dart
+index bcb60e89..0c7f4907 100644
+--- a/lib/widgets/navigation/flick_nav_bar.dart
++++ b/lib/widgets/navigation/flick_nav_bar.dart
+@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/models/nav_bar_config.dart';
+ 
+ class FlickNavBar extends StatefulWidget {
+-- 
+2.55.0
+

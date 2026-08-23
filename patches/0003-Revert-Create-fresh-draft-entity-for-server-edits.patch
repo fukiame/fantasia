@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 23 Aug 2026 23:19:23 +0700
+Subject: [PATCH] Revert "Create fresh draft entity for server edits"
+
+This reverts commit ea4f4d83888a49d16711ce1d94fb7075afbeecb7.
+
+diff --git a/lib/features/settings/screens/network_server_edit_screen.dart b/lib/features/settings/screens/network_server_edit_screen.dart
+index 28d1fb18..fa7f28b1 100644
+--- a/lib/features/settings/screens/network_server_edit_screen.dart
++++ b/lib/features/settings/screens/network_server_edit_screen.dart
+@@ -1,7 +1,6 @@
+ // Main sources
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+-import 'package:isar_community/isar.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:url_launcher/url_launcher.dart';
+ 
+@@ -178,14 +177,9 @@ class _NetworkServerEditScreenState extends State<NetworkServerEditScreen> {
+     return widget.server?.token;
+   }
+ 
+-  // Fresh entity, never the caller's in-memory row. Test Connection resolves
+-  // tokens from whatever is typed; mutating the shared entity here leaked
+-  // untested credentials into the list screen even when the edit was abandoned.
+   NetworkServerEntity _draftEntity({String? token}) {
+-    final old = widget.server;
+-    return NetworkServerEntity()
+-      ..id = old?.id ?? Isar.autoIncrement
+-      ..lastSyncedAt = old?.lastSyncedAt
++    final server = widget.server ?? NetworkServerEntity();
++    server
+       ..label = _labelController.text.trim()
+       ..protocol = _selectedProtocol
+       ..baseUrl = _isTidal
+@@ -194,7 +188,8 @@ class _NetworkServerEditScreenState extends State<NetworkServerEditScreen> {
+       ..username = _usernameController.text.trim().isEmpty
+           ? null
+           : _usernameController.text.trim()
+-      ..token = token ?? old?.token;
++      ..token = token ?? server.token;
++    return server;
+   }
+ 
+   Future<void> _testConnection() async {
+-- 
+2.55.0
+

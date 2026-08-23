@@ -1,0 +1,319 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 12:29:52 +0700
+Subject: [PATCH] treewide: drop Locker
+
+as of patch date, nonexistent
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+index f8dcf68b..ad41e960 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+@@ -96,8 +96,6 @@ class MainActivity: FlutterActivity() {
+     private val OVERLAY_CHANNEL = "com.mossapps.flick/overlay"
+     private val BLUETOOTH_CHANNEL = "com.mossapps.flick/bluetooth"
+     private val BLUETOOTH_EVENT_CHANNEL = "com.mossapps.flick/bluetooth_events"
+-    private val LOCKER_PACKAGE = "com.mossapps.locker"
+-    private val LOCKER_RETURN_URI = "locker://return?source=flick"
+     // private val CONVERTER_CHANNEL = "com.mossapps.flick/converter"
+     private val REQUEST_OPEN_DOCUMENT_TREE = 1001
+     private val REQUEST_OPEN_DOCUMENT = 1003
+@@ -738,9 +736,6 @@ class MainActivity: FlutterActivity() {
+                         result.success(pendingExternalPlaybackPayload)
+                         pendingExternalPlaybackPayload = null
+                     }
+-                    "returnToLocker" -> {
+-                        result.success(returnToLocker())
+-                    }
+                     else -> result.notImplemented()
+                 }
+             }
+@@ -1212,7 +1207,6 @@ class MainActivity: FlutterActivity() {
+             "mimeType" to (intent.type ?: contentResolver.getType(dataUri)),
+             "displayName" to getDocumentDisplayName(dataUri.toString()),
+             "sourcePackage" to sourcePackage,
+-            "fromLocker" to (sourcePackage == LOCKER_PACKAGE),
+         )
+     }
+ 
+@@ -1251,21 +1245,6 @@ class MainActivity: FlutterActivity() {
+         return uri.host?.takeIf { it.isNotBlank() }
+     }
+ 
+-    private fun returnToLocker(): Boolean {
+-        return try {
+-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(LOCKER_RETURN_URI)).apply {
+-                `package` = LOCKER_PACKAGE
+-                addCategory(Intent.CATEGORY_BROWSABLE)
+-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+-            }
+-            startActivity(intent)
+-            true
+-        } catch (e: Exception) {
+-            Log.w("Flick", "Failed to return to Locker", e)
+-            false
+-        }
+-    }
+-
+     private fun getDocumentDisplayName(uriString: String): String? {
+         android.util.Log.d("MainActivity", "[getDocumentDisplayName] Input URI: $uriString")
+         return try {
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index dbc9fd15..3f0f64a8 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -436,13 +436,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                     onOpenQueue: () => _navigation.openQueue(context),
+                     onToggleLyrics: () => _setLyricsMode(!_isLyricsMode),
+                     onQueueSwipe: () => _navigation.queueSong(context, song),
+-                    onReturnToLocker: () async {
+-                      final returned = await _externalPlaybackService
+-                          .returnToLocker();
+-                      if (!returned && context.mounted) {
+-                        Navigator.of(context).pop();
+-                      }
+-                    },
+                     onShowSongActions: () => SongActionsSheet.show(
+                       context,
+                       playerService: _playerService,
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 2898637b..14217d70 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -47,7 +47,6 @@ class AnimatedSongScene extends StatelessWidget {
+   final VoidCallback onOpenQueue;
+   final VoidCallback onToggleLyrics;
+   final Future<void> Function() onQueueSwipe;
+-  final Future<void> Function() onReturnToLocker;
+   final VoidCallback onShowSongActions;
+   final Future<void> Function() onPrevious;
+   final Future<void> Function() onNext;
+@@ -94,7 +93,6 @@ class AnimatedSongScene extends StatelessWidget {
+     required this.onOpenQueue,
+     required this.onToggleLyrics,
+     required this.onQueueSwipe,
+-    required this.onReturnToLocker,
+     required this.onShowSongActions,
+     required this.onPrevious,
+     required this.onNext,
+@@ -377,10 +375,8 @@ class AnimatedSongScene extends StatelessWidget {
+           SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+           Expanded(
+             child: GestureDetector(
+-              onTap: song.isFromLocker ? null : onOpenQueue,
+-              onHorizontalDragEnd: song.isFromLocker
+-                  ? null
+-                  : (details) async {
++              onTap: onOpenQueue,
++              onHorizontalDragEnd: (details) async {
+                       if (details.primaryVelocity != null &&
+                           details.primaryVelocity! < -400) {
+                         await onQueueSwipe();
+@@ -390,7 +386,6 @@ class AnimatedSongScene extends StatelessWidget {
+                 valueListenable: playerService.upNextNotifier,
+                 builder: (context, upNext, _) {
+                   final hasQueue = upNext.isNotEmpty;
+-                  final fromLocker = song.isFromLocker;
+                   final nowPlayingContent = Column(
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+@@ -404,17 +399,6 @@ class AnimatedSongScene extends StatelessWidget {
+                           letterSpacing: 0.8,
+                         ),
+                       ),
+-                      if (fromLocker) ...[
+-                        SizedBox(height: context.responsive(2.0, 3.0, 4.0)),
+-                        Text(
+-                          'opened from Locker',
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: context.responsive(10.0, 10.5, 11.0),
+-                            color: Colors.white.withValues(alpha: 0.7),
+-                          ),
+-                        ),
+-                      ],
+                     ],
+                   );
+ 
+@@ -423,7 +407,7 @@ class AnimatedSongScene extends StatelessWidget {
+                     padding: EdgeInsets.fromLTRB(
+                       context.responsive(12.0, 14.0, 16.0),
+                       context.responsive(6.0, 7.0, 8.0),
+-                      (!fromLocker && !hideQueueBadge)
++                      (!hideQueueBadge)
+                           ? context.responsive(10.0, 11.0, 12.0)
+                           : context.responsive(12.0, 14.0, 16.0),
+                       context.responsive(6.0, 7.0, 8.0),
+@@ -441,7 +425,7 @@ class AnimatedSongScene extends StatelessWidget {
+                       mainAxisSize: MainAxisSize.min,
+                       children: [
+                         nowPlayingContent,
+-                        if (!fromLocker && !hideQueueBadge) ...[
++                        if (!hideQueueBadge) ...[
+                           SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+                           _buildQueueSummaryBadge(
+                             context,
+@@ -466,10 +450,6 @@ class AnimatedSongScene extends StatelessWidget {
+           Row(
+             mainAxisSize: MainAxisSize.min,
+             children: [
+-              if (song.isFromLocker) ...[
+-                _buildReturnToLockerButton(context),
+-                SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
+-              ],
+               _buildChromeButton(
+                 context,
+                 icon: Icons.more_vert,
+@@ -482,45 +462,6 @@ class AnimatedSongScene extends StatelessWidget {
+     );
+   }
+ 
+-  Widget _buildReturnToLockerButton(BuildContext context) {
+-    return GestureDetector(
+-      onTap: () {
+-        unawaited(onReturnToLocker());
+-      },
+-      child: Container(
+-        padding: EdgeInsets.symmetric(
+-          horizontal: context.responsive(12.0, 14.0, 16.0),
+-          vertical: context.responsive(10.0, 11.0, 12.0),
+-        ),
+-        decoration: BoxDecoration(
+-          color: const Color(0xFF121212).withValues(alpha: 0.76),
+-          borderRadius: BorderRadius.circular(999),
+-          border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+-        ),
+-        child: Row(
+-          mainAxisSize: MainAxisSize.min,
+-          children: [
+-            Icon(
+-              LucideIcons.undo2,
+-              size: context.responsive(14.0, 15.0, 16.0),
+-              color: Colors.white.withValues(alpha: 0.9),
+-            ),
+-            SizedBox(width: context.responsive(6.0, 7.0, 8.0)),
+-            Text(
+-              'Back to Locker',
+-              style: TextStyle(
+-                fontFamily: 'ProductSans',
+-                fontSize: context.responsive(11.0, 12.0, 13.0),
+-                fontWeight: FontWeight.w600,
+-                color: Colors.white.withValues(alpha: 0.92),
+-              ),
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-
+   Widget _buildQueueSummaryBadge(
+     BuildContext context, {
+     required int count,
+diff --git a/lib/features/player/widgets/mini_player.dart b/lib/features/player/widgets/mini_player.dart
+index 86e3bbd4..5b1f67df 100644
+--- a/lib/features/player/widgets/mini_player.dart
++++ b/lib/features/player/widgets/mini_player.dart
+@@ -244,7 +244,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
+                       ),
+ 
+                       // Controls
+-                      if (!song.isFromLocker)
+                         ValueListenableBuilder<List<Song>>(
+                           valueListenable: _playerService.upNextNotifier,
+                           builder: (context, upNext, _) {
+diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
+index d9b5750b..8baf1866 100644
+--- a/lib/features/player/widgets/song_actions_sheet.dart
++++ b/lib/features/player/widgets/song_actions_sheet.dart
+@@ -181,7 +181,6 @@ class SongActionsSheet extends ConsumerWidget {
+                       child: Column(
+                         mainAxisSize: MainAxisSize.min,
+                         children: [
+-                          if (!activeSong.isFromLocker)
+                             _buildSongActionTile(
+                               context: sheetContext,
+                               icon: LucideIcons.listPlus,
+diff --git a/lib/features/settings/screens/privacy_policy_screen.dart b/lib/features/settings/screens/privacy_policy_screen.dart
+index 3653fd49..e6c58dab 100644
+--- a/lib/features/settings/screens/privacy_policy_screen.dart
++++ b/lib/features/settings/screens/privacy_policy_screen.dart
+@@ -50,11 +50,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
+                           content:
+                               'USB Audio Class 2.0 devices (external DACs/AMPs) are accessed locally for bit-perfect audio playback. No USB device information is transmitted externally.',
+                         ),
+-                        _Section(
+-                          title: 'Moss Ecosystem',
+-                          content:
+-                              'Flick can receive playback handoffs from Locker (another Moss app). Playback intents contain only song file paths/metadata. No personal data is exchanged. The integration is entirely local.',
+-                        ),
+                         _Section(
+                           title: 'Children\'s Privacy',
+                           content:
+diff --git a/lib/models/song.dart b/lib/models/song.dart
+index 5eb53ea4..7d408e05 100644
+--- a/lib/models/song.dart
++++ b/lib/models/song.dart
+@@ -111,8 +111,6 @@ class Song {
+     this.sourcePackage,
+   });
+ 
+-  bool get isFromLocker => sourcePackage == 'com.mossapps.locker';
+-
+   static const _dsdExtensions = {'dsf', 'dff'};
+   static const _wavpackExtension = 'wv';
+ 
+diff --git a/lib/services/external_playback_service.dart b/lib/services/external_playback_service.dart
+index ec23dab5..77def882 100644
+--- a/lib/services/external_playback_service.dart
++++ b/lib/services/external_playback_service.dart
+@@ -15,7 +15,6 @@ class ExternalPlaybackService {
+   static const _channel = MethodChannel(
+     'com.mossapps.flick/integration',
+   );
+-  static const _lockerPackage = 'com.mossapps.locker';
+ 
+   factory ExternalPlaybackService() => _instance;
+ 
+@@ -31,15 +30,6 @@ class ExternalPlaybackService {
+     return _consumePendingExternalPlayback();
+   }
+ 
+-  Future<bool> returnToLocker() async {
+-    try {
+-      return await _channel.invokeMethod<bool>('returnToLocker') ?? false;
+-    } on PlatformException catch (e) {
+-      devLog('Failed to return to Locker: ${e.message}');
+-      return false;
+-    }
+-  }
+-
+   Future<bool> _consumePendingExternalPlayback() async {
+     try {
+       final payload = await _channel.invokeMapMethod<dynamic, dynamic>(
+@@ -82,8 +72,7 @@ class ExternalPlaybackService {
+       final displayName = payload['displayName'] as String?;
+       final mimeType = payload['mimeType'] as String?;
+       final sourcePackage =
+-          (payload['sourcePackage'] as String?) ??
+-          ((payload['fromLocker'] == true) ? _lockerPackage : null);
++          (payload['sourcePackage'] as String?) ?? null;
+       final song = Song(
+         id: 'external:${DateTime.now().microsecondsSinceEpoch}:$uri',
+         title: _resolveTitle(metadata?.title, displayName, uri),
+@@ -168,10 +157,6 @@ class ExternalPlaybackService {
+       bitDepth: bitDepth,
+     );
+   }
+-
+-  bool isLockerSession(Song? song) {
+-    return song?.isExternal == true && song?.sourcePackage == _lockerPackage;
+-  }
+ }
+ 
+ String _canonicalPlaybackFileType({
+-- 
+2.55.0
+

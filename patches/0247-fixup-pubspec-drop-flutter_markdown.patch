@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 29 Jul 2026 23:07:41 +0700
+Subject: [PATCH] fixup! pubspec: drop flutter_markdown
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
+index 7fd892ef..c3c86ba8 100644
+--- a/lib/features/settings/screens/app_info_settings_screen.dart
++++ b/lib/features/settings/screens/app_info_settings_screen.dart
+@@ -3,7 +3,6 @@ import 'dart:convert';
+ import 'package:flutter/foundation.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:flutter_markdown/flutter_markdown.dart';
+ import 'package:flutter_svg/flutter_svg.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:url_launcher/url_launcher.dart';
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 869b16d1..27125cbe 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -36,7 +36,6 @@ dependencies:
+   flutter:
+     sdk: flutter
+   flutter_cache_manager: ^3.4.1
+-  flutter_markdown: ^0.7.7
+   flutter_riverpod: ^3.0.3
+   flutter_rust_bridge: ^2.12.0
+   flutter_secure_storage: ^10.0.0
+-- 
+2.55.0
+

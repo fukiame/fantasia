@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 10:09:53 +0700
+Subject: [PATCH] pubspec: drop flutter_launcher_icon
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 2a21e1e2..78460d73 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -57,7 +57,6 @@ dependencies:
+ 
+ dev_dependencies:
+   build_runner: ^2.4.13
+-  flutter_launcher_icons: ^0.14.4
+   flutter_lints: ^6.0.0
+   flutter_test:
+     sdk: flutter
+@@ -68,13 +67,6 @@ dev_dependencies:
+   isar_community_generator: ^3.3.2
+   json_serializable: 6.11.2
+ 
+-flutter_launcher_icons:
+-  image_path: "assets/icons/reverse_flick_logo.png"
+-  android: "launcher_icon"
+-  adaptive_icon_background: "#F5F5F5"
+-  adaptive_icon_foreground: "assets/icons/reverse_flick_logo_transparent.png"
+-  adaptive_icon_monochrome: "assets/icons/reverse_flick_logo.png"
+-
+ flutter:
+   uses-material-design: true
+ 
+-- 
+2.55.0
+

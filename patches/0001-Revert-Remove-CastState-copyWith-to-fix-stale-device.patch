@@ -1,0 +1,45 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 23 Aug 2026 23:19:03 +0700
+Subject: [PATCH] Revert "Remove CastState copyWith to fix stale device"
+
+This reverts commit 52dce238cf878dc2cfd1ed8bace69a9e6e8da603.
+
+diff --git a/lib/providers/cast_provider.dart b/lib/providers/cast_provider.dart
+index e07e88ce..fd7cc921 100644
+--- a/lib/providers/cast_provider.dart
++++ b/lib/providers/cast_provider.dart
+@@ -16,8 +16,19 @@ class CastState {
+     this.isDiscovering = false,
+   });
+ 
+-  // ponytail: no copyWith — its `activeDevice ?? old` kept a stale device after
+-  // disconnect. Always build from service notifiers instead.
++  CastState copyWith({
++    List<CastDevice>? devices,
++    CastDevice? activeDevice,
++    bool? isActive,
++    bool? isDiscovering,
++  }) {
++    return CastState(
++      devices: devices ?? this.devices,
++      activeDevice: activeDevice ?? this.activeDevice,
++      isActive: isActive ?? this.isActive,
++      isDiscovering: isDiscovering ?? this.isDiscovering,
++    );
++  }
+ }
+ 
+ final castServiceProvider = Provider<CastingService>((ref) {
+@@ -38,7 +49,7 @@ class CastNotifier extends Notifier<CastState> {
+     );
+ 
+     void sync() {
+-      state = CastState(
++      state = state.copyWith(
+         devices: _service.devicesNotifier.value,
+         activeDevice: _service.activeDeviceNotifier.value,
+         isActive: _service.isActiveNotifier.value,
+-- 
+2.55.0
+

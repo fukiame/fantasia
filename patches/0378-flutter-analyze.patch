@@ -1,0 +1,1336 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 15:18:20 +0700
+Subject: [PATCH] flutter analyze
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/app/app.dart b/lib/app/app.dart
+index ce6af2fb..59ae458e 100644
+--- a/lib/app/app.dart
++++ b/lib/app/app.dart
+@@ -373,7 +373,6 @@ class _MainShellState extends ConsumerState<MainShell>
+     if (_programmaticPageTarget != null || !_pageController.hasClients) return;
+     final page = _pageController.page;
+     if (page == null) return;
+-    final rounded = page.round();
+   }
+ 
+   void _startIdleTimer() {
+@@ -419,15 +418,6 @@ class _MainShellState extends ConsumerState<MainShell>
+       _cancelIdleTimer();
+       unawaited(ref.read(playerServiceProvider).persistLastPlayed());
+       unawaited(ref.read(playerServiceProvider).onAppPaused());
+-
+-      // Attempt to scrobble the current track before the app suspends.
+-      // Only fire if playback is not active — audio apps often keep playing
+-      // in the background, so treat this as a true "end" only when paused.
+-      final playerState = ref.read(playerProvider);
+-      final song = playerState.currentSong;
+-      if (song != null && !song.isExternal && !playerState.isPlaying) {
+-        final notifier = ref.read(playerProvider.notifier);
+-      }
+     }
+     if (state == AppLifecycleState.resumed) {
+       _startIdleTimer();
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index 146f7aa9..e68c37b5 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -54,8 +54,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+   final ScrollController _scrollController = ScrollController();
+   bool _showAppBarActions = false;
+ 
+-  List<AlbumGroup> _moreAlbums = [];
+-  Map<String, List<Song>> _moreArtists = {};
+   Color? _albumColor;
+ 
+   @override
+@@ -252,35 +250,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+     );
+   }
+ 
+-  void _openAlbum(AlbumGroup album) {
+-    Navigator.of(context).push(
+-      MaterialPageRoute<void>(
+-        builder: (_) => AlbumDetailScreen(
+-          albumName: album.albumName,
+-          albumArtist: album.albumArtist,
+-          songs: album.songs,
+-          albumArt: _getArt(album.songs),
+-          albumArtSourcePath: _getSourcePath(album.songs),
+-          playerService: widget.playerService,
+-        ),
+-      ),
+-    );
+-  }
+-
+-  void _openArtist(String artistName, List<Song> songs) {
+-    Navigator.of(context).push(
+-      MaterialPageRoute<void>(
+-        builder: (_) => ArtistDetailScreen(
+-          artistName: artistName,
+-          songs: songs,
+-          artistArt: _getArt(songs),
+-          artistArtSourcePath: _getSourcePath(songs),
+-          playerService: widget.playerService,
+-        ),
+-      ),
+-    );
+-  }
+-
+   @override
+   Widget build(BuildContext context) {
+     final bgColor = _tintBackground(_backgroundBlend);
+@@ -863,206 +832,3 @@ class _SongTile extends StatelessWidget {
+     );
+   }
+ }
+-
+-class _AlbumCard extends StatelessWidget {
+-  final String albumName;
+-  final String albumArtist;
+-  final int songCount;
+-  final String? albumArt;
+-  final String? albumArtSourcePath;
+-  final VoidCallback onTap;
+-
+-  const _AlbumCard({
+-    required this.albumName,
+-    required this.albumArtist,
+-    required this.songCount,
+-    required this.albumArt,
+-    required this.albumArtSourcePath,
+-    required this.onTap,
+-  });
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return GestureDetector(
+-      onTap: onTap,
+-      child: SizedBox(
+-        width: 150,
+-        child: Column(
+-          crossAxisAlignment: CrossAxisAlignment.start,
+-          children: [
+-            AspectRatio(
+-              aspectRatio: 1,
+-              child: Container(
+-                decoration: BoxDecoration(
+-                  color: AppColors.surfaceLight,
+-                  borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-                ),
+-                child: ClipRRect(
+-                  borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-                  child: CachedImageWidget(
+-                    imagePath: albumArt,
+-                    audioSourcePath: albumArtSourcePath,
+-                    fit: BoxFit.cover,
+-                    placeholder: Center(
+-                      child: Icon(
+-                        LucideIcons.disc,
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                    ),
+-                    errorWidget: Center(
+-                      child: Icon(
+-                        LucideIcons.disc,
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              ),
+-            ),
+-            const SizedBox(height: AppConstants.spacingSm),
+-            Text(
+-              albumName,
+-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                color: context.adaptiveTextPrimary,
+-                fontWeight: FontWeight.w600,
+-              ),
+-              maxLines: 1,
+-              overflow: TextOverflow.ellipsis,
+-            ),
+-            const SizedBox(height: 2),
+-            Text(
+-              '$songCount songs',
+-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                color: context.adaptiveTextTertiary,
+-              ),
+-              maxLines: 1,
+-              overflow: TextOverflow.ellipsis,
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+-class _ArtistCard extends StatelessWidget {
+-  final String artistName;
+-  final List<Song> songs;
+-  final VoidCallback onTap;
+-
+-  const _ArtistCard({
+-    required this.artistName,
+-    required this.songs,
+-    required this.onTap,
+-  });
+-
+-  String? _getArt() {
+-    for (final song in songs) {
+-      if (song.albumArt != null && song.albumArt!.isNotEmpty) {
+-        return song.albumArt;
+-      }
+-    }
+-    return null;
+-  }
+-
+-  String? _getSourcePath() {
+-    for (final song in songs) {
+-      if (song.albumArt != null && song.albumArt!.isNotEmpty) {
+-        final fp = song.filePath;
+-        if (fp != null && fp.isNotEmpty) return fp;
+-      }
+-    }
+-    for (final song in songs) {
+-      if (song.filePath != null && song.filePath!.isNotEmpty) {
+-        return song.filePath;
+-      }
+-    }
+-    return null;
+-  }
+-
+-  String _getInitials(String name) {
+-    final words = name.split(' ');
+-    if (words.length >= 2) {
+-      return '${words[0][0]}${words[1][0]}'.toUpperCase();
+-    } else if (name.isNotEmpty) {
+-      return name[0].toUpperCase();
+-    }
+-    return '?';
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final uniqueAlbums = songs.map((s) => s.album ?? 'Unknown').toSet().length;
+-
+-    return GestureDetector(
+-      onTap: onTap,
+-      child: SizedBox(
+-        width: 120,
+-        child: Column(
+-          crossAxisAlignment: CrossAxisAlignment.center,
+-          children: [
+-            Container(
+-              width: 100,
+-              height: 100,
+-              decoration: BoxDecoration(
+-                shape: BoxShape.circle,
+-                color: AppColors.surfaceLight,
+-                border: Border.all(color: AppColors.surfaceDark, width: 2),
+-              ),
+-              child: ClipOval(
+-                child: CachedImageWidget(
+-                  imagePath: _getArt(),
+-                  audioSourcePath: _getSourcePath(),
+-                  fit: BoxFit.cover,
+-                  placeholder: Center(
+-                    child: Text(
+-                      _getInitials(artistName),
+-                      style: Theme.of(
+-                        context,
+-                      ).textTheme.titleLarge?.copyWith(
+-                        color: context.adaptiveTextSecondary,
+-                        fontWeight: FontWeight.bold,
+-                      ),
+-                    ),
+-                  ),
+-                  errorWidget: Center(
+-                    child: Text(
+-                      _getInitials(artistName),
+-                      style: Theme.of(
+-                        context,
+-                      ).textTheme.titleLarge?.copyWith(
+-                        color: context.adaptiveTextSecondary,
+-                        fontWeight: FontWeight.bold,
+-                      ),
+-                    ),
+-                  ),
+-                ),
+-              ),
+-            ),
+-            const SizedBox(height: AppConstants.spacingSm),
+-            Text(
+-              artistName,
+-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                color: context.adaptiveTextPrimary,
+-                fontWeight: FontWeight.w600,
+-              ),
+-              maxLines: 1,
+-              overflow: TextOverflow.ellipsis,
+-              textAlign: TextAlign.center,
+-            ),
+-            const SizedBox(height: 2),
+-            Text(
+-              '${songs.length} songs • $uniqueAlbums albums',
+-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                color: context.adaptiveTextTertiary,
+-              ),
+-              maxLines: 1,
+-              overflow: TextOverflow.ellipsis,
+-              textAlign: TextAlign.center,
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-}
+diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
+index fd757801..31956cdb 100644
+--- a/lib/features/albums/screens/albums_screen.dart
++++ b/lib/features/albums/screens/albums_screen.dart
+@@ -133,9 +133,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+     return null;
+   }
+ 
+-  int get _totalTracks =>
+-      _albums.fold(0, (count, album) => count + album.songs.length);
+-
+   void _openAlbumDetail(AlbumGroup album) {
+     NavigationHelper.pushFade(
+       context,
+@@ -246,38 +243,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+     );
+   }
+ 
+-  Widget _buildInfoChip(
+-    BuildContext context, {
+-    required IconData icon,
+-    required String label,
+-  }) {
+-    return Container(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingMd,
+-        vertical: AppConstants.spacingSm,
+-      ),
+-      decoration: BoxDecoration(
+-        color: AppColors.glassBackgroundStrong,
+-        borderRadius: BorderRadius.circular(999),
+-        border: Border.all(color: AppColors.glassBorder),
+-      ),
+-      child: Row(
+-        mainAxisSize: MainAxisSize.min,
+-        children: [
+-          Icon(icon, size: 16, color: AppColors.accent),
+-          const SizedBox(width: AppConstants.spacingXs),
+-          Text(
+-            label,
+-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-              color: context.adaptiveTextPrimary,
+-              fontWeight: FontWeight.w600,
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+   Widget _buildLoadingState() {
+     return Center(
+       child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
+diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
+index 92737114..fe5e2673 100644
+--- a/lib/features/artists/screens/artist_detail_screen.dart
++++ b/lib/features/artists/screens/artist_detail_screen.dart
+@@ -55,7 +55,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+   bool _showAppBarActions = false;
+ 
+   List<AlbumGroup> _artistAlbums = [];
+-  bool _isLoadingExtras = true;
+   String? _artistArt;
+   String? _artistArtSourcePath;
+   Color? _artistColor;
+diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
+index e7deadd9..11bcd669 100644
+--- a/lib/features/artists/screens/artists_screen.dart
++++ b/lib/features/artists/screens/artists_screen.dart
+@@ -115,14 +115,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+         .toList();
+   }
+ 
+-  int get _totalSongs =>
+-      _artists.values.fold(0, (count, songs) => count + songs.length);
+-
+-  int get _totalAlbums => _artists.values
+-      .expand((songs) => songs.map((s) => s.album ?? 'Unknown'))
+-      .toSet()
+-      .length;
+-
+   String? _getArtistArt(List<Song> songs) {
+     for (final song in songs) {
+       if (song.albumArt != null && song.albumArt!.isNotEmpty) {
+@@ -303,38 +295,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+     );
+   }
+ 
+-  Widget _buildInfoChip(
+-    BuildContext context, {
+-    required IconData icon,
+-    required String label,
+-  }) {
+-    return Container(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingMd,
+-        vertical: AppConstants.spacingSm,
+-      ),
+-      decoration: BoxDecoration(
+-        color: AppColors.glassBackgroundStrong,
+-        borderRadius: BorderRadius.circular(999),
+-        border: Border.all(color: AppColors.glassBorder),
+-      ),
+-      child: Row(
+-        mainAxisSize: MainAxisSize.min,
+-        children: [
+-          Icon(icon, size: 16, color: AppColors.accent),
+-          const SizedBox(width: AppConstants.spacingXs),
+-          Text(
+-            label,
+-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-              color: context.adaptiveTextPrimary,
+-              fontWeight: FontWeight.w600,
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+   Widget _buildLoadingState() {
+     return Center(
+       child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
+@@ -598,7 +558,6 @@ class _ArtistSortSheet extends ConsumerWidget {
+ 
+   @override
+   Widget build(BuildContext context, WidgetRef ref) {
+-    final prefs = ref.watch(appPreferencesProvider);
+     return SafeArea(
+       top: false,
+       child: Container(
+@@ -734,57 +693,4 @@ class _ArtistSortSheet extends ConsumerWidget {
+         return 'Album Count';
+     }
+   }
+-
+-  Widget _buildToggleTile(
+-    BuildContext context, {
+-    required IconData icon,
+-    required String label,
+-    required String subtitle,
+-    required bool value,
+-    required ValueChanged<bool> onChanged,
+-  }) {
+-    return Material(
+-      color: Colors.transparent,
+-      child: InkWell(
+-        borderRadius: BorderRadius.circular(12),
+-        onTap: () => onChanged(!value),
+-        child: Padding(
+-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+-          child: Row(
+-            children: [
+-              Icon(icon, size: 20, color: context.adaptiveTextSecondary),
+-              const SizedBox(width: 14),
+-              Expanded(
+-                child: Column(
+-                  crossAxisAlignment: CrossAxisAlignment.start,
+-                  children: [
+-                    Text(
+-                      label,
+-                      style: TextStyle(
+-                        fontSize: 15,
+-                        color: context.adaptiveTextPrimary,
+-                      ),
+-                    ),
+-                    const SizedBox(height: 2),
+-                    Text(
+-                      subtitle,
+-                      style: TextStyle(
+-                        fontSize: 12,
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                    ),
+-                  ],
+-                ),
+-              ),
+-              Switch(
+-                value: value,
+-                activeThumbColor: AppColors.accent,
+-                onChanged: onChanged,
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+ }
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index 2ec9f1e5..ad030ab9 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -39,7 +39,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     with TickerProviderStateMixin {
+   final PlayerService _playerService = PlayerService();
+ 
+-  Color? _heroDominantColor;
+   String? _heroColorArtPath;
+   bool _isRefreshing = false;
+   late final AnimationController _refreshController;
+@@ -59,21 +58,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     super.dispose();
+   }
+ 
+-  Future<void> _updateHeroColor(String? artPath, String? filePath) async {
+-    final resolvedPath = artPath ?? filePath;
+-    if (resolvedPath == _heroColorArtPath) return;
+-    _heroColorArtPath = resolvedPath;
+-    if (resolvedPath == null || resolvedPath.isEmpty) {
+-      if (mounted) setState(() => _heroDominantColor = null);
+-      return;
+-    }
+-    final color =
+-        await ColorExtractionService().extractDominantColor(resolvedPath);
+-    if (mounted && _heroColorArtPath == resolvedPath) {
+-      setState(() => _heroDominantColor = color);
+-    }
+-  }
+-
+   Future<void> _refreshHome() async {
+     if (_isRefreshing) return;
+     _isRefreshing = true;
+@@ -96,36 +80,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     );
+   }
+ 
+-  Future<void> _playSongs(
+-    BuildContext context,
+-    List<Song> songs, {
+-    Song? initialSong,
+-    bool shuffle = false,
+-    required String heroSeed,
+-  }) async {
+-    if (songs.isEmpty) return;
+-
+-    final playlist = List<Song>.from(songs);
+-    if (shuffle) {
+-      playlist.shuffle();
+-    }
+-
+-    final songToPlay = initialSong ?? playlist.first;
+-    await _playerService.play(songToPlay, playlist: playlist);
+-
+-    if (!context.mounted) return;
+-    await NavigationHelper.navigateToFullPlayer(
+-      context,
+-      heroTag: '${heroSeed}_${songToPlay.id}',
+-    );
+-  }
+-
+   @override
+   Widget build(BuildContext context) {
+     final songsAsync = ref.watch(songsProvider);
+     final favoritesAsync = ref.watch(favoritesProvider);
+     final playlistsAsync = ref.watch(playlistsProvider);
+-    final currentSong = ref.watch(currentSongProvider);
+     final appPreferences = ref.watch(appPreferencesProvider);
+ 
+     final allSongs = songsAsync.value?.songs ?? const <Song>[];
+@@ -613,15 +572,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+     return unique;
+   }
+-
+-  List<Song> _takeDistinctSongs(List<Song> songs, int limit) {
+-    return _dedupeSongs(songs).take(limit).toList();
+-  }
+-
+-  bool _isAfterHours(DateTime playedAt) {
+-    final hour = playedAt.hour;
+-    return hour >= 21 || hour <= 4;
+-  }
+ }
+ 
+ class _MenuLoadingState extends StatelessWidget {
+@@ -672,159 +622,6 @@ class _MenuLoadingState extends StatelessWidget {
+   }
+ }
+ 
+-class _HeroFeatureTile extends StatelessWidget {
+-  final Song? song;
+-  final String eyebrow;
+-
+-  const _HeroFeatureTile({required this.song, required this.eyebrow});
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Container(
+-      padding: const EdgeInsets.all(AppConstants.spacingMd),
+-      decoration: BoxDecoration(
+-        color: Colors.white.withValues(alpha: 0.08),
+-        borderRadius: BorderRadius.circular(22),
+-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+-      ),
+-      child: Row(
+-        children: [
+-          ClipRRect(
+-            borderRadius: BorderRadius.circular(18),
+-            child: SizedBox(
+-              width: 74,
+-              height: 74,
+-              child: CachedImageWidget(
+-                imagePath: song?.albumArt,
+-                audioSourcePath: song?.filePath,
+-                fit: BoxFit.cover,
+-                useThumbnail: true,
+-                thumbnailWidth: 160,
+-                thumbnailHeight: 160,
+-                placeholder: Container(
+-                  color: Colors.white.withValues(alpha: 0.06),
+-                  child: Icon(
+-                    LucideIcons.music4,
+-                    color: Colors.white.withValues(alpha: 0.72),
+-                  ),
+-                ),
+-                errorWidget: Container(
+-                  color: Colors.white.withValues(alpha: 0.06),
+-                  child: Icon(
+-                    LucideIcons.music4,
+-                    color: Colors.white.withValues(alpha: 0.72),
+-                  ),
+-                ),
+-              ),
+-            ),
+-          ),
+-          const SizedBox(width: AppConstants.spacingMd),
+-          Expanded(
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                Text(
+-                  eyebrow,
+-                  maxLines: 1,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+-                    color: Colors.white.withValues(alpha: 0.7),
+-                    letterSpacing: 0.5,
+-                  ),
+-                ),
+-                const SizedBox(height: AppConstants.spacingXxs),
+-                Text(
+-                  song?.title ?? 'No featured track yet',
+-                  maxLines: 1,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                    color: Colors.white,
+-                    fontWeight: FontWeight.w700,
+-                  ),
+-                ),
+-                const SizedBox(height: AppConstants.spacingXxs),
+-                Text(
+-                  song?.artist ?? 'Start playing to populate this space',
+-                  maxLines: 2,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                    color: Colors.white.withValues(alpha: 0.72),
+-                    height: 1.35,
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-}
+-
+-class _HeroActionButton extends StatelessWidget {
+-  final String label;
+-  final IconData icon;
+-  final bool isPrimary;
+-  final VoidCallback onTap;
+-
+-  const _HeroActionButton({
+-    required this.label,
+-    required this.icon,
+-    required this.onTap,
+-  }) : isPrimary = false;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Material(
+-      color: Colors.transparent,
+-      child: InkWell(
+-        onTap: onTap,
+-        borderRadius: BorderRadius.circular(999),
+-        child: Ink(
+-          padding: const EdgeInsets.symmetric(
+-            horizontal: AppConstants.spacingMd,
+-            vertical: AppConstants.spacingSm,
+-          ),
+-          decoration: BoxDecoration(
+-            borderRadius: BorderRadius.circular(999),
+-            color: isPrimary
+-                ? Colors.white
+-                : Colors.white.withValues(alpha: 0.09),
+-            border: Border.all(
+-              color: isPrimary
+-                  ? Colors.white
+-                  : Colors.white.withValues(alpha: 0.14),
+-            ),
+-          ),
+-          child: Row(
+-            mainAxisSize: MainAxisSize.max,
+-            mainAxisAlignment: MainAxisAlignment.center,
+-            children: [
+-              Icon(
+-                icon,
+-                size: 16,
+-                color: isPrimary ? AppColors.background : Colors.white,
+-              ),
+-              const SizedBox(width: AppConstants.spacingXs),
+-              Flexible(
+-                child: Text(
+-                  label,
+-                  maxLines: 1,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+-                    color: isPrimary ? AppColors.background : Colors.white,
+-                    fontWeight: FontWeight.w700,
+-                  ),
+-                ),
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _QuickAccessItem {
+   final String title;
+   final String subtitle;
+@@ -933,83 +730,6 @@ class _QuickAccessCard extends StatelessWidget {
+   }
+ }
+ 
+-class _ArtistShelfCard extends StatelessWidget {
+-  final _ArtistSpotlight artist;
+-  final VoidCallback onTap;
+-
+-  const _ArtistShelfCard({required this.artist, required this.onTap});
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Material(
+-      color: Colors.transparent,
+-      child: InkWell(
+-        onTap: onTap,
+-        borderRadius: BorderRadius.circular(24),
+-        child: Ink(
+-          width: 138,
+-          padding: const EdgeInsets.all(AppConstants.spacingMd),
+-          decoration: BoxDecoration(
+-            color: AppColors.surface.withValues(alpha: 0.72),
+-            borderRadius: BorderRadius.circular(24),
+-            border: Border.all(color: AppColors.glassBorder),
+-          ),
+-          child: Column(
+-            children: [
+-              Container(
+-                width: 84,
+-                height: 84,
+-                decoration: BoxDecoration(
+-                  shape: BoxShape.circle,
+-                  border: Border.all(color: AppColors.glassBorder),
+-                ),
+-                child: ClipOval(
+-                  child: artist.artPath != null
+-                      ? CachedImageWidget(
+-                          imagePath: artist.artPath!,
+-                          fit: BoxFit.cover,
+-                          useThumbnail: true,
+-                          thumbnailWidth: 180,
+-                          thumbnailHeight: 180,
+-                        )
+-                      : Container(
+-                          color: AppColors.glassBackgroundStrong,
+-                          child: Icon(
+-                            LucideIcons.user,
+-                            color: context.adaptiveTextSecondary,
+-                          ),
+-                        ),
+-                ),
+-              ),
+-              const SizedBox(height: AppConstants.spacingSm),
+-              Text(
+-                artist.name,
+-                maxLines: 1,
+-                overflow: TextOverflow.ellipsis,
+-                textAlign: TextAlign.center,
+-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                  color: context.adaptiveTextPrimary,
+-                  fontWeight: FontWeight.w700,
+-                ),
+-              ),
+-              const SizedBox(height: AppConstants.spacingXxs),
+-              Text(
+-                '${artist.plays} plays',
+-                maxLines: 1,
+-                overflow: TextOverflow.ellipsis,
+-                textAlign: TextAlign.center,
+-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                  color: context.adaptiveTextTertiary,
+-                ),
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _PlaylistPreviewCard extends StatelessWidget {
+   final _PlaylistPreview preview;
+   final VoidCallback onTap;
+@@ -1348,21 +1068,6 @@ class _ArtistSpotlight {
+   });
+ }
+ 
+-class _ArtistSpotlightAccumulator {
+-  final String name;
+-  final Set<String> uniqueSongIds = <String>{};
+-  int plays = 0;
+-  String? artPath;
+-
+-  _ArtistSpotlightAccumulator({required this.name});
+-
+-  void add(Song song) {
+-    plays += 1;
+-    uniqueSongIds.add(song.id);
+-    artPath ??= song.albumArt;
+-  }
+-}
+-
+ class _PlaylistPreview {
+   final Playlist playlist;
+   final String? coverArtPath;
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index a918da71..2193e1ff 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -17,7 +17,6 @@ import 'package:flick/models/album_color_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/external_playback_service.dart';
+ import 'package:flick/services/favorites_service.dart';
+ 
+ import 'package:flick/widgets/uac2/iso_volume_popup.dart';
+@@ -34,8 +33,6 @@ class FullPlayerScreen extends ConsumerStatefulWidget {
+ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     with TickerProviderStateMixin {
+   final PlayerService _playerService = PlayerService();
+-  final ExternalPlaybackService _externalPlaybackService =
+-      ExternalPlaybackService();
+   final FavoritesService _favoritesService = FavoritesService();
+   final SongRepository _songRepository = SongRepository();
+   late final PlayerNavigation _navigation = PlayerNavigation(
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 6aadc698..0ecc4cd9 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -619,11 +619,6 @@ class AnimatedSongScene extends StatelessWidget {
+     final diagnostics = ProviderScope.containerOf(
+       context,
+     ).read(audioOutputDiagnosticsProvider);
+-    final appPrefs = ProviderScope.containerOf(
+-      context,
+-    ).read(appPreferencesProvider);
+-    final isBitPerfectVerified =
+-        diagnostics?.capabilityFlags.supportsVerifiedBitPerfect == true;
+     final hasAlbum = song.album != null && song.album!.trim().isNotEmpty;
+ 
+     return Column(
+diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
+index 3feeecac..ec62c13a 100644
+--- a/lib/features/player/widgets/waveform_layer.dart
++++ b/lib/features/player/widgets/waveform_layer.dart
+@@ -61,7 +61,6 @@ class _WaveformLayerState extends State<WaveformLayer>
+   Widget build(BuildContext context) {
+     return Consumer(
+       builder: (context, ref, _) {
+-        final style = ref.watch(progressBarStyleProvider);
+         return AnimatedBuilder(
+           animation: _appearAnimation,
+           builder: (context, _) {
+diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
+index c1234cd8..db804ca2 100644
+--- a/lib/features/settings/screens/app_info_settings_screen.dart
++++ b/lib/features/settings/screens/app_info_settings_screen.dart
+@@ -30,13 +30,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
+       duration: const Duration(milliseconds: 2000),
+       vsync: this,
+     );
+-    _donationPulseAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+-      CurvedAnimation(
+-        parent: _donationPulseController,
+-        curve: Curves.easeInOut,
+-      ),
+-    );
+-    _donationPulseController.repeat(reverse: true);
+   }
+ 
+   @override
+@@ -45,14 +38,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
+     super.dispose();
+   }
+ 
+-  void _showToast(String message) {
+-    final messenger = ScaffoldMessenger.of(context);
+-    messenger.removeCurrentSnackBar();
+-    messenger.showSnackBar(
+-      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+-    );
+-  }
+-
+   static const String _flickLicenseText = '''
+ MIT License
+ 
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index 8dfbf6f1..76ee86fa 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -1348,7 +1348,6 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+   @override
+   Widget build(BuildContext context) {
+     final libraryScanPreferences = ref.watch(libraryScanPreferencesProvider);
+-    final appPreferences = ref.watch(appPreferencesProvider);
+ 
+     return SettingsScaffold(
+       title: 'Library',
+diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
+index 4c1c1195..b3d06588 100644
+--- a/lib/features/settings/screens/logs_screen.dart
++++ b/lib/features/settings/screens/logs_screen.dart
+@@ -83,11 +83,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+     );
+   }
+ 
+-  void _snack(String message) {
+-    if (!mounted) return;
+-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+-  }
+-
+   Future<void> _saveAsText(List<LogEntry> entries) async {
+     if (entries.isEmpty) return;
+     final stamp = DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 1017e89e..8883783c 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -252,70 +252,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+   }
+ }
+ 
+-String _fileInfoLabel(Song? song) {
+-  if (song == null) return '';
+-  final type = song.fileType;
+-  final res = song.resolution;
+-  if (res != null && res.isNotEmpty) return '$type  $res';
+-  return type;
+-}
+-
+-class _AlbumArtThumb extends StatelessWidget {
+-  const _AlbumArtThumb({
+-    required this.song,
+-    required this.size,
+-    required this.radius,
+-  });
+-
+-  final Song? song;
+-  final double size;
+-  final double radius;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return ClipRRect(
+-      borderRadius: BorderRadius.circular(radius),
+-      child: SizedBox(
+-        width: size,
+-        height: size,
+-        child: CachedImageWidget(
+-          imagePath: song?.albumArt,
+-          audioSourcePath: song?.filePath,
+-          fit: BoxFit.cover,
+-          placeholder: Container(
+-            decoration: const BoxDecoration(
+-              gradient: LinearGradient(
+-                begin: Alignment.topLeft,
+-                end: Alignment.bottomRight,
+-                colors: [Color(0xFF4B3D7A), Color(0xFF111111)],
+-              ),
+-            ),
+-            child: const Icon(
+-              Icons.music_note_rounded,
+-              color: Color(0xFF555555),
+-              size: 32,
+-            ),
+-          ),
+-          errorWidget: Container(
+-            decoration: const BoxDecoration(
+-              gradient: LinearGradient(
+-                begin: Alignment.topLeft,
+-                end: Alignment.bottomRight,
+-                colors: [Color(0xFF4B3D7A), Color(0xFF111111)],
+-              ),
+-            ),
+-            child: const Icon(
+-              Icons.music_note_rounded,
+-              color: Color(0xFF555555),
+-              size: 32,
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _ActionButtonPickerScreen extends ConsumerWidget {
+   const _ActionButtonPickerScreen({
+     required this.title,
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index f5690249..1e35e08c 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -129,7 +129,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+ 
+     final sortOption =
+         songsAsync.value?.sortOption ?? SongSortOption.albumArtist;
+-    final isAlbumMode = sortOption == SongSortOption.album;
+ 
+     return Stack(
+         clipBehavior: Clip.none,
+@@ -2761,9 +2760,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+   late _AlbumGridSortOption _selectedSort;
+   late SongFileTypeFilter _selectedFilter;
+ 
+-  static const double _minPageSize = 1;
+-  static const double _maxPageSize = 30;
+-
+   @override
+   void initState() {
+     super.initState();
+diff --git a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
+index b6bd53b2..65e2644f 100644
+--- a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
++++ b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
+@@ -56,9 +56,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+   final PlayerService _playerService = PlayerService();
+ 
+   final List<AlbumArtCandidate> _candidates = const [];
+-  String? _searchError;
+   final int _selectedCandidateIndex = 0;
+-  final bool _isSearching = false;
+   bool _isWorking = false;
+   late bool _hasCustomArtwork;
+   AlbumArtScope _scope = AlbumArtScope.wholeAlbum;
+@@ -457,63 +455,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+     );
+   }
+ 
+-  Widget _buildInfoCard(
+-    BuildContext context, {
+-    required IconData icon,
+-    required String title,
+-    required String subtitle,
+-  }) {
+-    return Container(
+-      width: double.infinity,
+-      padding: const EdgeInsets.all(AppConstants.spacingMd),
+-      decoration: BoxDecoration(
+-        color: AppColors.surfaceLight,
+-        borderRadius: BorderRadius.circular(18),
+-        border: Border.all(color: AppColors.glassBorder),
+-      ),
+-      child: Row(
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          Container(
+-            width: 36,
+-            height: 36,
+-            decoration: BoxDecoration(
+-              color: AppColors.surface,
+-              borderRadius: BorderRadius.circular(12),
+-            ),
+-            child: Icon(icon, size: 18, color: context.adaptiveTextSecondary),
+-          ),
+-          const SizedBox(width: AppConstants.spacingSm),
+-          Expanded(
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                Text(
+-                  title,
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: 14,
+-                    fontWeight: FontWeight.w700,
+-                    color: context.adaptiveTextPrimary,
+-                  ),
+-                ),
+-                const SizedBox(height: 4),
+-                Text(
+-                  subtitle,
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: 13,
+-                    color: context.adaptiveTextSecondary,
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+   Widget _buildDragHandle() {
+     return Center(
+       child: Container(
+diff --git a/lib/providers/player_provider.dart b/lib/providers/player_provider.dart
+index 5d1c824a..0f827579 100644
+--- a/lib/providers/player_provider.dart
++++ b/lib/providers/player_provider.dart
+@@ -175,7 +175,6 @@ class PlayerNotifier extends Notifier<PlayerState> {
+       final latestPosition = _service.positionNotifier.value;
+       final latestPositionSeconds = latestPosition.inSeconds;
+       final latestSong = _service.currentSongNotifier.value;
+-      final latestDurationSeconds = _service.durationNotifier.value.inSeconds;
+ 
+       final isSameTrack =
+           latestSong != null && latestSong.id == _lastTrackedSong?.id;
+diff --git a/lib/services/album_art_import_service.dart b/lib/services/album_art_import_service.dart
+index 35f5fc0f..3e4c6112 100644
+--- a/lib/services/album_art_import_service.dart
++++ b/lib/services/album_art_import_service.dart
+@@ -229,113 +229,14 @@ class AlbumArtImportService {
+     return file;
+   }
+ 
+-  List<AlbumArtCandidate> _dedupeCandidates(
+-    List<AlbumArtCandidate> candidates,
+-  ) {
+-    final deduped = <String, AlbumArtCandidate>{};
+-    for (final candidate in candidates) {
+-      deduped.putIfAbsent(candidate.imageUrl, () => candidate);
+-    }
+-    return deduped.values.take(12).toList(growable: false);
+-  }
+-
+-  String _buildMusicBrainzQuery({
+-    required String titleField,
+-    required String album,
+-    required String artist,
+-  }) {
+-    final clauses = <String>['$titleField:"${_escapeQueryValue(album)}"'];
+-    if (artist.trim().isNotEmpty) {
+-      clauses.add('artist:"${_escapeQueryValue(artist)}"');
+-    }
+-    return clauses.join(' AND ');
+-  }
+-
+   String _escapeQueryValue(String value) {
+     return value.replaceAll('"', ' ').trim();
+   }
+ 
+-  String _artistCreditLabel(Object? artistCredit) {
+-    if (artistCredit is! List) {
+-      return '';
+-    }
+-
+-    final parts = <String>[];
+-    for (final item in artistCredit) {
+-      if (item is! Map<String, dynamic>) {
+-        continue;
+-      }
+-
+-      final name = (item['name'] as String?)?.trim();
+-      if (name != null && name.isNotEmpty) {
+-        parts.add(name);
+-      }
+-
+-      final joinPhrase = item['joinphrase'] as String?;
+-      if (joinPhrase != null && joinPhrase.isNotEmpty) {
+-        parts.add(joinPhrase);
+-      }
+-    }
+-
+-    return parts.join();
+-  }
+-
+-  int _matchScore({
+-    required String title,
+-    required String artist,
+-    required String album,
+-    required String expectedArtist,
+-    String? primaryType,
+-  }) {
+-    final normalizedTitle = _normalize(title);
+-    final normalizedAlbum = _normalize(album);
+-    final normalizedArtist = _normalize(artist);
+-    final normalizedExpectedArtist = _normalize(expectedArtist);
+-
+-    var score = 0;
+-    if (normalizedTitle == normalizedAlbum) {
+-      score += 120;
+-    } else if (normalizedTitle.contains(normalizedAlbum) ||
+-        normalizedAlbum.contains(normalizedTitle)) {
+-      score += 70;
+-    }
+-
+-    if (normalizedExpectedArtist.isNotEmpty) {
+-      if (normalizedArtist == normalizedExpectedArtist) {
+-        score += 60;
+-      } else if (normalizedArtist.contains(normalizedExpectedArtist) ||
+-          normalizedExpectedArtist.contains(normalizedArtist)) {
+-        score += 30;
+-      }
+-    }
+-
+-    if ((primaryType ?? '').toLowerCase() == 'album') {
+-      score += 10;
+-    }
+-
+-    return score;
+-  }
+-
+   String _normalize(String value) {
+     return value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), ' ').trim();
+   }
+ 
+-  String? _searchAlbumName(Song song) {
+-    final album = song.album?.trim();
+-    if (album == null || album.isEmpty) {
+-      return null;
+-    }
+-    return album;
+-  }
+-
+-  String _searchArtistName(Song song) {
+-    final albumArtist = song.albumArtist?.trim();
+-    if (albumArtist != null && albumArtist.isNotEmpty) {
+-      return albumArtist;
+-    }
+-    return song.artist.trim();
+-  }
+-
+   bool _looksLikeImage(Uint8List bytes) {
+     if (bytes.isEmpty) {
+       return false;
+@@ -381,11 +282,4 @@ class AlbumArtImportService {
+ 
+     return false;
+   }
+-
+-  AlbumArtImportException _asImportException(Object error) {
+-    if (error is AlbumArtImportException) {
+-      return error;
+-    }
+-    return const AlbumArtImportException('Failed to search album art online.');
+-  }
+ }
+diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
+index 357c8aeb..fc2c1752 100644
+--- a/lib/services/audio_preload_service.dart
++++ b/lib/services/audio_preload_service.dart
+@@ -30,8 +30,6 @@ class PreloadProgress {
+ /// capped at [_concurrency]; honours [cancel].
+ class AudioPreloadService {
+   static const int _concurrency = 2;
+-  static const int _peakBuckets = 240;
+-  static const int _currentVersion = 1;
+ 
+   final SongRepository _songRepository;
+   final AlbumArtService _albumArtService;
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 2312ba4c..6259f99e 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -307,7 +307,6 @@ class PlayerService {
+   just_audio.AudioPlayer? _justAudioPlayer;
+ 
+   final NotificationService _notificationService = NotificationService();
+-  bool _appInForeground = true;
+   final LastPlayedService _lastPlayedService = LastPlayedService();
+   final FavoritesService _favoritesService = FavoritesService();
+   final Uac2PreferencesService _preferencesService = Uac2PreferencesService();
+@@ -760,7 +759,6 @@ class PlayerService {
+ 
+   Future<void> onAppPaused() async {
+     if (!Platform.isAndroid) return;
+-    _appInForeground = false;
+     /*
+     final enabled = await _appPreferencesService.getFloatingPlayerEnabled();
+     if (!enabled) return;
+@@ -769,7 +767,6 @@ class PlayerService {
+   }
+ 
+   Future<void> onAppResumed() async {
+-    _appInForeground = true;
+     /*
+     if (_floatingPlayerActive) {
+       await _deactivateFloatingPlayer();
+@@ -2164,11 +2161,6 @@ class PlayerService {
+       _replayPlayTracker.syncPosition(songId: song.id, position: position);
+       return;
+     }
+-
+-    final counted = _replayPlayTracker.onPositionChanged(
+-      songId: song.id,
+-      position: position,
+-    );
+   }
+ 
+   void _setupRustAudioListeners() {
+@@ -3729,19 +3721,6 @@ class PlayerService {
+     }
+   }
+ 
+-  /// Called by the just_audio engine after a crossfade swap completes. The
+-  /// engine's emitted PlaybackState already drives currentSongNotifier, index
+-  /// sync, notification, replay tracking and position save via
+-  /// [_bindPlaybackState]; this only covers the two gaps that path leaves out.
+-  void _onAndroidTrackAdvanced(Song song) {
+-    final index = _playlist.indexWhere((entry) => entry.id == song.id);
+-    if (index >= 0) {
+-      _setCurrentIndex(index);
+-    }
+-    _consumeQueueEntryAt(_currentIndex);
+-    _updatePriorityAnchor();
+-  }
+-
+   Future<void> _savePosition({Song? song, Duration? position}) async {
+     final resolvedSong = song ?? currentSongNotifier.value;
+     if (!_shouldPersistSong(resolvedSong)) return;
+-- 
+2.55.0
+
