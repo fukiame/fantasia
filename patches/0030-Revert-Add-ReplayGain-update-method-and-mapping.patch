@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:46:18 +0700
+Subject: [PATCH] Revert "Add ReplayGain update method and mapping"
+
+This reverts commit 83a0a5e31ff8d2dcd16d0a912ddfefbdbad68a4f.
+
+diff --git a/lib/data/repositories/song_repository.dart b/lib/data/repositories/song_repository.dart
+index f162c7be..08315f33 100644
+--- a/lib/data/repositories/song_repository.dart
++++ b/lib/data/repositories/song_repository.dart
+@@ -117,37 +117,6 @@ class SongRepository {
+     });
+   }
+ 
+-  /// Persist ReplayGain metadata for a path (written by the ReplayGain
+-  /// scanner, which keeps the DB in sync with the file tags). Applies to
+-  /// every entity sharing the path (CUE tracks included).
+-  Future<void> updateReplayGainForPath(
+-    String filePath, {
+-    required double? trackGainDb,
+-    required double? trackPeak,
+-    required double? albumGainDb,
+-    required double? albumPeak,
+-  }) async {
+-    if (filePath.isEmpty) return;
+-
+-    await _isar.writeTxn(() async {
+-      final entities = await _isar.songEntitys
+-          .where()
+-          .filePathEqualToAnyStartOffsetMs(filePath)
+-          .findAll();
+-
+-      for (final entity in entities) {
+-        entity
+-          ..replaygainTrackGain = trackGainDb
+-          ..replaygainTrackPeak = trackPeak
+-          ..replaygainAlbumGain = albumGainDb
+-          ..replaygainAlbumPeak = albumPeak;
+-      }
+-      if (entities.isNotEmpty) {
+-        await _isar.songEntitys.putAll(entities);
+-      }
+-    });
+-  }
+-
+   /// Delete a song by ID.
+   Future<void> deleteSong(int id) async {
+     await _isar.writeTxn(() async {
+@@ -483,10 +452,6 @@ class SongRepository {
+       resolution: _buildResolutionString(entity),
+       sampleRate: entity.sampleRate,
+       bitDepth: entity.bitDepth,
+-      replaygainTrackGain: entity.replaygainTrackGain,
+-      replaygainTrackPeak: entity.replaygainTrackPeak,
+-      replaygainAlbumGain: entity.replaygainAlbumGain,
+-      replaygainAlbumPeak: entity.replaygainAlbumPeak,
+       startOffsetMs: entity.startOffsetMs,
+       endOffsetMs: entity.endOffsetMs,
+       ripper: entity.ripper,
+-- 
+2.55.0
+

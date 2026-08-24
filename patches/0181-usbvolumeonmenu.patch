@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:34:35 +0700
+Subject: [PATCH] usbvolumeonmenu
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index c460c5a5..1c04ad39 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -35,7 +35,6 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/display_mode_wrapper.dart';
+ import 'package:flick/widgets/common/engine_restart_notice.dart';
+ import 'package:flick/widgets/common/glass_bottom_sheet.dart';
+-import 'package:flick/widgets/uac2/uac2_volume_control.dart';
+ 
+ /// Music-home menu screen inspired by streaming app landing pages.
+ class MenuScreen extends ConsumerStatefulWidget {
+@@ -704,27 +703,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                                   : const SizedBox.shrink(),
+                         ),
+                       ),
+-                    if (appPreferences.showUsbVolumeOnMenu)
+-                      SliverToBoxAdapter(
+-                        child: AnimatedSize(
+-                          duration: AppConstants.animationNormal,
+-                          curve: Curves.easeInOut,
+-                          alignment: Alignment.topCenter,
+-                          child: Padding(
+-                            padding: const EdgeInsets.fromLTRB(
+-                              AppConstants.spacingLg,
+-                              0,
+-                              AppConstants.spacingLg,
+-                              AppConstants.spacingMd,
+-                            ),
+-                            child: Uac2VolumeControl(
+-                              useGradientBackground: true,
+-                              gradientColors:
+-                                  _heroGradientColors(_heroDominantColor),
+-                            ),
+-                          ),
+-                        ),
+-                      ),
+                     if (_pendingEngineRestart &&
+                         appPreferences.showEngineSelector)
+                       SliverToBoxAdapter(
+-- 
+2.55.0
+

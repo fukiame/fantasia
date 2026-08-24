@@ -1,0 +1,77 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:46:18 +0700
+Subject: [PATCH] Revert "Add songAddedAt to Playlist model"
+
+This reverts commit 8f597ca090cc08b7a4d9c1c05c4dd59b844ce105.
+
+diff --git a/lib/models/playlist.dart b/lib/models/playlist.dart
+index 1eac9e6d..221bed69 100644
+--- a/lib/models/playlist.dart
++++ b/lib/models/playlist.dart
+@@ -10,11 +10,6 @@ class Playlist {
+   final DateTime? updatedAt;
+   final String? sourcePath;
+ 
+-  /// Timestamp of when each song was added to this playlist, keyed by song id.
+-  /// Songs without an entry (legacy playlists, imported lists) fall back to
+-  /// their position in [songIds] when sorting by "Date Added".
+-  final Map<String, DateTime> songAddedAt;
+-
+   /// True when this playlist is a mirror of a server-side (Subsonic) playlist.
+   bool get isNetworkSource {
+     final path = sourcePath;
+@@ -51,7 +46,6 @@ class Playlist {
+     required this.createdAt,
+     this.updatedAt,
+     this.sourcePath,
+-    this.songAddedAt = const {},
+   });
+ 
+   Playlist copyWith({
+@@ -61,7 +55,6 @@ class Playlist {
+     DateTime? createdAt,
+     DateTime? updatedAt,
+     String? sourcePath,
+-    Map<String, DateTime>? songAddedAt,
+   }) {
+     return Playlist(
+       id: id ?? this.id,
+@@ -70,7 +63,6 @@ class Playlist {
+       createdAt: createdAt ?? this.createdAt,
+       updatedAt: updatedAt ?? this.updatedAt,
+       sourcePath: sourcePath ?? this.sourcePath,
+-      songAddedAt: songAddedAt ?? this.songAddedAt,
+     );
+   }
+ 
+@@ -82,15 +74,10 @@ class Playlist {
+       'createdAt': createdAt.toIso8601String(),
+       'updatedAt': updatedAt?.toIso8601String(),
+       'sourcePath': sourcePath,
+-      'songAddedAt': {
+-        for (final entry in songAddedAt.entries)
+-          entry.key: entry.value.toIso8601String(),
+-      },
+     };
+   }
+ 
+   factory Playlist.fromJson(Map<String, dynamic> json) {
+-    final rawAddedAt = json['songAddedAt'] as Map<String, dynamic>? ?? {};
+     return Playlist(
+       id: json['id'] as String,
+       name: json['name'] as String,
+@@ -100,10 +87,6 @@ class Playlist {
+           ? DateTime.parse(json['updatedAt'] as String)
+           : null,
+       sourcePath: json['sourcePath'] as String?,
+-      songAddedAt: {
+-        for (final entry in rawAddedAt.entries)
+-          entry.key: DateTime.parse(entry.value as String),
+-      },
+     );
+   }
+ 
+-- 
+2.55.0
+

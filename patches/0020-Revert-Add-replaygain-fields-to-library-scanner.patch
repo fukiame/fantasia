@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:45:36 +0700
+Subject: [PATCH] Revert "Add replaygain fields to library scanner"
+
+This reverts commit d596c114aeb3a671a12ad735d5f9d8d82cbf1586.
+
+diff --git a/lib/services/library_scanner_service.dart b/lib/services/library_scanner_service.dart
+index 9b4bd3d9..3a0418d4 100644
+--- a/lib/services/library_scanner_service.dart
++++ b/lib/services/library_scanner_service.dart
+@@ -1573,10 +1573,6 @@ class LibraryScannerService {
+             )
+             ..bitDepth = metadata.bitDepth
+             ..sampleRate = metadata.sampleRate
+-            ..replaygainTrackGain = metadata.replaygainTrackGain
+-            ..replaygainTrackPeak = metadata.replaygainTrackPeak
+-            ..replaygainAlbumGain = metadata.replaygainAlbumGain
+-            ..replaygainAlbumPeak = metadata.replaygainAlbumPeak
+             ..metadataComplete = true;
+ 
+           if (existing != null) {
+-- 
+2.55.0
+

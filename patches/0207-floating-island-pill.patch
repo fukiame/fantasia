@@ -1,0 +1,1455 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 18:54:35 +0700
+Subject: [PATCH] floating{island,pill}
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index bec81ae7..24d4e149 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -20,8 +20,6 @@
+     <uses-permission android:name="android.permission.WAKE_LOCK" />
+     <!-- Visualizer API requires RECORD_AUDIO to read the output mix -->
+     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+-    <!-- System-level floating mini-player overlay -->
+-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+     <!-- Bluetooth: connected-device / codec awareness (runtime-granted on Android 12+) -->
+     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+     <application
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/FloatingPlayerOverlay.kt b/android/app/src/main/kotlin/com/mossapps/flick/FloatingPlayerOverlay.kt
+deleted file mode 100644
+index 0584c5ba..00000000
+--- a/android/app/src/main/kotlin/com/mossapps/flick/FloatingPlayerOverlay.kt
++++ /dev/null
+@@ -1,419 +0,0 @@
+-package com.mossapps.flick
+-
+-import android.animation.ValueAnimator
+-import android.content.Context
+-import android.content.Intent
+-import android.graphics.Bitmap
+-import android.graphics.Color
+-import android.graphics.Outline
+-import android.graphics.PixelFormat
+-import android.os.Build
+-import android.os.Handler
+-import android.os.Looper
+-import android.view.Gravity
+-import android.view.MotionEvent
+-import android.view.View
+-import android.view.ViewGroup
+-import android.view.ViewOutlineProvider
+-import android.view.WindowManager
+-import android.view.animation.AnticipateInterpolator
+-import android.view.animation.OvershootInterpolator
+-import android.widget.FrameLayout
+-import android.widget.ImageView
+-import kotlin.math.abs
+-
+-class FloatingPlayerOverlay(private val context: Context) {
+-
+-    private val windowManager =
+-        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+-    private val mainHandler = Handler(Looper.getMainLooper())
+-
+-    private var isShowing = false
+-    private var albumArt: Bitmap? = null
+-    private var isPlaying: Boolean = false
+-
+-    private var bubbleView: FrameLayout? = null
+-    private var artView: ImageView? = null
+-    private var feedbackContainer: View? = null
+-    private var feedbackIcon: ImageView? = null
+-
+-    private var params: WindowManager.LayoutParams = createParams()
+-    private var snapAnimator: ValueAnimator? = null
+-
+-    private var initialX = 0
+-    private var initialY = 0
+-    private var initialTouchX = 0f
+-    private var initialTouchY = 0f
+-    private var downTime = 0L
+-    private var isDragging = false
+-    private var hasMoved = false
+-    private var longPressTriggered = false
+-
+-    private var tapCount = 0
+-    private val tapTimeoutRunnable = Runnable { flushTaps() }
+-    private val longPressRunnable = Runnable {
+-        if (!hasMoved) {
+-            longPressTriggered = true
+-            // A long-press consumes any pending multi-tap sequence.
+-            mainHandler.removeCallbacks(tapTimeoutRunnable)
+-            tapCount = 0
+-            openApp()
+-            showActionFeedback(R.drawable.ic_notification)
+-        }
+-    }
+-
+-    private val density = context.resources.displayMetrics.density
+-    private fun dp(v: Int) = (v * density).toInt()
+-    private val touchSlop = 8f * density
+-
+-    companion object {
+-        private const val BUBBLE_SIZE = 64
+-        private const val TAP_TIMEOUT = 400L
+-        private const val LONG_PRESS = 500L
+-    }
+-
+-    private fun createParams(): WindowManager.LayoutParams {
+-        val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+-        else
+-            @Suppress("DEPRECATION")
+-            WindowManager.LayoutParams.TYPE_PHONE
+-        return WindowManager.LayoutParams(
+-            WindowManager.LayoutParams.WRAP_CONTENT,
+-            WindowManager.LayoutParams.WRAP_CONTENT,
+-            type,
+-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+-            PixelFormat.TRANSLUCENT
+-        ).apply {
+-            gravity = Gravity.TOP or Gravity.START
+-            x = dp(16)
+-            y = dp(120)
+-        }
+-    }
+-
+-    fun show(
+-        title: String,
+-        artist: String,
+-        art: Bitmap?,
+-        playing: Boolean,
+-        duration: Long = 0,
+-        position: Long = 0
+-    ) {
+-        this.albumArt = art
+-        this.isPlaying = playing
+-        mainHandler.post {
+-            if (isShowing) {
+-                refreshViews()
+-                return@post
+-            }
+-            isShowing = true
+-            val view = buildBubble()
+-            bubbleView = view
+-            try {
+-                windowManager.addView(view, params)
+-                animateAppear(view)
+-            } catch (e: Exception) {
+-                isShowing = false
+-                bubbleView = null
+-                artView = null
+-                feedbackContainer = null
+-                feedbackIcon = null
+-            }
+-        }
+-    }
+-
+-    fun update(
+-        title: String,
+-        artist: String,
+-        art: Bitmap?,
+-        playing: Boolean,
+-        duration: Long = 0,
+-        position: Long = 0
+-    ) {
+-        this.albumArt = art
+-        this.isPlaying = playing
+-        mainHandler.post { refreshViews() }
+-    }
+-
+-    fun hide() {
+-        mainHandler.post {
+-            val view = bubbleView
+-            if (view != null) {
+-                animateDisappear(view) {
+-                    removeAllViews()
+-                }
+-            } else {
+-                removeAllViews()
+-            }
+-        }
+-    }
+-
+-    val shown: Boolean get() = isShowing
+-
+-    private fun removeAllViews() {
+-        snapAnimator?.cancel()
+-        bubbleView?.let { removeViewSafe(it) }
+-        bubbleView = null
+-        artView = null
+-
+-        feedbackContainer = null
+-        feedbackIcon = null
+-        isShowing = false
+-    }
+-
+-    private fun refreshViews() {
+-        val art = albumArt
+-        if (art != null) {
+-            artView?.setImageBitmap(art)
+-        }
+-    }
+-
+-    private fun buildBubble(): FrameLayout {
+-        val frame = FrameLayout(context).apply {
+-            layoutParams = ViewGroup.LayoutParams(dp(BUBBLE_SIZE), dp(BUBBLE_SIZE))
+-            setCircularOutline()
+-        }
+-
+-        val art = ImageView(context).apply {
+-            scaleType = ImageView.ScaleType.CENTER_CROP
+-            val b = albumArt
+-            if (b != null) setImageBitmap(b) else setBackgroundColor(0xFF2D2D3A.toInt())
+-            setCircularOutline()
+-            layoutParams = FrameLayout.LayoutParams(dp(BUBBLE_SIZE), dp(BUBBLE_SIZE)).apply {
+-                gravity = Gravity.CENTER
+-            }
+-        }
+-        artView = art
+-        frame.addView(art)
+-
+-        // Action feedback overlay
+-        val fbContainer = FrameLayout(context).apply {
+-            visibility = View.GONE
+-            setCircularOutline()
+-            layoutParams = FrameLayout.LayoutParams(dp(BUBBLE_SIZE), dp(BUBBLE_SIZE)).apply {
+-                gravity = Gravity.CENTER
+-            }
+-        }
+-        val fbBg = View(context).apply {
+-            setBackgroundColor(0xAA000000.toInt())
+-            setCircularOutline()
+-            layoutParams = FrameLayout.LayoutParams(dp(BUBBLE_SIZE), dp(BUBBLE_SIZE))
+-        }
+-        val fbIcon = ImageView(context).apply {
+-            setColorFilter(Color.WHITE)
+-            scaleType = ImageView.ScaleType.FIT_CENTER
+-            layoutParams = FrameLayout.LayoutParams(dp(26), dp(26)).apply {
+-                gravity = Gravity.CENTER
+-            }
+-        }
+-        fbContainer.addView(fbBg)
+-        fbContainer.addView(fbIcon)
+-        feedbackContainer = fbContainer
+-        feedbackIcon = fbIcon
+-        frame.addView(fbContainer)
+-
+-        frame.setOnTouchListener(dragTouchListener)
+-        return frame
+-    }
+-
+-    private val dragTouchListener = View.OnTouchListener { v, event ->
+-        when (event.actionMasked) {
+-            MotionEvent.ACTION_DOWN -> {
+-                snapAnimator?.cancel()
+-                initialX = params.x
+-                initialY = params.y
+-                initialTouchX = event.rawX
+-                initialTouchY = event.rawY
+-                downTime = System.currentTimeMillis()
+-                isDragging = false
+-                hasMoved = false
+-                longPressTriggered = false
+-                v.animate().scaleX(0.95f).scaleY(0.95f).setDuration(100).start()
+-                mainHandler.postDelayed(longPressRunnable, LONG_PRESS)
+-            }
+-            MotionEvent.ACTION_MOVE -> {
+-                val dx = event.rawX - initialTouchX
+-                val dy = event.rawY - initialTouchY
+-                if (!hasMoved && (abs(dx) > touchSlop || abs(dy) > touchSlop)) {
+-                    isDragging = true
+-                    hasMoved = true
+-                    mainHandler.removeCallbacks(longPressRunnable)
+-                }
+-                if (isDragging) {
+-                    params.x = clampX(initialX + dx.toInt())
+-                    params.y = (initialY + dy.toInt()).coerceIn(
+-                        0,
+-                        (getScreenHeight() - dp(BUBBLE_SIZE)).coerceAtLeast(0)
+-                    )
+-                    updateLayout(v)
+-                }
+-            }
+-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+-                v.animate().scaleX(1f).scaleY(1f).setDuration(150).start()
+-                mainHandler.removeCallbacks(longPressRunnable)
+-
+-                if (longPressTriggered) {
+-                    // Long-press already opened the app; don't treat the lift as a tap.
+-                    longPressTriggered = false
+-                } else if (isDragging) {
+-                    snapToEdge(v)
+-                } else if (!hasMoved) {
+-                    handleTap()
+-                }
+-            }
+-        }
+-        true
+-    }
+-
+-    private fun handleTap() {
+-        tapCount++
+-        mainHandler.removeCallbacks(tapTimeoutRunnable)
+-        if (tapCount >= 3) {
+-            broadcast(MusicNotificationService.ACTION_PREVIOUS)
+-            showActionFeedback(R.drawable.ic_previous)
+-            tapCount = 0
+-        } else {
+-            mainHandler.postDelayed(tapTimeoutRunnable, TAP_TIMEOUT)
+-        }
+-    }
+-
+-    private fun flushTaps() {
+-        when (tapCount) {
+-            1 -> {
+-                broadcast(MusicNotificationService.ACTION_PLAY_PAUSE)
+-                val icon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
+-                showActionFeedback(icon)
+-                isPlaying = !isPlaying
+-            }
+-            2 -> {
+-                broadcast(MusicNotificationService.ACTION_NEXT)
+-                showActionFeedback(R.drawable.ic_next)
+-            }
+-        }
+-        tapCount = 0
+-    }
+-
+-    private fun showActionFeedback(iconRes: Int) {
+-        feedbackIcon?.setImageResource(iconRes)
+-        feedbackContainer?.let { overlay ->
+-            overlay.animate().cancel()
+-            overlay.alpha = 0f
+-            overlay.visibility = View.VISIBLE
+-            overlay.animate()
+-                .alpha(1f)
+-                .setDuration(100)
+-                .withEndAction {
+-                    overlay.animate()
+-                        .alpha(0f)
+-                        .setDuration(200)
+-                        .setStartDelay(300)
+-                        .withEndAction {
+-                            overlay.visibility = View.GONE
+-                        }
+-                        .start()
+-                }
+-                .start()
+-        }
+-    }
+-
+-    private fun snapToEdge(v: View) {
+-        val w = getScreenWidth()
+-        val viewW = dp(BUBBLE_SIZE)
+-        val center = params.x + viewW / 2
+-        val target = if (center < w / 2) dp(4) else (w - viewW - dp(4)).coerceAtLeast(dp(4))
+-        snapAnimator?.cancel()
+-        ValueAnimator.ofInt(params.x, target).apply {
+-            duration = 250
+-            interpolator = OvershootInterpolator(1.2f)
+-            addUpdateListener {
+-                params.x = it.animatedValue as Int
+-                updateLayout(v)
+-            }
+-            snapAnimator = this
+-            start()
+-        }
+-    }
+-
+-    private fun animateAppear(view: View) {
+-        view.scaleX = 1f
+-        view.scaleY = 1f
+-        view.alpha = 1f
+-    }
+-
+-    private fun animateDisappear(view: View, onComplete: () -> Unit) {
+-        view.animate()
+-            .scaleX(0f)
+-            .scaleY(0f)
+-            .alpha(0f)
+-            .setDuration(200)
+-            .setInterpolator(AnticipateInterpolator())
+-            .withEndAction { onComplete() }
+-            .start()
+-    }
+-
+-    private fun updateLayout(v: View) {
+-        try {
+-            windowManager.updateViewLayout(v, params)
+-        } catch (_: Exception) {
+-        }
+-    }
+-
+-    private fun removeViewSafe(v: View) {
+-        try {
+-            windowManager.removeView(v)
+-        } catch (_: Exception) {
+-        }
+-    }
+-
+-    private fun clampX(x: Int): Int {
+-        val w = getScreenWidth()
+-        val viewW = dp(BUBBLE_SIZE)
+-        return x.coerceIn(dp(4), (w - viewW - dp(4)).coerceAtLeast(dp(4)))
+-    }
+-
+-    private fun getScreenWidth(): Int {
+-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+-            windowManager.maximumWindowMetrics.bounds.width()
+-        } else {
+-            val m = android.util.DisplayMetrics()
+-            @Suppress("DEPRECATION")
+-            windowManager.defaultDisplay.getMetrics(m)
+-            m.widthPixels
+-        }
+-    }
+-
+-    private fun getScreenHeight(): Int {
+-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+-            windowManager.maximumWindowMetrics.bounds.height()
+-        } else {
+-            val m = android.util.DisplayMetrics()
+-            @Suppress("DEPRECATION")
+-            windowManager.defaultDisplay.getMetrics(m)
+-            m.heightPixels
+-        }
+-    }
+-
+-    private fun broadcast(action: String) {
+-        context.sendBroadcast(Intent(action).apply { setPackage(context.packageName) })
+-    }
+-
+-    private fun openApp() {
+-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+-        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+-        try {
+-            context.startActivity(intent)
+-        } catch (_: Exception) {
+-        }
+-    }
+-
+-    private fun View.setCircularOutline() {
+-        outlineProvider = object : ViewOutlineProvider() {
+-            override fun getOutline(view: View, outline: Outline) {
+-                outline.setOval(0, 0, view.width, view.height)
+-            }
+-        }
+-        clipToOutline = true
+-    }
+-}
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+index 6a68dd2e..8f361bc0 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+@@ -736,24 +736,6 @@ class MainActivity: FlutterActivity() {
+                         result.success(false)
+                     }
+                 }
+-                "showFloatingPlayer" -> {
+-                    val intent = Intent(this, MusicNotificationService::class.java).apply {
+-                        putExtra("floating", "show")
+-                        call.argument<String>("title")?.let { putExtra("title", it) }
+-                        call.argument<String>("artist")?.let { putExtra("artist", it) }
+-                        call.argument<String>("albumArtPath")?.let { putExtra("albumArtPath", it) }
+-                        call.argument<Boolean>("isPlaying")?.let { putExtra("isPlaying", it) }
+-                    }
+-                    startService(intent)
+-                    result.success(null)
+-                }
+-                "hideFloatingPlayer" -> {
+-                    startService(
+-                        Intent(this, MusicNotificationService::class.java)
+-                            .putExtra("floating", "hide")
+-                    )
+-                    result.success(null)
+-                }
+                 else -> result.notImplemented()
+             }
+         }
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+index 2232d5ca..5db3bc42 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+@@ -60,8 +60,6 @@ class MusicNotificationService : Service() {
+     private var cachedAlbumArt: Bitmap? = null
+     private var cachedAlbumArtPath: String? = null
+ 
+-    private var floatingOverlay: FloatingPlayerOverlay? = null
+-
+     private val actionReceiver = object : BroadcastReceiver() {
+         override fun onReceive(context: Context?, intent: Intent?) {
+             android.util.Log.d("MusicNotification", "Received action: ${intent?.action}")
+@@ -175,20 +173,6 @@ class MusicNotificationService : Service() {
+             if (it.hasExtra("isShuffle")) isShuffleMode = it.getBooleanExtra("isShuffle", false)
+             if (it.hasExtra("isFavorite")) isFavorite = it.getBooleanExtra("isFavorite", false)
+             if (it.hasExtra("color")) currentColor = it.getIntExtra("color", 0)
+-
+-            it.getStringExtra("floating")?.let { action ->
+-                when (action) {
+-                    "show" -> showFloatingOverlay()
+-                    "hide" -> hideFloatingOverlay()
+-                }
+-            }
+-        }
+-
+-        if (floatingOverlay?.shown == true) {
+-            floatingOverlay?.update(
+-                currentTitle, currentArtist, getAlbumArtBitmap(), isPlaying,
+-                currentDuration, currentPosition
+-            )
+         }
+ 
+         syncAudioFocusState()
+@@ -255,7 +239,6 @@ class MusicNotificationService : Service() {
+         wakeLock = null
+         mediaSession.release()
+         isForegroundServiceStarted = false
+-        hideFloatingOverlay()
+     }
+ 
+     private fun shutdownForTaskRemoval() {
+@@ -608,17 +591,6 @@ class MusicNotificationService : Service() {
+         notificationManager.notify(NOTIFICATION_ID, notification)
+     }
+ 
+-    private fun showFloatingOverlay() {
+-        if (floatingOverlay == null) {
+-            floatingOverlay = FloatingPlayerOverlay(applicationContext)
+-        }
+-        floatingOverlay?.show(currentTitle, currentArtist, getAlbumArtBitmap(), isPlaying, currentDuration, currentPosition)
+-    }
+-
+-    private fun hideFloatingOverlay() {
+-        floatingOverlay?.hide()
+-    }
+-
+     private fun sendCommandToFlutter(command: String, args: Map<String, Any>? = null) {
+         android.os.Handler(mainLooper).post {
+             try {
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index 417a81ca..17b48760 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/adaptive_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+@@ -479,7 +478,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+             ),
+             ),
+             _buildOverlayTopBar(context, resolvedBg),
+-            const FloatingMiniPlayer(),
+           ],
+         );
+       },
+diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
+index 5fbfcb60..556fd213 100644
+--- a/lib/features/artists/screens/artist_detail_screen.dart
++++ b/lib/features/artists/screens/artist_detail_screen.dart
+@@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/adaptive_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/artist_repository.dart';
+@@ -541,7 +540,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+                 ),
+               ),
+               _buildOverlayTopBar(context, resolvedBg),
+-              const FloatingMiniPlayer(),
+             ],
+           );
+         },
+diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
+index f638fd18..dafe75ff 100644
+--- a/lib/features/folders/screens/folders_screen.dart
++++ b/lib/features/folders/screens/folders_screen.dart
+@@ -17,7 +17,6 @@ import 'package:flick/features/player/widgets/ambient_background.dart';
+ import 'package:flick/widgets/common/blurred_song_background.dart';
+ import 'package:flick/widgets/common/surface_icon_button.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ 
+ /// Groups songs by immediate subfolder relative to [prefix] within [folderUri].
+ ({List<FolderGroup> subfolders, List<Song> songs}) groupByImmediateFolder({
+@@ -1071,7 +1070,6 @@ class _FolderBrowserScreenState extends ConsumerState<FolderBrowserScreen> {
+             ),
+           ),
+         ),
+-        const FloatingMiniPlayer(),
+       ],
+     );
+   }
+diff --git a/lib/features/menu/screens/smart_mix_detail_screen.dart b/lib/features/menu/screens/smart_mix_detail_screen.dart
+index ac075577..a10f0d74 100644
+--- a/lib/features/menu/screens/smart_mix_detail_screen.dart
++++ b/lib/features/menu/screens/smart_mix_detail_screen.dart
+@@ -9,7 +9,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/adaptive_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/models/playback_context.dart';
+ import 'package:flick/models/song.dart';
+@@ -339,7 +338,6 @@ class _SmartMixDetailScreenState extends ConsumerState<SmartMixDetailScreen>
+                 ),
+               ),
+               _buildOverlayTopBar(context, resolvedBg),
+-              const FloatingMiniPlayer(),
+             ],
+           );
+         },
+diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
+index 1e206a06..2891e902 100644
+--- a/lib/features/playlists/screens/playlist_detail_screen.dart
++++ b/lib/features/playlists/screens/playlist_detail_screen.dart
+@@ -8,7 +8,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/adaptive_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/models/playback_context.dart';
+ import 'package:flick/models/song.dart';
+@@ -512,7 +511,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+             ),
+             ),
+             _buildOverlayTopBar(context, resolvedBg),
+-            const FloatingMiniPlayer(),
+           ],
+         );
+       },
+diff --git a/lib/features/settings/screens/equalizer_screen.dart b/lib/features/settings/screens/equalizer_screen.dart
+index 830a2c44..c0225f78 100644
+--- a/lib/features/settings/screens/equalizer_screen.dart
++++ b/lib/features/settings/screens/equalizer_screen.dart
+@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
+ 
+ import 'package:flutter/material.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:flick/widgets/common/floating_mini_player.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'dart:math' as math;
+ import 'package:path_provider/path_provider.dart';
+@@ -136,7 +135,6 @@ class _EqualizerScreenState extends ConsumerState<EqualizerScreen> {
+             ),
+           ),
+         ),
+-        const FloatingMiniPlayer(),
+       ],
+     );
+   }
+diff --git a/lib/features/settings/screens/playback_display_settings_screen.dart b/lib/features/settings/screens/playback_display_settings_screen.dart
+index 6e5e613f..8719196b 100644
+--- a/lib/features/settings/screens/playback_display_settings_screen.dart
++++ b/lib/features/settings/screens/playback_display_settings_screen.dart
+@@ -57,25 +57,10 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+                       .setPriorityAnchorEnabled(value);
+                 },
+               ),
+-              const SettingsDivider(),
+               if (Platform.isAndroid) ...[
+-                _DuckOnInterruptionTile(playerService: playerService),
+                 const SettingsDivider(),
++                _DuckOnInterruptionTile(playerService: playerService),
+               ],
+-              ToggleSetting(
+-                icon: LucideIcons.pictureInPicture2,
+-                title: 'Floating Mini-Player',
+-                subtitle: appPrefs.floatingPlayerEnabled
+-                    ? 'A draggable overlay shows while using other apps'
+-                    : 'Show a system overlay mini-player over other apps',
+-                value: appPrefs.floatingPlayerEnabled,
+-                onChanged: (value) => _onFloatingPlayerToggled(
+-                  context,
+-                  ref,
+-                  playerService,
+-                  value,
+-                ),
+-              ),
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+@@ -94,20 +79,6 @@ class PlaybackDisplaySettingsScreen extends ConsumerWidget {
+                 },
+               ),
+               const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.circleDot,
+-                title: 'Floating Island',
+-                subtitle: appPrefs.floatingIslandEnabled
+-                    ? 'Show the floating mini-player pill on screens'
+-                    : 'Hide the floating mini-player pill',
+-                value: appPrefs.floatingIslandEnabled,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setFloatingIslandEnabled(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+               SliderSetting(
+                 icon: LucideIcons.maximize,
+                 title: 'Immersive Full View Timer',
+@@ -225,33 +196,3 @@ class _GaplessPlaybackTile extends StatelessWidget {
+     );
+   }
+ }
+-
+-Future<void> _onFloatingPlayerToggled(
+-  BuildContext context,
+-  WidgetRef ref,
+-  PlayerService playerService,
+-  bool value,
+-) async {
+-  final messenger = ScaffoldMessenger.of(context);
+-  if (value) {
+-    final canShow = await playerService.canShowFloatingPlayer();
+-    if (!canShow) {
+-      final granted = await playerService.requestFloatingPlayerPermission();
+-      if (!granted) {
+-        messenger.showSnackBar(
+-          const SnackBar(
+-            content: Text(
+-              'Overlay permission is required to show the floating player',
+-            ),
+-          ),
+-        );
+-        return;
+-      }
+-    }
+-    await playerService.setFloatingPlayerEnabled(true);
+-    ref.read(appPreferencesProvider.notifier).setFloatingPlayerEnabled(true);
+-  } else {
+-    await playerService.setFloatingPlayerEnabled(false);
+-    ref.read(appPreferencesProvider.notifier).setFloatingPlayerEnabled(false);
+-  }
+-}
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index 91af28db..8c93f71d 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -591,22 +591,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setBtLdacBitsPerSample(value);
+   }
+ 
+-  Future<void> setFloatingPlayerEnabled(bool value) async {
+-    if (state.floatingPlayerEnabled == value) return;
+-    state = state.copyWith(floatingPlayerEnabled: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setFloatingPlayerEnabled(value);
+-  }
+-
+-  Future<void> setFloatingIslandEnabled(bool value) async {
+-    if (state.floatingIslandEnabled == value) return;
+-    state = state.copyWith(floatingIslandEnabled: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setFloatingIslandEnabled(value);
+-  }
+-
+   Future<void> setAutoFocusSearch(bool value) async {
+     if (state.autoFocusSearch == value) return;
+     state = state.copyWith(autoFocusSearch: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index f9f4dc6d..39270d0d 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -79,8 +79,6 @@ class AppPreferences {
+   final bool btEnableCodecControl;
+   final int btSampleRate;
+   final int btLdacBitsPerSample;
+-  final bool floatingPlayerEnabled;
+-  final bool floatingIslandEnabled;
+   final bool autoFocusSearch;
+   final String searchPlaybackMode; // 'results', 'library', or 'queue'
+   final bool visualizerEnabled;
+@@ -168,8 +166,6 @@ class AppPreferences {
+     this.btEnableCodecControl = false,
+     this.btSampleRate = 0,
+     this.btLdacBitsPerSample = 0,
+-    this.floatingPlayerEnabled = false,
+-    this.floatingIslandEnabled = true,
+     this.autoFocusSearch = false,
+     this.searchPlaybackMode = 'results',
+     this.visualizerEnabled = true,
+@@ -258,8 +254,6 @@ class AppPreferences {
+     bool? btEnableCodecControl,
+     int? btSampleRate,
+     int? btLdacBitsPerSample,
+-    bool? floatingPlayerEnabled,
+-    bool? floatingIslandEnabled,
+     bool? autoFocusSearch,
+     String? searchPlaybackMode,
+     bool? visualizerEnabled,
+@@ -386,10 +380,6 @@ class AppPreferences {
+       btSampleRate: btSampleRate ?? this.btSampleRate,
+       btLdacBitsPerSample:
+           btLdacBitsPerSample ?? this.btLdacBitsPerSample,
+-      floatingPlayerEnabled:
+-          floatingPlayerEnabled ?? this.floatingPlayerEnabled,
+-      floatingIslandEnabled:
+-          floatingIslandEnabled ?? this.floatingIslandEnabled,
+       autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
+       searchPlaybackMode:
+           searchPlaybackMode ?? this.searchPlaybackMode,
+@@ -488,8 +478,6 @@ class AppPreferencesService {
+   static const _btEnableCodecControlKey = 'app_bt_enable_codec_control';
+   static const _btSampleRateKey = 'app_bt_sample_rate';
+   static const _btLdacBitsPerSampleKey = 'app_bt_ldac_bits_per_sample';
+-  static const _floatingPlayerEnabledKey = 'app_floating_player_enabled';
+-  static const _floatingIslandEnabledKey = 'app_floating_island_enabled';
+   static const _autoFocusSearchKey = 'app_auto_focus_search';
+   static const _searchPlaybackModeKey = 'app_search_playback_mode';
+   static const _visualizerEnabledKey = 'visualizer_enabled';
+@@ -620,10 +608,6 @@ class AppPreferencesService {
+           prefs.getBool(_btEnableCodecControlKey) ?? false,
+       btSampleRate: prefs.getInt(_btSampleRateKey) ?? 0,
+       btLdacBitsPerSample: prefs.getInt(_btLdacBitsPerSampleKey) ?? 0,
+-      floatingPlayerEnabled:
+-          prefs.getBool(_floatingPlayerEnabledKey) ?? false,
+-      floatingIslandEnabled:
+-          prefs.getBool(_floatingIslandEnabledKey) ?? true,
+       autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
+       searchPlaybackMode:
+           prefs.getString(_searchPlaybackModeKey) ?? 'results',
+@@ -1396,26 +1380,6 @@ class AppPreferencesService {
+     await prefs.setInt(_btLdacBitsPerSampleKey, value);
+   }
+ 
+-  Future<bool> getFloatingPlayerEnabled() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_floatingPlayerEnabledKey) ?? false;
+-  }
+-
+-  Future<void> setFloatingPlayerEnabled(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_floatingPlayerEnabledKey, value);
+-  }
+-
+-  Future<bool> getFloatingIslandEnabled() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_floatingIslandEnabledKey) ?? true;
+-  }
+-
+-  Future<void> setFloatingIslandEnabled(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_floatingIslandEnabledKey, value);
+-  }
+-
+   Future<bool> getAutoFocusSearch() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_autoFocusSearchKey) ?? false;
+diff --git a/lib/services/floating_player_service.dart b/lib/services/floating_player_service.dart
+deleted file mode 100644
+index 2b4902e8..00000000
+--- a/lib/services/floating_player_service.dart
++++ /dev/null
+@@ -1,69 +0,0 @@
+-import 'package:flutter/services.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/core/utils/dev_log.dart';
+-
+-/// Flutter service to communicate with the native Android floating
+-/// mini-player overlay (WindowManager TYPE_APPLICATION_OVERLAY).
+-class FloatingPlayerService {
+-  static final FloatingPlayerService _instance =
+-      FloatingPlayerService._internal();
+-  factory FloatingPlayerService() => _instance;
+-  FloatingPlayerService._internal();
+-
+-  static const _channel = MethodChannel('com.mossapps.flick/overlay');
+-
+-  /// Whether the app is allowed to draw over other apps.
+-  Future<bool> canDrawOverlays() async {
+-    try {
+-      final result = await _channel.invokeMethod<bool>('canDrawOverlays');
+-      return result ?? false;
+-    } catch (e) {
+-      devLog('canDrawOverlays failed: $e');
+-      return false;
+-    }
+-  }
+-
+-  /// Launch the system overlay-permission settings screen and resolve with
+-  /// `true` once permission has been granted.
+-  Future<bool> requestPermission() async {
+-    try {
+-      final result =
+-          await _channel.invokeMethod<bool>('requestOverlayPermission');
+-      return result ?? false;
+-    } catch (e) {
+-      devLog('requestOverlayPermission failed: $e');
+-      return false;
+-    }
+-  }
+-
+-  /// Show (or update) the floating overlay with the current song metadata.
+-  Future<void> show({
+-    required Song song,
+-    required bool isPlaying,
+-    Duration? duration,
+-    Duration? position,
+-  }) async {
+-    try {
+-      final args = <String, dynamic>{
+-        'title': song.title,
+-        'artist': song.artist,
+-        'albumArtPath': song.albumArt,
+-        'isPlaying': isPlaying,
+-      };
+-      if (duration != null) args['duration'] = duration.inMilliseconds;
+-      if (position != null) args['position'] = position.inMilliseconds;
+-      await _channel.invokeMethod('showFloatingPlayer', args);
+-    } catch (e) {
+-      devLog('Failed to show floating player: $e');
+-    }
+-  }
+-
+-  /// Remove the floating overlay.
+-  Future<void> hide() async {
+-    try {
+-      await _channel.invokeMethod('hideFloatingPlayer');
+-    } catch (e) {
+-      devLog('Failed to hide floating player: $e');
+-    }
+-  }
+-}
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 7215be9d..6de7f3b6 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/src/rust/api/audio_api.dart' as rust_audio;
+ import 'package:flick/services/notification_service.dart';
+-import 'package:flick/services/floating_player_service.dart';
+ import 'package:flick/services/android_audio_device_service.dart';
+ import 'package:flick/services/bluetooth_service.dart';
+ import 'package:flick/services/audio_engine_manager.dart';
+@@ -313,8 +312,6 @@ class PlayerService {
+   int _crossfadeCurveIndex = 0;
+ 
+   final NotificationService _notificationService = NotificationService();
+-  final FloatingPlayerService _floatingPlayerService = FloatingPlayerService();
+-  bool _floatingPlayerActive = false;
+   bool _appInForeground = true;
+   final LastPlayedService _lastPlayedService = LastPlayedService();
+   final FavoritesService _favoritesService = FavoritesService();
+@@ -573,7 +570,6 @@ class PlayerService {
+     unawaited(_loadGaplessPlaybackPreference());
+     unawaited(_loadDuckOnInterruptionPreference());
+     unawaited(_loadCrossfadePreferences());
+-    unawaited(_loadFloatingPlayerPreference());
+     unawaited(_loadPriorityAnchorPreference());
+     _initBluetoothReconnectHandling();
+     _initUsbDacDisconnectHandling();
+@@ -855,75 +851,23 @@ class PlayerService {
+     }
+   }
+ 
+-  Future<void> _loadFloatingPlayerPreference() async {
+-    final enabled = await _appPreferencesService.getFloatingPlayerEnabled();
+-    if (enabled) {
+-      await _activateFloatingPlayer();
+-    }
+-  }
+-
+-  /// Activates the floating overlay. Returns `true` if the overlay could be
+-  /// shown (Android + overlay permission granted), `false` if permission is
+-  /// still required — in which case [requestFloatingPlayerPermission] should
+-  /// be called first.
+-  Future<bool> setFloatingPlayerEnabled(bool enabled) async {
+-    if (enabled) {
+-      return _activateFloatingPlayer();
+-    }
+-    await _deactivateFloatingPlayer();
+-    return true;
+-  }
+-
+-  Future<bool> requestFloatingPlayerPermission() async {
+-    return _floatingPlayerService.requestPermission();
+-  }
+-
+-  Future<bool> canShowFloatingPlayer() async {
+-    if (!Platform.isAndroid) return false;
+-    return _floatingPlayerService.canDrawOverlays();
+-  }
+-
+-  Future<bool> _activateFloatingPlayer() async {
+-    if (!Platform.isAndroid) return false;
+-    final canDraw = await _floatingPlayerService.canDrawOverlays();
+-    if (!canDraw) return false;
+-    _floatingPlayerActive = true;
+-    await _showFloatingPlayerOverlay();
+-    return true;
+-  }
+-
+-  Future<void> _deactivateFloatingPlayer() async {
+-    _floatingPlayerActive = false;
+-    await _floatingPlayerService.hide();
+-  }
+-
+-  Future<void> _showFloatingPlayerOverlay() async {
+-    if (!Platform.isAndroid) return;
+-    if (!_floatingPlayerActive) return;
+-    if (_appInForeground) return;
+-    final song = currentSongNotifier.value;
+-    if (song == null) return;
+-    await _floatingPlayerService.show(
+-      song: song,
+-      isPlaying: isPlayingNotifier.value,
+-      duration: durationNotifier.value,
+-      position: positionNotifier.value,
+-    );
+-  }
+-
+   Future<void> onAppPaused() async {
+     if (!Platform.isAndroid) return;
+     _appInForeground = false;
++    /*
+     final enabled = await _appPreferencesService.getFloatingPlayerEnabled();
+     if (!enabled) return;
+     await _activateFloatingPlayer();
++    */
+   }
+ 
+   Future<void> onAppResumed() async {
+     _appInForeground = true;
++    /*
+     if (_floatingPlayerActive) {
+       await _deactivateFloatingPlayer();
+     }
++    */
+     unawaited(_restoreBitPerfectEngineAfterForeground());
+   }
+ 
+@@ -2669,8 +2613,6 @@ class PlayerService {
+       isFavorite: isFav,
+       color: notificationColor,
+     );
+-
+-    await _showFloatingPlayerOverlay();
+   }
+ 
+   Future<void> _onSongFinished({String? endedPath}) {
+@@ -5099,7 +5041,6 @@ class PlayerService {
+     unawaited(_usbDacAttachSubscription?.cancel());
+     cancelSleepTimer();
+     _notificationService.hideNotification();
+-    _floatingPlayerService.hide();
+     if (_usingRustBackend) {
+       if (Uac2PreferencesService.isKillIsochronousUsbOnQuitSync) {
+         unawaited(_rustAudioService.stop());
+diff --git a/lib/widgets/common/floating_mini_player.dart b/lib/widgets/common/floating_mini_player.dart
+deleted file mode 100644
+index b5dec402..00000000
+--- a/lib/widgets/common/floating_mini_player.dart
++++ /dev/null
+@@ -1,389 +0,0 @@
+-import 'dart:async';
+-import 'package:flutter/material.dart';
+-import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:flick/core/theme/adaptive_color_provider.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/features/player/screens/full_player_screen.dart';
+-import 'package:flick/features/player/widgets/audio_visualizer.dart';
+-import 'package:flick/providers/providers.dart';
+-import 'package:flick/widgets/common/cached_image_widget.dart';
+-
+-class FloatingMiniPlayer extends ConsumerStatefulWidget {
+-  const FloatingMiniPlayer({super.key});
+-
+-  @override
+-  ConsumerState<FloatingMiniPlayer> createState() => _FloatingMiniPlayerState();
+-}
+-
+-class _FloatingMiniPlayerState extends ConsumerState<FloatingMiniPlayer>
+-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+-  bool _expanded = false;
+-
+-  static const _heroTag = 'floating_mini_player';
+-
+-  late final AnimationController _expandController;
+-  late final Animation<double> _expandAnimation;
+-
+-  Offset _offset = Offset.zero;
+-  Offset _startDragOffset = Offset.zero;
+-  Offset _dragStartPosition = Offset.zero;
+-  Offset _pointerDownPosition = Offset.zero;
+-  bool _isDragging = false;
+-  bool _isLongPress = false;
+-  Timer? _longPressTimer;
+-  static const _longPressDelay = Duration(milliseconds: 500);
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    _expandController = AnimationController(
+-      vsync: this,
+-      duration: const Duration(milliseconds: 350),
+-    );
+-    _expandAnimation = CurvedAnimation(
+-      parent: _expandController,
+-      curve: Curves.easeOutCubic,
+-      reverseCurve: Curves.easeInCubic,
+-    );
+-    WidgetsBinding.instance.addObserver(this);
+-    WidgetsBinding.instance.addPostFrameCallback((_) {
+-      _offset = Offset.zero;
+-      setState(() {});
+-    });
+-  }
+-
+-  @override
+-  void dispose() {
+-    _longPressTimer?.cancel();
+-    WidgetsBinding.instance.removeObserver(this);
+-    _expandController.dispose();
+-    super.dispose();
+-  }
+-
+-  @override
+-  void didChangeMetrics() {
+-    setState(() => _offset = Offset.zero);
+-  }
+-
+-  void _onTap() {
+-    setState(() => _expanded = !_expanded);
+-    if (_expanded) {
+-      _expandController.forward();
+-    } else {
+-      _expandController.reverse();
+-    }
+-  }
+-
+-  void _handlePointerDown(PointerDownEvent event) {
+-    _isLongPress = false;
+-    _pointerDownPosition = event.position;
+-    _longPressTimer?.cancel();
+-    _longPressTimer = Timer(_longPressDelay, () {
+-      if (!mounted) return;
+-      _isLongPress = true;
+-      Navigator.of(context).push(
+-        PageRouteBuilder(
+-          pageBuilder: (context, animation, secondaryAnimation) =>
+-              const FullPlayerScreen(heroTag: _heroTag),
+-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+-            const begin = Offset(0.0, 1.0);
+-            const end = Offset.zero;
+-            const curve = Curves.easeOutCubic;
+-            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+-            return SlideTransition(
+-              position: animation.drive(tween),
+-              child: child,
+-            );
+-          },
+-          transitionDuration: const Duration(milliseconds: 300),
+-          opaque: false,
+-          barrierColor: Colors.black,
+-        ),
+-      );
+-    });
+-  }
+-
+-  void _handlePointerMove(PointerMoveEvent event) {
+-    if (!_isDragging) {
+-      final delta = event.position - _pointerDownPosition;
+-      if (delta.distance > 8) {
+-        _longPressTimer?.cancel();
+-      }
+-    }
+-  }
+-
+-  void _handlePointerUp(PointerUpEvent event) {
+-    _longPressTimer?.cancel();
+-    if (_isLongPress || _isDragging) return;
+-    _onTap();
+-  }
+-
+-  void _onPanStart(DragStartDetails details) {
+-    _isDragging = false;
+-    _startDragOffset = _offset;
+-    _dragStartPosition = details.globalPosition;
+-  }
+-
+-  void _onPanUpdate(DragUpdateDetails details) {
+-    final delta = details.globalPosition - _dragStartPosition;
+-    if (!_isDragging && delta.distance > 4) {
+-      _isDragging = true;
+-    }
+-    if (_isDragging) {
+-      final screenSize = MediaQuery.of(context).size;
+-      final safeArea = MediaQuery.of(context).padding;
+-      final bottomLimit =
+-          screenSize.height - 36.0 - safeArea.bottom - safeArea.top - 16;
+-      setState(() {
+-        _offset = Offset(
+-          _startDragOffset.dx + delta.dx,
+-          (_startDragOffset.dy + delta.dy).clamp(0.0, bottomLimit),
+-        );
+-      });
+-    }
+-  }
+-
+-  double _clampHorizontalOffset(Size screenSize) {
+-    final t = _expandAnimation.value;
+-    final width = 96.0 + t * 184.0;
+-    final halfScreen = screenSize.width / 2;
+-    final halfWidget = width / 2;
+-    final maxDx = halfScreen - halfWidget - 8;
+-    return (_offset.dx).clamp(-maxDx, maxDx) / maxDx;
+-  }
+-
+-  void _onPanEnd(DragEndDetails details) {
+-    if (!_isDragging) return;
+-    final screenSize = MediaQuery.of(context).size;
+-    final safeArea = MediaQuery.of(context).padding;
+-    final velocity = details.velocity.pixelsPerSecond;
+-
+-    final t = _expandAnimation.value;
+-    final width = 96.0 + t * 184.0;
+-    final height = 36.0;
+-
+-    final double absCenterX =
+-        (screenSize.width - width) / 2 + _offset.dx + width / 2;
+-    final bool nearCenterX =
+-        (absCenterX - screenSize.width / 2).abs() < screenSize.width * 0.25;
+-    final bool flingCenterX = velocity.dx.abs() < 200 && nearCenterX;
+-
+-    double snapDx;
+-    if (flingCenterX) {
+-      snapDx = 0.0;
+-    } else if (absCenterX < screenSize.width / 2) {
+-      snapDx = 8.0 - (screenSize.width - width) / 2;
+-    } else {
+-      snapDx = (screenSize.width - width) / 2 - 8.0;
+-    }
+-
+-    final bottomLimit =
+-        screenSize.height - height - safeArea.bottom - safeArea.top - 16;
+-    final double absTop = safeArea.top + 8 + _offset.dy;
+-    final bool nearTop = absTop < screenSize.height * 0.25;
+-    final bool nearBottom =
+-        absTop > screenSize.height * 0.75 - safeArea.bottom;
+-    final bool flingVertical = velocity.dy.abs() > 400;
+-
+-    double snapDy;
+-    if (flingVertical) {
+-      if (velocity.dy < 0) {
+-        snapDy = 0.0;
+-      } else {
+-        snapDy = bottomLimit;
+-      }
+-    } else if (nearTop) {
+-      snapDy = 0.0;
+-    } else if (nearBottom) {
+-      snapDy = bottomLimit;
+-    } else {
+-      snapDy = _offset.dy.clamp(0.0, bottomLimit);
+-    }
+-
+-    _isDragging = false;
+-    setState(() {
+-      _offset = Offset(snapDx, snapDy);
+-    });
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final currentSong = ref.watch(currentSongProvider);
+-    if (currentSong == null) return const SizedBox.shrink();
+-
+-    final appPrefs = ref.watch(appPreferencesProvider);
+-    if (!appPrefs.floatingIslandEnabled) return const SizedBox.shrink();
+-
+-    final topPadding = MediaQuery.of(context).padding.top;
+-    final screenSize = MediaQuery.of(context).size;
+-
+-    return Positioned(
+-      top: topPadding + 8 + _offset.dy,
+-      left: 0,
+-      right: 0,
+-      child: Listener(
+-        onPointerDown: _handlePointerDown,
+-        onPointerMove: _handlePointerMove,
+-        onPointerUp: _handlePointerUp,
+-        child: GestureDetector(
+-          onPanStart: _onPanStart,
+-          onPanUpdate: _onPanUpdate,
+-          onPanEnd: _onPanEnd,
+-          child: Align(
+-            alignment: Alignment(_clampHorizontalOffset(screenSize), 0),
+-            child: AnimatedContainer(
+-              duration: _isDragging
+-                  ? Duration.zero
+-                  : const Duration(milliseconds: 250),
+-              curve: Curves.easeOutCubic,
+-              alignment: Alignment(_clampHorizontalOffset(screenSize), 0),
+-              child: Hero(
+-                tag: _heroTag,
+-                child: AnimatedBuilder(
+-                  animation: _expandAnimation,
+-                  builder: (context, _) {
+-                    final t = _expandAnimation.value;
+-                    final width = 96.0 + t * 184.0;
+-
+-                    return Container(
+-                      height: 36,
+-                      width: width,
+-                      decoration: BoxDecoration(
+-                        color: AppColors.surface.withValues(alpha: 0.85),
+-                        borderRadius: BorderRadius.circular(18),
+-                        border: Border.all(
+-                          color: AppColors.glassBorderStrong,
+-                          width: 0.5,
+-                        ),
+-                        boxShadow: [
+-                          BoxShadow(
+-                            color: Colors.black.withValues(alpha: 0.4),
+-                            blurRadius: 16,
+-                            offset: const Offset(0, 4),
+-                          ),
+-                        ],
+-                      ),
+-                      child: ClipRRect(
+-                        borderRadius: BorderRadius.circular(18),
+-                        child: Row(
+-                          children: [
+-                            Container(
+-                              width: 36,
+-                              height: 36,
+-                              decoration: const BoxDecoration(
+-                                color: AppColors.surfaceDark,
+-                                borderRadius: BorderRadius.only(
+-                                  topLeft: Radius.circular(18),
+-                                  bottomLeft: Radius.circular(18),
+-                                ),
+-                              ),
+-                              child: ClipRRect(
+-                                borderRadius: const BorderRadius.only(
+-                                  topLeft: Radius.circular(18),
+-                                  bottomLeft: Radius.circular(18),
+-                                ),
+-                                child: currentSong.albumArt != null
+-                                    ? CachedImageWidget(
+-                                        imagePath: currentSong.albumArt!,
+-                                        audioSourcePath: currentSong.filePath,
+-                                        fit: BoxFit.cover,
+-                                        useThumbnail: true,
+-                                        thumbnailWidth: 96,
+-                                        thumbnailHeight: 96,
+-                                      )
+-                                    : const Icon(
+-                                        LucideIcons.music,
+-                                        size: 16,
+-                                        color: AppColors.textTertiary,
+-                                      ),
+-                              ),
+-                            ),
+-                            const SizedBox(width: 8),
+-                            const _FloatingMiniVisualizer(),
+-                            SizedBox(width: t * 10),
+-                            Expanded(
+-                              child: Opacity(
+-                                opacity: t,
+-                                child: Transform.translate(
+-                                  offset: Offset(8 * (1 - t), 0),
+-                                  child: Padding(
+-                                    padding: EdgeInsets.only(right: 14 * t),
+-                                    child: Material(
+-                                      color: Colors.transparent,
+-                                      child: Column(
+-                                        mainAxisSize: MainAxisSize.min,
+-                                        mainAxisAlignment:
+-                                            MainAxisAlignment.center,
+-                                        crossAxisAlignment:
+-                                            CrossAxisAlignment.start,
+-                                        children: [
+-                                          Text(
+-                                            currentSong.title,
+-                                            style: TextStyle(
+-                                              fontFamily: 'ProductSans',
+-                                              fontSize: 11,
+-                                              fontWeight: FontWeight.w600,
+-                                              color:
+-                                                  context.adaptiveTextPrimary,
+-                                              height: 1.2,
+-                                            ),
+-                                            maxLines: 1,
+-                                            overflow: TextOverflow.ellipsis,
+-                                          ),
+-                                          Text(
+-                                            currentSong.artist,
+-                                            style: TextStyle(
+-                                              fontFamily: 'ProductSans',
+-                                              fontSize: 9,
+-                                              color:
+-                                                  context.adaptiveTextSecondary,
+-                                              fontWeight: FontWeight.w500,
+-                                              height: 1.2,
+-                                            ),
+-                                            maxLines: 1,
+-                                            overflow: TextOverflow.ellipsis,
+-                                          ),
+-                                        ],
+-                                      ),
+-                                    ),
+-                                  ),
+-                                ),
+-                              ),
+-                            ),
+-                          ],
+-                        ),
+-                      ),
+-                    );
+-                  },
+-                ),
+-              ),
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+-class _FloatingMiniVisualizer extends ConsumerWidget {
+-  const _FloatingMiniVisualizer();
+-
+-  @override
+-  Widget build(BuildContext context, WidgetRef ref) {
+-    final playerService = ref.read(playerServiceProvider);
+-    final appPrefs = ref.watch(appPreferencesProvider);
+-
+-    return SizedBox(
+-      height: 18,
+-      width: 40,
+-      child: AudioVisualizer(
+-        playerService: playerService,
+-        animationStyle: appPrefs.visualizerAnimationStyle,
+-        frequencyMode: appPrefs.visualizerFrequencyMode,
+-        movementMode: appPrefs.visualizerMovementMode,
+-        enabled: appPrefs.visualizerEnabled,
+-      ),
+-    );
+-  }
+-}
+-- 
+2.55.0
+

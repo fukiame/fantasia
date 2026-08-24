@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:45:04 +0700
+Subject: [PATCH] Revert "Defer visualizer loop and respect reduced motion"
+
+This reverts commit fac95e15a921c41b362e1bf03d1fdbff6bfcec08.
+
+diff --git a/lib/features/player/widgets/audio_visualizer.dart b/lib/features/player/widgets/audio_visualizer.dart
+index 1163fc45..3e74272a 100644
+--- a/lib/features/player/widgets/audio_visualizer.dart
++++ b/lib/features/player/widgets/audio_visualizer.dart
+@@ -61,11 +61,9 @@ class _AudioVisualizerState extends State<AudioVisualizer>
+       duration: const Duration(seconds: 1),
+     );
+     _controller.addListener(_onFrame);
+-    // Deferred so MediaQuery (system reduced motion) is available before
+-    // deciding whether to run the loop.
+-    WidgetsBinding.instance.addPostFrameCallback((_) {
+-      if (mounted) _updateControllerState();
+-    });
++    if (widget.enabled && _isPlaying) {
++      _controller.repeat();
++    }
+ 
+     widget.playerService.isPlayingNotifier.addListener(_onPlayingChanged);
+     widget.playerService.positionNotifier.addListener(_onPositionChanged);
+@@ -293,8 +291,7 @@ class _AudioVisualizerState extends State<AudioVisualizer>
+ 
+   void _updateControllerState() {
+     if (!mounted) return;
+-    final reducedMotion = MediaQuery.of(context).disableAnimations;
+-    if (!widget.enabled || reducedMotion) {
++    if (!widget.enabled) {
+       if (_controller.isAnimating) _controller.stop();
+       return;
+     }
+-- 
+2.55.0
+
