@@ -1,0 +1,105 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:26:13 +0700
+Subject: [PATCH] Revert "Add responsive scaling to settings icons and USB
+ volume toggles"
+
+This reverts commit f51abf76d30959600bbda33da3ecfc0ca82b1520.
+
+diff --git a/lib/features/settings/screens/network_server_edit_screen.dart b/lib/features/settings/screens/network_server_edit_screen.dart
+index 3040f6c54..b11a3f74a 100644
+--- a/lib/features/settings/screens/network_server_edit_screen.dart
++++ b/lib/features/settings/screens/network_server_edit_screen.dart
+@@ -7,7 +7,6 @@ import '../../../core/constants/app_constants.dart';
+ import '../../../core/theme/adaptive_color_provider.dart';
+ import '../../../core/theme/app_colors.dart';
+ import '../../../core/utils/app_haptics.dart';
+-import '../../../core/utils/responsive.dart';
+ 
+ // Database, widgets, and service configurations
+ import '../../../data/database.dart';
+@@ -194,7 +193,7 @@ class _NetworkServerEditScreenState extends State<NetworkServerEditScreen> {
+     }
+   }
+ 
+-  Future<void> _save() async {  
++  Future<void> _save() async {
+     if (!_isValid) return;
+     setState(() => _saving = true);
+     final token = await _resolvePersistedToken();
+@@ -220,7 +219,7 @@ class _NetworkServerEditScreenState extends State<NetworkServerEditScreen> {
+       context: context,
+       builder: (context) => AlertDialog(
+         title: const Text('Remove server?'),
+-      content: Text(
++        content: Text(
+           'Delete "${server.label}" and all songs synced from it? '
+           'Cached downloads are kept.',
+         ),
+@@ -456,7 +455,7 @@ class _TextFieldSetting extends StatelessWidget {
+   @override
+   Widget build(BuildContext context) {
+     return Padding(
+-      padding: const EdgeInsets.all(AppConstants.spacingLg),
++      padding: const EdgeInsets.all(AppConstants.spacingMd),
+       child: Row(
+         crossAxisAlignment: CrossAxisAlignment.center,
+         children: [
+@@ -534,8 +533,8 @@ class _SettingsTileIcon extends StatelessWidget {
+   @override
+   Widget build(BuildContext context) {
+     return Container(
+-      width: context.scaleSize(AppConstants.containerSizeMd),
+-      height: context.scaleSize(AppConstants.containerSizeMd),
++      width: AppConstants.containerSizeMd,
++      height: AppConstants.containerSizeMd,
+       decoration: BoxDecoration(
+         color: AppColors.glassBackgroundStrong,
+         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+@@ -543,7 +542,7 @@ class _SettingsTileIcon extends StatelessWidget {
+       child: Icon(
+         icon,
+         color: context.adaptiveTextSecondary,
+-        size: context.responsiveIcon(AppConstants.iconSizeLg),
++        size: AppConstants.iconSizeLg,
+       ),
+     );
+   }
+diff --git a/lib/features/settings/screens/ui_customization_settings_screen.dart b/lib/features/settings/screens/ui_customization_settings_screen.dart
+index ece572e57..7bba8fd1b 100644
+--- a/lib/features/settings/screens/ui_customization_settings_screen.dart
++++ b/lib/features/settings/screens/ui_customization_settings_screen.dart
+@@ -105,30 +105,6 @@ class UiCustomizationSettingsScreen extends ConsumerWidget {
+                       .setShowEngineSelector(value);
+                 },
+               ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.volume2,
+-                title: 'USB Volume on Home',
+-                subtitle: 'Show the USB volume bar on the home screen',
+-                value: appPreferences.showUsbVolumeOnMenu,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setShowUsbVolumeOnMenu(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.slidersHorizontal,
+-                title: 'USB Volume in Settings',
+-                subtitle: 'Show the USB volume bar on the UAC2 settings screen',
+-                value: appPreferences.showUsbVolumeOnSettings,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setShowUsbVolumeOnSettings(value);
+-                },
+-              ),
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-- 
+2.55.0
+

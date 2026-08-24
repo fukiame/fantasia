@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 17:15:59 +0700
+Subject: [PATCH] lib lib
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/library_settings_screen.dart b/lib/features/settings/screens/library_settings_screen.dart
+index 346c6b236..e5a529d10 100644
+--- a/lib/features/settings/screens/library_settings_screen.dart
++++ b/lib/features/settings/screens/library_settings_screen.dart
+@@ -1067,7 +1067,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                       Text(
+-                        'Library',
++                        'library',
+                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                           color: context.adaptiveTextPrimary,
+                         ),
+@@ -1219,13 +1219,13 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Text(
+-                          'Scanning Settings',
++                          'scanning settings',
+                           style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: context.adaptiveTextPrimary),
+                         ),
+                         const SizedBox(height: 2),
+                         Text(
+-                          'Filter files, size limits, and playlist import options',
++                          'filters, playlist import, deep scan, etc',
+                           style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: context.adaptiveTextTertiary),
+                         ),
+@@ -1376,8 +1376,8 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                               children: [
+                                  Text(
+                                    _isXiaomiDevice
+-                                       ? 'Disable Battery Optimization (Recommended)'
+-                                       : 'Disable Battery Optimization',
++                                      ? 'disable battery optimization (recommended)'
++                                      : 'disable battery optimization',
+                                    style: Theme.of(context).textTheme.titleMedium
+                                        ?.copyWith(
+                                          color: context.adaptiveTextPrimary,
+@@ -1385,9 +1385,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+-                                   _isXiaomiDevice
+-                                       ? 'Required on many Xiaomi, Redmi, and POCO devices so rescans and background features keep working'
+-                                       : 'Allow Flick to run without aggressive background limits so rescans and background features keep working',
++                                  'for background features to work',
+                                    style: Theme.of(context).textTheme.bodyMedium
+                                        ?.copyWith(
+                                          color: context.adaptiveTextTertiary,
+@@ -1405,7 +1403,7 @@ class _LibrarySettingsScreenState extends ConsumerState<LibrarySettingsScreen>
+                               ),
+                               color: context.adaptiveTextTertiary,
+                             ),
+-                            tooltip: 'Dismiss',
++                            tooltip: 'dismiss',
+                             onPressed: _dismissBatteryNotice,
+                             visualDensity: VisualDensity.compact,
+                             padding: EdgeInsets.zero,
+-- 
+2.55.0
+

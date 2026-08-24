@@ -1,0 +1,83 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:28:02 +0700
+Subject: [PATCH] Revert "Add Chromecast support with CastController and
+ channels"
+
+This reverts commit 4b9be6c7690184980c599712349c34e90b8ffc46.
+
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+index 213ac46b5..6a68dd2e7 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+@@ -101,8 +101,6 @@ class MainActivity: FlutterActivity() {
+     private val OVERLAY_CHANNEL = "com.mossapps.flick/overlay"
+     private val BLUETOOTH_CHANNEL = "com.mossapps.flick/bluetooth"
+     private val BLUETOOTH_EVENT_CHANNEL = "com.mossapps.flick/bluetooth_events"
+-    private val CAST_CHANNEL = "com.mossapps.flick/cast"
+-    private val CAST_EVENT_CHANNEL = "com.mossapps.flick/cast_events"
+     private val LOCKER_PACKAGE = "com.mossapps.locker"
+     private val LOCKER_RETURN_URI = "locker://return?source=flick"
+     // private val CONVERTER_CHANNEL = "com.mossapps.flick/converter"
+@@ -165,8 +163,6 @@ class MainActivity: FlutterActivity() {
+     private var developerMode: Boolean = false
+     private var bluetoothEventSink: EventChannel.EventSink? = null
+     private var aclReceiver: BroadcastReceiver? = null
+-    private var castController: CastController? = null
+-    private var castEventSink: EventChannel.EventSink? = null
+ 
+     // Load the Rust shared library before calling into native startup hooks.
+     init {
+@@ -990,49 +986,6 @@ class MainActivity: FlutterActivity() {
+             }
+         )
+ 
+-        // Chromecast: discovery via MediaRouter, control via RemoteMediaClient.
+-        if (castController == null) {
+-            castController = CastController(this)
+-            castController!!.start()
+-        }
+-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CAST_CHANNEL).setMethodCallHandler { call, result ->
+-            val cc = castController
+-            when (call.method) {
+-                "discover" -> result.success(cc?.discover())
+-                "connect" -> {
+-                    cc?.connect(call.argument<String>("id") ?: "")
+-                    result.success(null)
+-                }
+-                "disconnect" -> { cc?.disconnect(); result.success(null) }
+-                "load" -> {
+-                    cc?.load(
+-                        call.argument<String>("url") ?: "",
+-                        call.argument<String>("title"),
+-                        call.argument<String>("artist"),
+-                    )
+-                    result.success(null)
+-                }
+-                "play" -> { cc?.play(); result.success(null) }
+-                "pause" -> { cc?.pause(); result.success(null) }
+-                "stop" -> { cc?.stop(); result.success(null) }
+-                "seek" -> { cc?.seek((call.argument<Int>("position") ?: 0).toLong()); result.success(null) }
+-                "setVolume" -> { cc?.setVolume((call.argument<Double>("volume") ?: 1.0)); result.success(null) }
+-                "getOutputRoutes" -> result.success(cc?.getOutputRoutes())
+-                "selectOutputRoute" -> result.success(cc?.selectOutputRoute(call.argument<String>("id") ?: ""))
+-                else -> result.notImplemented()
+-            }
+-        }
+-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CAST_EVENT_CHANNEL).setStreamHandler(
+-            object : EventChannel.StreamHandler {
+-                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+-                    castEventSink = events
+-                }
+-                override fun onCancel(arguments: Any?) {
+-                    castEventSink = null
+-                }
+-            }
+-        )
+-
+         // Audio processing channel for Android native AudioEffect counterparts.
+         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, EQUALIZER_CHANNEL).setMethodCallHandler { call, result ->
+             if (!justAudioProcessingController.handle(call, result)) {
+-- 
+2.55.0
+

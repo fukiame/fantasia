@@ -1,0 +1,184 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 27 Jul 2026 11:24:49 +0700
+Subject: [PATCH] lib: settings: bar: bomb size
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/core/constants/app_constants.dart b/lib/core/constants/app_constants.dart
+index d266c4246..df187077e 100644
+--- a/lib/core/constants/app_constants.dart
++++ b/lib/core/constants/app_constants.dart
+@@ -88,6 +88,7 @@ class AppConstants {
+   static const double cardHeightLg = 200.0;
+ 
+   // Container sizes
++  static const double containerSizeXs = 32.0;
+   static const double containerSizeSm = 40.0;
+   static const double containerSizeMd = 48.0;
+   static const double containerSizeLg = 64.0;
+diff --git a/lib/features/settings/screens/bottom_bar_settings_screen.dart b/lib/features/settings/screens/bottom_bar_settings_screen.dart
+index 277527b8c..d4e153582 100644
+--- a/lib/features/settings/screens/bottom_bar_settings_screen.dart
++++ b/lib/features/settings/screens/bottom_bar_settings_screen.dart
+@@ -106,7 +106,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+                           child: Padding(
+                             padding: const EdgeInsets.only(
+                               left: 12,
+-                              right: 4,
++                              right: 0,
+                               top: 8,
+                               bottom: 8,
+                             ),
+@@ -130,6 +130,7 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+                                         .read(navBarConfigProvider.notifier)
+                                         .toggleButton(button);
+                                   },
++                            ic: true,
+                           ),
+                         ),
+                       ],
+@@ -176,38 +177,6 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+               ],
+             ),
+           ],
+-          if (enabledCount > 4) ...[
+-            const SizedBox(height: AppConstants.spacingLg),
+-            Container(
+-              width: double.infinity,
+-              padding: const EdgeInsets.all(AppConstants.spacingMd),
+-              decoration: BoxDecoration(
+-                color: Colors.amber.withValues(alpha: 0.12),
+-                borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-                border: Border.all(color: Colors.amber.withValues(alpha: 0.28)),
+-              ),
+-              child: Row(
+-                crossAxisAlignment: CrossAxisAlignment.start,
+-                children: [
+-                  Icon(
+-                    Icons.info_outline,
+-                    color: Colors.amber.shade400,
+-                    size: 18,
+-                  ),
+-                  const SizedBox(width: AppConstants.spacingSm),
+-                  Expanded(
+-                    child: Text(
+-                      'Having more than 4 buttons may cause text labels to compress. Consider reducing the button spacing below.',
+-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                        color: context.adaptiveTextSecondary,
+-                        height: 1.35,
+-                      ),
+-                    ),
+-                  ),
+-                ],
+-              ),
+-            ),
+-          ],
+           const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Appearance'),
+           SettingsCard(
+@@ -319,12 +288,15 @@ class _DisabledNavItem extends StatelessWidget {
+           onEnable();
+         },
+         child: Padding(
+-          padding: const EdgeInsets.all(AppConstants.spacingLg),
++          padding: const EdgeInsets.symmetric(
++            vertical: AppConstants.spacingSm,
++            horizontal: AppConstants.spacingMd,
++          ),
+           child: Row(
+             children: [
+               Container(
+-                width: 40,
+-                height: 40,
++                width: 32,
++                height: 32,
+                 decoration: BoxDecoration(
+                   color: AppColors.glassBackgroundStrong,
+                   borderRadius: BorderRadius.circular(8),
+@@ -332,7 +304,7 @@ class _DisabledNavItem extends StatelessWidget {
+                 child: Icon(
+                   button.icon,
+                   color: context.adaptiveTextSecondary,
+-                  size: 20,
++                  size: 16,
+                 ),
+               ),
+               const SizedBox(width: AppConstants.spacingMd),
+@@ -341,20 +313,11 @@ class _DisabledNavItem extends StatelessWidget {
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      button.label,
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
++                      button.label.toLowerCase(),
++                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                         color: context.adaptiveTextPrimary,
+                       ),
+                     ),
+-                    const SizedBox(height: 2),
+-                    Text(
+-                      isHidden
+-                          ? 'Completely hidden from the bottom bar'
+-                          : 'Appears in the overflow menu',
+-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                    ),
+                   ],
+                 ),
+               ),
+diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
+index 04660fe5e..7ffeeaaaa 100644
+--- a/lib/features/settings/widgets/settings_widgets.dart
++++ b/lib/features/settings/widgets/settings_widgets.dart
+@@ -102,6 +102,7 @@ class ToggleSetting extends StatelessWidget {
+     required this.subtitle,
+     required this.value,
+     required this.onChanged,
++    this.ic = false,
+   });
+ 
+   final IconData icon;
+@@ -109,6 +110,7 @@ class ToggleSetting extends StatelessWidget {
+   final String subtitle;
+   final bool value;
+   final ValueChanged<bool> onChanged;
++  final bool ic;
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -123,6 +125,10 @@ class ToggleSetting extends StatelessWidget {
+           padding: const EdgeInsets.all(AppConstants.spacingMd),
+           child: Row(
+             children: [
++              if (ic) ...[
++                _SettingsIcon(icon: icon),
++                const SizedBox(width: AppConstants.spacingMd),
++              ],
+               Expanded(
+                 child: Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+@@ -540,8 +546,8 @@ class _SettingsIcon extends StatelessWidget {
+   @override
+   Widget build(BuildContext context) {
+     return Container(
+-      width: context.scaleSize(AppConstants.containerSizeMd),
+-      height: context.scaleSize(AppConstants.containerSizeMd),
++      width: AppConstants.containerSizeXs,
++      height: AppConstants.containerSizeXs,
+       decoration: BoxDecoration(
+         color: AppColors.glassBackgroundStrong,
+         borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+@@ -549,7 +555,7 @@ class _SettingsIcon extends StatelessWidget {
+       child: Icon(
+         icon,
+         color: color ?? context.adaptiveTextSecondary,
+-        size: context.responsiveIcon(AppConstants.iconSizeLg),
++        size: AppConstants.iconSizeSm,
+       ),
+     );
+   }
+-- 
+2.55.0
+

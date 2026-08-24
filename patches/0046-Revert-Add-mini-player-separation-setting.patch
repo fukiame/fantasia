@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Add mini player separation setting"
+
+This reverts commit aacacce9bef26a21fa3df6c04524a9e18966e03f.
+
+diff --git a/lib/features/settings/screens/bottom_bar_settings_screen.dart b/lib/features/settings/screens/bottom_bar_settings_screen.dart
+index 29b770ae6..e884ca76d 100644
+--- a/lib/features/settings/screens/bottom_bar_settings_screen.dart
++++ b/lib/features/settings/screens/bottom_bar_settings_screen.dart
+@@ -54,18 +54,6 @@ class BottomBarSettingsScreen extends ConsumerWidget {
+                       .setMiniPlayerSwipeAction('switchSongs');
+                 },
+               ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.split,
+-                title: 'Separate from Nav Bar',
+-                subtitle: 'Show the mini player as its own bar above the buttons',
+-                value: appPreferences.separateMiniPlayerFromNavBar,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setSeparateMiniPlayerFromNavBar(value);
+-                },
+-              ),
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-- 
+2.55.0
+

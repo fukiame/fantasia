@@ -1,0 +1,328 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 22:50:55 +0700
+Subject: [PATCH] lib: recap: drop csv
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
+index 8704fdb65..bc1397657 100644
+--- a/lib/features/recap/screens/listening_recap_screen.dart
++++ b/lib/features/recap/screens/listening_recap_screen.dart
+@@ -10,7 +10,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/recently_played_repository.dart';
+-import 'package:flick/services/csv_export_service.dart';
+ import 'package:flick/services/gallery_save_service.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+@@ -27,7 +26,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+   final RecentlyPlayedRepository _recentlyPlayedRepository =
+       RecentlyPlayedRepository();
+   final GallerySaveService _gallerySaveService = GallerySaveService();
+-  final CsvExportService _csvExportService = CsvExportService();
+   final GlobalKey _cardBoundaryKey = GlobalKey();
+   final GlobalKey _topSongsPosterBoundaryKey = GlobalKey();
+   final GlobalKey _topArtistsPosterBoundaryKey = GlobalKey();
+@@ -38,8 +36,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+   Map<ListeningRecapPeriod, ListeningRecap> _recaps = {};
+   bool _isLoading = true;
+   bool _isSaving = false;
+-  bool _isExportingCsv = false;
+-  bool _isExportingTxt = false;
+   String? _galleryBackgroundPath;
+   _RecapRankingPosterType? _savingPosterType;
+   _RecapRankingPosterType? _savedPosterType;
+@@ -166,52 +162,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+     }
+   }
+ 
+-  Future<void> _saveRecapCsv() async {
+-    if (_isExportingCsv || _isExportingTxt) return;
+-
+-    setState(() => _isExportingCsv = true);
+-
+-    try {
+-      final recap = _currentRecap();
+-      await _csvExportService.saveCsv(recap);
+-
+-      if (!mounted) return;
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        const SnackBar(content: Text('Recap saved as CSV')),
+-      );
+-    } catch (error) {
+-      if (!mounted) return;
+-      ScaffoldMessenger.of(
+-        context,
+-      ).showSnackBar(SnackBar(content: Text(_saveErrorMessage(error))));
+-    } finally {
+-      if (mounted) setState(() => _isExportingCsv = false);
+-    }
+-  }
+-
+-  Future<void> _saveRecapTxt() async {
+-    if (_isExportingCsv || _isExportingTxt) return;
+-
+-    setState(() => _isExportingTxt = true);
+-
+-    try {
+-      final recap = _currentRecap();
+-      await _csvExportService.saveTxt(recap);
+-
+-      if (!mounted) return;
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        const SnackBar(content: Text('Recap saved as TXT')),
+-      );
+-    } catch (error) {
+-      if (!mounted) return;
+-      ScaffoldMessenger.of(
+-        context,
+-      ).showSnackBar(SnackBar(content: Text(_saveErrorMessage(error))));
+-    } finally {
+-      if (mounted) setState(() => _isExportingTxt = false);
+-    }
+-  }
+-
+   GlobalKey _rankingPosterBoundaryKey(_RecapRankingPosterType type) {
+     return switch (type) {
+       _RecapRankingPosterType.topSongs => _topSongsPosterBoundaryKey,
+@@ -621,34 +571,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+           isPrimary: true,
+           onTap: _isSaving ? null : _saveCurrentRecap,
+         ),
+-        if (recap.hasData) ...[
+-          const SizedBox(height: AppConstants.spacingSm),
+-          Row(
+-            children: [
+-              Expanded(
+-                child: _RecapActionButton(
+-                  icon: Icons.table_chart_rounded,
+-                  label: _isExportingCsv ? 'Saving...' : 'Save as CSV',
+-                  onTap:
+-                      (_isExportingCsv || _isExportingTxt)
+-                          ? null
+-                          : _saveRecapCsv,
+-                ),
+-              ),
+-              const SizedBox(width: AppConstants.spacingSm),
+-              Expanded(
+-                child: _RecapActionButton(
+-                  icon: Icons.description_rounded,
+-                  label: _isExportingTxt ? 'Saving...' : 'Save as TXT',
+-                  onTap:
+-                      (_isExportingCsv || _isExportingTxt)
+-                          ? null
+-                          : _saveRecapTxt,
+-                ),
+-              ),
+-            ],
+-          ),
+-        ],
+       ],
+     );
+   }
+diff --git a/lib/services/csv_export_service.dart b/lib/services/csv_export_service.dart
+deleted file mode 100644
+index b81a995d2..000000000
+--- a/lib/services/csv_export_service.dart
++++ /dev/null
+@@ -1,195 +0,0 @@
+-import 'dart:io';
+-
+-import 'package:flutter/services.dart';
+-
+-import '../data/repositories/recently_played_repository.dart';
+-
+-class CsvExportService {
+-  static const _channel = MethodChannel('com.mossapps.flick/storage');
+-
+-  Future<String?> saveCsv(ListeningRecap recap) async {
+-    if (!Platform.isAndroid) {
+-      throw UnsupportedError('CSV export is currently supported on Android only.');
+-    }
+-
+-    final content = _buildCsv(recap);
+-    final fileName = _buildFileName(recap, 'csv');
+-    final documentUri = await _channel.invokeMethod<String>(
+-      'createDocument',
+-      {'fileName': fileName, 'mimeType': 'text/csv'},
+-    );
+-    if (documentUri == null || documentUri.trim().isEmpty) return null;
+-
+-    final success = await _channel.invokeMethod<bool>(
+-      'writeTextDocument',
+-      {'uri': documentUri, 'content': content},
+-    );
+-    if (success != true) {
+-      throw const FileSystemException('Failed to write CSV file');
+-    }
+-
+-    return fileName;
+-  }
+-
+-  Future<String?> saveTxt(ListeningRecap recap) async {
+-    if (!Platform.isAndroid) {
+-      throw UnsupportedError('TXT export is currently supported on Android only.');
+-    }
+-
+-    final content = _buildTxt(recap);
+-    final fileName = _buildFileName(recap, 'txt');
+-    final documentUri = await _channel.invokeMethod<String>(
+-      'createDocument',
+-      {'fileName': fileName, 'mimeType': 'text/plain'},
+-    );
+-    if (documentUri == null || documentUri.trim().isEmpty) return null;
+-
+-    final success = await _channel.invokeMethod<bool>(
+-      'writeTextDocument',
+-      {'uri': documentUri, 'content': content},
+-    );
+-    if (success != true) {
+-      throw const FileSystemException('Failed to write TXT file');
+-    }
+-
+-    return fileName;
+-  }
+-
+-  String _buildFileName(ListeningRecap recap, String extension) {
+-    final now = DateTime.now();
+-    final ts =
+-        '${now.year}-${_pad(now.month)}-${_pad(now.day)}_'
+-        '${_pad(now.hour)}${_pad(now.minute)}${_pad(now.second)}';
+-    return 'flick_${recap.period.label.toLowerCase()}_replay_$ts.$extension';
+-  }
+-
+-  String _pad(int n) => n.toString().padLeft(2, '0');
+-
+-  String _formatDuration(Duration d) {
+-    final hours = d.inHours;
+-    final minutes = d.inMinutes.remainder(60);
+-    if (hours > 0) {
+-      return '${hours}h ${minutes}m';
+-    }
+-    return '${minutes}m';
+-  }
+-
+-  String _formatDateTime(DateTime dt) {
+-    return '${dt.year}-${_pad(dt.month)}-${_pad(dt.day)} '
+-        '${_pad(dt.hour)}:${_pad(dt.minute)}';
+-  }
+-
+-  String _csvEscape(String value) {
+-    if (value.contains(',') || value.contains('"') || value.contains('\n')) {
+-      return '"${value.replaceAll('"', '""')}"';
+-    }
+-    return value;
+-  }
+-
+-  String _buildCsv(ListeningRecap recap) {
+-    final buf = StringBuffer();
+-
+-    buf.writeln('Flick Replay — ${recap.period.label} Recap');
+-    buf.writeln();
+-    buf.writeln('Period: ${_formatDateTime(recap.start)} → ${_formatDateTime(recap.endExclusive)}');
+-    buf.writeln('Total Plays: ${recap.totalPlays}');
+-    buf.writeln('Total Listening Time: ${_formatDuration(recap.totalListeningTime)}');
+-    buf.writeln('Unique Songs: ${recap.uniqueSongs}');
+-    buf.writeln('Unique Artists: ${recap.uniqueArtists}');
+-    buf.writeln('Active Days: ${recap.activeDays}');
+-    if (recap.peakHour != null) {
+-      buf.writeln('Peak Listening Hour: ${recap.peakHour}:00');
+-    }
+-    buf.writeln();
+-
+-    buf.writeln('Top Songs');
+-    buf.writeln('Rank,Title,Artist,Album,Plays,Listening Time,Last Played');
+-    for (var i = 0; i < recap.topSongs.length; i++) {
+-      final s = recap.topSongs[i];
+-      buf.writeln(
+-        '${i + 1},'
+-        '${_csvEscape(s.song.title)},'
+-        '${_csvEscape(s.song.artist)},'
+-        '${_csvEscape(s.song.album ?? '')},'
+-        '${s.plays},'
+-        '${_formatDuration(s.listeningTime)},'
+-        '${_formatDateTime(s.lastPlayedAt)}',
+-      );
+-    }
+-    buf.writeln();
+-
+-    buf.writeln('Top Artists');
+-    buf.writeln('Rank,Artist,Plays,Unique Songs,Listening Time,Last Played');
+-    for (var i = 0; i < recap.topArtists.length; i++) {
+-      final a = recap.topArtists[i];
+-      buf.writeln(
+-        '${i + 1},'
+-        '${_csvEscape(a.artist)},'
+-        '${a.plays},'
+-        '${a.uniqueSongs},'
+-        '${_formatDuration(a.listeningTime)},'
+-        '${_formatDateTime(a.lastPlayedAt)}',
+-      );
+-    }
+-    buf.writeln();
+-
+-    buf.writeln('Top Albums');
+-    buf.writeln('Rank,Album,Artist,Plays,Unique Songs,Listening Time,Last Played');
+-    for (var i = 0; i < recap.topAlbums.length; i++) {
+-      final a = recap.topAlbums[i];
+-      buf.writeln(
+-        '${i + 1},'
+-        '${_csvEscape(a.album)},'
+-        '${_csvEscape(a.artist)},'
+-        '${a.plays},'
+-        '${a.uniqueSongs},'
+-        '${_formatDuration(a.listeningTime)},'
+-        '${_formatDateTime(a.lastPlayedAt)}',
+-      );
+-    }
+-
+-    return buf.toString();
+-  }
+-
+-  String _buildTxt(ListeningRecap recap) {
+-    final buf = StringBuffer();
+-
+-    buf.writeln('=== FLICK REPLAY: ${recap.period.label.toUpperCase()} RECAP ===');
+-    buf.writeln();
+-    buf.writeln('Period:       ${_formatDateTime(recap.start)} → ${_formatDateTime(recap.endExclusive)}');
+-    buf.writeln('Total Plays:  ${recap.totalPlays}');
+-    buf.writeln('Listening:    ${_formatDuration(recap.totalListeningTime)}');
+-    buf.writeln('Songs:        ${recap.uniqueSongs} unique');
+-    buf.writeln('Artists:      ${recap.uniqueArtists} unique');
+-    buf.writeln('Active Days:  ${recap.activeDays}');
+-    if (recap.peakHour != null) {
+-      buf.writeln('Peak Hour:    ${recap.peakHour}:00');
+-    }
+-    buf.writeln();
+-
+-    buf.writeln('--- Top Songs ---');
+-    for (var i = 0; i < recap.topSongs.length; i++) {
+-      final s = recap.topSongs[i];
+-      buf.writeln('  ${i + 1}. ${s.song.title} — ${s.song.artist}');
+-      buf.writeln('     Plays: ${s.plays} | Time: ${_formatDuration(s.listeningTime)} | Last: ${_formatDateTime(s.lastPlayedAt)}');
+-    }
+-    buf.writeln();
+-
+-    buf.writeln('--- Top Artists ---');
+-    for (var i = 0; i < recap.topArtists.length; i++) {
+-      final a = recap.topArtists[i];
+-      buf.writeln('  ${i + 1}. ${a.artist}');
+-      buf.writeln('     Plays: ${a.plays} | Songs: ${a.uniqueSongs} | Time: ${_formatDuration(a.listeningTime)} | Last: ${_formatDateTime(a.lastPlayedAt)}');
+-    }
+-    buf.writeln();
+-
+-    buf.writeln('--- Top Albums ---');
+-    for (var i = 0; i < recap.topAlbums.length; i++) {
+-      final a = recap.topAlbums[i];
+-      buf.writeln('  ${i + 1}. ${a.album} — ${a.artist}');
+-      buf.writeln('     Plays: ${a.plays} | Songs: ${a.uniqueSongs} | Time: ${_formatDuration(a.listeningTime)} | Last: ${_formatDateTime(a.lastPlayedAt)}');
+-    }
+-
+-    return buf.toString();
+-  }
+-}
+-- 
+2.55.0
+

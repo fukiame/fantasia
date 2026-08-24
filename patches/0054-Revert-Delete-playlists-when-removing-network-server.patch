@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Delete playlists when removing network server"
+
+This reverts commit a5a2b5889d51d0e71c6a40aee742d3436c21e235.
+
+diff --git a/lib/features/settings/screens/network_server_edit_screen.dart b/lib/features/settings/screens/network_server_edit_screen.dart
+index fa7f28b1a..ade9cbebd 100644
+--- a/lib/features/settings/screens/network_server_edit_screen.dart
++++ b/lib/features/settings/screens/network_server_edit_screen.dart
+@@ -14,7 +14,6 @@ import '../../../core/utils/responsive.dart';
+ // Database, widgets, and service configurations
+ import '../../../data/database.dart';
+ import '../../../data/repositories/song_repository.dart';
+-import '../../../services/playlist_service.dart';
+ import '../../../services/sources/network_source_service.dart';
+ import '../../../services/sources/tidal_service.dart';
+ import '../widgets/settings_widgets.dart';
+@@ -291,8 +290,8 @@ class _NetworkServerEditScreenState extends State<NetworkServerEditScreen> {
+       builder: (context) => AlertDialog(
+         title: const Text('Remove server?'),
+       content: Text(
+-          'Delete "${server.label}" and all songs and playlists synced from '
+-          'it? Cached downloads are kept.',
++          'Delete "${server.label}" and all songs synced from it? '
++          'Cached downloads are kept.',
+         ),
+         actions: [
+           TextButton(
+@@ -311,7 +310,6 @@ class _NetworkServerEditScreenState extends State<NetworkServerEditScreen> {
+       await Database.networkServers.delete(server.id);
+     });
+     await SongRepository().deleteSongsForRemoteServer(server.id);
+-    await PlaylistService.instance.removeNetworkPlaylistsForServer('${server.id}');
+     if (!mounted) return;
+     Navigator.of(context).pop(true);
+   }
+-- 
+2.55.0
+

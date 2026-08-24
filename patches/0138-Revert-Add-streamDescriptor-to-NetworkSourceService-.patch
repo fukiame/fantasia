@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:34 +0700
+Subject: [PATCH] Revert "Add `streamDescriptor` to `NetworkSourceService` for
+ HTTP-first playback"
+
+This reverts commit 3269e16bc014bbbb3bd799ab31b2c7d27421a99d.
+
+diff --git a/lib/services/sources/network_source_service.dart b/lib/services/sources/network_source_service.dart
+index c1fac158f..8ec5cbf77 100644
+--- a/lib/services/sources/network_source_service.dart
++++ b/lib/services/sources/network_source_service.dart
+@@ -52,16 +52,6 @@ abstract class NetworkSourceService {
+     void Function(double progress)? onProgress,
+   });
+ 
+-  /// Direct ranged HTTP stream URL + auth headers for [remoteId], when the
+-  /// protocol supports byte-range requests. Returning non-null enables
+-  /// HTTP-first playback (no cache download before play). Default: unsupported
+-  /// (cache-then-play via [stream]).
+-  Future<({String url, Map<String, String> headers})?> streamDescriptor(
+-    NetworkServerEntity server,
+-    String remoteId, {
+-    String? extension,
+-  }) async => null;
+-
+   /// Pull the full server library into the local DB as [SongEntity]s,
+   /// upserting new/changed rows and deleting stale ones, yielding progress.
+   Stream<ScanProgress> syncLibrary(NetworkServerEntity server);
+-- 
+2.55.0
+

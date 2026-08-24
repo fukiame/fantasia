@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 00:04:45 +0700
+Subject: [PATCH] pubspec: drop http
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index f85c80928..e6d399044 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -45,7 +45,6 @@ dependencies:
+   flutter_svg: ^2.2.3
+   home_widget: ^0.7.0
+   freezed_annotation: ^3.0.0
+-  http: ^1.2.0
+   image: ^4.8.0
+   image_picker: ^1.1.2
+   isar_community: ^3.3.2
+-- 
+2.55.0
+

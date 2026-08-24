@@ -1,0 +1,136 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: ultraelectronica <fyketonel@gmail.com>
+Date: Mon, 27 Jul 2026 11:57:26 +0800
+Subject: [PATCH] Hold artwork extraction during audio preload for consistency
+
+
+diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
+index d5c6ed82e..b5d6e5c00 100644
+--- a/lib/services/audio_preload_service.dart
++++ b/lib/services/audio_preload_service.dart
+@@ -3,6 +3,7 @@ import 'dart:async';
+ import '../data/entities/song_entity.dart';
+ import '../data/repositories/song_repository.dart';
+ import 'album_art_service.dart';
++import 'artwork_gate.dart';
+ 
+ class PreloadProgress {
+   final int completed;
+@@ -58,61 +59,71 @@ class AudioPreloadService {
+       return;
+     }
+ 
+-    final toProcess = <SongEntity>[];
+-    var skipped = 0;
+-
+-    for (final song in songs) {
+-      if (_isCancelled) break;
+-
+-      if (!forceAll) {
+-        skipped++;
+-        continue;
++    // ponytail: hold the artwork gate for the whole pass so scroll-side
++    // extraction steps aside. Preload owns the shared compute() isolate
++    // until done; tiles refresh via watchSongs() -> invalidateSelf when each
++    // path is persisted, so art appears as preload reaches it. Refcounted,
++    // so a concurrent fling gate won't clobber this on its settle timer.
++    pauseArtworkExtraction(true);
++    try {
++      final toProcess = <SongEntity>[];
++      var skipped = 0;
++
++      for (final song in songs) {
++        if (_isCancelled) break;
++
++        if (!forceAll) {
++          skipped++;
++          continue;
++        }
++        toProcess.add(song);
+       }
+-      toProcess.add(song);
+-    }
+-
+-    var completed = skipped;
+-    var failed = 0;
+ 
+-    yield PreloadProgress(
+-      completed: completed,
+-      total: songs.length,
+-      skipped: skipped,
+-      failed: failed,
+-    );
++      var completed = skipped;
++      var failed = 0;
+ 
+-    // ponytail: chunked concurrency — simple, correct, good enough for v1.
+-    // Uneven decode times leave a worker idle at chunk boundaries; upgrade to
+-    // a shared-queue worker pool if that matters.
+-    for (var i = 0; i < toProcess.length; i += _concurrency) {
+-      if (_isCancelled) break;
+-
+-      final end = (i + _concurrency).clamp(0, toProcess.length);
+-      final chunk = toProcess.sublist(i, end);
+-
+-      final results = await Future.wait(
+-        chunk.map((s) => _processSong(s).then((_) => true).catchError((_) => false)),
++      yield PreloadProgress(
++        completed: completed,
++        total: songs.length,
++        skipped: skipped,
++        failed: failed,
+       );
+ 
+-      completed += results.where((r) => r).length;
+-      failed += results.where((r) => !r).length;
++      // ponytail: chunked concurrency — simple, correct, good enough for v1.
++      // Uneven decode times leave a worker idle at chunk boundaries; upgrade
++      // a shared-queue worker pool if that matters.
++      for (var i = 0; i < toProcess.length; i += _concurrency) {
++        if (_isCancelled) break;
++
++        final end = (i + _concurrency).clamp(0, toProcess.length);
++        final chunk = toProcess.sublist(i, end);
++
++        final results = await Future.wait(
++          chunk.map((s) => _processSong(s).then((_) => true).catchError((_) => false)),
++        );
++
++        completed += results.where((r) => r).length;
++        failed += results.where((r) => !r).length;
++
++        yield PreloadProgress(
++          completed: completed,
++          total: songs.length,
++          skipped: skipped,
++          failed: failed,
++          currentFile: chunk.last.title,
++        );
++      }
+ 
+       yield PreloadProgress(
+-        completed: completed,
++        completed: songs.length,
+         total: songs.length,
+         skipped: skipped,
+         failed: failed,
+-        currentFile: chunk.last.title,
++        isComplete: true,
+       );
++    } finally {
++      pauseArtworkExtraction(false);
+     }
+-
+-    yield PreloadProgress(
+-      completed: songs.length,
+-      total: songs.length,
+-      skipped: skipped,
+-      failed: failed,
+-      isComplete: true,
+-    );
+   }
+ 
+   Future<void> _processSong(SongEntity song) async {
+-- 
+2.55.0
+

@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 19:39:42 +0700
+Subject: [PATCH] left left right
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/uac2_settings_screen.dart b/lib/features/settings/screens/uac2_settings_screen.dart
+index 1fa4b4e3a..8bfe1e53c 100644
+--- a/lib/features/settings/screens/uac2_settings_screen.dart
++++ b/lib/features/settings/screens/uac2_settings_screen.dart
+@@ -275,6 +275,7 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             style: Theme.of(context).textTheme.titleMedium?.copyWith(
+               color: context.adaptiveTextSecondary,
+             ),
++            textAlign: TextAlign.left,
+           ),
+           const SizedBox(height: AppConstants.spacingSm),
+           Text(
+@@ -282,7 +283,7 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             style: Theme.of(context).textTheme.bodySmall?.copyWith(
+               color: context.adaptiveTextTertiary,
+             ),
+-            textAlign: TextAlign.center,
++            textAlign: TextAlign.left,
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+           _buildRefreshButton(context),
+@@ -424,6 +425,7 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+                   color: context.adaptiveTextSecondary,
+                   fontWeight: FontWeight.w500,
+                 ),
++                textAlign: TextAlign.right,
+               ),
+             ],
+           ),
+-- 
+2.55.0
+

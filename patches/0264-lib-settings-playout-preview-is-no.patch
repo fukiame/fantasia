@@ -1,0 +1,711 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 29 Jul 2026 14:02:38 +0700
+Subject: [PATCH] lib: settings: playout: preview is no
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index f5be1881f..1e9db7ddd 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -32,66 +32,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+       body: Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+-          GestureDetector(
+-            onTap: () => _showFullScreenPreview(context, ref),
+-            child: Stack(
+-              children: [
+-                _LayoutPreview(
+-                  song: ref.watch(currentSongProvider),
+-                  mode: playerScreenMode,
+-                  artworkCardArtworkScale: appPrefs.artworkCardArtworkScale,
+-                  artworkCardTextScale: appPrefs.artworkCardTextScale,
+-                  artworkCardVerticalOffset: appPrefs.artworkCardVerticalOffset,
+-                  artworkCardShowTitle: appPrefs.artworkCardShowTitle,
+-                  artworkCardShowArtist: appPrefs.artworkCardShowArtist,
+-                  artworkCardShowAlbum: appPrefs.artworkCardShowAlbum,
+-                  artworkCardShowFileInfo: appPrefs.artworkCardShowFileInfo,
+-                  artworkCardShowFrame: appPrefs.artworkCardShowFrame,
+-                  immersiveTextScale: appPrefs.immersiveTextScale,
+-                  immersiveVerticalOffset: appPrefs.immersiveVerticalOffset,
+-                  immersiveFullViewScale: appPrefs.immersiveFullViewScale,
+-                  immersiveShowTitle: appPrefs.immersiveShowTitle,
+-                  immersiveShowArtist: appPrefs.immersiveShowArtist,
+-                  immersiveShowFileInfo: appPrefs.immersiveShowFileInfo,
+-                ),
+-                Positioned(
+-                  top: 8,
+-                  right: 8,
+-                  child: Container(
+-                    padding: const EdgeInsets.symmetric(
+-                      horizontal: 8,
+-                      vertical: 4,
+-                    ),
+-                    decoration: BoxDecoration(
+-                      color: Colors.black.withValues(alpha: 0.48),
+-                      borderRadius: BorderRadius.circular(8),
+-                    ),
+-                    child: Row(
+-                      mainAxisSize: MainAxisSize.min,
+-                      children: [
+-                        Icon(
+-                          Icons.open_in_full_rounded,
+-                          size: 13,
+-                          color: Colors.white.withValues(alpha: 0.86),
+-                        ),
+-                        const SizedBox(width: 4),
+-                        Text(
+-                          'Fullscreen',
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: 11,
+-                            fontWeight: FontWeight.w500,
+-                            color: Colors.white.withValues(alpha: 0.86),
+-                          ),
+-                        ),
+-                      ],
+-                    ),
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Layout Mode'),
+           SettingsCard(
+             children: [
+@@ -468,112 +408,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+       ),
+     );
+   }
+-
+-  void _showFullScreenPreview(BuildContext context, WidgetRef ref) {
+-    Navigator.of(context).push(
+-      PageRouteBuilder(
+-        opaque: false,
+-        barrierDismissible: true,
+-        barrierColor: Colors.black.withValues(alpha: 0.88),
+-        transitionDuration: AppConstants.animationNormal,
+-        reverseTransitionDuration: AppConstants.animationNormal,
+-        pageBuilder: (context, animation, secondaryAnimation) {
+-          return FadeTransition(
+-            opacity: animation,
+-            child: Consumer(
+-              builder: (context, ref, _) {
+-                final appPrefs = ref.watch(appPreferencesProvider);
+-                final mode = ref.watch(playerScreenModeProvider);
+-                return SafeArea(
+-                  child: Stack(
+-                    children: [
+-                      Positioned.fill(
+-                        child: _FullScreenPreview(
+-                          song: ref.watch(currentSongProvider),
+-                          mode: mode,
+-                          artworkCardArtworkScale:
+-                              appPrefs.artworkCardArtworkScale,
+-                          artworkCardTextScale: appPrefs.artworkCardTextScale,
+-                          artworkCardVerticalOffset:
+-                              appPrefs.artworkCardVerticalOffset,
+-                          artworkCardShowTitle: appPrefs.artworkCardShowTitle,
+-                          artworkCardShowArtist: appPrefs.artworkCardShowArtist,
+-                          artworkCardShowAlbum: appPrefs.artworkCardShowAlbum,
+-                          artworkCardShowFileInfo:
+-                              appPrefs.artworkCardShowFileInfo,
+-                          artworkCardShowFrame: appPrefs.artworkCardShowFrame,
+-                          immersiveTextScale: appPrefs.immersiveTextScale,
+-                          immersiveVerticalOffset:
+-                              appPrefs.immersiveVerticalOffset,
+-                          immersiveFullViewScale:
+-                              appPrefs.immersiveFullViewScale,
+-                          immersiveShowTitle: appPrefs.immersiveShowTitle,
+-                          immersiveShowArtist: appPrefs.immersiveShowArtist,
+-                          immersiveShowFileInfo:
+-                              appPrefs.immersiveShowFileInfo,
+-                        ),
+-                      ),
+-                      Positioned(
+-                        top: 0,
+-                        left: 0,
+-                        right: 0,
+-                        child: Padding(
+-                          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+-                          child: Row(
+-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                            children: [
+-                              Row(
+-                                children: [
+-                                  Icon(
+-                                    mode == PlayerScreenMode.immersive
+-                                        ? Icons.fit_screen_rounded
+-                                        : Icons.rounded_corner_rounded,
+-                                    size: 18,
+-                                    color: Colors.white.withValues(alpha: 0.6),
+-                                  ),
+-                                  const SizedBox(width: 8),
+-                                  Text(
+-                                    mode.label,
+-                                    style: TextStyle(
+-                                      fontFamily: 'ProductSans',
+-                                      fontSize: 15,
+-                                      fontWeight: FontWeight.w600,
+-                                      color: Colors.white.withValues(
+-                                        alpha: 0.72,
+-                                      ),
+-                                    ),
+-                                  ),
+-                                ],
+-                              ),
+-                              GestureDetector(
+-                                onTap: () => Navigator.of(context).pop(),
+-                                child: Container(
+-                                  padding: const EdgeInsets.all(8),
+-                                  decoration: BoxDecoration(
+-                                    color: Colors.white.withValues(alpha: 0.08),
+-                                    borderRadius: BorderRadius.circular(10),
+-                                  ),
+-                                  child: Icon(
+-                                    Icons.close_rounded,
+-                                    size: 20,
+-                                    color: Colors.white.withValues(alpha: 0.7),
+-                                  ),
+-                                ),
+-                              ),
+-                            ],
+-                          ),
+-                        ),
+-                      ),
+-                    ],
+-                  ),
+-                );
+-              },
+-            ),
+-          );
+-        },
+-      ),
+-    );
+-  }
+ }
+ 
+ String _fileInfoLabel(Song? song) {
+@@ -584,287 +418,6 @@ String _fileInfoLabel(Song? song) {
+   return type;
+ }
+ 
+-class _LayoutPreview extends StatelessWidget {
+-  const _LayoutPreview({
+-    required this.song,
+-    required this.mode,
+-    required this.artworkCardArtworkScale,
+-    required this.artworkCardTextScale,
+-    required this.artworkCardVerticalOffset,
+-    required this.artworkCardShowTitle,
+-    required this.artworkCardShowArtist,
+-    required this.artworkCardShowAlbum,
+-    required this.artworkCardShowFileInfo,
+-    required this.artworkCardShowFrame,
+-    required this.immersiveTextScale,
+-    required this.immersiveVerticalOffset,
+-    required this.immersiveFullViewScale,
+-    required this.immersiveShowTitle,
+-    required this.immersiveShowArtist,
+-    required this.immersiveShowFileInfo,
+-  });
+-
+-  final Song? song;
+-  final PlayerScreenMode mode;
+-  final double artworkCardArtworkScale;
+-  final double artworkCardTextScale;
+-  final double artworkCardVerticalOffset;
+-  final bool artworkCardShowTitle;
+-  final bool artworkCardShowArtist;
+-  final bool artworkCardShowAlbum;
+-  final bool artworkCardShowFileInfo;
+-  final bool artworkCardShowFrame;
+-  final double immersiveTextScale;
+-  final double immersiveVerticalOffset;
+-  final double immersiveFullViewScale;
+-  final bool immersiveShowTitle;
+-  final bool immersiveShowArtist;
+-  final bool immersiveShowFileInfo;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Container(
+-      clipBehavior: Clip.hardEdge,
+-      decoration: BoxDecoration(
+-        color: AppColors.surface.withValues(alpha: 0.6),
+-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-        border: Border.all(color: AppColors.glassBorder, width: 1),
+-      ),
+-      child: Column(
+-        crossAxisAlignment: CrossAxisAlignment.start,
+-        children: [
+-          Padding(
+-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+-            child: Row(
+-              children: [
+-                Icon(
+-                  Icons.preview_rounded,
+-                  size: 16,
+-                  color: context.adaptiveTextTertiary,
+-                ),
+-                const SizedBox(width: 6),
+-                Text(
+-                  'Live Preview',
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: 12,
+-                    fontWeight: FontWeight.w600,
+-                    color: context.adaptiveTextTertiary,
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-          const SizedBox(height: 8),
+-          Container(
+-            height: 180,
+-            margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+-            decoration: BoxDecoration(
+-              borderRadius: BorderRadius.circular(14),
+-              gradient: const LinearGradient(
+-                begin: Alignment.topLeft,
+-                end: Alignment.bottomRight,
+-                colors: [
+-                  Color(0xFF232323),
+-                  Color(0xFF121212),
+-                  Color(0xFF2A1A3A),
+-                ],
+-              ),
+-            ),
+-            child: Stack(
+-              children: [
+-                if (song == null)
+-                  const Center(
+-                    child: Text(
+-                      'No song playing',
+-                      style: TextStyle(
+-                        fontFamily: 'ProductSans',
+-                        fontSize: 14,
+-                        color: Color(0xFF888888),
+-                      ),
+-                    ),
+-                  )
+-                else
+-                  Positioned.fill(
+-                    child: mode == PlayerScreenMode.artworkCard
+-                        ? _buildArtworkCardPreview(context)
+-                        : _buildImmersivePreview(context),
+-                  ),
+-              ],
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildArtworkCardPreview(BuildContext context) {
+-    final artSize = 70.0 * artworkCardArtworkScale;
+-    return Transform.translate(
+-      offset: Offset(0, artworkCardVerticalOffset * 0.45),
+-      child: Column(
+-        mainAxisAlignment: MainAxisAlignment.center,
+-        children: [
+-          _AlbumArtThumb(song: song, size: artSize, radius: 18),
+-          const SizedBox(height: 10),
+-          if (artworkCardShowTitle)
+-            Padding(
+-              padding: const EdgeInsets.symmetric(horizontal: 28),
+-              child: Text(
+-                song?.title ?? 'Unknown',
+-                maxLines: 1,
+-                overflow: TextOverflow.ellipsis,
+-                textAlign: TextAlign.center,
+-                style: TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 17 * artworkCardTextScale,
+-                  fontWeight: FontWeight.w700,
+-                  color: Colors.white,
+-                ),
+-              ),
+-            ),
+-          if (artworkCardShowTitle && artworkCardShowArtist)
+-            const SizedBox(height: 4),
+-          if (artworkCardShowArtist)
+-            Text(
+-              song?.artist ?? 'Unknown Artist',
+-              maxLines: 1,
+-              overflow: TextOverflow.ellipsis,
+-              style: TextStyle(
+-                fontFamily: 'ProductSans',
+-                fontSize: 12 * artworkCardTextScale,
+-                color: Colors.white.withValues(alpha: 0.72),
+-              ),
+-            ),
+-          if (artworkCardShowAlbum) ...[
+-            if ((artworkCardShowTitle || artworkCardShowArtist))
+-              const SizedBox(height: 2),
+-            Text(
+-              song?.album ?? '',
+-              maxLines: 1,
+-              overflow: TextOverflow.ellipsis,
+-              style: TextStyle(
+-                fontFamily: 'ProductSans',
+-                fontSize: 11 * artworkCardTextScale,
+-                color: Colors.white.withValues(alpha: 0.55),
+-              ),
+-            ),
+-          ],
+-          if (artworkCardShowFileInfo && song != null)
+-            Padding(
+-              padding: const EdgeInsets.only(top: 3),
+-              child: Text(
+-                _fileInfoLabel(song),
+-                maxLines: 1,
+-                overflow: TextOverflow.ellipsis,
+-                style: TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 10,
+-                  color: Colors.white.withValues(alpha: 0.48),
+-                ),
+-              ),
+-            ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildImmersivePreview(BuildContext context) {
+-    final artSize = 38.0 * immersiveFullViewScale;
+-    return Stack(
+-      children: [
+-        Positioned.fill(
+-          child: Opacity(
+-            opacity: 0.28,
+-            child: _AlbumArtThumb(
+-              song: song,
+-              size: double.infinity,
+-              radius: 0,
+-            ),
+-          ),
+-        ),
+-        Positioned(
+-          left: 16,
+-          right: 16,
+-          bottom: 14,
+-          child: Transform.translate(
+-            offset: Offset(0, immersiveVerticalOffset * 0.45),
+-            child: Row(
+-              crossAxisAlignment: CrossAxisAlignment.end,
+-              children: [
+-                Container(
+-                  padding: EdgeInsets.all(7 * immersiveFullViewScale),
+-                  decoration: BoxDecoration(
+-                    color: Colors.black.withValues(alpha: 0.34),
+-                    borderRadius: BorderRadius.circular(18),
+-                    border: Border.all(
+-                      color: Colors.white.withValues(alpha: 0.08),
+-                    ),
+-                  ),
+-                  child: _AlbumArtThumb(
+-                    song: song,
+-                    size: artSize,
+-                    radius: 12,
+-                  ),
+-                ),
+-                const SizedBox(width: 12),
+-                Expanded(
+-                  child: Column(
+-                    crossAxisAlignment: CrossAxisAlignment.start,
+-                    mainAxisSize: MainAxisSize.min,
+-                    children: [
+-                      if (immersiveShowTitle)
+-                        Text(
+-                          song?.title ?? 'Unknown',
+-                          maxLines: 2,
+-                          overflow: TextOverflow.ellipsis,
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: 18 * immersiveTextScale,
+-                            fontWeight: FontWeight.w700,
+-                            height: 1.05,
+-                            color: Colors.white,
+-                          ),
+-                        ),
+-                      if (immersiveShowTitle && immersiveShowArtist)
+-                        const SizedBox(height: 5),
+-                      if (immersiveShowArtist)
+-                        Text(
+-                          song?.artist ?? 'Unknown Artist',
+-                          maxLines: 1,
+-                          overflow: TextOverflow.ellipsis,
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: 12 * immersiveTextScale,
+-                            color: Colors.white.withValues(alpha: 0.76),
+-                          ),
+-                        ),
+-                      if (immersiveShowFileInfo && song != null)
+-                        Padding(
+-                          padding: const EdgeInsets.only(top: 4),
+-                          child: Text(
+-                            _fileInfoLabel(song),
+-                            maxLines: 1,
+-                            overflow: TextOverflow.ellipsis,
+-                            style: TextStyle(
+-                              fontFamily: 'ProductSans',
+-                              fontSize: 11,
+-                              color: Colors.white.withValues(alpha: 0.48),
+-                            ),
+-                          ),
+-                        ),
+-                    ],
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-}
+-
+ class _AlbumArtThumb extends StatelessWidget {
+   const _AlbumArtThumb({
+     required this.song,
+@@ -970,228 +523,3 @@ class _ActionButtonPickerScreen extends ConsumerWidget {
+     );
+   }
+ }
+-
+-class _FullScreenPreview extends StatelessWidget {
+-  const _FullScreenPreview({
+-    required this.song,
+-    required this.mode,
+-    required this.artworkCardArtworkScale,
+-    required this.artworkCardTextScale,
+-    required this.artworkCardVerticalOffset,
+-    this.artworkCardShowTitle = true,
+-    this.artworkCardShowArtist = true,
+-    this.artworkCardShowAlbum = true,
+-    this.artworkCardShowFileInfo = true,
+-    this.artworkCardShowFrame = true,
+-    required this.immersiveTextScale,
+-    required this.immersiveVerticalOffset,
+-    required this.immersiveFullViewScale,
+-    this.immersiveShowTitle = true,
+-    this.immersiveShowArtist = true,
+-    this.immersiveShowFileInfo = true,
+-  });
+-
+-  final Song? song;
+-  final PlayerScreenMode mode;
+-  final double artworkCardArtworkScale;
+-  final double artworkCardTextScale;
+-  final double artworkCardVerticalOffset;
+-  final bool artworkCardShowTitle;
+-  final bool artworkCardShowArtist;
+-  final bool artworkCardShowAlbum;
+-  final bool artworkCardShowFileInfo;
+-  final bool artworkCardShowFrame;
+-  final double immersiveTextScale;
+-  final double immersiveVerticalOffset;
+-  final double immersiveFullViewScale;
+-  final bool immersiveShowTitle;
+-  final bool immersiveShowArtist;
+-  final bool immersiveShowFileInfo;
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Container(
+-      decoration: BoxDecoration(
+-        gradient: LinearGradient(
+-          begin: Alignment.topLeft,
+-          end: Alignment.bottomRight,
+-          colors: [
+-            const Color(0xFF232323),
+-            AppColors.background,
+-            AppColors.accent.withValues(alpha: 0.28),
+-          ],
+-        ),
+-      ),
+-      child: mode == PlayerScreenMode.artworkCard
+-          ? _buildArtworkCardFullScreen(context)
+-          : _buildImmersiveFullScreen(context),
+-    );
+-  }
+-
+-  Widget _buildArtworkCardFullScreen(BuildContext context) {
+-    return LayoutBuilder(
+-      builder: (context, constraints) {
+-        final maxWidth = constraints.maxWidth;
+-        final artSize =
+-            (maxWidth * 0.68).clamp(180.0, 380.0) * artworkCardArtworkScale;
+-        return Transform.translate(
+-          offset: Offset(0, artworkCardVerticalOffset * 1.0),
+-          child: Column(
+-            mainAxisAlignment: MainAxisAlignment.center,
+-            children: [
+-              _AlbumArtThumb(song: song, size: artSize, radius: 28),
+-              const SizedBox(height: 24),
+-              if (artworkCardShowTitle)
+-                Padding(
+-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+-                  child: Text(
+-                    song?.title ?? 'Midnight Signal',
+-                    maxLines: 2,
+-                    overflow: TextOverflow.ellipsis,
+-                    textAlign: TextAlign.center,
+-                    style: TextStyle(
+-                      fontFamily: 'ProductSans',
+-                      fontSize: 28 * artworkCardTextScale,
+-                      fontWeight: FontWeight.w700,
+-                      color: Colors.white,
+-                    ),
+-                  ),
+-                ),
+-              if (artworkCardShowTitle && artworkCardShowArtist)
+-                const SizedBox(height: 8),
+-              if (artworkCardShowArtist)
+-                Text(
+-                  song?.artist ?? 'Flick Preview',
+-                  maxLines: 1,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: 17 * artworkCardTextScale,
+-                    color: Colors.white.withValues(alpha: 0.72),
+-                  ),
+-                ),
+-              if (artworkCardShowArtist && artworkCardShowAlbum)
+-                const SizedBox(height: 6),
+-              if (artworkCardShowAlbum)
+-                Text(
+-                  song?.album ?? 'Mirror Test',
+-                  maxLines: 1,
+-                  overflow: TextOverflow.ellipsis,
+-                  style: TextStyle(
+-                    fontFamily: 'ProductSans',
+-                    fontSize: 14 * artworkCardTextScale,
+-                    color: Colors.white.withValues(alpha: 0.56),
+-                  ),
+-                ),
+-              if (artworkCardShowFileInfo)
+-                Padding(
+-                  padding: const EdgeInsets.only(top: 10),
+-                  child: Text(
+-                    _fileInfoLabel(song),
+-                    style: TextStyle(
+-                      fontFamily: 'ProductSans',
+-                      fontSize: 11,
+-                      color: Colors.white.withValues(alpha: 0.4),
+-                    ),
+-                  ),
+-                ),
+-            ],
+-          ),
+-        );
+-      },
+-    );
+-  }
+-
+-  Widget _buildImmersiveFullScreen(BuildContext context) {
+-    final artSize = 64.0 * immersiveFullViewScale;
+-    return Stack(
+-      children: [
+-        Positioned.fill(
+-          child: Opacity(
+-            opacity: 0.32,
+-            child: _AlbumArtThumb(
+-              song: song,
+-              size: double.infinity,
+-              radius: 0,
+-            ),
+-          ),
+-        ),
+-        Positioned(
+-          left: 24,
+-          right: 24,
+-          bottom: 36,
+-          child: Transform.translate(
+-            offset: Offset(0, immersiveVerticalOffset * 1.0),
+-            child: Row(
+-              crossAxisAlignment: CrossAxisAlignment.end,
+-              children: [
+-                Container(
+-                  padding: EdgeInsets.all(10 * immersiveFullViewScale),
+-                  decoration: BoxDecoration(
+-                    color: Colors.black.withValues(alpha: 0.34),
+-                    borderRadius: BorderRadius.circular(24),
+-                    border: Border.all(
+-                      color: Colors.white.withValues(alpha: 0.08),
+-                    ),
+-                  ),
+-                  child: _AlbumArtThumb(
+-                    song: song,
+-                    size: artSize,
+-                    radius: 16,
+-                  ),
+-                ),
+-                const SizedBox(width: 16),
+-                Expanded(
+-                  child: Column(
+-                    crossAxisAlignment: CrossAxisAlignment.start,
+-                    mainAxisSize: MainAxisSize.min,
+-                    children: [
+-                      if (immersiveShowTitle)
+-                        Text(
+-                          song?.title ?? 'Midnight Signal',
+-                          maxLines: 2,
+-                          overflow: TextOverflow.ellipsis,
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: 32 * immersiveTextScale,
+-                            fontWeight: FontWeight.w700,
+-                            height: 1.05,
+-                            color: Colors.white,
+-                          ),
+-                        ),
+-                      if (immersiveShowTitle && immersiveShowArtist)
+-                        const SizedBox(height: 8),
+-                      if (immersiveShowArtist)
+-                        Text(
+-                          song?.artist ?? 'Flick Preview',
+-                          maxLines: 1,
+-                          overflow: TextOverflow.ellipsis,
+-                          style: TextStyle(
+-                            fontFamily: 'ProductSans',
+-                            fontSize: 18 * immersiveTextScale,
+-                            color: Colors.white.withValues(alpha: 0.76),
+-                          ),
+-                        ),
+-                      if (immersiveShowFileInfo)
+-                        Padding(
+-                          padding: const EdgeInsets.only(top: 8),
+-                          child: Text(
+-                            _fileInfoLabel(song),
+-                            style: TextStyle(
+-                              fontFamily: 'ProductSans',
+-                              fontSize: 12,
+-                              color: Colors.white.withValues(alpha: 0.4),
+-                            ),
+-                          ),
+-                        ),
+-                    ],
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-}
+-- 
+2.55.0
+

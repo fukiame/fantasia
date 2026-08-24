@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 00:43:55 +0700
+Subject: [PATCH] android: drop firebase and gms
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
+index 905bec2e9..9685acb7d 100644
+--- a/android/app/build.gradle.kts
++++ b/android/app/build.gradle.kts
+@@ -3,7 +3,6 @@ plugins {
+     id("kotlin-android")
+     id("org.jetbrains.kotlin.plugin.compose")
+     id("dev.flutter.flutter-gradle-plugin")
+-    id("com.google.gms.google-services")
+ }
+ 
+ import java.io.File
+@@ -206,7 +205,6 @@ tasks.named("preBuild") {
+ }
+ 
+ dependencies {
+-    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+     implementation("androidx.core:core-ktx:1.13.1")
+     implementation("androidx.documentfile:documentfile:1.1.0")
+     implementation("androidx.media:media:1.7.0")
+diff --git a/android/settings.gradle.kts b/android/settings.gradle.kts
+index 447a5f598..dca18efac 100644
+--- a/android/settings.gradle.kts
++++ b/android/settings.gradle.kts
+@@ -30,7 +30,6 @@ plugins {
+     id("com.android.application") version "8.11.1" apply false
+     id("org.jetbrains.kotlin.android") version "2.2.20" apply false
+     id("org.jetbrains.kotlin.plugin.compose") version "2.2.20" apply false
+-    id("com.google.gms.google-services") version "4.4.4" apply false
+ }
+ 
+ include(":app")
+-- 
+2.55.0
+

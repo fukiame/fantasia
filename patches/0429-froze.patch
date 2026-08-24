@@ -1,0 +1,188 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 4 Aug 2026 03:21:06 +0700
+Subject: [PATCH] froze
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/src/rust/api/audio_api.freezed.dart b/lib/src/rust/api/audio_api.freezed.dart
+index 24e9d4dab..ca74ee8f5 100644
+--- a/lib/src/rust/api/audio_api.freezed.dart
++++ b/lib/src/rust/api/audio_api.freezed.dart
+@@ -55,14 +55,13 @@ extension AudioEventTypePatterns on AudioEventType {
+ /// }
+ /// ```
+ 
+-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AudioEventType_StateChanged value)?  stateChanged,TResult Function( AudioEventType_Progress value)?  progress,TResult Function( AudioEventType_TrackEnded value)?  trackEnded,TResult Function( AudioEventType_CrossfadeStarted value)?  crossfadeStarted,TResult Function( AudioEventType_Error value)?  error,TResult Function( AudioEventType_NextTrackReady value)?  nextTrackReady,required TResult orElse(),}){
++@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( AudioEventType_StateChanged value)?  stateChanged,TResult Function( AudioEventType_Progress value)?  progress,TResult Function( AudioEventType_TrackEnded value)?  trackEnded,TResult Function( AudioEventType_Error value)?  error,TResult Function( AudioEventType_NextTrackReady value)?  nextTrackReady,required TResult orElse(),}){
+ final _that = this;
+ switch (_that) {
+ case AudioEventType_StateChanged() when stateChanged != null:
+ return stateChanged(_that);case AudioEventType_Progress() when progress != null:
+ return progress(_that);case AudioEventType_TrackEnded() when trackEnded != null:
+-return trackEnded(_that);case AudioEventType_CrossfadeStarted() when crossfadeStarted != null:
+-return crossfadeStarted(_that);case AudioEventType_Error() when error != null:
++return trackEnded(_that);case AudioEventType_Error() when error != null:
+ return error(_that);case AudioEventType_NextTrackReady() when nextTrackReady != null:
+ return nextTrackReady(_that);case _:
+   return orElse();
+@@ -82,14 +81,13 @@ return nextTrackReady(_that);case _:
+ /// }
+ /// ```
+ 
+-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AudioEventType_StateChanged value)  stateChanged,required TResult Function( AudioEventType_Progress value)  progress,required TResult Function( AudioEventType_TrackEnded value)  trackEnded,required TResult Function( AudioEventType_CrossfadeStarted value)  crossfadeStarted,required TResult Function( AudioEventType_Error value)  error,required TResult Function( AudioEventType_NextTrackReady value)  nextTrackReady,}){
++@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( AudioEventType_StateChanged value)  stateChanged,required TResult Function( AudioEventType_Progress value)  progress,required TResult Function( AudioEventType_TrackEnded value)  trackEnded,required TResult Function( AudioEventType_Error value)  error,required TResult Function( AudioEventType_NextTrackReady value)  nextTrackReady,}){
+ final _that = this;
+ switch (_that) {
+ case AudioEventType_StateChanged():
+ return stateChanged(_that);case AudioEventType_Progress():
+ return progress(_that);case AudioEventType_TrackEnded():
+-return trackEnded(_that);case AudioEventType_CrossfadeStarted():
+-return crossfadeStarted(_that);case AudioEventType_Error():
++return trackEnded(_that);case AudioEventType_Error():
+ return error(_that);case AudioEventType_NextTrackReady():
+ return nextTrackReady(_that);}
+ }
+@@ -105,14 +103,13 @@ return nextTrackReady(_that);}
+ /// }
+ /// ```
+ 
+-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AudioEventType_StateChanged value)?  stateChanged,TResult? Function( AudioEventType_Progress value)?  progress,TResult? Function( AudioEventType_TrackEnded value)?  trackEnded,TResult? Function( AudioEventType_CrossfadeStarted value)?  crossfadeStarted,TResult? Function( AudioEventType_Error value)?  error,TResult? Function( AudioEventType_NextTrackReady value)?  nextTrackReady,}){
++@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( AudioEventType_StateChanged value)?  stateChanged,TResult? Function( AudioEventType_Progress value)?  progress,TResult? Function( AudioEventType_TrackEnded value)?  trackEnded,TResult? Function( AudioEventType_Error value)?  error,TResult? Function( AudioEventType_NextTrackReady value)?  nextTrackReady,}){
+ final _that = this;
+ switch (_that) {
+ case AudioEventType_StateChanged() when stateChanged != null:
+ return stateChanged(_that);case AudioEventType_Progress() when progress != null:
+ return progress(_that);case AudioEventType_TrackEnded() when trackEnded != null:
+-return trackEnded(_that);case AudioEventType_CrossfadeStarted() when crossfadeStarted != null:
+-return crossfadeStarted(_that);case AudioEventType_Error() when error != null:
++return trackEnded(_that);case AudioEventType_Error() when error != null:
+ return error(_that);case AudioEventType_NextTrackReady() when nextTrackReady != null:
+ return nextTrackReady(_that);case _:
+   return null;
+@@ -131,13 +128,12 @@ return nextTrackReady(_that);case _:
+ /// }
+ /// ```
+ 
+-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String state)?  stateChanged,TResult Function( double positionSecs,  double? durationSecs,  double bufferLevel)?  progress,TResult Function( String path)?  trackEnded,TResult Function( String fromPath,  String toPath)?  crossfadeStarted,TResult Function( String message)?  error,TResult Function( String path)?  nextTrackReady,required TResult orElse(),}) {final _that = this;
++@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String state)?  stateChanged,TResult Function( double positionSecs,  double? durationSecs,  double bufferLevel)?  progress,TResult Function( String path)?  trackEnded,TResult Function( String message)?  error,TResult Function( String path)?  nextTrackReady,required TResult orElse(),}) {final _that = this;
+ switch (_that) {
+ case AudioEventType_StateChanged() when stateChanged != null:
+ return stateChanged(_that.state);case AudioEventType_Progress() when progress != null:
+ return progress(_that.positionSecs,_that.durationSecs,_that.bufferLevel);case AudioEventType_TrackEnded() when trackEnded != null:
+-return trackEnded(_that.path);case AudioEventType_CrossfadeStarted() when crossfadeStarted != null:
+-return crossfadeStarted(_that.fromPath,_that.toPath);case AudioEventType_Error() when error != null:
++return trackEnded(_that.path);case AudioEventType_Error() when error != null:
+ return error(_that.message);case AudioEventType_NextTrackReady() when nextTrackReady != null:
+ return nextTrackReady(_that.path);case _:
+   return orElse();
+@@ -157,13 +153,12 @@ return nextTrackReady(_that.path);case _:
+ /// }
+ /// ```
+ 
+-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String state)  stateChanged,required TResult Function( double positionSecs,  double? durationSecs,  double bufferLevel)  progress,required TResult Function( String path)  trackEnded,required TResult Function( String fromPath,  String toPath)  crossfadeStarted,required TResult Function( String message)  error,required TResult Function( String path)  nextTrackReady,}) {final _that = this;
++@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String state)  stateChanged,required TResult Function( double positionSecs,  double? durationSecs,  double bufferLevel)  progress,required TResult Function( String path)  trackEnded,required TResult Function( String message)  error,required TResult Function( String path)  nextTrackReady,}) {final _that = this;
+ switch (_that) {
+ case AudioEventType_StateChanged():
+ return stateChanged(_that.state);case AudioEventType_Progress():
+ return progress(_that.positionSecs,_that.durationSecs,_that.bufferLevel);case AudioEventType_TrackEnded():
+-return trackEnded(_that.path);case AudioEventType_CrossfadeStarted():
+-return crossfadeStarted(_that.fromPath,_that.toPath);case AudioEventType_Error():
++return trackEnded(_that.path);case AudioEventType_Error():
+ return error(_that.message);case AudioEventType_NextTrackReady():
+ return nextTrackReady(_that.path);}
+ }
+@@ -179,13 +174,12 @@ return nextTrackReady(_that.path);}
+ /// }
+ /// ```
+ 
+-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String state)?  stateChanged,TResult? Function( double positionSecs,  double? durationSecs,  double bufferLevel)?  progress,TResult? Function( String path)?  trackEnded,TResult? Function( String fromPath,  String toPath)?  crossfadeStarted,TResult? Function( String message)?  error,TResult? Function( String path)?  nextTrackReady,}) {final _that = this;
++@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String state)?  stateChanged,TResult? Function( double positionSecs,  double? durationSecs,  double bufferLevel)?  progress,TResult? Function( String path)?  trackEnded,TResult? Function( String message)?  error,TResult? Function( String path)?  nextTrackReady,}) {final _that = this;
+ switch (_that) {
+ case AudioEventType_StateChanged() when stateChanged != null:
+ return stateChanged(_that.state);case AudioEventType_Progress() when progress != null:
+ return progress(_that.positionSecs,_that.durationSecs,_that.bufferLevel);case AudioEventType_TrackEnded() when trackEnded != null:
+-return trackEnded(_that.path);case AudioEventType_CrossfadeStarted() when crossfadeStarted != null:
+-return crossfadeStarted(_that.fromPath,_that.toPath);case AudioEventType_Error() when error != null:
++return trackEnded(_that.path);case AudioEventType_Error() when error != null:
+ return error(_that.message);case AudioEventType_NextTrackReady() when nextTrackReady != null:
+ return nextTrackReady(_that.path);case _:
+   return null;
+@@ -400,74 +394,6 @@ as String,
+ /// @nodoc
+ 
+ 
+-class AudioEventType_CrossfadeStarted extends AudioEventType {
+-  const AudioEventType_CrossfadeStarted({required this.fromPath, required this.toPath}): super._();
+-  
+-
+- final  String fromPath;
+- final  String toPath;
+-
+-/// Create a copy of AudioEventType
+-/// with the given fields replaced by the non-null parameter values.
+-@JsonKey(includeFromJson: false, includeToJson: false)
+-@pragma('vm:prefer-inline')
+-$AudioEventType_CrossfadeStartedCopyWith<AudioEventType_CrossfadeStarted> get copyWith => _$AudioEventType_CrossfadeStartedCopyWithImpl<AudioEventType_CrossfadeStarted>(this, _$identity);
+-
+-
+-
+-@override
+-bool operator ==(Object other) {
+-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AudioEventType_CrossfadeStarted&&(identical(other.fromPath, fromPath) || other.fromPath == fromPath)&&(identical(other.toPath, toPath) || other.toPath == toPath));
+-}
+-
+-
+-@override
+-int get hashCode => Object.hash(runtimeType,fromPath,toPath);
+-
+-@override
+-String toString() {
+-  return 'AudioEventType.crossfadeStarted(fromPath: $fromPath, toPath: $toPath)';
+-}
+-
+-
+-}
+-
+-/// @nodoc
+-abstract mixin class $AudioEventType_CrossfadeStartedCopyWith<$Res> implements $AudioEventTypeCopyWith<$Res> {
+-  factory $AudioEventType_CrossfadeStartedCopyWith(AudioEventType_CrossfadeStarted value, $Res Function(AudioEventType_CrossfadeStarted) _then) = _$AudioEventType_CrossfadeStartedCopyWithImpl;
+-@useResult
+-$Res call({
+- String fromPath, String toPath
+-});
+-
+-
+-
+-
+-}
+-/// @nodoc
+-class _$AudioEventType_CrossfadeStartedCopyWithImpl<$Res>
+-    implements $AudioEventType_CrossfadeStartedCopyWith<$Res> {
+-  _$AudioEventType_CrossfadeStartedCopyWithImpl(this._self, this._then);
+-
+-  final AudioEventType_CrossfadeStarted _self;
+-  final $Res Function(AudioEventType_CrossfadeStarted) _then;
+-
+-/// Create a copy of AudioEventType
+-/// with the given fields replaced by the non-null parameter values.
+-@pragma('vm:prefer-inline') $Res call({Object? fromPath = null,Object? toPath = null,}) {
+-  return _then(AudioEventType_CrossfadeStarted(
+-fromPath: null == fromPath ? _self.fromPath : fromPath // ignore: cast_nullable_to_non_nullable
+-as String,toPath: null == toPath ? _self.toPath : toPath // ignore: cast_nullable_to_non_nullable
+-as String,
+-  ));
+-}
+-
+-
+-}
+-
+-/// @nodoc
+-
+-
+ class AudioEventType_Error extends AudioEventType {
+   const AudioEventType_Error({required this.message}): super._();
+   
+-- 
+2.55.0
+

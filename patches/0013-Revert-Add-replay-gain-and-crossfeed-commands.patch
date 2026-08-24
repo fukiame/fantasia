@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:45:36 +0700
+Subject: [PATCH] Revert "Add replay gain and crossfeed commands"
+
+This reverts commit ce04a22f41bfe26418ee12a908b56c0ec54a7887.
+
+diff --git a/rust/src/audio/commands.rs b/rust/src/audio/commands.rs
+index 24ed27b9f..dbe36c1fd 100644
+--- a/rust/src/audio/commands.rs
++++ b/rust/src/audio/commands.rs
+@@ -34,13 +34,6 @@ pub enum AudioCommand {
+     Seek { position_secs: f64 },
+     /// Set the main volume (0.0 to 1.0)
+     SetVolume { volume: f32 },
+-    /// Set the effective ReplayGain (dB) for the current track and the
+-    /// default applied to sources spawned afterwards (next track, seek
+-    /// re-spawn). 0.0 = ReplayGain off.
+-    SetReplayGain { gain_db: f32 },
+-    /// Set only the spawn-time default ReplayGain (dB). Used when pre-queueing
+-    /// the next gapless track: the running source keeps its own gain.
+-    SetReplayGainDefault { gain_db: f32 },
+     /// Enable/disable crossfade and set duration
+     SetCrossfade { enabled: bool, duration_secs: f32 },
+     /// Set the crossfade curve type
+@@ -53,8 +46,6 @@ pub enum AudioCommand {
+     SetEqualizer { enabled: bool, specs: Vec<EqBandSpec> },
+     /// Set pitch shift in semitones (tempo preserved). 0 = bypass.
+     SetPitchShift { semitones: f32 },
+-    /// Set BS2B crossfeed level (Off/Default/Crossfeed/CrossfeedEasy).
+-    SetCrossfeed { level: crate::audio::crossfeed::CrossfeedLevel },
+     /// Configure compressor settings.
+     SetCompressor {
+         enabled: bool,
+-- 
+2.55.0
+

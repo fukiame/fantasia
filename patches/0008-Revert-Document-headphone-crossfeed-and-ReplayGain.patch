@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:45:36 +0700
+Subject: [PATCH] Revert "Document headphone crossfeed and ReplayGain"
+
+This reverts commit e92c3184b7972b68e2734a86b99c4d1f0b017f8e.
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 5d42749fd..e9f3a8d9c 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -4,15 +4,6 @@
+ 
+ Changes landing on top of the current pre-release are tracked here and folded into the release notes as they ship.
+ 
+-### Headphone Crossfeed
+-- BS2B (Bauer stereophonic-to-binaural) 3-stage crossfeed with selectable presets — Default, Crossfeed (strong), and Crossfeed easy (gentle), plus Off. Blends a low-passed opposite-channel signal into each channel to reduce ear fatigue on headphones; runs in the native Rust DSP chain, bypassed on bit-perfect passthrough.
+-- Crossfeed level persists across engine recreation (e.g. sample-rate changes between tracks).
+-
+-### ReplayGain
+-- ReplayGain playback (Track & Album modes) with pre-amp and clipping prevention — applied per source by the native engine and folded into the just_audio volume path.
+-- ReplayGain scanner in Library settings: analyzes loudness (EBU R128 / BS.1770), writes `REPLAYGAIN_*` tags back into files, and updates the library database.
+-- Library scans now read existing `REPLAYGAIN_*` tags (FLAC/Vorbis, MP3/ID3, MP4, WAV/AIFF, plus DSF/DFF ID3 tags).
+-
+ ### Folders
+ - Hierarchy (tree) view now available inside folders via the grid/list toggle — matches the root Folders screen; view mode persists across screens.
+ 
+diff --git a/FEATURE_REQUESTS.md b/FEATURE_REQUESTS.md
+index 3586320c3..7b3058a8f 100644
+--- a/FEATURE_REQUESTS.md
++++ b/FEATURE_REQUESTS.md
+@@ -77,7 +77,7 @@ name, track count, artist, and (newly added) **Year**.
+ - [X] **Pitch shifter** — adjust audio pitch independently of tempo
+ - [ ] **Replay Gain (track & album)** — apply per-track or per-album loudness gain on playback; album mode keeps relative levels, track mode normalizes every track. Clipping prevention (peak limiting when gain pushes past 0 dBFS) included.
+ - [ ] **Replay Gain scanner** — batch-scan library (or per-track) using ReplayGain 2.0-style loudness analysis (EBU R128/LUFS), store values as tags or in a local DB.
+-- [X] **Crossfeed (BS2B)** — 3-stage Bauer stereophonic-to-binaural crossfeed DSP to reduce ear fatigue on headphones; selectable crossfeed level (Off/Default/Crossfeed/Crossfeed easy) built into the Rust DSP pipeline. Shipped as `_CrossfeedSection` in Audio settings; bypassed in bit-perfect passthrough and under 432 Hz tuning.
++- [ ] **Crossfeed (BS2B)** — 3-stage Bauer stereophonic-to-binaural crossfeed DSP to reduce ear fatigue on headphones; selectable crossfeed level (e.g. default/crossfeed/crossfeed-easy), built-in or wrapped around the existing Rust DSP pipeline.
+ 
+ ---
+ 
+-- 
+2.55.0
+

@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 15 Aug 2026 21:55:42 +0700
+Subject: [PATCH] fixup! android: kill url_launcher BROWSABLE
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index 9d911e723..f06d8048c 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -76,14 +76,6 @@
+             <action android:name="android.intent.action.PROCESS_TEXT"/>
+             <data android:mimeType="text/plain"/>
+         </intent>
+-        <!-- url_launcher: Android 11+ (API 30+) package-visibility requires
+-             declaring the browser VIEW intent or launchUrl throws
+-             ACTIVITY_NOT_FOUND. Needed for Tidal/Last.fm OAuth device flow. -->
+-        <intent>
+-            <action android:name="android.intent.action.VIEW" />
+-            <category android:name="android.intent.category.BROWSABLE" />
+-            <data android:scheme="https" />
+-        </intent>
+         <intent>
+             <action android:name="android.intent.action.VIEW" />
+             <data android:scheme="http" />
+-- 
+2.55.0
+

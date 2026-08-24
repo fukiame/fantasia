@@ -1,0 +1,104 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 23:24:37 +0700
+Subject: [PATCH] lyricseditor
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/inline_lyrics_panel.dart b/lib/features/player/widgets/inline_lyrics_panel.dart
+index 35c666ea5..3ed868048 100644
+--- a/lib/features/player/widgets/inline_lyrics_panel.dart
++++ b/lib/features/player/widgets/inline_lyrics_panel.dart
+@@ -1,4 +1,8 @@
+ import 'dart:async';
++import 'dart:convert';
++import 'dart:io';
++import 'dart:typed_data';
++
+ import 'package:flutter/material.dart';
+ import 'package:flutter/rendering.dart';
+ import 'package:file_picker/file_picker.dart';
+@@ -9,7 +13,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/features/player/widgets/album_color_helpers.dart';
+-import 'package:flick/features/player/widgets/lyrics_editor_bottom_sheet.dart';
+ class InlineLyricsPanel extends StatefulWidget {
+   final PlayerService playerService;
+   final LyricsService lyricsService;
+@@ -195,19 +198,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+       );
+   }
+ 
+-  Future<void> _openLyricsEditor() async {
+-    final result = await LyricsEditorBottomSheet.show(
+-      context: context,
+-      song: widget.song,
+-      playerService: widget.playerService,
+-      lyricsService: widget.lyricsService,
+-      initialLyrics: _lyricsData,
+-    );
+-    if (!mounted || result == null) return;
+-    _showMessage(result.message);
+-    await _loadLyricsForSong(widget.song);
+-  }
+-
+   Future<void> _importLyricsFile() async {
+     try {
+       final result = await FilePicker.pickFiles(
+@@ -285,12 +275,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+         spacing: 8,
+         runSpacing: 8,
+         children: [
+-          action(
+-            icon: LucideIcons.pencilLine,
+-            label: _lyricsData == null ? 'Create Lyrics' : 'Edit & Sync',
+-            onPressed: () => unawaited(_openLyricsEditor()),
+-            emphasized: true,
+-          ),
+           action(
+             icon: LucideIcons.filePlus,
+             label: 'Use Existing File',
+@@ -404,7 +388,6 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+                           ? 'Tap any line to seek'
+                           : 'Static lyrics — no timestamps',
+                     ),
+-                    chip(LucideIcons.pencilLine, 'Edit & Sync Studio'),
+                     if (lyrics.lines.isNotEmpty)
+                       chip(
+                         Icons.format_align_left,
+@@ -641,6 +624,31 @@ class _InlineLyricsPanelState extends State<InlineLyricsPanel> {
+   }
+ }
+ 
++Future<String?> readTextFromPickedLyricsFile(PlatformFile file) async {
++  if (file.bytes != null) {
++    return _decodeLyricsBytes(file.bytes!);
++  }
++
++  final path = file.path;
++  if (path == null || path.isEmpty) return null;
++  final diskFile = File(path);
++  if (!await diskFile.exists()) return null;
++  final bytes = await diskFile.readAsBytes();
++  return _decodeLyricsBytes(bytes);
++}
++
++String? _decodeLyricsBytes(Uint8List bytes) {
++  try {
++    return utf8.decode(bytes);
++  } catch (_) {
++    try {
++      return latin1.decode(bytes);
++    } catch (_) {
++      return null;
++    }
++  }
++}
++
+ /// Extracted waveform layer widget.
+ /// Owns a ValueListenableBuilder on [positionNotifier] so that 50ms position
+ /// ticks **never** cause the parent [_FullPlayerScreenState] to rebuild.
+-- 
+2.55.0
+

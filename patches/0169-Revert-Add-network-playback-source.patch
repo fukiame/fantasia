@@ -1,0 +1,30 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:28:41 +0700
+Subject: [PATCH] Revert "Add network playback source"
+
+This reverts commit f1bbaf1fe04a08c28e6818953208cd178b91226a.
+
+diff --git a/lib/models/playback_context.dart b/lib/models/playback_context.dart
+index c4e4e6bf0..ed586cb57 100644
+--- a/lib/models/playback_context.dart
++++ b/lib/models/playback_context.dart
+@@ -4,7 +4,6 @@ enum PlaybackSource {
+   folder,
+   playlist,
+   allSongs,
+-  network,
+   unknown;
+ 
+   String get label => switch (this) {
+@@ -13,7 +12,6 @@ enum PlaybackSource {
+     PlaybackSource.folder => 'Folder',
+     PlaybackSource.playlist => 'Playlist',
+     PlaybackSource.allSongs => 'All Songs',
+-    PlaybackSource.network => 'Network',
+     PlaybackSource.unknown => 'Unknown',
+   };
+ }
+-- 
+2.55.0
+

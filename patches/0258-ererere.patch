@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 11:06:07 +0700
+Subject: [PATCH] ererere
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 6816bd633..967305fde 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -363,7 +363,9 @@ class AnimatedSongScene extends StatelessWidget {
+   Widget _buildTopChrome(BuildContext context) {
+     return Padding(
+       padding: EdgeInsets.symmetric(
+-        horizontal: context.responsive(8.0, 12.0, 16.0),
++        horizontal: playerScreenMode == PlayerScreenMode.artworkCard
++	     ? context.responsive(20.0, 24.0, 28.0)
++	     : context.responsive(8.0, 12.0, 16.0),
+         vertical: context.responsive(4.0, 6.0, 8.0),
+       ),
+       child: Row(
+-- 
+2.55.0
+

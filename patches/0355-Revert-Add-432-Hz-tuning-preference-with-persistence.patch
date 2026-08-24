@@ -1,0 +1,85 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 15:27:45 +0700
+Subject: [PATCH] Revert "Add 432 Hz tuning preference with persistence"
+
+This reverts commit 1e47c61435e268420534ac708350af6658c8243d.
+
+diff --git a/lib/services/uac2_preferences_service.dart b/lib/services/uac2_preferences_service.dart
+index e9c08219d..b3e23ff12 100644
+--- a/lib/services/uac2_preferences_service.dart
++++ b/lib/services/uac2_preferences_service.dart
+@@ -26,7 +26,6 @@ class Uac2PreferencesService {
+   static const _keyHiFiModeEnabled = 'uac2_hifi_mode_enabled';
+   static const _keyBitPerfectEnabled = 'uac2_bit_perfect_enabled';
+   static const _keyDapBitPerfectEnabled = 'uac2_dap_bit_perfect_enabled';
+-  static const _key432HzTuningEnabled = 'uac2_432hz_tuning_enabled';
+   static const _keyExclusiveDacModeEnabled = 'uac2_exclusive_dac_mode_enabled';
+   static const _keyAudioEnginePreference = 'audio_engine_preference';
+   static const _keyAndroidAudioApi = 'android_audio_api';
+@@ -48,8 +47,6 @@ class Uac2PreferencesService {
+   static int? get dsdSubslotOverrideSync => dsdSubslotOverrideNotifier.value;
+   static final ValueNotifier<bool> autoSwitchDsdForVolumeNotifier = ValueNotifier(false);
+   static bool get autoSwitchDsdForVolumeSync => autoSwitchDsdForVolumeNotifier.value;
+-  static final ValueNotifier<bool> tuning432HzNotifier = ValueNotifier(false);
+-  static bool get is432HzTuningEnabledSync => tuning432HzNotifier.value;
+   static final ValueNotifier<bool> btLowLatencyModeNotifier = ValueNotifier(false);
+   static bool get isBtLowLatencyModeSync => btLowLatencyModeNotifier.value;
+   static const _keyBtLowLatencyMode = 'bt_low_latency_mode';
+@@ -187,37 +184,6 @@ class Uac2PreferencesService {
+     }
+   }
+ 
+-  Future<void> set432HzTuningEnabled(bool enabled) async {
+-    try {
+-      final prefs = await SharedPreferences.getInstance();
+-      await prefs.setBool(_key432HzTuningEnabled, enabled);
+-      tuning432HzNotifier.value = enabled;
+-    } catch (e) {
+-      devLog('Failed to save 432 Hz tuning setting: $e');
+-    }
+-  }
+-
+-  Future<bool> get432HzTuningEnabled() async {
+-    try {
+-      final prefs = await SharedPreferences.getInstance();
+-      final enabled = prefs.getBool(_key432HzTuningEnabled) ?? false;
+-      if (tuning432HzNotifier.value != enabled) {
+-        tuning432HzNotifier.value = enabled;
+-      }
+-      return enabled;
+-    } catch (e) {
+-      devLog('Failed to load 432 Hz tuning setting: $e');
+-      return tuning432HzNotifier.value;
+-    }
+-  }
+-
+-  Future<void> initialize432HzTuningCache() async {
+-    final enabled = await get432HzTuningEnabled();
+-    if (tuning432HzNotifier.value != enabled) {
+-      tuning432HzNotifier.value = enabled;
+-    }
+-  }
+-
+   Future<void> setExclusiveDacModeEnabled(bool enabled) {
+     return setBitPerfectEnabled(enabled);
+   }
+@@ -618,7 +584,6 @@ class Uac2PreferencesService {
+       await prefs.remove(_keyHiFiModeEnabled);
+       await prefs.remove(_keyBitPerfectEnabled);
+       await prefs.remove(_keyDapBitPerfectEnabled);
+-      await prefs.remove(_key432HzTuningEnabled);
+       await prefs.remove(_keyExclusiveDacModeEnabled);
+ await prefs.remove(_keyAudioEnginePreference);
+     await prefs.remove(_keyAndroidAudioApi);
+@@ -639,7 +604,6 @@ await prefs.remove(_keyAudioEnginePreference);
+       dsdSubslotOverrideNotifier.value = null;
+       developerModeNotifier.value = false;
+       killIsochronousUsbOnQuitNotifier.value = true;
+-      tuning432HzNotifier.value = false;
+       btLowLatencyModeNotifier.value = false;
+       btHiResDirectNotifier.value = false;
+     } catch (e) {
+-- 
+2.55.0
+

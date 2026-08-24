@@ -1,0 +1,208 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 13:53:57 +0700
+Subject: [PATCH] bitinpergect
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index b081260d1..38da4c662 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -394,7 +394,7 @@ class AnimatedSongScene extends StatelessWidget {
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Text(
+-                        'Now Playing',
++                        'now playing',
+                         style: TextStyle(
+                           fontFamily: 'ProductSans',
+                           fontSize: context.responsive(12.0, 13.0, 14.0),
+@@ -406,7 +406,7 @@ class AnimatedSongScene extends StatelessWidget {
+                       if (fromLocker) ...[
+                         SizedBox(height: context.responsive(2.0, 3.0, 4.0)),
+                         Text(
+-                          'Opened from Locker',
++                          'opened from Locker',
+                           style: TextStyle(
+                             fontFamily: 'ProductSans',
+                             fontSize: context.responsive(10.0, 10.5, 11.0),
+diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
+index b2e362c47..b8fddffdf 100644
+--- a/lib/features/player/widgets/bit_perfect_indicator.dart
++++ b/lib/features/player/widgets/bit_perfect_indicator.dart
+@@ -546,7 +546,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+     rows.add(
+       _buildRow(
+         context,
+-        label: 'Format',
++        label: 'format',
+         value: widget.song.isDsd
+             ? '${widget.song.fileType.toUpperCase()} (${widget.song.dsdRateLabel})'
+             : widget.song.fileType.toUpperCase(),
+@@ -555,7 +555,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+ 
+     if (widget.song.resolution != null && !widget.song.isDsd) {
+       rows.add(
+-        _buildRow(context, label: 'Resolution', value: widget.song.resolution!),
++        _buildRow(context, label: 'resolution', value: widget.song.resolution!),
+       );
+     }
+ 
+@@ -563,7 +563,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+       rows.add(
+         _buildRow(
+           context,
+-          label: 'Source rate',
++          label: 'source rate',
+           value: _formatHz(widget.song.sampleRate!),
+         ),
+       );
+@@ -579,7 +579,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+       rows.add(
+         _buildRow(
+           context,
+-          label: 'Output rate',
++          label: 'output rate',
+           value: _formatHz(outRate),
+           trailing: matches
+               ? Icon(Icons.check_circle_rounded, size: 14, color: Colors.green.shade400)
+@@ -590,7 +590,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+ 
+     final bitDepth = widget.deviceStatus?.currentFormat?.bitDepth ?? widget.song.bitDepth;
+     if (bitDepth != null) {
+-      rows.add(_buildRow(context, label: 'Bit depth', value: '$bitDepth-bit'));
++      rows.add(_buildRow(context, label: 'bit depth', value: '$bitDepth-bit'));
+     }
+ 
+     final channels = widget.deviceStatus?.currentFormat?.channels;
+@@ -598,7 +598,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+       rows.add(
+         _buildRow(
+           context,
+-          label: 'Channels',
++          label: 'channels',
+           value: channels == 1 ? 'Mono' : channels == 2 ? 'Stereo' : '$channels ch',
+         ),
+       );
+@@ -606,12 +606,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+ 
+     final backendDesc = d?.backendDescription;
+     if (backendDesc != null && backendDesc.isNotEmpty) {
+-      rows.add(_buildRow(context, label: 'Engine', value: backendDesc));
++      rows.add(_buildRow(context, label: 'engine', value: backendDesc));
+     }
+ 
+     final strategy = d?.outputStrategyLabel;
+     if (strategy != null && strategy.isNotEmpty) {
+-      rows.add(_buildRow(context, label: 'Strategy', value: strategy));
++      rows.add(_buildRow(context, label: 'strategy', value: strategy));
+     }
+ 
+     final deviceLabel =
+@@ -619,12 +619,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+         d?.outputDeviceLabel ??
+         d?.detectedDapBrand;
+     if (deviceLabel != null && deviceLabel.isNotEmpty) {
+-      rows.add(_buildRow(context, label: 'Device', value: deviceLabel));
++      rows.add(_buildRow(context, label: 'device', value: deviceLabel));
+     }
+ 
+     final volMode = widget.deviceStatus?.volumeMode;
+     if (volMode != null && volMode != Uac2VolumeMode.unavailable) {
+-      rows.add(_buildRow(context, label: 'Volume', value: _formatVolumeMode(volMode)));
++      rows.add(_buildRow(context, label: 'volume', value: _formatVolumeMode(volMode)));
+     }
+ 
+     final routeLabel = d?.routeLabel;
+@@ -632,12 +632,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+       rows.add(
+         _buildRow(
+           context,
+-          label: 'Route',
++          label: 'route',
+           value: routeLabel,
+           trailing: widget.isDirectUsb
+-              ? _buildTinyBadge('Direct', Colors.blue)
++              ? _buildTinyBadge('direct', Colors.blue)
+               : (d?.isMixerManaged ?? false)
+-                  ? _buildTinyBadge('Mixer', Colors.grey)
++                  ? _buildTinyBadge('mixer', Colors.grey)
+                   : null,
+         ),
+       );
+@@ -647,8 +647,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+       rows.add(
+         _buildRow(
+           context,
+-          label: 'Resampler',
+-          value: d.resamplerActive ? 'Active' : 'Inactive',
++          label: 'resampler',
++          value: d.resamplerActive ? 'active' : 'inactive',
+           trailing: d.resamplerActive
+               ? Icon(Icons.warning_amber_rounded, size: 14, color: Colors.amber.shade400)
+               : Icon(Icons.check_circle_rounded, size: 14, color: Colors.green.shade400),
+@@ -660,8 +660,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+       rows.add(
+         _buildRow(
+           context,
+-          label: 'Passthrough',
+-          value: d.passthroughAllowed ? 'Allowed' : 'Blocked',
++          label: 'passthrough',
++          value: d.passthroughAllowed ? 'allowed' : 'blocked',
+           trailing: d.passthroughAllowed
+               ? Icon(Icons.check_circle_rounded, size: 14, color: Colors.green.shade400)
+               : Icon(Icons.block_rounded, size: 14, color: Colors.red.shade400),
+@@ -671,8 +671,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+ 
+     if (d?.directUsbRegistered == true) {
+       final usbParts = <String>[
+-        if (d!.usbInterfaceClaimed) 'Interface claimed',
+-        if (d.usbStreamStable) 'Stream stable',
++        if (d!.usbInterfaceClaimed) 'interface claimed',
++        if (d.usbStreamStable) 'stream stable',
+       ];
+       if (usbParts.isNotEmpty) {
+         rows.add(_buildRow(context, label: 'USB', value: usbParts.join(' · ')));
+@@ -682,21 +682,21 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+     final verification = d?.verificationReason;
+     final fallback = d?.fallbackReason;
+     if (verification != null && verification.isNotEmpty) {
+-      rows.add(_buildRow(context, label: 'Verified', value: verification));
++      rows.add(_buildRow(context, label: 'verified', value: verification));
+     } else if (fallback != null && fallback.isNotEmpty) {
+-      rows.add(_buildRow(context, label: 'Fallback', value: fallback));
++      rows.add(_buildRow(context, label: 'fallback', value: fallback));
+     }
+ 
+     final isDop = widget.deviceStatus?.currentFormat?.isDop ?? false;
+     final isNativeDsd = widget.deviceStatus?.currentFormat?.isNativeDsd ?? false;
+     if (isDop || isNativeDsd || widget.song.isDsd) {
+-      final dsdLabel = isNativeDsd ? 'Native DSD' : isDop ? 'DoP' : 'DSD';
++      final dsdLabel = isNativeDsd ? 'native DSD' : isDop ? 'DoP' : 'DSD';
+       rows.add(_buildRow(context, label: 'DSD mode', value: dsdLabel));
+     }
+ 
+     if (widget.song.filePath != null) {
+       rows.add(
+-        _buildRow(context, label: 'Source', value: _truncatePath(widget.song.filePath!)),
++        _buildRow(context, label: 'source', value: _truncatePath(widget.song.filePath!)),
+       );
+     }
+ 
+@@ -854,9 +854,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+     final bytes = _seededBytes(song.filePath ?? song.id, 16);
+ 
+     const stageColors = [
+-      Color(0xFFFF9100), // File — vibrant orange
+-      Color(0xFFEA80FC), // Decode — vibrant purple
+-      Color(0xFF00E5FF), // Format — vibrant cyan
++      Color(0xFF1F1E33), // File
++      Color(0xFF1F1E33), // Decode
++      Color(0xFF1F1E33), // Format
+     ];
+ 
+     final stages = <_FlowStageData>[
+-- 
+2.55.0
+

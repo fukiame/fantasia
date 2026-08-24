@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 29 Jul 2026 23:21:14 +0700
+Subject: [PATCH] pubspec: drop unused rive
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 72b70fd0a..672445bdf 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -50,7 +50,6 @@ dependencies:
+   native_toolchain_rust: ^1.0.3
+   path_provider: ^2.1.1
+   permission_handler: ^12.0.1
+-  rive: ^0.14.0
+   restart_app: ^1.2.1
+   rust_lib_flick_player:
+     path: rust_builder
+-- 
+2.55.0
+

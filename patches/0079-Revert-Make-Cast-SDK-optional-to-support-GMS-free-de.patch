@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 13 Aug 2026 01:10:20 +0700
+Subject: [PATCH] Revert "Make Cast SDK optional to support GMS-free devices"
+
+This reverts commit 98f86fca9d95d65d183ef5fe3266319ada0e6dcb.
+
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/CastController.kt b/android/app/src/main/kotlin/com/mossapps/flick/CastController.kt
+index c2f0c34c4..4539c06bb 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/CastController.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/CastController.kt
+@@ -1,7 +1,6 @@
+ package com.mossapps.flick
+ 
+ import android.content.Context
+-import android.util.Log
+ import androidx.mediarouter.media.MediaRouter
+ import com.google.android.gms.cast.MediaInfo
+ import com.google.android.gms.cast.MediaMetadata
+@@ -16,17 +15,7 @@ import java.util.concurrent.TimeUnit
+ // (CastContext creates the session); control = RemoteMediaClient on the session.
+ class CastController(private val context: Context) {
+     private val mediaRouter: MediaRouter by lazy { MediaRouter.getInstance(context) }
+-    // ponytail: Cast SDK needs Google Play Services; null out on GMS-free
+-    // devices (GrapheneOS etc.) so the app runs without Cast instead of
+-    // crashing on launch. MediaRouter output routing still works without GMS.
+-    private val castContext: CastContext? by lazy {
+-        try {
+-            CastContext.getSharedInstance(context)
+-        } catch (e: Throwable) {
+-            Log.w("CastController", "Cast SDK unavailable (no Google Play Services): ${e.message}")
+-            null
+-        }
+-    }
++    private val castContext: CastContext by lazy { CastContext.getSharedInstance(context) }
+     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
+ 
+     private var eventSink: android.os.Handler? = null
+@@ -51,7 +40,7 @@ class CastController(private val context: Context) {
+     }
+ 
+     fun start() {
+-        castContext?.sessionManager?.addSessionManagerListener(sessionListener, CastSession::class.java)
++        castContext.sessionManager.addSessionManagerListener(sessionListener, CastSession::class.java)
+     }
+ 
+     fun discover(): List<Map<String, Any>> {
+@@ -79,16 +68,14 @@ class CastController(private val context: Context) {
+     }
+ 
+     fun disconnect() {
+-        val sessionManager = castContext?.sessionManager
+-        if (sessionManager?.currentCastSession != null) {
+-            sessionManager.endCurrentSession(true)
++        if (castContext.sessionManager.currentCastSession != null) {
++            castContext.sessionManager.endCurrentSession(true)
+         }
+         connectedSession = null
+     }
+ 
+     private fun client(): RemoteMediaClient? {
+-        val sessionManager = castContext?.sessionManager ?: return null
+-        return connectedSession?.remoteMediaClient ?: sessionManager.currentCastSession?.remoteMediaClient
++        return connectedSession?.remoteMediaClient ?: castContext.sessionManager.currentCastSession?.remoteMediaClient
+     }
+ 
+     fun load(url: String, title: String?, artist: String?) {
+-- 
+2.55.0
+

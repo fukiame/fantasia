@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 18:06:22 +0700
+Subject: [PATCH] Revert "Add pitch_shifter module to audio exports"
+
+This reverts commit 89b9966684096dda1a2af21f637443186b154d59.
+
+diff --git a/rust/src/audio/mod.rs b/rust/src/audio/mod.rs
+index 614af33e6..26a9092aa 100644
+--- a/rust/src/audio/mod.rs
++++ b/rust/src/audio/mod.rs
+@@ -33,7 +33,6 @@ pub mod ir_loader;
+ pub mod manager;
+ pub mod opus_decoder;
+ pub mod audiotrack_direct;
+-pub mod pitch_shifter;
+ pub mod resampler;
+ pub mod source;
+ pub mod strategy;
+-- 
+2.55.0
+

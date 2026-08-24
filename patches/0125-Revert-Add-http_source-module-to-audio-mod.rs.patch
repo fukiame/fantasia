@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:21 +0700
+Subject: [PATCH] Revert "Add http_source module to audio mod.rs"
+
+This reverts commit 23e50fb8b22d10873e794412c4f0dabf24a14ba6.
+
+diff --git a/rust/src/audio/mod.rs b/rust/src/audio/mod.rs
+index 6dc804426..614af33e6 100644
+--- a/rust/src/audio/mod.rs
++++ b/rust/src/audio/mod.rs
+@@ -29,7 +29,6 @@ pub mod dynamics;
+ pub mod engine;
+ pub mod equalizer;
+ pub mod fx;
+-pub mod http_source;
+ pub mod ir_loader;
+ pub mod manager;
+ pub mod opus_decoder;
+-- 
+2.55.0
+

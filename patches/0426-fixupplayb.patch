@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 4 Aug 2026 03:04:20 +0700
+Subject: [PATCH] fixupplayb
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 6259f99eb..4dbd39504 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -1588,7 +1588,6 @@ class PlayerService {
+     if (!passthrough) return false;
+     if (Uac2PreferencesService.is432HzTuningEnabledSync) return false;
+     if (gaplessPlaybackEnabledNotifier.value) return false;
+-    if ((playbackSpeedNotifier.value - 1.0).abs() > 0.001) return false;
+     return true;
+   }
+ 
+-- 
+2.55.0
+

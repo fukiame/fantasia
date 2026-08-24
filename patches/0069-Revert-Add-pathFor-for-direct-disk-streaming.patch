@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Add pathFor for direct disk streaming"
+
+This reverts commit 4f24ef96d7e2513be03af75b9f1935b5ffd8db8e.
+
+diff --git a/lib/services/network_cache_service.dart b/lib/services/network_cache_service.dart
+index d1bcf6d7a..2af0264c9 100644
+--- a/lib/services/network_cache_service.dart
++++ b/lib/services/network_cache_service.dart
+@@ -81,20 +81,6 @@ class NetworkCacheService {
+     return file.path;
+   }
+ 
+-  /// Resolve (and create) the canonical cache path for a (server, song) entry
+-  /// without writing bytes. Lets a native downloader stream straight to disk,
+-  /// avoiding a full-file FFI buffer round-trip for large FLACs.
+-  Future<String> pathFor(
+-    int remoteServerId,
+-    String remoteId, {
+-    String? extension,
+-  }) async {
+-    final serverDir = Directory(p.join((await _root()).path, '$remoteServerId'));
+-    await serverDir.create(recursive: true);
+-    return p.join(serverDir.path,
+-        '${_hash(remoteServerId, remoteId)}.${extension ?? 'bin'}');
+-  }
+-
+   Future<String?> _findByHash(Directory serverDir, String hash) async {
+     await for (final entry in serverDir.list()) {
+       final name = p.basename(entry.path);
+-- 
+2.55.0
+

@@ -1,0 +1,60 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:26 +0700
+Subject: [PATCH] Revert "Add HTTP streaming playback support to
+ RustAudioService"
+
+This reverts commit 6a2e842f93c289ea6bde82b275c2d62b06d2e514.
+
+diff --git a/lib/services/rust_audio_service.dart b/lib/services/rust_audio_service.dart
+index 622009ffa..063b8f8ba 100644
+--- a/lib/services/rust_audio_service.dart
++++ b/lib/services/rust_audio_service.dart
+@@ -245,23 +245,6 @@ class RustAudioService {
+     _startProgressUpdates(fast: true);
+   }
+ 
+-  /// Play a remote audio stream directly over HTTP (range-based, no cache
+-  /// download before play). Auth is carried via [headers] (e.g. WebDAV Basic);
+-  /// Subsonic/Jellyfin embed credentials in [url] and pass an empty map.
+-  Future<void> playHttp({
+-    required String url,
+-    Map<String, String> headers = const {},
+-  }) async {
+-    if (!_initialized) {
+-      throw StateError('Rust audio engine not initialized');
+-    }
+-    _syncDsdOutputMode();
+-    _syncDsdTransportOverrides();
+-    await rust_audio.audioPlayFromHttp(url: url, headers: headers);
+-    _currentPath = rust_audio.audioGetCurrentPath() ?? url;
+-    _startProgressUpdates(fast: true);
+-  }
+-
+   /// Queue the next track for gapless playback.
+   /// The next track will automatically start when the current one ends.
+   Future<void> queueNext(String path) async {
+@@ -275,20 +258,6 @@ class RustAudioService {
+     await rust_audio.audioQueueNext(path: path);
+   }
+ 
+-  /// Queue a remote HTTP stream as the next track for gapless playback.
+-  Future<void> queueNextHttp({
+-    required String url,
+-    Map<String, String> headers = const {},
+-  }) async {
+-    if (!_initialized) {
+-      throw StateError('Rust audio engine not initialized');
+-    }
+-    _nextPath = url;
+-    _syncDsdOutputMode();
+-    _syncDsdTransportOverrides();
+-    await rust_audio.audioQueueNextFromHttp(url: url, headers: headers);
+-  }
+-
+   void _syncDsdOutputMode() {
+     final mode = Uac2PreferencesService.dsdOutputModeSync;
+     final rustMode = switch (mode) {
+-- 
+2.55.0
+

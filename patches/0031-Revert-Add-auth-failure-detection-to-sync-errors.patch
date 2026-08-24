@@ -1,0 +1,56 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 23 Aug 2026 23:19:13 +0700
+Subject: [PATCH] Revert "Add auth failure detection to sync errors"
+
+This reverts commit 631d66cdf654520eb729148c1fb8f10421be453c.
+
+diff --git a/lib/features/settings/screens/network_sources_screen.dart b/lib/features/settings/screens/network_sources_screen.dart
+index eae99d56f..5e8f531fd 100644
+--- a/lib/features/settings/screens/network_sources_screen.dart
++++ b/lib/features/settings/screens/network_sources_screen.dart
+@@ -62,16 +62,6 @@ class _NetworkSourcesScreenState extends State<NetworkSourcesScreen> {
+     }
+   }
+ 
+-  // ponytail: string sniffing across the per-protocol exception types; a
+-  // shared AuthException hierarchy is the upgrade path.
+-  bool _isAuthFailure(Object e) {
+-    final s = e.toString();
+-    return s.contains('401') ||
+-        s.contains('has no stored credentials') ||
+-        s.contains('Authentication failed') ||
+-        s.contains('session expired');
+-  }
+-
+   Future<void> _syncServer(NetworkServerEntity server) async {
+     if (_syncingId != null) return;
+     setState(() {
+@@ -87,23 +77,8 @@ class _NetworkSourcesScreenState extends State<NetworkSourcesScreen> {
+       }
+     } catch (e) {
+       if (mounted) {
+-        final authFailure = _isAuthFailure(e);
+         ScaffoldMessenger.of(context).showSnackBar(
+-          SnackBar(
+-            duration: const Duration(seconds: 6),
+-            content: Text(
+-              authFailure
+-                  ? 'Credentials rejected by ${server.label}. '
+-                      'Re-enter the password.'
+-                  : 'Sync failed: $e',
+-            ),
+-            action: authFailure
+-                ? SnackBarAction(
+-                    label: 'Fix',
+-                    onPressed: () => _openEditor(server: server),
+-                  )
+-                : null,
+-          ),
++          SnackBar(content: Text('Sync failed: $e')),
+         );
+       }
+     }
+-- 
+2.55.0
+

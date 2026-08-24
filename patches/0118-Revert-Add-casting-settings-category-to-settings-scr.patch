@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:27:57 +0700
+Subject: [PATCH] Revert "Add casting settings category to settings screen"
+
+This reverts commit 591669499a6449a274de12623cc377d5f7f8dcbe.
+
+diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
+index f1d1abe67..4d5a34af9 100644
+--- a/lib/features/settings/screens/settings_screen.dart
++++ b/lib/features/settings/screens/settings_screen.dart
+@@ -5,7 +5,6 @@ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/features/settings/screens/app_info_settings_screen.dart';
+ import 'package:flick/features/settings/screens/audio_settings_screen.dart';
+ import 'package:flick/features/settings/screens/bluetooth_settings_screen.dart';
+-import 'package:flick/features/settings/screens/casting_settings_screen.dart';
+ import 'package:flick/features/settings/screens/interface_settings_screen.dart';
+ import 'package:flick/features/settings/screens/library_settings_screen.dart';
+ import 'package:flick/features/settings/screens/playback_display_settings_screen.dart';
+@@ -151,18 +150,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+                           ),
+                         ),
+                         const SettingsDivider(),
+-                        _CategoryTile(
+-                          icon: LucideIcons.cast,
+-                          iconBg: const Color(0xFF6F2D4A),
+-                          iconFg: const Color(0xFFFF8BB8),
+-                          title: 'Casting',
+-                          subtitle: 'DLNA, UPnP and Chromecast receivers',
+-                          onTap: () => _navigate(
+-                            context,
+-                            const CastingSettingsScreen(),
+-                          ),
+-                        ),
+-                        const SettingsDivider(),
+                         _CategoryTile(
+                           icon: LucideIcons.fileText,
+                           iconBg: const Color(0xFF4A6F2D),
+-- 
+2.55.0
+

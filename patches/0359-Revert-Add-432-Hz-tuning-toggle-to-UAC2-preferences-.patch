@@ -1,0 +1,73 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 15:31:49 +0700
+Subject: [PATCH] Revert "Add 432 Hz tuning toggle to UAC2 preferences screen"
+
+This reverts commit 70af329a4b2a24e7fc15173e6572b76115eae9f7.
+
+diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
+index 23e5e021a..1bcdea465 100644
+--- a/lib/features/settings/screens/uac2_preferences_screen.dart
++++ b/lib/features/settings/screens/uac2_preferences_screen.dart
+@@ -37,7 +37,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+                     final audioFormatAsync = ref.watch(audioFormatEnabledProvider);
+                     final bitPerfectAsync = ref.watch(uac2BitPerfectEnabledProvider);
+                     final dapBitPerfectAsync = ref.watch(uac2DapBitPerfectEnabledProvider);
+-                    final tuning432HzAsync = ref.watch(uac2432HzTuningEnabledProvider);
+                     final audioEngineAsync = ref.watch(audioEnginePreferenceProvider);
+                     final androidAudioApiAsync = ref.watch(androidAudioApiProvider);
+                     final developerModeAsync = ref.watch(developerModeEnabledProvider);
+@@ -93,12 +92,6 @@ class _Uac2PreferencesScreenState extends ConsumerState<Uac2PreferencesScreen> {
+                             preferencesService,
+                             dsdOutputModeAsync,
+                           ),
+-                          const SizedBox(height: AppConstants.spacingSm),
+-                          _build432HzTuningTile(
+-                            context,
+-                            preferencesService,
+-                            tuning432HzAsync,
+-                          ),
+                           const SizedBox(height: AppConstants.spacingLg),
+                           _buildSectionHeader(context, 'Advanced'),
+                           _buildAdvancedOptions(
+@@ -1544,37 +1537,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+     );
+   }
+ 
+-  Widget _build432HzTuningTile(
+-    BuildContext context,
+-    Uac2PreferencesService service,
+-    AsyncValue<bool> tuningAsync,
+-  ) {
+-    return Container(
+-      decoration: BoxDecoration(
+-        color: AppColors.surface.withValues(alpha: 0.6),
+-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-        border: Border.all(color: AppColors.glassBorder),
+-      ),
+-      child: tuningAsync.when(
+-        data: (enabled) => _buildSwitchTile(
+-          context,
+-          icon: LucideIcons.music2,
+-          title: '432 Hz Tuning',
+-          subtitle:
+-              'Experimental — down-tune playback by 432/440. This disables bit-perfect passthrough and runs the DSP path.',
+-          value: enabled,
+-          onChanged: (value) async {
+-            await service.set432HzTuningEnabled(value);
+-            rust_audio.audioSet432HzTuningEnabled(enabled: value);
+-            ref.invalidate(uac2432HzTuningEnabledProvider);
+-          },
+-        ),
+-        loading: () => _buildLoadingTile(context),
+-        error: (_, _) => _buildErrorTile(context),
+-      ),
+-    );
+-  }
+-
+   Widget _buildExperimentalWarning(BuildContext context) {
+     const warnColor = Colors.amber;
+     return Padding(
+-- 
+2.55.0
+

@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 21:11:02 +0700
+Subject: [PATCH] Revert "Skip background metadata for locally edited songs"
+
+This reverts commit dd187dfd33e6aa2a5d1be64234386d0879f6ce30.
+
+diff --git a/lib/services/background_metadata_service.dart b/lib/services/background_metadata_service.dart
+index 09a95c228..894f9e2d7 100644
+--- a/lib/services/background_metadata_service.dart
++++ b/lib/services/background_metadata_service.dart
+@@ -93,13 +93,10 @@ class BackgroundMetadataService {
+             if (meta != null) {
+               song.sampleRate = meta.sampleRate ?? song.sampleRate;
+               song.bitDepth = meta.bitDepth ?? song.bitDepth;
+-              if (!song.hasLocalEdits) {
+-                song.discNumber = meta.discNumber ?? song.discNumber;
+-                song.albumArtist =
+-                    (meta.albumArtist?.trim().isNotEmpty ?? false)
+-                        ? meta.albumArtist!.trim()
+-                        : song.albumArtist;
+-              }
++              song.discNumber = meta.discNumber ?? song.discNumber;
++              song.albumArtist = (meta.albumArtist?.trim().isNotEmpty ?? false)
++                  ? meta.albumArtist!.trim()
++                  : song.albumArtist;
+             }
+             song.metadataComplete = true;
+             updateBatch.add(song);
+-- 
+2.55.0
+

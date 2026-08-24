@@ -1,0 +1,268 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 16:30:06 +0700
+Subject: [PATCH] lib: settings: uac2: icon nulling 3
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/uac2_settings_screen.dart b/lib/features/settings/screens/uac2_settings_screen.dart
+index 27295a8aa..7a3225931 100644
+--- a/lib/features/settings/screens/uac2_settings_screen.dart
++++ b/lib/features/settings/screens/uac2_settings_screen.dart
+@@ -173,12 +173,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+       ),
+       child: Row(
+         children: [
+-          Icon(
+-            Icons.info_outline,
+-            color: context.adaptiveTextSecondary,
+-            size: 24,
+-          ),
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Text(
+               'UAC2 is not available on this platform',
+@@ -214,8 +208,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+       ),
+       child: Row(
+         children: [
+-          Icon(Icons.error_outline, color: Colors.red.shade400, size: 24),
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Text(
+               'Error: $error',
+@@ -278,8 +270,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+       ),
+       child: Column(
+         children: [
+-          Icon(Icons.usb_off, color: context.adaptiveTextTertiary, size: 48),
+-          const SizedBox(height: AppConstants.spacingMd),
+           Text(
+             'No USB audio devices found',
+             style: Theme.of(context).textTheme.titleMedium?.copyWith(
+@@ -428,12 +418,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+           child: Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+-              Icon(
+-                LucideIcons.refreshCw,
+-                color: context.adaptiveTextSecondary,
+-                size: 18,
+-              ),
+-              const SizedBox(width: AppConstants.spacingSm),
+               Text(
+                 'Refresh Devices',
+                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+@@ -462,35 +446,30 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             context,
+             'Manufacturer',
+             device.manufacturer.isNotEmpty ? device.manufacturer : 'Unknown',
+-            LucideIcons.building,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+             context,
+             'Product',
+             device.productName,
+-            LucideIcons.package,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+             context,
+             'Serial Number',
+             device.serial ?? 'N/A',
+-            LucideIcons.hash,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+             context,
+             'Vendor ID',
+             '0x${device.vendorId.toRadixString(16).toUpperCase().padLeft(4, '0')}',
+-            LucideIcons.tag,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+             context,
+             'Product ID',
+             '0x${device.productId.toRadixString(16).toUpperCase().padLeft(4, '0')}',
+-            LucideIcons.tag,
+           ),
+         ],
+       ),
+@@ -547,7 +526,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             context,
+             'Device Type',
+             capabilities.deviceType,
+-            LucideIcons.cpu,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+@@ -556,14 +534,12 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             capabilities.supportedSampleRates
+                 .map((r) => '${r ~/ 1000}kHz')
+                 .join(', '),
+-            LucideIcons.activity,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+             context,
+             'Bit Depths',
+             capabilities.supportedBitDepths.map((d) => '${d}bit').join(', '),
+-            LucideIcons.layers,
+           ),
+           _buildDivider(),
+           _buildInfoRow(
+@@ -578,7 +554,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+                       : '$c ch',
+                 )
+                 .join(', '),
+-            LucideIcons.radio,
+           ),
+         ],
+       ),
+@@ -601,7 +576,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+             context,
+             'Connection Status',
+             _getStatusLabel(status.state),
+-            LucideIcons.activity,
+             valueColor: _getStatusColor(status.state),
+           ),
+           if (status.routeType != Uac2RouteType.unknown) ...[
+@@ -610,7 +584,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+               context,
+               'Playback Path',
+               _getPlaybackPathLabel(status, diagnostics: diagnostics),
+-              Icons.alt_route,
+             ),
+           ],
+           if (diagnostics != null) ...[
+@@ -619,14 +592,12 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+               context,
+               'Capability State',
+               diagnostics.capabilityStateLabel,
+-              Icons.tune,
+             ),
+             _buildDivider(),
+             _buildInfoRow(
+               context,
+               'Backend',
+               diagnostics.backendDescription,
+-              Icons.memory,
+             ),
+           ],
+           if (status.currentFormat != null) ...[
+@@ -635,14 +606,12 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+               context,
+               'Track Sample Rate',
+               '${status.currentFormat!.sampleRate ~/ 1000}kHz',
+-              Icons.graphic_eq,
+             ),
+             _buildDivider(),
+             _buildInfoRow(
+               context,
+               'Track Bit Depth',
+               '${status.currentFormat!.bitDepth}bit',
+-              LucideIcons.layers,
+             ),
+             _buildDivider(),
+             _buildInfoRow(
+@@ -653,7 +622,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+                   : status.currentFormat!.channels == 2
+                   ? 'Stereo'
+                   : '${status.currentFormat!.channels} channels',
+-              LucideIcons.radio,
+             ),
+             if (diagnostics != null) ...[
+               _buildDivider(),
+@@ -663,7 +631,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+                 diagnostics.requestedOutputSampleRate == null
+                     ? 'Unknown'
+                     : '${diagnostics.requestedOutputSampleRate! ~/ 1000}kHz',
+-                Icons.speed,
+               ),
+               _buildDivider(),
+               _buildInfoRow(
+@@ -672,7 +639,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+                 diagnostics.reportedOutputSampleRate == null
+                     ? 'Unreported'
+                     : '${diagnostics.reportedOutputSampleRate! ~/ 1000}kHz',
+-                Icons.graphic_eq,
+               ),
+             ],
+           ],
+@@ -684,7 +650,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+               diagnostics.isMixerManaged
+                   ? 'Android-managed'
+                   : 'Direct USB device-managed',
+-              Icons.account_tree_outlined,
+               valueColor: diagnostics.isMixerManaged
+                   ? Colors.amber.shade300
+                   : Colors.green.shade400,
+@@ -698,7 +663,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+                         ? 'Claimed by Flick'
+                         : 'Registered, not claimed')
+                   : 'Not registered',
+-              Icons.usb,
+               valueColor: diagnostics.usbInterfaceClaimed
+                   ? Colors.green.shade400
+                   : Colors.amber.shade300,
+@@ -708,7 +672,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+               context,
+               'Audio Focus',
+               diagnostics.audioFocusHeld ? 'Held' : 'Not held',
+-              Icons.hearing,
+               valueColor: diagnostics.audioFocusHeld
+                   ? Colors.green.shade400
+                   : Colors.amber.shade300,
+@@ -746,12 +709,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+       padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+       child: Row(
+         children: [
+-          Icon(
+-            Icons.warning_amber_rounded,
+-            color: Colors.red.shade400,
+-            size: 20,
+-          ),
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Text(
+               message,
+@@ -770,8 +727,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+       padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+       child: Row(
+         children: [
+-          Icon(Icons.info_outline, color: Colors.amber.shade400, size: 20),
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Text(
+               message,
+@@ -797,8 +752,6 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+         ),
+         child: Row(
+           children: [
+-            Icon(Icons.help_outline, color: Colors.lightBlue.shade300, size: 20),
+-            const SizedBox(width: AppConstants.spacingMd),
+             Expanded(
+               child: Text(
+                 message,
+@@ -816,16 +769,13 @@ class _Uac2SettingsScreenState extends ConsumerState<Uac2SettingsScreen> {
+   Widget _buildInfoRow(
+     BuildContext context,
+     String label,
+-    String value,
+-    IconData icon, {
++    String value, {
+     Color? valueColor,
+   }) {
+     return Padding(
+       padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingSm),
+       child: Row(
+         children: [
+-          Icon(icon, color: context.adaptiveTextSecondary, size: 20),
+-          const SizedBox(width: AppConstants.spacingMd),
+           Expanded(
+             child: Column(
+               crossAxisAlignment: CrossAxisAlignment.start,
+-- 
+2.55.0
+

@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 08:37:51 +0700
+Subject: [PATCH] 0.01*6
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/widgets/settings_widgets.dart b/lib/features/settings/widgets/settings_widgets.dart
+index 8807b6323..dc714bd79 100644
+--- a/lib/features/settings/widgets/settings_widgets.dart
++++ b/lib/features/settings/widgets/settings_widgets.dart
+@@ -87,7 +87,7 @@ class SettingsDivider extends StatelessWidget {
+     return Container(
+       height: 1,
+       margin: const EdgeInsets.only(left: AppConstants.spacingMd),
+-      color: AppColors.glassBorder,
++      color: AppColors.glassBorder.withValues(alpha: 0.06),
+     );
+   }
+ }
+-- 
+2.55.0
+

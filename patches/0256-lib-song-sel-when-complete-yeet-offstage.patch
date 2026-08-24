@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 15:57:25 +0700
+Subject: [PATCH] lib: song sel: when complete yeet offstage
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index 685e0367a..c45c09dc8 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -2985,6 +2985,7 @@ class _AlbumLoadMoreIndicator extends StatelessWidget {
+ 
+   @override
+   Widget build(BuildContext context) {
++    if (isComplete) return const Offstage(offstage: true);
+     final label = isComplete
+         ? 'Showing all $totalCount albums'
+         : 'Showing $visibleCount of $totalCount albums';
+-- 
+2.55.0
+

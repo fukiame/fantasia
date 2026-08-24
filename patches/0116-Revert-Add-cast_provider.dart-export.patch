@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 9 Aug 2026 01:27:55 +0700
+Subject: [PATCH] Revert "Add cast_provider.dart export"
+
+This reverts commit 59bd5c7fd277a655f03ad61e0f8dbc42a54b9e54.
+
+diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
+index 046f2536c..9f8a1c7ef 100644
+--- a/lib/providers/providers.dart
++++ b/lib/providers/providers.dart
+@@ -27,4 +27,3 @@ export 'update_check_provider.dart';
+ export 'milestone_provider.dart';
+ export 'tutorial_provider.dart';
+ export 'whats_new_provider.dart';
+-export 'cast_provider.dart';
+-- 
+2.55.0
+

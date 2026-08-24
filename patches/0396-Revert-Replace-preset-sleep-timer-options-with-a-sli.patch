@@ -1,0 +1,185 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 08:28:57 +0700
+Subject: [PATCH] Revert "Replace preset sleep timer options with a slider for
+ custom duration"
+
+This reverts commit 6f1602dc160ce4a57ac4b1203de4ed69818c8ee8.
+
+diff --git a/lib/features/player/widgets/sleep_timer_bottom_sheet.dart b/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
+index c49589ee9..b2d23ef4c 100644
+--- a/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
++++ b/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
+@@ -4,7 +4,7 @@ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/utils/duration_format.dart';
+ import 'package:flick/services/player_service.dart';
+ 
+-class SleepTimerBottomSheet extends StatefulWidget {
++class SleepTimerBottomSheet extends StatelessWidget {
+   final PlayerService playerService;
+   const SleepTimerBottomSheet({super.key, required this.playerService});
+ 
+@@ -16,18 +16,15 @@ class SleepTimerBottomSheet extends StatefulWidget {
+     );
+   }
+ 
+-  @override
+-  State<SleepTimerBottomSheet> createState() => _SleepTimerBottomSheetState();
+-}
+-
+-class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
+-  static const _min = 5.0;
+-  static const _max = 120.0;
+-  static const _step = 5.0;
+-  double _value = 30.0;
+-
+   @override
+   Widget build(BuildContext context) {
++    final timerOptions = [
++      (const Duration(minutes: 15), '15 min'),
++      (const Duration(minutes: 30), '30 min'),
++      (const Duration(minutes: 45), '45 min'),
++      (const Duration(hours: 1), '1 hour'),
++      (const Duration(hours: 2), '2 hours'),
++    ];
+     return Container(
+       decoration: BoxDecoration(
+         color: AppColors.surface,
+@@ -61,28 +58,26 @@ class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
+                   ),
+                 ],
+               ),
+-              ValueListenableBuilder<Duration?>(
+-                valueListenable:
+-                    widget.playerService.sleepTimerRemainingNotifier,
+-                builder: (context, remaining, _) => Switch(
+-                  value: remaining != null,
+-                  activeThumbColor: AppColors.accent,
+-                  onChanged: (on) {
+-                    if (on) {
+-                      widget.playerService.setSleepTimer(
+-                        Duration(minutes: _value.round()),
+-                      );
+-                    } else {
+-                      widget.playerService.cancelSleepTimer();
+-                    }
++              if (playerService.isSleepTimerActive)
++                TextButton(
++                  onPressed: () {
++                    playerService.cancelSleepTimer();
++                    Navigator.pop(context);
+                   },
++                  child: const Text(
++                    'Cancel Timer',
++                    style: TextStyle(
++                      fontFamily: 'ProductSans',
++                      color: Colors.redAccent,
++                      fontWeight: FontWeight.w600,
++                    ),
++                  ),
+                 ),
+-              ),
+             ],
+           ),
+           const SizedBox(height: 8),
+           ValueListenableBuilder<Duration?>(
+-            valueListenable: widget.playerService.sleepTimerRemainingNotifier,
++            valueListenable: playerService.sleepTimerRemainingNotifier,
+             builder: (context, remaining, _) {
+               if (remaining != null) {
+                 return Padding(
+@@ -125,59 +120,39 @@ class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
+               return const SizedBox.shrink();
+             },
+           ),
+-          Row(
+-            children: [
+-              const SizedBox(width: 4),
+-              Text(
+-                '${_min.round()}m',
+-                style: const TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 14,
+-                  color: AppColors.textSecondary,
+-                ),
+-              ),
+-              Expanded(
+-                child: Slider(
+-                  value: _value,
+-                  min: _min,
+-                  max: _max,
+-                  divisions: ((_max - _min) / _step).round(),
+-                  activeColor: AppColors.accent,
+-                  inactiveColor: AppColors.glassBorder,
+-                  onChanged: (v) {
+-                    setState(() {
+-                      _value = (v / _step).round() * _step;
+-                    });
+-                  },
+-                  onChangeEnd: (v) {
+-                    final minutes = (v / _step).round() * _step;
+-                    widget.playerService
+-                        .setSleepTimer(Duration(minutes: minutes.toInt()));
+-                    Navigator.pop(context);
+-                  },
+-                ),
+-              ),
+-              Text(
+-                '${_max.round()}m',
+-                style: const TextStyle(
+-                  fontFamily: 'ProductSans',
+-                  fontSize: 14,
+-                  color: AppColors.textSecondary,
++          Wrap(
++            spacing: 12,
++            runSpacing: 12,
++            children: timerOptions.map((option) {
++              return GestureDetector(
++                onTap: () {
++                  playerService.setSleepTimer(option.$1);
++                  Navigator.pop(context);
++                },
++                child: Container(
++                  padding: const EdgeInsets.symmetric(
++                    horizontal: 20,
++                    vertical: 12,
++                  ),
++                  decoration: BoxDecoration(
++                    color: AppColors.glassBackground,
++                    borderRadius: BorderRadius.circular(12),
++                    border: Border.all(
++                      color: AppColors.glassBorder,
++                      width: 1,
++                    ),
++                  ),
++                  child: Text(
++                    option.$2,
++                    style: const TextStyle(
++                      fontFamily: 'ProductSans',
++                      fontSize: 16,
++                      color: AppColors.textPrimary,
++                    ),
++                  ),
+                 ),
+-              ),
+-              const SizedBox(width: 4),
+-            ],
+-          ),
+-          Center(
+-            child: Text(
+-              '${_value.round()} min',
+-              style: const TextStyle(
+-                fontFamily: 'ProductSans',
+-                fontSize: 16,
+-                fontWeight: FontWeight.w600,
+-                color: AppColors.accent,
+-              ),
+-            ),
++              );
++            }).toList(),
+           ),
+           const SizedBox(height: 16),
+         ],
+-- 
+2.55.0
+

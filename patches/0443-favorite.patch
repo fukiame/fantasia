@@ -1,0 +1,2071 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 13 Aug 2026 09:50:33 +0700
+Subject: [PATCH] favorite
+
+playlists exists
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+index f3d52de15..b787be041 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MainActivity.kt
+@@ -557,7 +557,6 @@ class MainActivity: FlutterActivity() {
+                         else -> 0L
+                     }
+                     val isShuffle = call.argument<Boolean>("isShuffle") ?: false
+-                    val isFavorite = call.argument<Boolean>("isFavorite") ?: false
+                     val color = call.argument<Any>("color")?.let { c ->
+                         when (c) {
+                             is Int -> c
+@@ -574,7 +573,6 @@ class MainActivity: FlutterActivity() {
+                         putExtra("duration", duration)
+                         putExtra("position", position)
+                         putExtra("isShuffle", isShuffle)
+-                        putExtra("isFavorite", isFavorite)
+                         color?.let { putExtra("color", it) }
+                     }
+                     
+@@ -606,7 +604,6 @@ class MainActivity: FlutterActivity() {
+                         }
+                     }
+                     val isShuffle = call.argument<Boolean>("isShuffle")
+-                    val isFavorite = call.argument<Boolean>("isFavorite")
+                     val color = call.argument<Any>("color")?.let { c ->
+                         when (c) {
+                             is Int -> c
+@@ -623,7 +620,6 @@ class MainActivity: FlutterActivity() {
+                         duration?.let { putExtra("duration", it) }
+                         position?.let { putExtra("position", it) }
+                         isShuffle?.let { putExtra("isShuffle", it) }
+-                        isFavorite?.let { putExtra("isFavorite", it) }
+                         color?.let { putExtra("color", it) }
+                     }
+                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+diff --git a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+index 1c4fbd4d1..e127d25dc 100644
+--- a/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
++++ b/android/app/src/main/kotlin/com/mossapps/flick/MusicNotificationService.kt
+@@ -35,7 +35,6 @@ class MusicNotificationService : Service() {
+         const val ACTION_PREVIOUS = "com.mossapps.flick.PREVIOUS"
+         const val ACTION_STOP = "com.mossapps.flick.STOP"
+         const val ACTION_SHUFFLE = "com.mossapps.flick.SHUFFLE"
+-        const val ACTION_FAVORITE = "com.mossapps.flick.FAVORITE"
+ 
+         private const val PLAYER_CHANNEL = "com.mossapps.flick/player"
+     }
+@@ -53,7 +52,6 @@ class MusicNotificationService : Service() {
+     private var currentDuration: Long = 0
+     private var currentPosition: Long = 0
+     private var isShuffleMode: Boolean = false
+-    private var isFavorite: Boolean = false
+     private var currentColor: Int? = null
+ 
+     private var cachedAlbumArt: Bitmap? = null
+@@ -92,13 +90,6 @@ class MusicNotificationService : Service() {
+                     val notification = buildNotification()
+                     notificationManager.notify(NOTIFICATION_ID, notification)
+                 }
+-                ACTION_FAVORITE -> {
+-                    android.util.Log.d("MusicNotification", "Favorite action triggered")
+-                    isFavorite = !isFavorite
+-                    sendCommandToFlutter("toggleFavorite")
+-                    val notification = buildNotification()
+-                    notificationManager.notify(NOTIFICATION_ID, notification)
+-                }
+             }
+         }
+     }
+@@ -134,7 +125,6 @@ class MusicNotificationService : Service() {
+             addAction(ACTION_PREVIOUS)
+             addAction(ACTION_STOP)
+             addAction(ACTION_SHUFFLE)
+-            addAction(ACTION_FAVORITE)
+         }
+ 
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+@@ -170,7 +160,6 @@ class MusicNotificationService : Service() {
+                     ?: it.getIntExtra("position", 0).toLong()
+             }
+             if (it.hasExtra("isShuffle")) isShuffleMode = it.getBooleanExtra("isShuffle", false)
+-            if (it.hasExtra("isFavorite")) isFavorite = it.getBooleanExtra("isFavorite", false)
+             if (it.hasExtra("color")) currentColor = it.getIntExtra("color", 0)
+         }
+ 
+@@ -348,13 +337,6 @@ class MusicNotificationService : Service() {
+                             val notification = buildNotification()
+                             notificationManager.notify(NOTIFICATION_ID, notification)
+                         }
+-                        ACTION_FAVORITE -> {
+-                            isFavorite = !isFavorite
+-                            sendCommandToFlutter("toggleFavorite")
+-                            updatePlaybackState()
+-                            val notification = buildNotification()
+-                            notificationManager.notify(NOTIFICATION_ID, notification)
+-                        }
+                     }
+                 }
+             })
+@@ -413,17 +395,6 @@ class MusicNotificationService : Service() {
+                     shuffleIcon
+                 ).build()
+             )
+-
+-            val favoriteIcon = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+-            val favoriteTitle = if (isFavorite) "Unfavorite" else "Favorite"
+-            
+-            stateBuilder.addCustomAction(
+-                PlaybackStateCompat.CustomAction.Builder(
+-                    ACTION_FAVORITE,
+-                    favoriteTitle,
+-                    favoriteIcon
+-                ).build()
+-            )
+         }
+ 
+         mediaSession.setPlaybackState(stateBuilder.build())
+@@ -518,13 +489,10 @@ class MusicNotificationService : Service() {
+             val playPauseIntent = pendingBroadcast(100, ACTION_PLAY_PAUSE)
+             val prevIntent = pendingBroadcast(101, ACTION_PREVIOUS)
+             val nextIntent = pendingBroadcast(102, ACTION_NEXT)
+-            val favoriteIntent = pendingBroadcast(103, ACTION_FAVORITE)
+             val shuffleIntent = pendingBroadcast(104, ACTION_SHUFFLE)
+ 
+             val playPauseIcon = if (isPlaying) R.drawable.ic_pause else R.drawable.ic_play
+             val playPauseText = if (isPlaying) "Pause" else "Play"
+-            val favoriteIcon = if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_favorite_border
+-            val favoriteText = if (isFavorite) "Unfavorite" else "Favorite"
+             val shuffleIcon = if (isShuffleMode) R.drawable.ic_shuffle_on else R.drawable.ic_shuffle
+             val shuffleText = if (isShuffleMode) "Shuffle On" else "Shuffle Off"
+ 
+@@ -533,7 +501,6 @@ class MusicNotificationService : Service() {
+                 .addAction(playPauseIcon, playPauseText, playPauseIntent)
+                 .addAction(R.drawable.ic_next, "Next", nextIntent)
+                 .addAction(shuffleIcon, shuffleText, shuffleIntent)
+-                .addAction(favoriteIcon, favoriteText, favoriteIntent)
+                 .setStyle(
+                     MediaNotificationCompat.MediaStyle()
+                         .setMediaSession(mediaSession.sessionToken)
+@@ -566,7 +533,7 @@ class MusicNotificationService : Service() {
+     fun updateNotification(
+         title: String?, artist: String?, albumArtPath: String?,
+         playing: Boolean?, duration: Long?, position: Long?,
+-        shuffle: Boolean?, favorite: Boolean?, color: Int? = null
++        shuffle: Boolean?, color: Int? = null
+     ) {
+         title?.let { currentTitle = it }
+         artist?.let { currentArtist = it }
+@@ -575,7 +542,6 @@ class MusicNotificationService : Service() {
+         duration?.let { currentDuration = it }
+         position?.let { currentPosition = it }
+         shuffle?.let { isShuffleMode = it }
+-        favorite?.let { isFavorite = it }
+         color?.let { currentColor = it }
+ 
+         val notification = buildNotification()
+diff --git a/android/app/src/main/res/drawable/ic_favorite.xml b/android/app/src/main/res/drawable/ic_favorite.xml
+deleted file mode 100644
+index 06a53f5a2..000000000
+--- a/android/app/src/main/res/drawable/ic_favorite.xml
++++ /dev/null
+@@ -1,9 +0,0 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFF0000"
+-        android:pathData="M12,21.35l-1.45,-1.32C5.4,15.36 2,12.28 2,8.5 2,5.42 4.42,3 7.5,3c1.74,0 3.41,0.81 4.5,2.09C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.42 22,8.5c0,3.78 -3.4,6.86 -8.55,11.54L12,21.35z"/>
+-</vector>
+diff --git a/android/app/src/main/res/drawable/ic_favorite_border.xml b/android/app/src/main/res/drawable/ic_favorite_border.xml
+deleted file mode 100644
+index 047b69f85..000000000
+--- a/android/app/src/main/res/drawable/ic_favorite_border.xml
++++ /dev/null
+@@ -1,9 +0,0 @@
+-<vector xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:width="24dp"
+-    android:height="24dp"
+-    android:viewportWidth="24"
+-    android:viewportHeight="24">
+-    <path
+-        android:fillColor="#FFFFFFFF"
+-        android:pathData="M16.5,3c-1.74,0 -3.41,0.81 -4.5,2.09C10.91,3.81 9.24,3 7.5,3 4.42,3 2,5.42 2,8.5c0,3.78 3.4,6.86 8.55,11.54L12,21.35l1.45,-1.32C18.6,15.36 22,12.28 22,8.5 22,5.42 19.58,3 16.5,3zM12.1,18.55l-0.1,0.1 -0.1,-0.1C7.14,14.24 4,11.39 4,8.5 4,6.5 5.5,5 7.5,5c1.54,0 3.04,0.99 3.57,2.36h1.87C13.46,5.99 14.96,5 16.5,5c2,0 3.5,1.5 3.5,3.5 0,2.89 -3.14,5.74 -7.9,10.05z"/>
+-</vector>
+diff --git a/lib/app/app.dart b/lib/app/app.dart
+index 4d2ffb2d0..ba0d61a6e 100644
+--- a/lib/app/app.dart
++++ b/lib/app/app.dart
+@@ -16,7 +16,6 @@ import 'package:flick/features/albums/screens/albums_screen.dart';
+ import 'package:flick/features/artists/screens/artists_screen.dart';
+ import 'package:flick/features/folders/screens/folders_screen.dart';
+ import 'package:flick/features/playlists/screens/playlists_screen.dart';
+-import 'package:flick/features/favorites/screens/favorites_screen.dart';
+ import 'package:flick/features/search/screens/search_screen.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+@@ -643,9 +642,6 @@ class _MainShellState extends ConsumerState<MainShell>
+       NavBarButton.playlists => const PlaylistsScreen(
+         key: ValueKey('playlists'),
+       ),
+-      NavBarButton.favorites => const FavoritesScreen(
+-        key: ValueKey('favorites'),
+-      ),
+       NavBarButton.search => const SearchScreen(key: ValueKey('search')),
+     };
+   }
+diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
+deleted file mode 100644
+index a681630d0..000000000
+--- a/lib/features/favorites/screens/favorites_screen.dart
++++ /dev/null
+@@ -1,552 +0,0 @@
+-import 'package:flutter/material.dart';
+-import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/theme/adaptive_color_provider.dart';
+-import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/core/utils/navigation_helper.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/favorites_service.dart';
+-import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/surface_icon_button.dart';
+-import 'package:flick/providers/providers.dart';
+-import 'package:flick/features/player/widgets/ambient_background.dart';
+-
+-class FavoritesScreen extends ConsumerStatefulWidget {
+-  const FavoritesScreen({super.key});
+-
+-  @override
+-  ConsumerState<FavoritesScreen> createState() => _FavoritesScreenState();
+-}
+-
+-class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+-  final PlayerService _playerService = PlayerService();
+-  final FavoritesService _favoritesService = FavoritesService();
+-
+-  List<Song> _favorites = [];
+-  bool _isLoading = true;
+-  bool _selectionMode = false;
+-  final Set<String> _selectedIds = {};
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    final navBarNotifier = ref.read(navBarVisibleProvider.notifier);
+-    WidgetsBinding.instance.addPostFrameCallback((_) {
+-      navBarNotifier.setVisible(true);
+-      _loadFavorites();
+-    });
+-  }
+-
+-  Future<void> _loadFavorites() async {
+-    final favorites = await _favoritesService.getFavorites();
+-    if (mounted) {
+-      setState(() {
+-        _favorites = favorites;
+-        _isLoading = false;
+-      });
+-    }
+-  }
+-
+-  Future<void> _removeFavorite(Song song) async {
+-    setState(() {
+-      _favorites.remove(song);
+-    });
+-
+-    await _favoritesService.removeFavorite(song.id);
+-
+-    if (mounted) {
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        SnackBar(
+-          content: Text('Removed "${song.title}" from favorites'),
+-          action: SnackBarAction(
+-            label: 'Undo',
+-            onPressed: () async {
+-              await _favoritesService.addFavorite(song.id);
+-              setState(() {
+-                _favorites.add(song);
+-              });
+-            },
+-          ),
+-        ),
+-      );
+-    }
+-  }
+-
+-  void _enterSelectionMode(String? songId) {
+-    setState(() {
+-      _selectionMode = true;
+-      if (songId != null) _selectedIds.add(songId);
+-    });
+-  }
+-
+-  void _exitSelectionMode() {
+-    setState(() {
+-      _selectionMode = false;
+-      _selectedIds.clear();
+-    });
+-  }
+-
+-  void _toggleSelection(String songId) {
+-    setState(() {
+-      if (_selectedIds.contains(songId)) {
+-        _selectedIds.remove(songId);
+-        if (_selectedIds.isEmpty) _selectionMode = false;
+-      } else {
+-        _selectedIds.add(songId);
+-      }
+-    });
+-  }
+-
+-  void _selectAll() {
+-    setState(() {
+-      _selectedIds.addAll(_favorites.map((s) => s.id));
+-    });
+-  }
+-
+-  Future<void> _removeSelected() async {
+-    final toRemove =
+-        _favorites.where((s) => _selectedIds.contains(s.id)).toList();
+-    final removedIds = toRemove.map((s) => s.id).toSet();
+-    final removedSongs = List<Song>.from(toRemove);
+-
+-    setState(() {
+-      _favorites.removeWhere((s) => removedIds.contains(s.id));
+-      _selectedIds.clear();
+-      _selectionMode = false;
+-    });
+-
+-    for (final id in removedIds) {
+-      await _favoritesService.removeFavorite(id);
+-    }
+-
+-    if (mounted) {
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        SnackBar(
+-          content: Text('Removed ${removedSongs.length} from favorites'),
+-          action: SnackBarAction(
+-            label: 'Undo',
+-            onPressed: () async {
+-              for (final song in removedSongs) {
+-                await _favoritesService.addFavorite(song.id);
+-              }
+-              setState(() {
+-                _favorites = [..._favorites, ...removedSongs];
+-              });
+-            },
+-          ),
+-        ),
+-      );
+-    }
+-  }
+-
+-  void _showLongPressSheet(Song song) {
+-    showModalBottomSheet(
+-      context: context,
+-      backgroundColor: Colors.transparent,
+-      builder: (_) => Container(
+-        decoration: BoxDecoration(
+-          color: AppColors.surface,
+-          borderRadius: const BorderRadius.vertical(
+-            top: Radius.circular(AppConstants.radiusXl),
+-          ),
+-        ),
+-        padding: const EdgeInsets.only(
+-          bottom: AppConstants.spacingLg,
+-          top: AppConstants.spacingSm,
+-        ),
+-        child: Column(
+-          mainAxisSize: MainAxisSize.min,
+-          children: [
+-            Container(
+-              width: 40,
+-              height: 4,
+-              decoration: BoxDecoration(
+-                color: AppColors.glassBorder,
+-                borderRadius: BorderRadius.circular(2),
+-              ),
+-            ),
+-            const SizedBox(height: AppConstants.spacingMd),
+-            ListTile(
+-              leading: const Icon(LucideIcons.heartOff, color: Colors.red),
+-              title: const Text('Unfavorite'),
+-              onTap: () {
+-                Navigator.of(context).pop();
+-                _removeFavorite(song);
+-              },
+-            ),
+-            ListTile(
+-              leading: Icon(LucideIcons.checkCheck,
+-                  color: context.adaptiveTextSecondary),
+-              title: const Text('Select'),
+-              onTap: () {
+-                Navigator.of(context).pop();
+-                _enterSelectionMode(song.id);
+-              },
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final removalMode =
+-        ref.watch(appPreferencesProvider).favoriteRemovalMode;
+-    final currentSong = ref.watch(currentSongProvider);
+-
+-    return Scaffold(
+-        backgroundColor: Colors.transparent,
+-        body: Stack(
+-          children: [
+-            Positioned.fill(
+-              child: AmbientBackground(song: currentSong),
+-            ),
+-            SafeArea(
+-              bottom: false,
+-              child: Column(
+-                crossAxisAlignment: CrossAxisAlignment.start,
+-                children: [
+-                  if (_selectionMode)
+-                    _buildSelectionHeader(context)
+-                  else
+-                    _buildHeader(context),
+-                  Expanded(
+-                    child: _isLoading
+-                        ? _buildLoadingState()
+-                        : _favorites.isEmpty
+-                            ? _buildEmptyState()
+-                            : _buildFavoritesList(removalMode),
+-                  ),
+-                ],
+-              ),
+-            ),
+-          ],
+-        ),
+-    );
+-  }
+-
+-  Widget _buildSelectionHeader(BuildContext context) {
+-    final count = _selectedIds.length;
+-    final allSelected = count == _favorites.length;
+-
+-    return Padding(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingMd,
+-        vertical: AppConstants.spacingMd,
+-      ),
+-      child: Row(
+-        children: [
+-          IconButton(
+-            icon: const Icon(LucideIcons.x),
+-            color: context.adaptiveTextPrimary,
+-            onPressed: _exitSelectionMode,
+-          ),
+-          const SizedBox(width: AppConstants.spacingSm),
+-          Expanded(
+-            child: Text(
+-              '$count selected',
+-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                    fontWeight: FontWeight.w600,
+-                    color: context.adaptiveTextPrimary,
+-                  ),
+-            ),
+-          ),
+-          if (!allSelected)
+-            TextButton(
+-              onPressed: _selectAll,
+-              child: Text(
+-                'Select All',
+-                style: TextStyle(color: context.adaptiveTextSecondary),
+-              ),
+-            ),
+-          IconButton(
+-            icon: Icon(
+-              LucideIcons.heartOff,
+-              color: Colors.red.withValues(alpha: 0.8),
+-            ),
+-            onPressed: count > 0 ? _removeSelected : null,
+-            tooltip: 'Unfavorite selected',
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildHeader(BuildContext context) {
+-    return Padding(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingLg,
+-        vertical: AppConstants.spacingMd,
+-      ),
+-      child: Row(
+-        children: [
+-          if (Navigator.of(context).canPop()) ...[
+-            SurfaceIconButton.icon(
+-              icon: LucideIcons.chevronLeft,
+-              onPressed: () => Navigator.of(context).pop(),
+-              iconColor: context.adaptiveTextPrimary,
+-            ),
+-            const SizedBox(width: AppConstants.spacingMd),
+-          ],
+-          Expanded(
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                Text(
+-                  'favorites',
+-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+-                        fontWeight: FontWeight.w600,
+-                        color: context.adaptiveTextPrimary,
+-                      ),
+-                ),
+-                Text(
+-                  '${_favorites.length} liked songs',
+-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                ),
+-              ],
+-            ),
+-          ),
+-          if (_favorites.isNotEmpty) ...[
+-            SurfaceIconButton.icon(
+-              icon: LucideIcons.checkCheck,
+-              onPressed: () => _enterSelectionMode(null),
+-              iconColor: context.adaptiveTextPrimary,
+-            ),
+-            const SizedBox(width: AppConstants.spacingSm),
+-            SurfaceIconButton.icon(
+-              icon: LucideIcons.shuffle,
+-              onPressed: () {
+-                final shuffled = List<Song>.from(_favorites)..shuffle();
+-                _playerService.play(shuffled.first, playlist: shuffled);
+-              },
+-              iconColor: context.adaptiveTextPrimary,
+-            ),
+-          ],
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildLoadingState() {
+-    return Center(
+-      child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
+-    );
+-  }
+-
+-  Widget _buildEmptyState() {
+-    return Center(
+-      child: Padding(
+-        padding: const EdgeInsets.all(AppConstants.spacingXl),
+-        child: Column(
+-          mainAxisAlignment: MainAxisAlignment.center,
+-          children: [
+-            const SizedBox(height: AppConstants.spacingXl),
+-            Text(
+-              'No Favorites Yet',
+-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+-                    color: context.adaptiveTextSecondary,
+-                    fontWeight: FontWeight.w600,
+-                  ),
+-            ),
+-            const SizedBox(height: AppConstants.spacingSm),
+-            Text(
+-              'Tap the heart icon on any song\nto add it to your favorites',
+-              textAlign: TextAlign.center,
+-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                    color: context.adaptiveTextTertiary,
+-                    height: 1.5,
+-                  ),
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildFavoritesList(String removalMode) {
+-    return NotificationListener<ScrollNotification>(
+-      onNotification: (_) => true,
+-      child: ListView.builder(
+-        padding: EdgeInsets.only(bottom: AppConstants.navBarHeight + 120),
+-        itemCount: _favorites.length,
+-      itemBuilder: (context, index) {
+-        final song = _favorites[index];
+-        final isSelected = _selectedIds.contains(song.id);
+-        return _FavoriteSongTile(
+-          key: ValueKey(song.id),
+-          song: song,
+-          isSelectionMode: _selectionMode,
+-          isSelected: isSelected,
+-          removalMode: removalMode,
+-          onTap: () async {
+-            if (_selectionMode) {
+-              _toggleSelection(song.id);
+-              return;
+-            }
+-            await _playerService.play(song, playlist: _favorites);
+-            if (context.mounted) {
+-              await NavigationHelper.navigateToFullPlayer(
+-                context,
+-                heroTag: 'favorite_song_${song.id}',
+-              );
+-            }
+-          },
+-          onLongPress: () {
+-            if (_selectionMode) return;
+-            if (removalMode == 'longpress') {
+-              _showLongPressSheet(song);
+-            } else {
+-              _enterSelectionMode(song.id);
+-            }
+-          },
+-          onRemove: () => _removeFavorite(song),
+-        );
+-      },
+-      ),
+-    );
+-  }
+-}
+-
+-class _FavoriteSongTile extends StatelessWidget {
+-  final Song song;
+-  final bool isSelectionMode;
+-  final bool isSelected;
+-  final String removalMode;
+-  final VoidCallback onTap;
+-  final VoidCallback onLongPress;
+-  final VoidCallback onRemove;
+-
+-  const _FavoriteSongTile({
+-    super.key,
+-    required this.song,
+-    required this.onTap,
+-    required this.onLongPress,
+-    required this.onRemove,
+-    this.isSelectionMode = false,
+-    this.isSelected = false,
+-    this.removalMode = 'swipe',
+-  });
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final tile = Padding(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingMd,
+-        vertical: AppConstants.spacingXs,
+-      ),
+-      child: Material(
+-        color: isSelected
+-            ? AppColors.accent.withValues(alpha: 0.12)
+-            : AppColors.surface,
+-        borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-        child: InkWell(
+-          onTap: onTap,
+-          onLongPress: onLongPress,
+-          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-          child: Padding(
+-            padding: const EdgeInsets.all(AppConstants.spacingMd),
+-            child: Row(
+-              children: [
+-                if (isSelectionMode) ...[
+-                  Icon(
+-                    isSelected
+-                      ? LucideIcons.check
+-                      : LucideIcons.circle,
+-                    color: isSelected
+-                        ? AppColors.accent
+-                        : context.adaptiveTextTertiary,
+-                    size: context.responsiveIcon(AppConstants.iconSizeMd),
+-                  ),
+-                  const SizedBox(width: AppConstants.spacingMd),
+-                ],
+-                Container(
+-                  width: context.scaleSize(52),
+-                  height: context.scaleSize(52),
+-                  decoration: BoxDecoration(
+-                    color: AppColors.surfaceLight,
+-                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-                  ),
+-                  child: ClipRRect(
+-                    borderRadius: BorderRadius.circular(AppConstants.radiusMd),
+-                    child: CachedImageWidget(
+-                      imagePath: song.albumArt,
+-                      audioSourcePath: song.filePath,
+-                      fit: BoxFit.cover,
+-                      placeholder: _buildPlaceholder(context),
+-                      errorWidget: _buildPlaceholder(context),
+-                    ),
+-                  ),
+-                ),
+-                const SizedBox(width: AppConstants.spacingMd),
+-                Expanded(
+-                  child: Column(
+-                    crossAxisAlignment: CrossAxisAlignment.start,
+-                    children: [
+-                      Text(
+-                        song.title,
+-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+-                              color: context.adaptiveTextPrimary,
+-                              fontWeight: FontWeight.w600,
+-                            ),
+-                        maxLines: 1,
+-                        overflow: TextOverflow.ellipsis,
+-                      ),
+-                      const SizedBox(height: 4),
+-                      Text(
+-                        song.artist,
+-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                              color: context.adaptiveTextTertiary,
+-                            ),
+-                        maxLines: 1,
+-                        overflow: TextOverflow.ellipsis,
+-                      ),
+-                    ],
+-                  ),
+-                ),
+-                if (!isSelectionMode)
+-                  Icon(
+-                    LucideIcons.heart,
+-                    color: Colors.red.withValues(alpha: 0.8),
+-                    size: context.responsiveIcon(AppConstants.iconSizeMd),
+-                  ),
+-              ],
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-
+-    if (isSelectionMode || removalMode != 'swipe') {
+-      return tile;
+-    }
+-
+-    return Dismissible(
+-      key: Key(song.id),
+-      direction: DismissDirection.endToStart,
+-      background: Container(
+-        alignment: Alignment.centerRight,
+-        padding: const EdgeInsets.only(right: AppConstants.spacingLg),
+-        color: Colors.red.withValues(alpha: 0.3),
+-        child: const Icon(LucideIcons.trash2, color: Colors.white),
+-      ),
+-      onDismissed: (_) => onRemove(),
+-      child: tile,
+-    );
+-  }
+-
+-  Widget _buildPlaceholder(BuildContext context) {
+-    return Center(
+-      child: Icon(
+-        LucideIcons.music,
+-        color: context.adaptiveTextTertiary,
+-        size: context.responsiveIcon(AppConstants.iconSizeLg),
+-      ),
+-    );
+-  }
+-}
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index b2da91322..7e3950803 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -10,7 +10,6 @@ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/features/albums/screens/albums_screen.dart';
+ import 'package:flick/features/artists/screens/artists_screen.dart';
+-import 'package:flick/features/favorites/screens/favorites_screen.dart';
+ import 'package:flick/features/folders/screens/folders_screen.dart';
+ import 'package:flick/features/playlists/screens/playlist_detail_screen.dart';
+ import 'package:flick/features/playlists/screens/playlists_screen.dart';
+@@ -57,7 +56,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     _isRefreshing = true;
+     _refreshController.repeat();
+     ref.invalidate(songsProvider);
+-    ref.invalidate(favoritesProvider);
+     ref.invalidate(playlistsProvider);
+     _refreshController.stop();
+     _refreshController.animateBack(
+@@ -77,26 +75,21 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+   @override
+   Widget build(BuildContext context) {
+     final songsAsync = ref.watch(songsProvider);
+-    final favoritesAsync = ref.watch(favoritesProvider);
+     final playlistsAsync = ref.watch(playlistsProvider);
+     final appPreferences = ref.watch(appPreferencesProvider);
+ 
+     final allSongs = songsAsync.value?.songs ?? const <Song>[];
+-    final favoriteSongs = favoritesAsync.value?.favoriteSongs ?? const <Song>[];
+     final playlists = playlistsAsync.value?.playlists ?? const <Playlist>[];
+ 
+     final homeData = _buildHomeData(
+       allSongs: allSongs,
+-      favoriteSongs: favoriteSongs,
+       playlists: playlists,
+     );
+ 
+     final isInitialLoading =
+         allSongs.isEmpty &&
+-        favoriteSongs.isEmpty &&
+         playlists.isEmpty &&
+         (songsAsync.isLoading ||
+-            favoritesAsync.isLoading ||
+             playlistsAsync.isLoading);
+ 
+     return Scaffold(
+@@ -118,7 +111,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                       child: _buildHeader(
+                         context,
+                         songCount: allSongs.length,
+-                        favoriteCount: favoriteSongs.length,
+                         playlistCount: playlists.length,
+                       ),
+                     ),
+@@ -150,7 +142,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                             child: _buildQuickAccessGrid(
+                               context,
+                               homeData: homeData,
+-                              favoritesCount: favoriteSongs.length,
+                               playlistCount: playlists.length,
+                             ),
+                           ),
+@@ -304,7 +295,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+   Widget _buildHeader(
+     BuildContext context, {
+     required int songCount,
+-    required int favoriteCount,
+     required int playlistCount,
+   }) {
+     return Padding(
+@@ -330,7 +320,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+                 ),
+                 const SizedBox(height: AppConstants.spacingXs),
+                 Text(
+-                  '$songCount tracks, $favoriteCount liked songs, $playlistCount playlists',
++                  '$songCount tracks, $playlistCount playlists',
+                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                     color: context.adaptiveTextSecondary,
+                     height: 1.45,
+@@ -365,19 +355,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+   Widget _buildQuickAccessGrid(
+     BuildContext context, {
+     required _MenuHomeData homeData,
+-    required int favoritesCount,
+     required int playlistCount,
+   }) {
+     final cards = [
+-      _QuickAccessItem(
+-        title: 'Favorite Songs',
+-        subtitle: favoritesCount == 0
+-            ? 'Liked songs live here'
+-            : '$favoritesCount tracks ready to revisit',
+-        icon: LucideIcons.heart,
+-        artPath: homeData.favoriteArtPath,
+-        onTap: () => _navigateTo(context, const FavoritesScreen()),
+-      ),
+       _QuickAccessItem(
+         title: 'Playlists',
+         subtitle: playlistCount == 0
+@@ -473,7 +453,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+   _MenuHomeData _buildHomeData({
+     required List<Song> allSongs,
+-    required List<Song> favoriteSongs,
+     required List<Playlist> playlists,
+   }) {
+     final songById = {for (final song in allSongs) song.id: song};
+@@ -495,7 +474,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+     return _MenuHomeData(
+       playlistPreviews: playlistPreviews,
+-      favoriteArtPath: favoriteSongs.firstOrNull?.albumArt,
+     );
+   }
+ 
+@@ -590,7 +568,7 @@ class _MenuLoadingState extends StatelessWidget {
+           ),
+           const SizedBox(height: AppConstants.spacingXs),
+           Text(
+-            'Loading favorites, recent sessions, generated mixes, and playlists.',
++            'Loading recent sessions, generated mixes, and playlists.',
+             textAlign: TextAlign.center,
+             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+               color: context.adaptiveTextTertiary,
+@@ -1025,11 +1003,9 @@ class _BrowseChip extends StatelessWidget {
+ 
+ class _MenuHomeData {
+   final List<_PlaylistPreview> playlistPreviews;
+-  final String? favoriteArtPath;
+ 
+   const _MenuHomeData({
+     required this.playlistPreviews,
+-    required this.favoriteArtPath,
+   });
+ }
+ 
+diff --git a/lib/features/player/screens/full_player_screen.dart b/lib/features/player/screens/full_player_screen.dart
+index 4d81e96a7..14b29601b 100644
+--- a/lib/features/player/screens/full_player_screen.dart
++++ b/lib/features/player/screens/full_player_screen.dart
+@@ -17,7 +17,6 @@ import 'package:flick/models/album_color_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/favorites_service.dart';
+ 
+ import 'package:flick/widgets/uac2/iso_volume_popup.dart';
+ import 'package:flick/providers/providers.dart';
+@@ -33,7 +32,6 @@ class FullPlayerScreen extends ConsumerStatefulWidget {
+ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     with TickerProviderStateMixin {
+   final PlayerService _playerService = PlayerService();
+-  final FavoritesService _favoritesService = FavoritesService();
+   final SongRepository _songRepository = SongRepository();
+   late final PlayerNavigation _navigation = PlayerNavigation(
+     playerService: _playerService,
+@@ -102,9 +100,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     });
+ 
+     _playerService.currentSongNotifier.addListener(_handleCurrentSongChanged);
+-    _playerService.favoriteNotificationToggleNotifier.addListener(
+-      _handleFavoriteToggledFromNotification,
+-    );
+     _updateTopBarTextMeasurement(_playerService.currentSongNotifier.value);
+   }
+ 
+@@ -119,9 +114,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     _playerService.currentSongNotifier.removeListener(
+       _handleCurrentSongChanged,
+     );
+-    _playerService.favoriteNotificationToggleNotifier.removeListener(
+-      _handleFavoriteToggledFromNotification,
+-    );
+     _positionThrottleTimer?.cancel();
+     _dismissVolumePopup?.call();
+     _dismissVolumePopup = null;
+@@ -137,10 +129,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+     _updateTopBarTextMeasurement(_playerService.currentSongNotifier.value);
+   }
+ 
+-  void _handleFavoriteToggledFromNotification() {
+-    if (mounted) setState(() {});
+-  }
+-
+   Future<void> _animateToNextSong() async {
+     _dismissVolumePopup?.call();
+     _dismissVolumePopup = null;
+@@ -343,7 +331,6 @@ class _FullPlayerScreenState extends ConsumerState<FullPlayerScreen>
+                             appPrefs.rightActionButton,
+                           ),
+                           playerService: _playerService,
+-                          favoritesService: _favoritesService,
+                           onOpenQueue: (ctx) => _navigation.openQueue(ctx),
+                           usbVolumeButtonKey: _usbVolumeButtonKey,
+                           onShowUsbVolumePopup: (ctx) =>
+diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
+index 1e62fdff0..5ef1811d5 100644
+--- a/lib/features/player/widgets/player_action_button_row.dart
++++ b/lib/features/player/widgets/player_action_button_row.dart
+@@ -6,7 +6,6 @@ import 'package:flick/models/song.dart';
+ import 'package:flick/models/album_color_mode.dart';
+ import 'package:flick/models/player_action_button.dart';
+ import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/favorites_service.dart';
+ import 'package:flick/services/uac2_preferences_service.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/features/player/widgets/album_color_helpers.dart';
+@@ -22,7 +21,6 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+   final PlayerActionButton rightTopAction;
+   final PlayerActionButton rightAction;
+   final PlayerService playerService;
+-  final FavoritesService favoritesService;
+   final void Function(BuildContext) onOpenQueue;
+   final GlobalKey usbVolumeButtonKey;
+   final void Function(BuildContext) onShowUsbVolumePopup;
+@@ -37,7 +35,6 @@ class PlayerActionButtonRow extends ConsumerStatefulWidget {
+     required this.rightTopAction,
+     required this.rightAction,
+     required this.playerService,
+-    required this.favoritesService,
+     required this.onOpenQueue,
+     required this.usbVolumeButtonKey,
+     required this.onShowUsbVolumePopup,
+@@ -229,23 +226,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+       // ponytail: none is filtered out by _buildSideButtons; unreachable here.
+       case PlayerActionButton.none:
+         return const SizedBox.shrink();
+-      case PlayerActionButton.favorites:
+-        if (song.isExternal) {
+-          return SizedBox(
+-            width: actionIconSize + actionPadding.horizontal,
+-            height: actionIconSize + actionPadding.vertical,
+-          );
+-        }
+-        return _buildFavoritesButton(
+-          song: song,
+-          actionPadding: actionPadding,
+-          actionRadius: actionRadius,
+-          actionIconSize: actionIconSize,
+-          inactiveBg: inactiveBg,
+-          albumColor: albumColor,
+-          accentBlend: accentBlend,
+-          hasAlbumTint: hasAlbumTint,
+-        );
+       case PlayerActionButton.queue:
+         return _buildQueueButton(
+           context: context,
+@@ -278,67 +258,6 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+     }
+   }
+ 
+-  Widget _buildFavoritesButton({
+-    required Song song,
+-    required EdgeInsets actionPadding,
+-    required double actionRadius,
+-    required double actionIconSize,
+-    required Color inactiveBg,
+-    required Color? albumColor,
+-    required double accentBlend,
+-    required bool hasAlbumTint,
+-  }) {
+-    return FutureBuilder<bool>(
+-      future: widget.favoritesService.isFavorite(song.id),
+-      builder: (context, snapshot) {
+-        final isFavorite = snapshot.data ?? false;
+-        return GestureDetector(
+-          onTap: () async {
+-            final newState = await widget.favoritesService.toggleFavorite(song.id);
+-            setState(() {});
+-            widget.playerService.refreshNotificationState();
+-            if (context.mounted) {
+-              ScaffoldMessenger.of(context).showSnackBar(
+-                SnackBar(
+-                  content: Text(
+-                    newState ? 'Added to favorites' : 'Removed from favorites',
+-                  ),
+-                  duration: const Duration(seconds: 1),
+-                ),
+-              );
+-            }
+-          },
+-          child: Container(
+-            padding: actionPadding,
+-            decoration: BoxDecoration(
+-              color: isFavorite
+-                  ? (hasAlbumTint
+-                        ? albumAccent(
+-                            albumColor!,
+-                            accentBlend,
+-                          ).withValues(alpha: 0.25)
+-                        : Colors.red.withValues(alpha: 0.25))
+-                  : inactiveBg,
+-              borderRadius: BorderRadius.circular(actionRadius),
+-            ),
+-            child: Icon(
+-              isFavorite ? Icons.favorite : Icons.favorite_border,
+-              color: isFavorite
+-                  ? (hasAlbumTint
+-                        ? albumAccent(
+-                            albumColor!,
+-                            accentBlend,
+-                          )
+-                        : Colors.red)
+-                  : Colors.white.withValues(alpha: 0.9),
+-              size: actionIconSize,
+-            ),
+-          ),
+-        );
+-      },
+-    );
+-  }
+-
+   Widget _buildQueueButton({
+     required BuildContext context,
+     required EdgeInsets actionPadding,
+diff --git a/lib/features/settings/screens/interface_settings_screen.dart b/lib/features/settings/screens/interface_settings_screen.dart
+index 9cd68cc33..483e8f15c 100644
+--- a/lib/features/settings/screens/interface_settings_screen.dart
++++ b/lib/features/settings/screens/interface_settings_screen.dart
+@@ -36,7 +36,7 @@ class InterfaceSettingsScreen extends ConsumerWidget {
+               ToggleSetting(
+                 icon: LucideIcons.arrowLeftRight,
+                 title: 'Swipe Actions',
+-                subtitle: 'Swipe songs left to queue or right to favorite',
++                subtitle: 'Swipe songs left to queue',
+                 value: appPreferences.swipeActionsEnabled,
+                 onChanged: (value) {
+                   ref
+@@ -59,35 +59,6 @@ class InterfaceSettingsScreen extends ConsumerWidget {
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Favorite Removal'),
+-          SettingsCard(
+-            children: [
+-              SelectionSetting(
+-                icon: LucideIcons.arrowLeftRight,
+-                title: 'Swipe',
+-                subtitle: 'Swipe left to unfavorite a song',
+-                selected: appPreferences.favoriteRemovalMode == 'swipe',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setFavoriteRemovalMode('swipe');
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.mousePointerClick,
+-                title: 'Long Press',
+-                subtitle: 'Hold a song to unfavorite',
+-                selected: appPreferences.favoriteRemovalMode == 'longpress',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setFavoriteRemovalMode('longpress');
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Fast Index Scrolling'),
+           SettingsCard(
+             children: [
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index 75082a99d..eaa61a395 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -447,9 +447,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+                   onQueued: () async {
+                     await _queueSong(song);
+                   },
+-                  onFavorited: () async {
+-                    await _favoriteSong(song);
+-                  },
+                   child: _SongListTile(
+                     song: song,
+                     isSelected: isSelected,
+@@ -1169,31 +1166,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+     );
+   }
+ 
+-  Future<void> _favoriteSong(Song song) async {
+-    unawaited(() async {
+-      try {
+-        await ref.read(favoritesServiceProvider).addFavorite(song.id);
+-      } catch (error, stackTrace) {
+-        devLog('Failed to add favorite for ${song.id}: $error');
+-        debugPrintStack(stackTrace: stackTrace);
+-        if (!mounted) return;
+-        _showSongActionSnackBar('Failed to add "${song.title}" to favorites');
+-        return;
+-      }
+-
+-      ref.invalidate(favoritesProvider);
+-      PlayerService().refreshNotificationState();
+-    }());
+-    _showSongActionSnackBar(
+-      'Added "${song.title}" to favorites',
+-      onUndo: () =>
+-          ref.read(favoritesServiceProvider).removeFavorite(song.id).then((_) {
+-            ref.invalidate(favoritesProvider);
+-            PlayerService().refreshNotificationState();
+-          }),
+-    );
+-  }
+-
+   void _enterSelectionMode(String? songId) {
+     setState(() {
+       _selectionMode = true;
+@@ -1238,32 +1210,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+     }
+   }
+ 
+-  Future<void> _favoriteSelected() async {
+-    final toFavorite = _cachedDisplaySongs
+-        .where((s) => _selectedIds.contains(s.id))
+-        .toList();
+-    for (final song in toFavorite) {
+-      try {
+-        await ref.read(favoritesServiceProvider).addFavorite(song.id);
+-      } catch (_) {}
+-    }
+-    ref.invalidate(favoritesProvider);
+-    PlayerService().refreshNotificationState();
+-    if (mounted) {
+-      _showSongActionSnackBar(
+-        'Added ${toFavorite.length} songs to favorites',
+-        onUndo: () async {
+-          for (final song in toFavorite) {
+-            await ref.read(favoritesServiceProvider).removeFavorite(song.id);
+-          }
+-          ref.invalidate(favoritesProvider);
+-          PlayerService().refreshNotificationState();
+-        },
+-      );
+-      _exitSelectionMode();
+-    }
+-  }
+-
+   List<Song> _selectedSongs() {
+     final ids = _selectedIds;
+     return _cachedDisplaySongs.where((s) => ids.contains(s.id)).toList();
+@@ -1916,14 +1862,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+             onPressed: count > 0 ? () => _queueSelected() : null,
+             tooltip: 'Add to queue',
+           ),
+-          IconButton(
+-            icon: Icon(
+-              LucideIcons.heart,
+-              color: Colors.red.withValues(alpha: 0.8),
+-            ),
+-            onPressed: count > 0 ? () => _favoriteSelected() : null,
+-            tooltip: 'Add to favorites',
+-          ),
+           IconButton(
+             icon: Icon(
+               LucideIcons.listMusic,
+@@ -2028,13 +1966,11 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+ class _QueueSwipeListItem extends StatefulWidget {
+   final Widget child;
+   final Future<void> Function() onQueued;
+-  final Future<void> Function() onFavorited;
+   final bool swipeActionsEnabled;
+ 
+   const _QueueSwipeListItem({
+     required this.child,
+     required this.onQueued,
+-    required this.onFavorited,
+     this.swipeActionsEnabled = false,
+   });
+ 
+@@ -2185,14 +2121,12 @@ class _SongListTile extends StatelessWidget {
+ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+   double _dragDx = 0;
+   bool _queuedFlash = false;
+-  bool _favoriteFlash = false;
+ 
+   @override
+   Widget build(BuildContext context) {
+     if (!widget.swipeActionsEnabled) return widget.child;
+ 
+     final queueRevealProgress = (-_dragDx / 120).clamp(0.0, 1.0);
+-    final favoriteRevealProgress = (_dragDx / 120).clamp(0.0, 1.0);
+ 
+     return Stack(
+       children: [
+@@ -2204,26 +2138,12 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+                 begin: Alignment.centerLeft,
+                 end: Alignment.centerRight,
+                 colors: [
+-                  Colors.redAccent.withValues(
+-                    alpha: 0.14 + (favoriteRevealProgress * 0.14),
+-                  ),
+                   AppColors.surface,
+                   AppColors.accent.withValues(
+                     alpha: 0.14 + (queueRevealProgress * 0.14),
+                   ),
+                 ],
+               ),
+-              border: Border.all(
+-                color: Color.lerp(
+-                  AppColors.accent.withValues(
+-                    alpha: 0.18 + (queueRevealProgress * 0.24),
+-                  ),
+-                  Colors.redAccent.withValues(
+-                    alpha: 0.18 + (favoriteRevealProgress * 0.24),
+-                  ),
+-                  favoriteRevealProgress,
+-                )!,
+-              ),
+             ),
+             child: Padding(
+               padding: const EdgeInsets.symmetric(
+@@ -2231,14 +2151,6 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+               ),
+               child: Row(
+                 children: [
+-                  Opacity(
+-                    opacity: favoriteRevealProgress,
+-                    child: const Icon(
+-                      Icons.favorite_rounded,
+-                      color: Colors.redAccent,
+-                      size: 22,
+-                    ),
+-                  ),
+                   const Spacer(),
+                   Opacity(
+                     opacity: queueRevealProgress,
+@@ -2276,28 +2188,10 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+             }
+           },
+           onHorizontalDragEnd: (details) async {
+-            final shouldFavorite =
+-                _dragDx >= 84 ||
+-                (details.primaryVelocity != null &&
+-                    details.primaryVelocity! > 400);
+             final shouldQueue =
+                 _dragDx <= -84 ||
+                 (details.primaryVelocity != null &&
+                     details.primaryVelocity! < -400);
+-            if (shouldFavorite) {
+-              setState(() {
+-                _dragDx = 0;
+-                _favoriteFlash = true;
+-              });
+-              await widget.onFavorited();
+-              if (!mounted) return;
+-              await Future<void>.delayed(const Duration(milliseconds: 180));
+-              if (!mounted) return;
+-              setState(() {
+-                _favoriteFlash = false;
+-              });
+-              return;
+-            }
+             if (shouldQueue) {
+               setState(() {
+                 _dragDx = 0;
+@@ -2330,18 +2224,16 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+             offset: Offset(_dragDx / 360, 0),
+             child: AnimatedScale(
+               duration: AppConstants.animationFast,
+-              scale: (_queuedFlash || _favoriteFlash) ? 0.985 : 1,
++              scale: (_queuedFlash) ? 0.985 : 1,
+               child: AnimatedContainer(
+                 duration: AppConstants.animationFast,
+                 decoration: BoxDecoration(
+                   borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-                  boxShadow: (_queuedFlash || _favoriteFlash)
++                  boxShadow: (_queuedFlash)
+                       ? [
+                           BoxShadow(
+                             color:
+-                                (_favoriteFlash
+-                                        ? Colors.redAccent
+-                                        : AppColors.accent)
++                                (AppColors.accent)
+                                     .withValues(alpha: 0.22),
+                             blurRadius: 18,
+                             spreadRadius: 1,
+diff --git a/lib/features/songs/widgets/song_actions_bottom_sheet.dart b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
+index ed6432431..07a144370 100644
+--- a/lib/features/songs/widgets/song_actions_bottom_sheet.dart
++++ b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
+@@ -15,7 +15,7 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/glass_bottom_sheet.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ 
+-/// Bottom sheet with actions for a song (add to playlist, favorites, view metadata, etc.)
++/// Bottom sheet with actions for a song (add to playlist, view metadata, etc.)
+ class SongActionsBottomSheet extends ConsumerWidget {
+   final Song song;
+   final BuildContext rootContext;
+@@ -50,8 +50,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
+ 
+   @override
+   Widget build(BuildContext context, WidgetRef ref) {
+-    final isFavorite = ref.watch(isSongFavoriteProvider(song.id));
+-
+     return SingleChildScrollView(
+       child: Column(
+         mainAxisSize: MainAxisSize.min,
+@@ -59,22 +57,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
+           _buildDragHandle(),
+           const SizedBox(height: AppConstants.spacingMd),
+           _buildSongHeader(context),
+-          const SizedBox(height: AppConstants.spacingMd),
+-          _buildActionTile(
+-            context: context,
+-            icon: LucideIcons.heart,
+-            highlighted: isFavorite,
+-            label: isFavorite ? 'Remove from Favorites' : 'Add to Favorites',
+-            onTap: () async {
+-              await ref
+-                  .read(favoritesProvider.notifier)
+-                  .toggleFavorite(song.id);
+-              PlayerService().refreshNotificationState();
+-              if (context.mounted) {
+-                Navigator.pop(context);
+-              }
+-            },
+-          ),
+           if (onSelect != null)
+             _buildActionTile(
+               context: context,
+diff --git a/lib/features/songs/widgets/song_card.dart b/lib/features/songs/widgets/song_card.dart
+index 5da0fe4bb..b723bdf7d 100644
+--- a/lib/features/songs/widgets/song_card.dart
++++ b/lib/features/songs/widgets/song_card.dart
+@@ -30,7 +30,7 @@ class SongCard extends StatefulWidget {
+   /// Callback when the card is swiped right.
+   final VoidCallback? onSwipeRight;
+ 
+-  /// Whether swipe-to-queue and swipe-to-favorite gestures are enabled.
++  /// Whether swipe-to-queue gestures is enabled.
+   final bool swipeActionsEnabled;
+ 
+   /// Whether multiselect mode is active.
+@@ -76,7 +76,6 @@ class SongCard extends StatefulWidget {
+ class _SongCardState extends State<SongCard> {
+   double _dragDx = 0;
+   bool _queuedFlash = false;
+-  bool _favoriteFlash = false;
+ 
+   @override
+   Widget build(BuildContext context) {
+@@ -87,7 +86,7 @@ class _SongCardState extends State<SongCard> {
+     const cardHeight = 130.0;
+ 
+     final isSwiping = _dragDx.abs() > 0.001;
+-    final isFlashing = _queuedFlash || _favoriteFlash;
++    final isFlashing = _queuedFlash;
+     final showSwipeOverlay = isSwiping || isFlashing;
+ 
+     GestureDragUpdateCallback? dragUpdate;
+@@ -104,27 +103,10 @@ class _SongCardState extends State<SongCard> {
+       };
+       dragEnd = (details) {
+         unawaited(() async {
+-          final shouldFavorite =
+-              _dragDx >= 80 ||
+-              (details.primaryVelocity != null &&
+-                  details.primaryVelocity! > 400);
+           final shouldQueue =
+               _dragDx <= -80 ||
+               (details.primaryVelocity != null &&
+                   details.primaryVelocity! < -400);
+-          if (shouldFavorite) {
+-            setState(() {
+-              _dragDx = 0;
+-              _favoriteFlash = true;
+-            });
+-            widget.onSwipeRight?.call();
+-            await Future<void>.delayed(const Duration(milliseconds: 180));
+-            if (!mounted) return;
+-            setState(() {
+-              _favoriteFlash = false;
+-            });
+-            return;
+-          }
+           if (shouldQueue) {
+             setState(() {
+               _dragDx = 0;
+@@ -232,10 +214,9 @@ class _SongCardState extends State<SongCard> {
+ 
+   Widget _buildSwipeStack(double cardWidth, double artSize) {
+     final queueProgress = (-_dragDx / 110).clamp(0.0, 1.0);
+-    final favoriteProgress = (_dragDx / 110).clamp(0.0, 1.0);
+-    final isFlashing = _queuedFlash || _favoriteFlash;
++    final isFlashing = _queuedFlash;
+ 
+-    final glowColor = (_favoriteFlash ? Colors.redAccent : AppColors.accent)
++    final glowColor = (AppColors.accent)
+         .withValues(alpha: 0.25);
+ 
+     return Stack(
+@@ -249,33 +230,17 @@ class _SongCardState extends State<SongCard> {
+                 begin: Alignment.centerLeft,
+                 end: Alignment.centerRight,
+                 colors: [
+-                  Colors.redAccent
+-                      .withValues(alpha: 0.14 + (favoriteProgress * 0.14)),
+                   AppColors.surface,
+                   AppColors.accent
+                       .withValues(alpha: 0.14 + (queueProgress * 0.14)),
+                 ],
+               ),
+-              border: Border.all(
+-                color: Color.lerp(
+-                  AppColors.accent
+-                      .withValues(alpha: 0.18 + (queueProgress * 0.26)),
+-                  Colors.redAccent
+-                      .withValues(alpha: 0.18 + (favoriteProgress * 0.26)),
+-                  favoriteProgress,
+-                )!,
+-              ),
+             ),
+             child: Padding(
+               padding: const EdgeInsets.symmetric(
+                   horizontal: AppConstants.spacingLg),
+               child: Row(
+                 children: [
+-                  Opacity(
+-                    opacity: favoriteProgress,
+-                    child: const Icon(Icons.favorite_rounded,
+-                        color: Colors.redAccent, size: 22),
+-                  ),
+                   const Spacer(),
+                   Opacity(
+                     opacity: queueProgress,
+diff --git a/lib/models/nav_bar_config.dart b/lib/models/nav_bar_config.dart
+index 6e851430d..f930aeebe 100644
+--- a/lib/models/nav_bar_config.dart
++++ b/lib/models/nav_bar_config.dart
+@@ -9,8 +9,7 @@ enum NavBarButton {
+   artists(4, 'Artists', LucideIcons.users),
+   folders(5, 'Folders', LucideIcons.folder),
+   playlists(6, 'Playlists', LucideIcons.listMusic),
+-  favorites(7, 'Favorites', LucideIcons.heart),
+-  search(8, 'Search', LucideIcons.search);
++  search(7, 'Search', LucideIcons.search);
+ 
+   const NavBarButton(this.pageIndex, this.label, this.icon);
+ 
+diff --git a/lib/models/player_action_button.dart b/lib/models/player_action_button.dart
+index 0971670e5..87eb91d35 100644
+--- a/lib/models/player_action_button.dart
++++ b/lib/models/player_action_button.dart
+@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
+ 
+ enum PlayerActionButton {
+   none,
+-  favorites,
+   queue,
+   usbVolume,
+   volume,
+@@ -14,8 +13,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (this) {
+       case PlayerActionButton.none:
+         return 'none';
+-      case PlayerActionButton.favorites:
+-        return 'favorites';
+       case PlayerActionButton.queue:
+         return 'queue';
+       case PlayerActionButton.usbVolume:
+@@ -29,8 +26,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (this) {
+       case PlayerActionButton.none:
+         return 'None';
+-      case PlayerActionButton.favorites:
+-        return 'Favorites';
+       case PlayerActionButton.queue:
+         return 'Queue';
+       case PlayerActionButton.usbVolume:
+@@ -44,8 +39,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (this) {
+       case PlayerActionButton.none:
+         return Icons.block_rounded;
+-      case PlayerActionButton.favorites:
+-        return Icons.favorite_border;
+       case PlayerActionButton.queue:
+         return LucideIcons.listMusic;
+       case PlayerActionButton.usbVolume:
+@@ -59,8 +52,6 @@ extension PlayerActionButtonX on PlayerActionButton {
+     switch (value) {
+       case 'none':
+         return PlayerActionButton.none;
+-      case 'favorites':
+-        return PlayerActionButton.favorites;
+       case 'queue':
+         return PlayerActionButton.queue;
+       case 'volume':
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index b414f6599..3340ee58d 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -75,12 +75,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setSwipeActionsEnabled(value);
+   }
+ 
+-  Future<void> setFavoriteRemovalMode(String value) async {
+-    if (state.favoriteRemovalMode == value) return;
+-    state = state.copyWith(favoriteRemovalMode: value);
+-    await ref.read(appPreferencesServiceProvider).setFavoriteRemovalMode(value);
+-  }
+-
+   Future<void> setSearchPlaybackMode(String value) async {
+     if (state.searchPlaybackMode == value) return;
+     state = state.copyWith(searchPlaybackMode: value);
+diff --git a/lib/providers/favorites_provider.dart b/lib/providers/favorites_provider.dart
+deleted file mode 100644
+index 222cb0540..000000000
+--- a/lib/providers/favorites_provider.dart
++++ /dev/null
+@@ -1,125 +0,0 @@
+-import 'package:flutter_riverpod/flutter_riverpod.dart';
+-
+-import '../models/song.dart';
+-import '../services/favorites_service.dart';
+-import 'player_provider.dart';
+-
+-/// Provider for the FavoritesService.
+-final favoritesServiceProvider = Provider<FavoritesService>((ref) {
+-  ref.watch(favoriteNotificationSyncProvider);
+-  return FavoritesService();
+-});
+-
+-/// State for favorites management.
+-class FavoritesState {
+-  final Set<String> favoriteIds;
+-  final List<Song> favoriteSongs;
+-  final bool isLoading;
+-
+-  const FavoritesState({
+-    this.favoriteIds = const {},
+-    this.favoriteSongs = const [],
+-    this.isLoading = true,
+-  });
+-
+-  FavoritesState copyWith({
+-    Set<String>? favoriteIds,
+-    List<Song>? favoriteSongs,
+-    bool? isLoading,
+-  }) {
+-    return FavoritesState(
+-      favoriteIds: favoriteIds ?? this.favoriteIds,
+-      favoriteSongs: favoriteSongs ?? this.favoriteSongs,
+-      isLoading: isLoading ?? this.isLoading,
+-    );
+-  }
+-
+-  /// Check if a song is a favorite.
+-  bool isFavorite(String songId) => favoriteIds.contains(songId);
+-
+-  /// Number of favorites.
+-  int get count => favoriteIds.length;
+-}
+-
+-/// AsyncNotifier for favorites with autoDispose.
+-class FavoritesNotifier extends AsyncNotifier<FavoritesState> {
+-  @override
+-  Future<FavoritesState> build() async {
+-    final service = ref.watch(favoritesServiceProvider);
+-
+-    final songs = await service.getFavorites();
+-    final ids = songs.map((s) => s.id).toSet();
+-
+-    return FavoritesState(
+-      favoriteIds: ids,
+-      favoriteSongs: songs,
+-      isLoading: false,
+-    );
+-  }
+-
+-  /// Toggle favorite status for a song.
+-  Future<bool> toggleFavorite(String songId) async {
+-    final service = ref.read(favoritesServiceProvider);
+-    final isFavorite = await service.toggleFavorite(songId);
+-
+-    // Refresh state
+-    ref.invalidateSelf();
+-
+-    return isFavorite;
+-  }
+-
+-  /// Add a song to favorites.
+-  Future<void> addFavorite(String songId) async {
+-    final service = ref.read(favoritesServiceProvider);
+-    await service.addFavorite(songId);
+-    ref.invalidateSelf();
+-  }
+-
+-  /// Remove a song from favorites.
+-  Future<void> removeFavorite(String songId) async {
+-    final service = ref.read(favoritesServiceProvider);
+-    await service.removeFavorite(songId);
+-    ref.invalidateSelf();
+-  }
+-
+-  /// Clear all favorites.
+-  Future<void> clearFavorites() async {
+-    final service = ref.read(favoritesServiceProvider);
+-    await service.clearFavorites();
+-    ref.invalidateSelf();
+-  }
+-}
+-
+-/// Main favorites provider.
+-final favoritesProvider =
+-    AsyncNotifierProvider.autoDispose<FavoritesNotifier, FavoritesState>(
+-      FavoritesNotifier.new,
+-    );
+-
+-/// Convenience provider to check if a specific song is a favorite.
+-/// Usage: ref.watch(isSongFavoriteProvider(songId))
+-final isSongFavoriteProvider = Provider.autoDispose.family<bool, String>((
+-  ref,
+-  songId,
+-) {
+-  final favorites = ref.watch(favoritesProvider).value;
+-  return favorites?.isFavorite(songId) ?? false;
+-});
+-
+-/// Favorites count provider.
+-final favoritesCountProvider = Provider.autoDispose<int>((ref) {
+-  return ref.watch(favoritesProvider).value?.count ?? 0;
+-});
+-
+-/// Syncs favorites state from lock screen/notification toggles back into
+-/// Riverpod so the app UI reflects changes made via the media session.
+-final favoriteNotificationSyncProvider = Provider<void>((ref) {
+-  final service = ref.watch(playerServiceProvider);
+-  final notifier = service.favoriteNotificationToggleNotifier;
+-
+-  void listener() => ref.invalidate(favoritesProvider);
+-
+-  notifier.addListener(listener);
+-  ref.onDispose(() => notifier.removeListener(listener));
+-  return;
+-});
+diff --git a/lib/providers/providers.dart b/lib/providers/providers.dart
+index 07ed08ce9..67bbce132 100644
+--- a/lib/providers/providers.dart
++++ b/lib/providers/providers.dart
+@@ -5,7 +5,6 @@ library;
+ 
+ export 'player_provider.dart';
+ export 'songs_provider.dart';
+-export 'favorites_provider.dart';
+ export 'library_scanner_provider.dart';
+ export 'library_scan_preferences_provider.dart';
+ export 'navigation_provider.dart';
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 7b8143839..394ad0bdb 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -8,7 +8,6 @@ class AppPreferences {
+   final bool showUsbVolumeOnMenu;
+   final bool showUsbVolumeOnSettings;
+   final bool swipeActionsEnabled;
+-  final String favoriteRemovalMode; // 'swipe' or 'longpress'
+   final bool fastIndexEnabled;
+   final int fastIndexTimeoutSeconds;
+   final double artworkCardArtworkScale;
+@@ -70,7 +69,6 @@ class AppPreferences {
+     this.showUsbVolumeOnMenu = true,
+     this.showUsbVolumeOnSettings = false,
+     this.swipeActionsEnabled = false,
+-    this.favoriteRemovalMode = 'longpress',
+     this.fastIndexEnabled = true,
+     this.fastIndexTimeoutSeconds = 3,
+     this.artworkCardArtworkScale = 1.0,
+@@ -96,7 +94,7 @@ class AppPreferences {
+     this.widgetFlagshipTextScale = 1.0,
+     this.widgetCompactTextScale = 1.0,
+     this.leftActionButton = 'usb_volume',
+-    this.rightActionButton = 'favorites',
++    this.rightActionButton = 'queue',
+     this.leftTopActionButton = 'none',
+     this.rightTopActionButton = 'none',
+     this.animatedAlbumArt = true,
+@@ -133,7 +131,6 @@ class AppPreferences {
+     bool? showUsbVolumeOnMenu,
+     bool? showUsbVolumeOnSettings,
+     bool? swipeActionsEnabled,
+-    String? favoriteRemovalMode,
+     bool? fastIndexEnabled,
+     int? fastIndexTimeoutSeconds,
+     double? artworkCardArtworkScale,
+@@ -197,7 +194,6 @@ class AppPreferences {
+       showUsbVolumeOnSettings:
+           showUsbVolumeOnSettings ?? this.showUsbVolumeOnSettings,
+       swipeActionsEnabled: swipeActionsEnabled ?? this.swipeActionsEnabled,
+-      favoriteRemovalMode: favoriteRemovalMode ?? this.favoriteRemovalMode,
+       fastIndexEnabled: fastIndexEnabled ?? this.fastIndexEnabled,
+       fastIndexTimeoutSeconds:
+           fastIndexTimeoutSeconds ?? this.fastIndexTimeoutSeconds,
+@@ -290,7 +286,6 @@ class AppPreferencesService {
+   static const _showUsbVolumeOnMenuKey = 'menu_show_usb_volume';
+   static const _showUsbVolumeOnSettingsKey = 'settings_show_usb_volume';
+   static const _swipeActionsEnabledKey = 'swipe_actions_enabled';
+-  static const _favoriteRemovalModeKey = 'favorite_removal_mode';
+   static const _fastIndexEnabledKey = 'fast_index_enabled';
+   static const _fastIndexTimeoutKey = 'fast_index_timeout_seconds';
+   static const _artworkCardArtworkScaleKey = 'artwork_card_artwork_scale';
+@@ -349,8 +344,6 @@ class AppPreferencesService {
+       showUsbVolumeOnSettings:
+           prefs.getBool(_showUsbVolumeOnSettingsKey) ?? false,
+       swipeActionsEnabled: prefs.getBool(_swipeActionsEnabledKey) ?? false,
+-      favoriteRemovalMode:
+-          prefs.getString(_favoriteRemovalModeKey) ?? 'longpress',
+       fastIndexEnabled: prefs.getBool(_fastIndexEnabledKey) ?? true,
+       fastIndexTimeoutSeconds: prefs.getInt(_fastIndexTimeoutKey) ?? 3,
+       artworkCardArtworkScale:
+@@ -365,7 +358,7 @@ class AppPreferencesService {
+           prefs.getBool(_artworkCardShowFileInfoKey) ?? true,
+       artworkCardShowFrame: prefs.getBool(_artworkCardShowFrameKey) ?? true,
+       leftActionButton: prefs.getString(_leftActionButtonKey) ?? 'usb_volume',
+-      rightActionButton: prefs.getString(_rightActionButtonKey) ?? 'favorites',
++      rightActionButton: prefs.getString(_rightActionButtonKey) ?? 'queue',
+       leftTopActionButton:
+           prefs.getString(_leftTopActionButtonKey) ?? 'none',
+       rightTopActionButton:
+@@ -482,16 +475,6 @@ class AppPreferencesService {
+     await prefs.setBool(_swipeActionsEnabledKey, value);
+   }
+ 
+-  Future<String> getFavoriteRemovalMode() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getString(_favoriteRemovalModeKey) ?? 'longpress';
+-  }
+-
+-  Future<void> setFavoriteRemovalMode(String value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setString(_favoriteRemovalModeKey, value);
+-  }
+-
+   Future<bool> getFastIndexEnabled() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_fastIndexEnabledKey) ?? true;
+@@ -589,7 +572,7 @@ class AppPreferencesService {
+ 
+   Future<String> getRightActionButton() async {
+     final prefs = await SharedPreferences.getInstance();
+-    return prefs.getString(_rightActionButtonKey) ?? 'favorites';
++    return prefs.getString(_rightActionButtonKey) ?? 'queue';
+   }
+ 
+   Future<void> setRightActionButton(String value) async {
+diff --git a/lib/services/favorites_service.dart b/lib/services/favorites_service.dart
+deleted file mode 100644
+index edab4f9cb..000000000
+--- a/lib/services/favorites_service.dart
++++ /dev/null
+@@ -1,95 +0,0 @@
+-import 'package:shared_preferences/shared_preferences.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/data/repositories/song_repository.dart';
+-
+-/// Service for managing favorite songs.
+-/// Stores favorite song IDs in SharedPreferences for persistence.
+-class FavoritesService {
+-  static const String _favoritesKey = 'favorite_song_ids';
+-
+-  final SongRepository _songRepository;
+-
+-  // Cached set of favorite IDs for quick lookup
+-  Set<String> _favoriteIds = {};
+-  bool _isLoaded = false;
+-
+-  FavoritesService({SongRepository? songRepository})
+-    : _songRepository = songRepository ?? SongRepository();
+-
+-  /// Load favorites from SharedPreferences.
+-  Future<void> _ensureLoaded() async {
+-    if (_isLoaded) return;
+-
+-    final prefs = await SharedPreferences.getInstance();
+-    final ids = prefs.getStringList(_favoritesKey) ?? [];
+-    _favoriteIds = ids.toSet();
+-    _isLoaded = true;
+-  }
+-
+-  /// Get all favorite songs.
+-  Future<List<Song>> getFavorites() async {
+-    await _ensureLoaded();
+-
+-    if (_favoriteIds.isEmpty) return [];
+-
+-    // Get all songs and filter by favorite IDs
+-    final allSongs = await _songRepository.getAllSongs();
+-    return allSongs.where((song) => _favoriteIds.contains(song.id)).toList();
+-  }
+-
+-  /// Check if a song is a favorite.
+-  Future<bool> isFavorite(String songId) async {
+-    await _ensureLoaded();
+-    return _favoriteIds.contains(songId);
+-  }
+-
+-  /// Add a song to favorites.
+-  Future<void> addFavorite(String songId) async {
+-    await _ensureLoaded();
+-
+-    _favoriteIds.add(songId);
+-    await _saveFavorites();
+-  }
+-
+-  /// Remove a song from favorites.
+-  Future<void> removeFavorite(String songId) async {
+-    await _ensureLoaded();
+-
+-    _favoriteIds.remove(songId);
+-    await _saveFavorites();
+-  }
+-
+-  /// Toggle favorite status for a song.
+-  /// Returns true if the song is now a favorite, false otherwise.
+-  Future<bool> toggleFavorite(String songId) async {
+-    await _ensureLoaded();
+-
+-    if (_favoriteIds.contains(songId)) {
+-      _favoriteIds.remove(songId);
+-      await _saveFavorites();
+-      return false;
+-    } else {
+-      _favoriteIds.add(songId);
+-      await _saveFavorites();
+-      return true;
+-    }
+-  }
+-
+-  /// Get the count of favorite songs.
+-  Future<int> getFavoritesCount() async {
+-    await _ensureLoaded();
+-    return _favoriteIds.length;
+-  }
+-
+-  /// Save favorites to SharedPreferences.
+-  Future<void> _saveFavorites() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setStringList(_favoritesKey, _favoriteIds.toList());
+-  }
+-
+-  /// Clear all favorites.
+-  Future<void> clearFavorites() async {
+-    _favoriteIds.clear();
+-    await _saveFavorites();
+-  }
+-}
+diff --git a/lib/services/notification_service.dart b/lib/services/notification_service.dart
+index 91a5c5579..989273dcc 100644
+--- a/lib/services/notification_service.dart
++++ b/lib/services/notification_service.dart
+@@ -25,7 +25,6 @@ class NotificationService {
+     required VoidCallback onStop,
+     required Function(Duration) onSeek,
+     required VoidCallback onToggleShuffle,
+-    required VoidCallback onToggleFavorite,
+   }) {
+     _channel.setMethodCallHandler((call) async {
+       switch (call.method) {
+@@ -56,9 +55,6 @@ class NotificationService {
+         case 'toggleShuffle':
+           onToggleShuffle();
+           break;
+-        case 'toggleFavorite':
+-          onToggleFavorite();
+-          break;
+       }
+     });
+   }
+@@ -70,7 +66,6 @@ class NotificationService {
+     Duration? duration,
+     Duration? position,
+     bool isShuffle = false,
+-    bool isFavorite = false,
+     int? color,
+   }) async {
+     try {
+@@ -82,7 +77,6 @@ class NotificationService {
+         'duration': duration?.inMilliseconds ?? 0,
+         'position': position?.inMilliseconds ?? 0,
+         'isShuffle': isShuffle,
+-        'isFavorite': isFavorite,
+       };
+       if (color != null) args['color'] = color;
+       await _channel.invokeMethod('showNotification', args);
+@@ -117,7 +111,6 @@ class NotificationService {
+     Duration? duration,
+     Duration? position,
+     bool? isShuffle,
+-    bool? isFavorite,
+     int? color,
+   }) async {
+     try {
+@@ -131,7 +124,6 @@ class NotificationService {
+       };
+ 
+       if (isShuffle != null) args['isShuffle'] = isShuffle;
+-      if (isFavorite != null) args['isFavorite'] = isFavorite;
+       if (color != null) args['color'] = color;
+ 
+       await _channel.invokeMethod('updateNotification', args);
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 31666d531..3fe28830d 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -19,7 +19,6 @@ import 'package:flick/services/bluetooth_service.dart';
+ import 'package:flick/services/audio_engine_manager.dart';
+ import 'package:flick/services/audio_session_manager.dart';
+ import 'package:flick/services/last_played_service.dart';
+-import 'package:flick/services/favorites_service.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/services/playlist_service.dart';
+ import 'package:flick/services/replay_play_tracker.dart';
+@@ -308,7 +307,6 @@ class PlayerService {
+ 
+   final NotificationService _notificationService = NotificationService();
+   final LastPlayedService _lastPlayedService = LastPlayedService();
+-  final FavoritesService _favoritesService = FavoritesService();
+   final Uac2PreferencesService _preferencesService = Uac2PreferencesService();
+   final AppPreferencesService _appPreferencesService = AppPreferencesService();
+   final SongRepository _songRepository = SongRepository();
+@@ -473,10 +471,6 @@ class PlayerService {
+   String? _lastNotificationColorSongId;
+   int? _lastNotificationColor;
+ 
+-  final ValueNotifier<int> favoriteNotificationToggleNotifier = ValueNotifier(
+-    0,
+-  );
+-
+   final ValueNotifier<bool> playbackDesyncedNotifier = ValueNotifier(false);
+   Song? _engineCurrentTrack;
+   Timer? _desyncDetectionTimer;
+@@ -503,7 +497,6 @@ class PlayerService {
+       onStop: _stopPlayback,
+       onSeek: seek,
+       onToggleShuffle: toggleShuffle,
+-      onToggleFavorite: _toggleFavoriteFromNotification,
+     );
+     _sessionManager.selectedModeNotifier.addListener(() {
+       unawaited(
+@@ -2140,10 +2133,6 @@ class PlayerService {
+     return song != null && !song.isExternal;
+   }
+ 
+-  bool _allowsFavoriteActions(Song? song) {
+-    return song != null && !song.isExternal;
+-  }
+-
+   void _clearReplayTracking() {
+     _replayPlayTracker.clear();
+   }
+@@ -2410,28 +2399,10 @@ class PlayerService {
+     return _updateNotificationState();
+   }
+ 
+-  Future<void> _toggleFavoriteFromNotification() async {
+-    final song = currentSongNotifier.value;
+-    if (_allowsFavoriteActions(song)) {
+-      await _favoritesService.toggleFavorite(song!.id);
+-      _updateNotificationState();
+-      favoriteNotificationToggleNotifier.value++;
+-    }
+-  }
+-
+   Future<void> _updateNotificationState() async {
+     final song = currentSongNotifier.value;
+     if (song == null) return;
+ 
+-    var isFav = false;
+-    if (_allowsFavoriteActions(song)) {
+-      try {
+-        isFav = await _favoritesService.isFavorite(song.id);
+-      } catch (e) {
+-        _debugLog('Failed to load favorite state: $e');
+-      }
+-    }
+-
+     int? notificationColor;
+     try {
+       final colorMode = await _albumColorModePreferenceService.getMode();
+@@ -2463,7 +2434,6 @@ class PlayerService {
+       duration: durationNotifier.value,
+       position: positionNotifier.value,
+       isShuffle: isShuffleNotifier.value,
+-      isFavorite: isFav,
+       color: notificationColor,
+     );
+   }
+-- 
+2.55.0
+
