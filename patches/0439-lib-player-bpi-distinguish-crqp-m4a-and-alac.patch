@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 13:07:53 +0700
+Subject: [PATCH] lib: player: bpi: distinguish crqp m4a and alac
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
+index a38186c18..b5c0a79f4 100644
+--- a/lib/features/player/widgets/bit_perfect_indicator.dart
++++ b/lib/features/player/widgets/bit_perfect_indicator.dart
+@@ -92,7 +92,9 @@ class BitPerfectIndicator extends ConsumerWidget {
+     if (song.isDsd) return 'DSD';
+     final fileType = song.fileType.toUpperCase();
+     const lossless = {'FLAC', 'WAV', 'ALAC', 'AIFF', 'APE', 'WV'};
+-    if (!lossless.contains(fileType)) return '';
++    final isM4A = (fileType == 'M4A');
++    if (!lossless.contains(fileType) && !isM4A) return '';
++    if (isM4A && ((song.bitDepth ?? 0) == 0)) return '';
+     if ((song.bitDepth ?? 0) >= 24) return 'HQ';
+     if ((song.sampleRate ?? 0) >= 88200) return 'HQ';
+     return 'SQ';
+-- 
+2.55.0
+

@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 10 Aug 2026 08:15:40 +0700
+Subject: [PATCH] albmpill
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 12f1a9269..ee7a5c174 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -661,13 +661,6 @@ class AnimatedSongScene extends StatelessWidget {
+                   horizontal: albumHorizontalPadding,
+                   vertical: albumVerticalPadding,
+                 ),
+-                decoration: BoxDecoration(
+-                  color: Colors.white.withValues(alpha: 0.03),
+-                  borderRadius: BorderRadius.circular(999),
+-                  border: Border.all(
+-                    color: Colors.white.withValues(alpha: 0.05),
+-                  ),
+-                ),
+                 child: Text(
+                   song.album!,
+                   maxLines: 1,
+-- 
+2.55.0
+

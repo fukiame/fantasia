@@ -1,0 +1,79 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 15:29:15 +0700
+Subject: [PATCH] Revert "add 432 Hz tuning support"
+
+this partially reverts commit db705dfe8f3997298c8a44c4b24ed38ccb1fc271.
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 5e7b19a09..ef71ed67a 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -553,9 +553,6 @@ class PlayerService {
+     _uac2Service.dapBitPerfectEnabledNotifier.addListener(
+       _updateBitPerfectProcessingLocked,
+     );
+-    Uac2PreferencesService.tuning432HzNotifier.addListener(
+-      _on432HzTuningChanged,
+-    );
+     _bitPerfectLockedListener = () {
+       unawaited(reapplyEqualizer());
+     };
+@@ -1199,23 +1196,12 @@ class PlayerService {
+           AudioEngineType.dapInternalHighRes =>
+             _uac2Service.isDapBitPerfectEnabledSync,
+           _ => false,
+-        } ||
+-        Uac2PreferencesService.is432HzTuningEnabledSync;
++        };
+     if (bitPerfectProcessingLockedNotifier.value != locked) {
+       bitPerfectProcessingLockedNotifier.value = locked;
+     }
+   }
+ 
+-  /// Listener for 432 Hz tuning changes. Crossfade is suppressed under tuning
+-  /// (the mix bypasses speed resampling), so re-applying the processing policy
+-  /// pushes the new crossfade state to the Rust engine immediately.
+-  void _on432HzTuningChanged() {
+-    _updateBitPerfectProcessingLocked();
+-    if (_usingRustBackend) {
+-      unawaited(_applyRustPlaybackProcessingPolicy(currentEngineType));
+-    }
+-  }
+-
+   void _debugLog(String message) {
+     devLog(message);
+   }
+@@ -1302,7 +1288,6 @@ class PlayerService {
+       await Future.wait<void>([
+         _preferencesService.initializeDeveloperModeCache(),
+         _preferencesService.initializeKillIsochronousUsbOnQuitCache(),
+-        _preferencesService.initialize432HzTuningCache(),
+         _preferencesService.initializeBtFlagsCache(),
+         _preferencesService.getDsdOutputMode(),
+         _sessionManager.initialize(),
+@@ -1311,9 +1296,6 @@ class PlayerService {
+       final dapBitPerfect = await _preferencesService.getDapBitPerfectEnabled();
+       _uac2Service.dapBitPerfectEnabledNotifier.value = dapBitPerfect;
+       rust_audio.audioSetDapBitPerfectEnabled(enabled: dapBitPerfect);
+-      rust_audio.audioSet432HzTuningEnabled(
+-        enabled: Uac2PreferencesService.is432HzTuningEnabledSync,
+-      );
+ 
+       final engineType = _sessionManager.selectedMode;
+       if (engineType == AudioEngineType.usbDacExperimental ||
+@@ -5021,9 +5003,6 @@ class PlayerService {
+     _uac2Service.dapBitPerfectEnabledNotifier.removeListener(
+       _updateBitPerfectProcessingLocked,
+     );
+-    Uac2PreferencesService.tuning432HzNotifier.removeListener(
+-      _on432HzTuningChanged,
+-    );
+     if (_bitPerfectLockedListener != null) {
+       bitPerfectProcessingLockedNotifier.removeListener(
+         _bitPerfectLockedListener!,
+-- 
+2.55.0
+

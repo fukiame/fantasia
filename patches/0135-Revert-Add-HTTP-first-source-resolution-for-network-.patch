@@ -1,0 +1,66 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 5 Aug 2026 23:07:29 +0700
+Subject: [PATCH] Revert "Add HTTP-first source resolution for network songs"
+
+This reverts commit 35e8f85e3ecaaffbe4df6a3a1b377979c203559f.
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index baa654f5a..7f9f3868b 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -3277,26 +3277,10 @@ class PlayerService {
+       rustAudioService: _rustAudioService,
+       ensureInitialized: () => _ensureRustEngineInitialized(playbackMode),
+       resolvePlaybackPath: _resolveRustPath,
+-      resolveHttpSource: _resolveRustHttpSource,
+       disposeEngine: _disposeUsbEngine,
+     );
+   }
+ 
+-  /// HTTP-first source resolver for network songs. Returns null for local
+-  /// songs or protocols without byte-range support (then the engine falls back
+-  /// to cache-then-play via [_resolveRustPath]).
+-  Future<({String url, Map<String, String> headers})?> _resolveRustHttpSource(
+-    Song song,
+-  ) async {
+-    if (!song.isNetworkSource) return null;
+-    try {
+-      return await RemoteSourceService.instance.resolveHttpPlayback(song);
+-    } catch (e) {
+-      _debugLog('HTTP source resolve failed: $e');
+-      return null;
+-    }
+-  }
+-
+   Future<void> _ensureRustEngineInitialized(
+     AudioEngineType playbackMode,
+   ) async {
+@@ -4155,24 +4139,6 @@ class PlayerService {
+ 
+     final nextIndex = isLastTrack ? 0 : _currentIndex + 1;
+     final nextSong = _playlist[nextIndex];
+-
+-    // HTTP-first: try a direct ranged stream, fall back to cache-then-play.
+-    if (nextSong.isNetworkSource) {
+-      try {
+-        final http = await RemoteSourceService.instance
+-            .resolveHttpPlayback(nextSong);
+-        if (http != null) {
+-          await _rustAudioService.queueNextHttp(
+-            url: http.url,
+-            headers: http.headers,
+-          );
+-          return;
+-        }
+-      } catch (e) {
+-        _debugLog('HTTP queue-next failed, falling back to cache: $e');
+-      }
+-    }
+-
+     final nextPath = await _resolveRustPath(nextSong);
+     if (nextPath != null) {
+       await _rustAudioService.queueNext(nextPath);
+-- 
+2.55.0
+

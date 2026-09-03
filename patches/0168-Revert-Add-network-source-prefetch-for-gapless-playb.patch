@@ -1,0 +1,114 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 2 Aug 2026 19:28:41 +0700
+Subject: [PATCH] Revert "Add network-source prefetch for gapless playback"
+
+This reverts commit 776a27035496ed18e315b10541c99a62c6a2283e.
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 7f9f3868b..0389ee6ed 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -37,7 +37,6 @@ import 'package:flick/services/album_color_mode_preference_service.dart';
+ import 'package:flick/models/album_color_mode.dart';
+ import 'package:flick/services/uac2_service.dart';
+ import 'package:flick/services/alac_converter_service.dart';
+-import 'package:flick/services/remote_source_service.dart';
+ import 'package:flick/core/utils/dev_log.dart';
+ 
+ /// Volume Control State Machine:
+@@ -1013,7 +1012,6 @@ class PlayerService {
+     if (_currentIndex == newIndex) return;
+     _currentIndex = newIndex;
+     currentIndexNotifier.value = newIndex;
+-    _prefetchedNextSongId = null;
+     _notifyUpNextChanged();
+   }
+ 
+@@ -1136,9 +1134,6 @@ class PlayerService {
+       dateAdded: song.dateAdded,
+       isExternal: song.isExternal,
+       sourcePackage: song.sourcePackage,
+-      sourceType: song.sourceType,
+-      remoteId: song.remoteId,
+-      remoteServerId: song.remoteServerId,
+     );
+   }
+ 
+@@ -3037,12 +3032,6 @@ class PlayerService {
+       return null;
+     }
+ 
+-    if (song.isNetworkSource) {
+-      // Network songs always play from the local network cache: a cache hit
+-      // is instant (gapless/crossfade handoff), a miss downloads first.
+-      return RemoteSourceService.instance.ensureLocal(song);
+-    }
+-
+     final sourceKey = filePath;
+     var resolvedPath = filePath;
+     final parsed = Uri.tryParse(filePath);
+@@ -5227,44 +5216,9 @@ class PlayerService {
+     _positionSaveTimer?.cancel();
+     _positionSaveTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+       _savePosition();
+-      _maybePrefetchNextNetworkSong();
+     });
+   }
+ 
+-  /// Last song id handed to [RemoteSourceService.prefetch]. Reset whenever the
+-  /// current track changes so a replayed song re-prefetches its successor.
+-  String? _prefetchedNextSongId;
+-
+-  /// P1.7: when the current network-sourced track is within 10s of its end,
+-  /// start downloading the linear-next song so gapless/crossfade handoff reads
+-  /// a local path. Cache hits make repeated calls no-ops (and the marker is
+-  /// reset on track change, which also covers wrap-around).
+-  void _maybePrefetchNextNetworkSong() {
+-    final current = currentSongNotifier.value;
+-    if (current == null || !current.isNetworkSource) return;
+-    if (_playlist.isEmpty || _currentIndex < 0) return;
+-
+-    final duration = durationNotifier.value;
+-    if (duration <= Duration.zero) return;
+-    if (positionNotifier.value < duration - const Duration(seconds: 10)) {
+-      return;
+-    }
+-
+-    if (_currentIndex >= _playlist.length - 1 &&
+-        loopModeNotifier.value != LoopMode.all) {
+-      return;
+-    }
+-    final nextIndex = _currentIndex >= _playlist.length - 1
+-        ? 0
+-        : _currentIndex + 1;
+-    final next = _playlist[nextIndex];
+-    if (!next.isNetworkSource) return;
+-    if (next.id == _prefetchedNextSongId) return;
+-
+-    _prefetchedNextSongId = next.id;
+-    unawaited(RemoteSourceService.instance.prefetch(next));
+-  }
+-
+   void _startHwVolumeHealthTimer() {
+     _hwVolumeHealthTimer?.cancel();
+     _hwVolumeHealthTimer = Timer.periodic(
+@@ -5622,7 +5576,6 @@ class PlayerService {
+         final playlists = await _playlistService.getPlaylists();
+         return playlists.map((p) => p.id).toList();
+       case PlaybackSource.allSongs:
+-      case PlaybackSource.network:
+       case PlaybackSource.unknown:
+         return [];
+     }
+@@ -5685,7 +5638,6 @@ class PlayerService {
+         );
+         return songs;
+       case PlaybackSource.allSongs:
+-      case PlaybackSource.network:
+       case PlaybackSource.unknown:
+         return null;
+     }
+-- 
+2.55.0
+

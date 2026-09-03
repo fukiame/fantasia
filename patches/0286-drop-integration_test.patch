@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 30 Jul 2026 10:20:07 +0700
+Subject: [PATCH] drop integration_test
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/integration_test/simple_test.dart b/integration_test/simple_test.dart
+deleted file mode 100644
+index 167453127..000000000
+--- a/integration_test/simple_test.dart
++++ /dev/null
+@@ -1,16 +0,0 @@
+-import 'package:flutter_test/flutter_test.dart';
+-import 'package:flick/app/app.dart';
+-import 'package:flick/src/rust/frb_generated.dart';
+-import 'package:integration_test/integration_test.dart';
+-
+-void main() {
+-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+-  setUpAll(() async => await RustLib.init());
+-
+-  testWidgets('Flick Player integration test', (WidgetTester tester) async {
+-    await tester.pumpWidget(const FlickPlayerApp());
+-
+-    // Verify the app launches with the Songs screen
+-    expect(find.text('library'), findsOneWidget);
+-  });
+-}
+diff --git a/pubspec.yaml b/pubspec.yaml
+index 04c627b66..e2d499fa3 100644
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -63,8 +63,6 @@ dev_dependencies:
+     sdk: flutter
+   test: ^1.25.0
+   freezed: ^3.0.0
+-  integration_test:
+-    sdk: flutter
+   isar_community_generator: ^3.3.2
+   json_serializable: 6.11.2
+ 
+diff --git a/test_driver/integration_test.dart b/test_driver/integration_test.dart
+deleted file mode 100644
+index b38629cca..000000000
+--- a/test_driver/integration_test.dart
++++ /dev/null
+@@ -1,3 +0,0 @@
+-import 'package:integration_test/integration_test_driver.dart';
+-
+-Future<void> main() => integrationDriver();
+-- 
+2.55.0
+

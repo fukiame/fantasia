@@ -1,0 +1,23 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 20:49:39 +0700
+Subject: [PATCH] lib: player: bpi: one must at least deserve the spot
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
+index 56a4d810b..05631892f 100644
+--- a/lib/features/player/widgets/bit_perfect_indicator.dart
++++ b/lib/features/player/widgets/bit_perfect_indicator.dart
+@@ -39,6 +39,8 @@ class BitPerfectIndicator extends ConsumerWidget {
+     );
+     final label = _getSongQuality(song);
+ 
++    if (label == '') return const Offstage(offstage: true);
++
+     return GestureDetector(
+       onTap: onTap,
+       behavior: HitTestBehavior.opaque,
+-- 
+2.55.0
+
