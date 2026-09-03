@@ -544,7 +544,7 @@ index 3c5747ff3..5d1c824af 100644
 -  return ref.watch(playerProvider.select((state) => state.sleepTimerRemaining));
 -});
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 9f798dc40..1b136447b 100644
+index bb1c17956..789175025 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -453,13 +453,6 @@ class PlayerService {
@@ -561,7 +561,7 @@ index 9f798dc40..1b136447b 100644
    // Playlist Management
    final List<Song> _playlist = [];
    final List<Song> _originalPlaylist = []; // For shuffle restore
-@@ -2723,7 +2716,6 @@ class PlayerService {
+@@ -2720,7 +2713,6 @@ class PlayerService {
        _debugLog('Stop failed: $e');
      }
      await _refreshAudioOutputDiagnostics(reason: 'playback stopped');
@@ -569,7 +569,7 @@ index 9f798dc40..1b136447b 100644
    }
  
    /// Build audio sources for the playlist (gapless playback).
-@@ -4772,39 +4764,6 @@ class PlayerService {
+@@ -4769,39 +4761,6 @@ class PlayerService {
      _debounceQueueChanged();
    }
  
@@ -609,7 +609,7 @@ index 9f798dc40..1b136447b 100644
    void _armAutoSyncGuard(Song song) {
      _autoSyncGuardSongId = song.id;
    }
-@@ -4920,7 +4879,6 @@ class PlayerService {
+@@ -4917,7 +4876,6 @@ class PlayerService {
      unawaited(_bluetoothDeviceEventSubscription?.cancel());
      unawaited(_usbDacDetachSubscription?.cancel());
      unawaited(_usbDacAttachSubscription?.cancel());
@@ -617,7 +617,7 @@ index 9f798dc40..1b136447b 100644
      _notificationService.hideNotification();
      if (_usingRustBackend) {
        if (Uac2PreferencesService.isKillIsochronousUsbOnQuitSync) {
-@@ -4961,7 +4919,6 @@ class PlayerService {
+@@ -4958,7 +4916,6 @@ class PlayerService {
      positionNotifier.dispose();
      durationNotifier.dispose();
      bufferedPositionNotifier.dispose();

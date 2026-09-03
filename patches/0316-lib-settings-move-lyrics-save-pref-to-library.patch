@@ -84,7 +84,7 @@ index 218091767..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 7d055ad6f..135b4d891 100644
+index de709ff0b..e0564e463 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -9,7 +9,6 @@ import 'package:flick/features/settings/screens/interface_settings_screen.dart';
@@ -93,9 +93,9 @@ index 7d055ad6f..135b4d891 100644
  import 'package:flick/features/settings/screens/ui_customization_settings_screen.dart';
 -import 'package:flick/features/settings/screens/lyrics_settings_screen.dart';
  import 'package:flick/features/settings/screens/player_layout_settings_screen.dart';
- import 'package:flick/features/settings/screens/support_flick_screen.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
-@@ -94,13 +93,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+@@ -93,13 +92,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                              const BluetoothSettingsScreen(),
                            ),
                          ),

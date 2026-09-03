@@ -8,7 +8,7 @@ this partially reverts commit db705dfe8f3997298c8a44c4b24ed38ccb1fc271.
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 5e7b19a09..ef71ed67a 100644
+index 48d798672..959cbf6fc 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -553,9 +553,6 @@ class PlayerService {
@@ -21,7 +21,7 @@ index 5e7b19a09..ef71ed67a 100644
      _bitPerfectLockedListener = () {
        unawaited(reapplyEqualizer());
      };
-@@ -1199,23 +1196,12 @@ class PlayerService {
+@@ -1196,23 +1193,12 @@ class PlayerService {
            AudioEngineType.dapInternalHighRes =>
              _uac2Service.isDapBitPerfectEnabledSync,
            _ => false,
@@ -46,7 +46,7 @@ index 5e7b19a09..ef71ed67a 100644
    void _debugLog(String message) {
      devLog(message);
    }
-@@ -1302,7 +1288,6 @@ class PlayerService {
+@@ -1299,7 +1285,6 @@ class PlayerService {
        await Future.wait<void>([
          _preferencesService.initializeDeveloperModeCache(),
          _preferencesService.initializeKillIsochronousUsbOnQuitCache(),
@@ -54,7 +54,7 @@ index 5e7b19a09..ef71ed67a 100644
          _preferencesService.initializeBtFlagsCache(),
          _preferencesService.getDsdOutputMode(),
          _sessionManager.initialize(),
-@@ -1311,9 +1296,6 @@ class PlayerService {
+@@ -1308,9 +1293,6 @@ class PlayerService {
        final dapBitPerfect = await _preferencesService.getDapBitPerfectEnabled();
        _uac2Service.dapBitPerfectEnabledNotifier.value = dapBitPerfect;
        rust_audio.audioSetDapBitPerfectEnabled(enabled: dapBitPerfect);
@@ -64,7 +64,7 @@ index 5e7b19a09..ef71ed67a 100644
  
        final engineType = _sessionManager.selectedMode;
        if (engineType == AudioEngineType.usbDacExperimental ||
-@@ -5021,9 +5003,6 @@ class PlayerService {
+@@ -5018,9 +5000,6 @@ class PlayerService {
      _uac2Service.dapBitPerfectEnabledNotifier.removeListener(
        _updateBitPerfectProcessingLocked,
      );

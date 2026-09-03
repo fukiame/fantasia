@@ -6,10 +6,10 @@ Subject: [PATCH] 432fixu
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index e23e5b25c..d8b3253b6 100644
+index 5a01859a0..882323606 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -1719,7 +1719,6 @@ class PlayerService {
+@@ -1716,7 +1716,6 @@ class PlayerService {
      final passthrough =
          audioOutputDiagnosticsNotifier.value?.passthroughAllowed ?? false;
      if (!passthrough) return false;

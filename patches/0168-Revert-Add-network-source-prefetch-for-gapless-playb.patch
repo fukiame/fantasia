@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add network-source prefetch for gapless playback"
 This reverts commit 776a27035496ed18e315b10541c99a62c6a2283e.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 7f9f3868b..0389ee6ed 100644
+index 7f9f3868b..8e847be5a 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -37,7 +37,6 @@ import 'package:flick/services/album_color_mode_preference_service.dart';
@@ -35,7 +35,17 @@ index 7f9f3868b..0389ee6ed 100644
      );
    }
  
-@@ -3037,12 +3032,6 @@ class PlayerService {
+@@ -1220,9 +1215,6 @@ class PlayerService {
+         dateAdded: song.dateAdded,
+         isExternal: song.isExternal,
+         sourcePackage: song.sourcePackage,
+-        sourceType: song.sourceType,
+-        remoteId: song.remoteId,
+-        remoteServerId: song.remoteServerId,
+       );
+     }
+ 
+@@ -3037,12 +3029,6 @@ class PlayerService {
        return null;
      }
  
@@ -48,7 +58,7 @@ index 7f9f3868b..0389ee6ed 100644
      final sourceKey = filePath;
      var resolvedPath = filePath;
      final parsed = Uri.tryParse(filePath);
-@@ -5227,44 +5216,9 @@ class PlayerService {
+@@ -5227,44 +5213,9 @@ class PlayerService {
      _positionSaveTimer?.cancel();
      _positionSaveTimer = Timer.periodic(const Duration(seconds: 5), (_) {
        _savePosition();
@@ -93,7 +103,7 @@ index 7f9f3868b..0389ee6ed 100644
    void _startHwVolumeHealthTimer() {
      _hwVolumeHealthTimer?.cancel();
      _hwVolumeHealthTimer = Timer.periodic(
-@@ -5622,7 +5576,6 @@ class PlayerService {
+@@ -5622,7 +5573,6 @@ class PlayerService {
          final playlists = await _playlistService.getPlaylists();
          return playlists.map((p) => p.id).toList();
        case PlaybackSource.allSongs:
@@ -101,7 +111,7 @@ index 7f9f3868b..0389ee6ed 100644
        case PlaybackSource.unknown:
          return [];
      }
-@@ -5685,7 +5638,6 @@ class PlayerService {
+@@ -5685,7 +5635,6 @@ class PlayerService {
          );
          return songs;
        case PlaybackSource.allSongs:

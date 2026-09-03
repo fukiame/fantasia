@@ -55,7 +55,7 @@ index 23ffa47e8..f81b5e453 100644
      <!-- Required to query activities that can process text, see:
           https://developer.android.com/training/package-visibility and
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 6f766e19f..7c62a7b07 100644
+index e58132beb..7353d6ef9 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -12,7 +12,6 @@ import 'package:flick/features/settings/screens/queue_settings_screen.dart';
@@ -63,10 +63,10 @@ index 6f766e19f..7c62a7b07 100644
  import 'package:flick/features/settings/screens/lyrics_settings_screen.dart';
  import 'package:flick/features/settings/screens/player_layout_settings_screen.dart';
 -import 'package:flick/features/settings/screens/widget_settings_screen.dart';
- import 'package:flick/features/settings/screens/support_flick_screen.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/features/settings/widgets/settings_widgets.dart';
-@@ -134,13 +133,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+ 
+@@ -133,13 +132,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                              const UiCustomizationSettingsScreen(),
                            ),
                          ),

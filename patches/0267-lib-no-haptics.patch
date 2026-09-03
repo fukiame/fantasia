@@ -425,10 +425,10 @@ index 35518a70d..477ef5153 100644
              if (source == null) {
                _sources.clear();
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 7c62a7b07..dcc1f2400 100644
+index 7353d6ef9..710aa993b 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -118,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -117,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                        children: [
                          _CategoryTile(
                            title: 'Interface',

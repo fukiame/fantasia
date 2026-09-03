@@ -125,7 +125,7 @@ index b25a7bca9..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index c0c203669..7d055ad6f 100644
+index 29b9b6685..de709ff0b 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -7,7 +7,6 @@ import 'package:flick/features/settings/screens/audio_settings_screen.dart';
@@ -136,7 +136,7 @@ index c0c203669..7d055ad6f 100644
  import 'package:flick/features/settings/screens/queue_settings_screen.dart';
  import 'package:flick/features/settings/screens/ui_customization_settings_screen.dart';
  import 'package:flick/features/settings/screens/lyrics_settings_screen.dart';
-@@ -64,15 +63,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -63,15 +62,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                _navigate(context, const LibrarySettingsScreen()),
                          ),
                          const SettingsDivider(),

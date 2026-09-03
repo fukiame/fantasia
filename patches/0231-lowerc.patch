@@ -175,10 +175,10 @@ index 3cfc8f244..f6461ab16 100644
                      ],
                      icon: Icon(
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index beba3636a..6f766e19f 100644
+index c893e3793..e58132beb 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -185,7 +185,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -184,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(

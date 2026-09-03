@@ -6,10 +6,10 @@ Subject: [PATCH] Misato - Necro Fantasia
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 3a4c2edca..f9503a72d 100644
+index 3f2998aa1..93536ecad 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -179,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -178,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                  ),
                  const SizedBox(height: 4),
                  Text(

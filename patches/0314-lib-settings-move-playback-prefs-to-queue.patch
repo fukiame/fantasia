@@ -235,10 +235,10 @@ index df63128d8..e56d9a870 100644
 +  }
 +}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index dcc1f2400..c0c203669 100644
+index 710aa993b..29b9b6685 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -74,8 +74,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -73,8 +73,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(

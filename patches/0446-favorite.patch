@@ -1981,7 +1981,7 @@ index 91a5c5579..989273dcc 100644
  
        await _channel.invokeMethod('updateNotification', args);
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index d8b3253b6..46ef5a935 100644
+index 882323606..836cc9031 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -19,7 +19,6 @@ import 'package:flick/services/bluetooth_service.dart';
@@ -2019,7 +2019,7 @@ index d8b3253b6..46ef5a935 100644
      );
      _sessionManager.selectedModeNotifier.addListener(() {
        unawaited(
-@@ -2273,10 +2266,6 @@ class PlayerService {
+@@ -2270,10 +2263,6 @@ class PlayerService {
      return song != null && !song.isExternal;
    }
  
@@ -2030,7 +2030,7 @@ index d8b3253b6..46ef5a935 100644
    void _clearReplayTracking() {
      _replayPlayTracker.clear();
    }
-@@ -2543,28 +2532,10 @@ class PlayerService {
+@@ -2540,28 +2529,10 @@ class PlayerService {
      return _updateNotificationState();
    }
  
@@ -2059,7 +2059,7 @@ index d8b3253b6..46ef5a935 100644
      int? notificationColor;
      try {
        final colorMode = await _albumColorModePreferenceService.getMode();
-@@ -2596,7 +2567,6 @@ class PlayerService {
+@@ -2593,7 +2564,6 @@ class PlayerService {
        duration: durationNotifier.value,
        position: positionNotifier.value,
        isShuffle: isShuffleNotifier.value,

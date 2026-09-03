@@ -5727,7 +5727,7 @@ index ae85022a0..000000000
 -  );
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 12c1801dc..a25333be8 100644
+index a5c6227f5..a530195b0 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -18,7 +18,6 @@ import 'package:flick/services/android_audio_device_service.dart';
@@ -5754,7 +5754,7 @@ index 12c1801dc..a25333be8 100644
      await _refreshAudioOutputDiagnostics(
        reason: 'bit-perfect preference changed',
      );
-@@ -1239,7 +1236,6 @@ class PlayerService {
+@@ -1236,7 +1233,6 @@ class PlayerService {
      if (Platform.isAndroid && !_sessionManager.selectedMode.usesRustBackend) {
        await _ensureAndroidPlayer();
      }
@@ -5762,7 +5762,7 @@ index 12c1801dc..a25333be8 100644
    }
  
    Future<void> setHiFiModeEnabled(bool enabled) async {
-@@ -3313,7 +3309,6 @@ class PlayerService {
+@@ -3310,7 +3306,6 @@ class PlayerService {
        await _rustAudioService.setVolume(_currentVolume);
      }
  

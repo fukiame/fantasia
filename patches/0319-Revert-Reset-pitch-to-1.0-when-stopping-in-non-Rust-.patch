@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Reset pitch to 1.0 when stopping in non-Rust backend"
 This reverts commit 8c3cc02e862f9aa98ddded60fdef0d955d07ab55.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 225087b3a..29c4c56c3 100644
+index 431b838a6..05f6b2fe1 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -5003,11 +5003,6 @@ class PlayerService {
+@@ -5000,11 +5000,6 @@ class PlayerService {
        );
        if (_usingRustBackend) {
          await _rustAudioService.setPitchShiftSemitones(0.0);
@@ -21,7 +21,7 @@ index 225087b3a..29c4c56c3 100644
        }
        return;
      }
-@@ -5015,12 +5010,7 @@ class PlayerService {
+@@ -5012,12 +5007,7 @@ class PlayerService {
      if (_usingRustBackend) {
        await _rustAudioService.setPitchShiftSemitones(clamped);
      } else {

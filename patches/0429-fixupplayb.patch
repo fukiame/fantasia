@@ -6,10 +6,10 @@ Subject: [PATCH] fixupplayb
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 66e783471..e23e5b25c 100644
+index d607241df..5a01859a0 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
-@@ -1721,7 +1721,6 @@ class PlayerService {
+@@ -1718,7 +1718,6 @@ class PlayerService {
      if (!passthrough) return false;
      if (Uac2PreferencesService.is432HzTuningEnabledSync) return false;
      if (gaplessPlaybackEnabledNotifier.value) return false;

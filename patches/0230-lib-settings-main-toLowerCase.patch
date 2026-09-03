@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: main: toLowerCase()
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 90a1fc93e..beba3636a 100644
+index 32772579c..c893e3793 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -240,14 +240,14 @@ class _CategoryTile extends StatelessWidget {
+@@ -239,14 +239,14 @@ class _CategoryTile extends StatelessWidget {
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(

@@ -92,7 +92,7 @@ index 8baff8073..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 0bc326b05..dc5aa6c1f 100644
+index 1b83362bd..ea23bcd3e 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -3,10 +3,11 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -107,8 +107,8 @@ index 0bc326b05..dc5aa6c1f 100644
 +import 'package:flick/features/settings/screens/uac2_settings_screen.dart';
  import 'package:flick/features/settings/screens/ui_customization_settings_screen.dart';
  import 'package:flick/features/settings/screens/player_layout_settings_screen.dart';
- import 'package:flick/features/settings/screens/support_flick_screen.dart';
-@@ -73,10 +74,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
+ import 'package:flick/core/utils/navigation_helper.dart';
+@@ -72,10 +73,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                      SettingsCard(
                        children: [
                          _CategoryTile(

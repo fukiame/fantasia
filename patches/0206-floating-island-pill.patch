@@ -830,7 +830,7 @@ index 2b4902e82..000000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 714ea6019..225087b3a 100644
+index 13f198f7b..431b838a6 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -938,7 +938,7 @@ index 714ea6019..225087b3a 100644
      unawaited(_restoreBitPerfectEngineAfterForeground());
    }
  
-@@ -2802,8 +2746,6 @@ class PlayerService {
+@@ -2799,8 +2743,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -947,7 +947,7 @@ index 714ea6019..225087b3a 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -5232,7 +5174,6 @@ class PlayerService {
+@@ -5229,7 +5171,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();
