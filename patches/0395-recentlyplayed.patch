@@ -1229,7 +1229,7 @@ index ced26e9b3..000000000
 -  }
 -}
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 888df2f6a..775af507b 100644
+index de2200cfe..986b9fe78 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
 @@ -7,7 +7,6 @@ import 'package:flick/core/constants/app_constants.dart';
@@ -1240,7 +1240,7 @@ index 888df2f6a..775af507b 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/features/albums/screens/album_detail_screen.dart';
  import 'package:flick/models/playback_context.dart';
-@@ -26,7 +25,7 @@ import 'package:flick/providers/favorites_provider.dart';
+@@ -24,7 +23,7 @@ import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
  import 'package:flick/providers/navigation_provider.dart';
  import 'package:flick/providers/app_preferences_provider.dart';
  
@@ -1249,7 +1249,7 @@ index 888df2f6a..775af507b 100644
  class ArtistDetailScreen extends ConsumerStatefulWidget {
    final String artistName;
    final List<Song> songs;
-@@ -53,15 +52,12 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -51,15 +50,12 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
    static const double _backgroundBlend = 0.22;
  
    final SongRepository _songRepository = SongRepository();
@@ -1265,7 +1265,7 @@ index 888df2f6a..775af507b 100644
    List<AlbumGroup> _artistAlbums = [];
    bool _isLoadingExtras = true;
    String? _artistArt;
-@@ -99,9 +95,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -97,9 +93,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
    }
  
    Future<void> _loadExtras() async {
@@ -1275,7 +1275,7 @@ index 888df2f6a..775af507b 100644
      final allAlbums = await _songRepository.getAlbumGroups();
      final artistAlbums = allAlbums
          .where(
-@@ -111,7 +104,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -109,7 +102,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
  
      if (mounted) {
        setState(() {
@@ -1283,7 +1283,7 @@ index 888df2f6a..775af507b 100644
          _artistAlbums = artistAlbums;
          _isLoadingExtras = false;
        });
-@@ -495,35 +487,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -433,35 +425,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
                            const SliverToBoxAdapter(
                              child: SizedBox(height: AppConstants.spacingLg),
                            ),
@@ -1319,7 +1319,7 @@ index 888df2f6a..775af507b 100644
                          _buildSectionTitle(context, 'Songs'),
                          SliverPadding(
                            padding: EdgeInsets.only(
-@@ -800,116 +763,6 @@ class _AlbumCardState extends State<_AlbumCard>
+@@ -738,116 +701,6 @@ class _AlbumCardState extends State<_AlbumCard>
    }
  }
  
@@ -1563,7 +1563,7 @@ index d31ca74f5..01ece8e41 100644
      final hour = playedAt.hour;
      return hour >= 21 || hour <= 4;
 diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index 959209ae2..f6396b6ed 100644
+index 3c0e42a9a..27edaf4c0 100644
 --- a/lib/features/playlists/screens/playlist_detail_screen.dart
 +++ b/lib/features/playlists/screens/playlist_detail_screen.dart
 @@ -16,7 +16,6 @@ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
@@ -1574,7 +1574,7 @@ index 959209ae2..f6396b6ed 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/providers/playlist_provider.dart';
  import 'package:flick/providers/navigation_provider.dart';
-@@ -48,8 +47,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -46,8 +45,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
  
    final PlayerService _playerService = PlayerService();
    final SongRepository _songRepository = SongRepository();
@@ -1583,7 +1583,7 @@ index 959209ae2..f6396b6ed 100644
    final ColorExtractionService _colorService = ColorExtractionService();
  
    final ScrollController _scrollController = ScrollController();
-@@ -240,11 +237,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -238,11 +235,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
    Future<void> _extractPlaylistColor(List<String> songIds) async {
      if (songIds.isEmpty) return;
  

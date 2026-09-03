@@ -343,10 +343,10 @@ index 22e5604df..22943b33d 100644
      return Center(
        child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 775af507b..b0482f2f3 100644
+index 986b9fe78..92fa8f8f7 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
-@@ -59,7 +59,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -57,7 +57,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
    bool _showAppBarActions = false;
  
    List<AlbumGroup> _artistAlbums = [];

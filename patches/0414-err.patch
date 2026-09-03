@@ -90,10 +90,10 @@ index 0090c609d..d4d583f04 100644
      var total = Duration.zero;
      for (final song in widget.songs) {
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index b0482f2f3..67bfbb487 100644
+index 92fa8f8f7..ef44c7a09 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
-@@ -104,7 +104,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -102,7 +102,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
      if (mounted) {
        setState(() {
          _artistAlbums = artistAlbums;

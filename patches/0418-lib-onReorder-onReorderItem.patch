@@ -6,10 +6,10 @@ Subject: [PATCH] lib: onReorder -> onReorderItem
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index f6396b6ed..71e480a76 100644
+index 27edaf4c0..8958fbd69 100644
 --- a/lib/features/playlists/screens/playlist_detail_screen.dart
 +++ b/lib/features/playlists/screens/playlist_detail_screen.dart
-@@ -519,7 +519,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -458,7 +458,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
                                  child: child,
                                );
                              },
@@ -18,7 +18,7 @@ index f6396b6ed..71e480a76 100644
                                if (_sortOption != PlaylistSortOption.manual) {
                                  return;
                                }
-@@ -531,10 +531,8 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -470,10 +470,8 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
                                      newIndex,
                                    );
                                setState(() {

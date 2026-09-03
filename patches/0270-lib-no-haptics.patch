@@ -364,6 +364,63 @@ index d4e153582..783119ae1 100644
            onEnable();
          },
          child: Padding(
+diff --git a/lib/features/settings/screens/duplicate_cleaner_screen.dart b/lib/features/settings/screens/duplicate_cleaner_screen.dart
+index e0924b6d8..673c883f0 100644
+--- a/lib/features/settings/screens/duplicate_cleaner_screen.dart
++++ b/lib/features/settings/screens/duplicate_cleaner_screen.dart
+@@ -1,4 +1,3 @@
+-import 'package:flick/core/utils/app_haptics.dart';
+ import 'package:flick/features/player/widgets/ambient_background.dart';
+ import 'package:flick/widgets/common/flick_dialog.dart';
+ import 'package:flutter/material.dart';
+@@ -327,14 +326,7 @@ class _DuplicateCleanerScreenState extends ConsumerState<DuplicateCleanerScreen>
+                 ),
+               ),
+               if (scanState.hasCustomSelection)
+-                GestureDetector(
+-                  onTap: () {
+-                    AppHaptics.tap();
+-                    ref
+-                        .read(duplicateScanProvider.notifier)
+-                        .resetAllToRecommended();
+-                  },
+-                  child: const Text(
++                Text(
+                     'Reset',
+                     style: TextStyle(
+                       fontFamily: 'ProductSans',
+@@ -345,7 +337,6 @@ class _DuplicateCleanerScreenState extends ConsumerState<DuplicateCleanerScreen>
+                       decorationColor: AppColors.textPrimary,
+                     ),
+                   ),
+-                ),
+             ],
+           ),
+         ),
+@@ -1134,7 +1125,6 @@ class _DuplicateGroupCardState extends ConsumerState<_DuplicateGroupCard> {
+                                   onTap: isRemoving
+                                       ? null
+                                       : () {
+-                                          AppHaptics.tap();
+                                           ref
+                                               .read(duplicateScanProvider
+                                                   .notifier)
+@@ -1168,7 +1158,6 @@ class _DuplicateGroupCardState extends ConsumerState<_DuplicateGroupCard> {
+                                 onTap: isRemoving
+                                     ? null
+                                     : () {
+-                                        AppHaptics.tap();
+                                         ref
+                                             .read(
+                                                 duplicateScanProvider.notifier)
+@@ -1240,7 +1229,6 @@ class _DuplicateGroupCardState extends ConsumerState<_DuplicateGroupCard> {
+                                 enabled: !isRemoving,
+                                 canToggleOff: canToggleOff,
+                                 onTap: () {
+-                                  AppHaptics.selection();
+                                   final ok = ref
+                                       .read(duplicateScanProvider.notifier)
+                                       .toggleKeep(widget.group.key, song.id);
 diff --git a/lib/features/settings/screens/interface_settings_screen.dart b/lib/features/settings/screens/interface_settings_screen.dart
 index 331ad2eb9..ce4b62848 100644
 --- a/lib/features/settings/screens/interface_settings_screen.dart
