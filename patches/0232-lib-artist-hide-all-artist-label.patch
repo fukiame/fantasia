@@ -6,10 +6,10 @@ Subject: [PATCH] lib: artist: hide "all artist" label
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 64c6c687a..e7deadd9a 100644
+index a6c0e95f0..6401e4be3 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -377,6 +377,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -378,6 +378,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
      return Column(
        crossAxisAlignment: CrossAxisAlignment.start,
        children: [
@@ -17,7 +17,7 @@ index 64c6c687a..e7deadd9a 100644
          Padding(
            padding: const EdgeInsets.fromLTRB(
              AppConstants.spacingLg,
-@@ -385,15 +386,14 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -386,15 +387,14 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
              AppConstants.spacingMd,
            ),
            child: Text(

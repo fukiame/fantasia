@@ -6,10 +6,10 @@ Subject: [PATCH] flutter analyze
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 377fa9054..4d2ffb2d0 100644
+index bd11da60f..5a58d4c07 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -373,7 +373,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -380,7 +380,6 @@ class _MainShellState extends ConsumerState<MainShell>
      if (_programmaticPageTarget != null || !_pageController.hasClients) return;
      final page = _pageController.page;
      if (page == null) return;
@@ -17,7 +17,7 @@ index 377fa9054..4d2ffb2d0 100644
    }
  
    void _startIdleTimer() {
-@@ -419,15 +418,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -426,15 +425,6 @@ class _MainShellState extends ConsumerState<MainShell>
        _cancelIdleTimer();
        unawaited(ref.read(playerServiceProvider).persistLastPlayed());
        unawaited(ref.read(playerServiceProvider).onAppPaused());
@@ -34,10 +34,10 @@ index 377fa9054..4d2ffb2d0 100644
      if (state == AppLifecycleState.resumed) {
        _startIdleTimer();
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 146f7aa96..e68c37b53 100644
+index 85669699d..e8820a08e 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -54,8 +54,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -55,8 +55,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    final ScrollController _scrollController = ScrollController();
    bool _showAppBarActions = false;
  
@@ -46,7 +46,7 @@ index 146f7aa96..e68c37b53 100644
    Color? _albumColor;
  
    @override
-@@ -252,35 +250,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -253,35 +251,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      );
    }
  
@@ -82,7 +82,7 @@ index 146f7aa96..e68c37b53 100644
    @override
    Widget build(BuildContext context) {
      final bgColor = _tintBackground(_backgroundBlend);
-@@ -863,206 +832,3 @@ class _SongTile extends StatelessWidget {
+@@ -862,206 +831,3 @@ class _SongTile extends StatelessWidget {
      );
    }
  }
@@ -290,10 +290,10 @@ index 146f7aa96..e68c37b53 100644
 -  }
 -}
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index fd7578014..31956cdb8 100644
+index 22e5604df..22943b33d 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -133,9 +133,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -134,9 +134,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
      return null;
    }
  
@@ -303,7 +303,7 @@ index fd7578014..31956cdb8 100644
    void _openAlbumDetail(AlbumGroup album) {
      NavigationHelper.pushFade(
        context,
-@@ -246,38 +243,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -247,38 +244,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
      );
    }
  
@@ -343,10 +343,10 @@ index fd7578014..31956cdb8 100644
      return Center(
        child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 927371143..fe5e26735 100644
+index f5c06bb9b..994fb35bf 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
-@@ -55,7 +55,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -56,7 +56,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
    bool _showAppBarActions = false;
  
    List<AlbumGroup> _artistAlbums = [];
@@ -355,7 +355,7 @@ index 927371143..fe5e26735 100644
    String? _artistArtSourcePath;
    Color? _artistColor;
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index e7deadd9a..11bcd669a 100644
+index 6401e4be3..da2b19ac7 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
 @@ -115,14 +115,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
@@ -373,7 +373,7 @@ index e7deadd9a..11bcd669a 100644
    String? _getArtistArt(List<Song> songs) {
      for (final song in songs) {
        if (song.albumArt != null && song.albumArt!.isNotEmpty) {
-@@ -303,38 +295,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -304,38 +296,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
      );
    }
  
@@ -412,7 +412,7 @@ index e7deadd9a..11bcd669a 100644
    Widget _buildLoadingState() {
      return Center(
        child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
-@@ -598,7 +558,6 @@ class _ArtistSortSheet extends ConsumerWidget {
+@@ -599,7 +559,6 @@ class _ArtistSortSheet extends ConsumerWidget {
  
    @override
    Widget build(BuildContext context, WidgetRef ref) {
@@ -420,7 +420,7 @@ index e7deadd9a..11bcd669a 100644
      return SafeArea(
        top: false,
        child: Container(
-@@ -734,57 +693,4 @@ class _ArtistSortSheet extends ConsumerWidget {
+@@ -735,57 +694,4 @@ class _ArtistSortSheet extends ConsumerWidget {
          return 'Album Count';
      }
    }
@@ -479,10 +479,10 @@ index e7deadd9a..11bcd669a 100644
 -  }
  }
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 2ec9f1e5a..ad030ab91 100644
+index 24e4a0e3b..69e1b7b9b 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -39,7 +39,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -41,7 +41,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      with TickerProviderStateMixin {
    final PlayerService _playerService = PlayerService();
  
@@ -490,7 +490,7 @@ index 2ec9f1e5a..ad030ab91 100644
    String? _heroColorArtPath;
    bool _isRefreshing = false;
    late final AnimationController _refreshController;
-@@ -59,21 +58,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -61,21 +60,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      super.dispose();
    }
  
@@ -512,7 +512,7 @@ index 2ec9f1e5a..ad030ab91 100644
    Future<void> _refreshHome() async {
      if (_isRefreshing) return;
      _isRefreshing = true;
-@@ -96,36 +80,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -98,36 +82,11 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      );
    }
  
@@ -549,7 +549,7 @@ index 2ec9f1e5a..ad030ab91 100644
      final appPreferences = ref.watch(appPreferencesProvider);
  
      final allSongs = songsAsync.value?.songs ?? const <Song>[];
-@@ -613,15 +572,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -615,15 +574,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
      return unique;
    }
@@ -565,7 +565,7 @@ index 2ec9f1e5a..ad030ab91 100644
  }
  
  class _MenuLoadingState extends StatelessWidget {
-@@ -672,159 +622,6 @@ class _MenuLoadingState extends StatelessWidget {
+@@ -674,153 +624,6 @@ class _MenuLoadingState extends StatelessWidget {
    }
  }
  
@@ -600,17 +600,11 @@ index 2ec9f1e5a..ad030ab91 100644
 -                thumbnailHeight: 160,
 -                placeholder: Container(
 -                  color: Colors.white.withValues(alpha: 0.06),
--                  child: Icon(
--                    LucideIcons.music4,
--                    color: Colors.white.withValues(alpha: 0.72),
--                  ),
+-                  child: const FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -                ),
 -                errorWidget: Container(
 -                  color: Colors.white.withValues(alpha: 0.06),
--                  child: Icon(
--                    LucideIcons.music4,
--                    color: Colors.white.withValues(alpha: 0.72),
--                  ),
+-                  child: const FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -                ),
 -              ),
 -            ),
@@ -725,7 +719,7 @@ index 2ec9f1e5a..ad030ab91 100644
  class _QuickAccessItem {
    final String title;
    final String subtitle;
-@@ -933,83 +730,6 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -929,83 +732,6 @@ class _QuickAccessCard extends StatelessWidget {
    }
  }
  
@@ -809,7 +803,7 @@ index 2ec9f1e5a..ad030ab91 100644
  class _PlaylistPreviewCard extends StatelessWidget {
    final _PlaylistPreview preview;
    final VoidCallback onTap;
-@@ -1348,21 +1068,6 @@ class _ArtistSpotlight {
+@@ -1344,21 +1070,6 @@ class _ArtistSpotlight {
    });
  }
  
@@ -853,7 +847,7 @@ index a918da717..2193e1ffe 100644
    final SongRepository _songRepository = SongRepository();
    late final PlayerNavigation _navigation = PlayerNavigation(
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 6aadc698a..0ecc4cd92 100644
+index 85f69944a..f4566845c 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -619,11 +619,6 @@ class AnimatedSongScene extends StatelessWidget {
@@ -942,10 +936,10 @@ index 4c1c11952..b3d06588d 100644
      if (entries.isEmpty) return;
      final stamp = DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 1017e89ec..8883783cb 100644
+index 9319f0854..91e0d07f3 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -252,70 +252,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -253,66 +253,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
    }
  }
  
@@ -987,10 +981,8 @@ index 1017e89ec..8883783cb 100644
 -                colors: [Color(0xFF4B3D7A), Color(0xFF111111)],
 -              ),
 -            ),
--            child: const Icon(
--              Icons.music_note_rounded,
--              color: Color(0xFF555555),
--              size: 32,
+-            child: const Center(
+-              child: FlickArtworkPlaceholder(size: 36, opacity: 0.9),
 -            ),
 -          ),
 -          errorWidget: Container(
@@ -1001,10 +993,8 @@ index 1017e89ec..8883783cb 100644
 -                colors: [Color(0xFF4B3D7A), Color(0xFF111111)],
 -              ),
 -            ),
--            child: const Icon(
--              Icons.music_note_rounded,
--              color: Color(0xFF555555),
--              size: 32,
+-            child: const Center(
+-              child: FlickArtworkPlaceholder(size: 36, opacity: 0.9),
 -            ),
 -          ),
 -        ),
@@ -1017,10 +1007,10 @@ index 1017e89ec..8883783cb 100644
    const _ActionButtonPickerScreen({
      required this.title,
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index f56902496..1e35e08c9 100644
+index 2af84524d..49b1e6403 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -129,7 +129,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -130,7 +130,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
  
      final sortOption =
          songsAsync.value?.sortOption ?? SongSortOption.albumArtist;
@@ -1028,7 +1018,7 @@ index f56902496..1e35e08c9 100644
  
      return Stack(
          clipBehavior: Clip.none,
-@@ -2761,9 +2760,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+@@ -2757,9 +2756,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
    late _AlbumGridSortOption _selectedSort;
    late SongFileTypeFilter _selectedFilter;
  
@@ -1039,10 +1029,10 @@ index f56902496..1e35e08c9 100644
    void initState() {
      super.initState();
 diff --git a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
-index b6bd53b2c..65e2644ff 100644
+index f05daf580..8be2af9e2 100644
 --- a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
 +++ b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
-@@ -56,9 +56,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -57,9 +57,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
    final PlayerService _playerService = PlayerService();
  
    final List<AlbumArtCandidate> _candidates = const [];
@@ -1052,7 +1042,7 @@ index b6bd53b2c..65e2644ff 100644
    bool _isWorking = false;
    late bool _hasCustomArtwork;
    AlbumArtScope _scope = AlbumArtScope.wholeAlbum;
-@@ -457,63 +455,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -458,63 +456,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
      );
    }
  
@@ -1272,7 +1262,7 @@ index 357c8aeb2..fc2c17528 100644
    final SongRepository _songRepository;
    final AlbumArtService _albumArtService;
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 2312ba4c5..6259f99eb 100644
+index 3c03c0a21..ef675e926 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -307,7 +307,6 @@ class PlayerService {
@@ -1299,7 +1289,7 @@ index 2312ba4c5..6259f99eb 100644
      /*
      if (_floatingPlayerActive) {
        await _deactivateFloatingPlayer();
-@@ -2164,11 +2161,6 @@ class PlayerService {
+@@ -2305,11 +2302,6 @@ class PlayerService {
        _replayPlayTracker.syncPosition(songId: song.id, position: position);
        return;
      }
@@ -1311,7 +1301,7 @@ index 2312ba4c5..6259f99eb 100644
    }
  
    void _setupRustAudioListeners() {
-@@ -3729,19 +3721,6 @@ class PlayerService {
+@@ -3870,19 +3862,6 @@ class PlayerService {
      }
    }
  

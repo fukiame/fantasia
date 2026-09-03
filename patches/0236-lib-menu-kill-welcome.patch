@@ -6,10 +6,10 @@ Subject: [PATCH] lib: menu: kill welcome
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index f920c13d9..ae4da4be1 100644
+index 9f1a3c031..7a092cb6d 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -213,106 +213,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -214,106 +214,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      return 'Good evening';
    }
  
@@ -116,7 +116,7 @@ index f920c13d9..ae4da4be1 100644
    Widget _buildEngineSelector(
      BuildContext context,
      AudioEnginePreference engine, {
-@@ -665,30 +565,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -666,30 +566,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                          child: _MenuLoadingState(),
                        )
                      else ...[

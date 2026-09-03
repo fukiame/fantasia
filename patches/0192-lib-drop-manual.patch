@@ -927,18 +927,18 @@ index 1007a3038..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index a3078a802..fc172b82c 100644
+index 939a2c44f..b8e4f0725 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -15,7 +15,6 @@ import 'package:flick/features/settings/screens/player_layout_settings_screen.da
- import 'package:flick/features/settings/screens/widget_settings_screen.dart';
+@@ -16,7 +16,6 @@ import 'package:flick/features/settings/screens/widget_settings_screen.dart';
  import 'package:flick/features/settings/screens/support_flick_screen.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/features/settings/widgets/settings_widgets.dart';
 -import 'package:flick/features/manual/screens/manual_screen.dart';
  
  class SettingsScreen extends StatefulWidget {
    const SettingsScreen({super.key});
-@@ -176,21 +175,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -177,21 +176,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                        ],
                      ),
                      const SizedBox(height: AppConstants.spacingLg),

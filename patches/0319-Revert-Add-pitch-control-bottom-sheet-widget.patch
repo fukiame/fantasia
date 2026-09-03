@@ -7,10 +7,10 @@ This reverts commit 87f507140bcf99adeedab0a1c6529c5876f33270.
 
 diff --git a/lib/features/player/widgets/pitch_bottom_sheet.dart b/lib/features/player/widgets/pitch_bottom_sheet.dart
 deleted file mode 100644
-index b9695f97b..000000000
+index 680d32d39..000000000
 --- a/lib/features/player/widgets/pitch_bottom_sheet.dart
 +++ /dev/null
-@@ -1,109 +0,0 @@
+@@ -1,110 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
 -import 'package:flick/core/theme/app_colors.dart';
@@ -22,6 +22,7 @@ index b9695f97b..000000000
 -
 -  static Future<void> show(BuildContext context, PlayerService playerService) {
 -    return showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (context) => PitchBottomSheet(playerService: playerService),

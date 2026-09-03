@@ -6,10 +6,10 @@ Subject: [PATCH] lib: favorites: drop heart illu
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
-index cb95e9d12..a681630d0 100644
+index 33c5427ad..f802ac46a 100644
 --- a/lib/features/favorites/screens/favorites_screen.dart
 +++ b/lib/features/favorites/screens/favorites_screen.dart
-@@ -346,7 +346,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+@@ -348,7 +348,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
          child: Column(
            mainAxisAlignment: MainAxisAlignment.center,
            children: [
@@ -17,7 +17,7 @@ index cb95e9d12..a681630d0 100644
              const SizedBox(height: AppConstants.spacingXl),
              Text(
                'No Favorites Yet',
-@@ -414,69 +413,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+@@ -416,69 +415,6 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
    }
  }
  

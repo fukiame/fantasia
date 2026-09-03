@@ -6,10 +6,10 @@ Subject: [PATCH] ererere
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 6816bd633..967305fde 100644
+index d6e4bc8ff..7cb78d0d8 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -363,7 +363,9 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -358,7 +358,9 @@ class AnimatedSongScene extends StatelessWidget {
    Widget _buildTopChrome(BuildContext context) {
      return Padding(
        padding: EdgeInsets.symmetric(

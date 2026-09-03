@@ -6,10 +6,10 @@ Subject: [PATCH] lib: recap: drop kofi notice
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
-index 8adc2fe86..479f2fd38 100644
+index ed3a35470..b7042a206 100644
 --- a/lib/features/recap/screens/listening_recap_screen.dart
 +++ b/lib/features/recap/screens/listening_recap_screen.dart
-@@ -914,20 +914,6 @@ class _PosterBackgroundSelector extends StatelessWidget {
+@@ -915,20 +915,6 @@ class _PosterBackgroundSelector extends StatelessWidget {
              ),
            ],
          ),

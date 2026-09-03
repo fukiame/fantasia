@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: player layout: subt 2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index a4e10bfa3..0d3c410d8 100644
+index 9766d1011..8e97f8cb2 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -122,13 +122,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -123,13 +123,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
            ),
  	  if (playerScreenMode == PlayerScreenMode.immersive) ...[
            const SizedBox(height: AppConstants.spacingLg),
@@ -24,7 +24,7 @@ index a4e10bfa3..0d3c410d8 100644
                  value: appPrefs.immersiveTextScale,
                  displayValue: _percentLabel(appPrefs.immersiveTextScale),
                  min: 0.82,
-@@ -231,7 +230,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -232,7 +231,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
  	  ],
  	  if (playerScreenMode == PlayerScreenMode.artworkCard) ...[
            const SizedBox(height: AppConstants.spacingLg),
@@ -32,7 +32,7 @@ index a4e10bfa3..0d3c410d8 100644
            SettingsCard(
              children: [
                SliderSetting(
-@@ -253,7 +251,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -254,7 +252,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                SliderSetting(
                  icon: LucideIcons.type,
                  title: 'Text Size',

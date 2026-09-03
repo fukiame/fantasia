@@ -195,7 +195,7 @@ index 047b69f85..000000000
 -        android:pathData="M16.5,3c-1.74,0 -3.41,0.81 -4.5,2.09C10.91,3.81 9.24,3 7.5,3 4.42,3 2,5.42 2,8.5c0,3.78 3.4,6.86 8.55,11.54L12,21.35l1.45,-1.32C18.6,15.36 22,12.28 22,8.5 22,5.42 19.58,3 16.5,3zM12.1,18.55l-0.1,0.1 -0.1,-0.1C7.14,14.24 4,11.39 4,8.5 4,6.5 5.5,5 7.5,5c1.54,0 3.04,0.99 3.57,2.36h1.87C13.46,5.99 14.96,5 16.5,5c2,0 3.5,1.5 3.5,3.5 0,2.89 -3.14,5.74 -7.9,10.05z"/>
 -</vector>
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 4d2ffb2d0..ba0d61a6e 100644
+index 5a58d4c07..bdd53d11d 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
 @@ -16,7 +16,6 @@ import 'package:flick/features/albums/screens/albums_screen.dart';
@@ -204,9 +204,9 @@ index 4d2ffb2d0..ba0d61a6e 100644
  import 'package:flick/features/playlists/screens/playlists_screen.dart';
 -import 'package:flick/features/favorites/screens/favorites_screen.dart';
  import 'package:flick/features/search/screens/search_screen.dart';
+ import 'package:flick/core/navigation/root_navigator.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
- import 'package:flick/core/constants/app_constants.dart';
-@@ -643,9 +642,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -717,9 +716,6 @@ class _MainShellState extends ConsumerState<MainShell>
        NavBarButton.playlists => const PlaylistsScreen(
          key: ValueKey('playlists'),
        ),
@@ -218,10 +218,10 @@ index 4d2ffb2d0..ba0d61a6e 100644
    }
 diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
 deleted file mode 100644
-index a681630d0..000000000
+index f802ac46a..000000000
 --- a/lib/features/favorites/screens/favorites_screen.dart
 +++ /dev/null
-@@ -1,552 +0,0 @@
+@@ -1,553 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -234,6 +234,7 @@ index a681630d0..000000000
 -import 'package:flick/services/player_service.dart';
 -import 'package:flick/services/favorites_service.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -import 'package:flick/widgets/common/surface_icon_button.dart';
 -import 'package:flick/providers/providers.dart';
 -import 'package:flick/features/player/widgets/ambient_background.dart';
@@ -368,6 +369,7 @@ index a681630d0..000000000
 -
 -  void _showLongPressSheet(Song song) {
 -    showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (_) => Container(
@@ -765,17 +767,16 @@ index a681630d0..000000000
 -  }
 -
 -  Widget _buildPlaceholder(BuildContext context) {
--    return Center(
--      child: Icon(
--        LucideIcons.music,
--        color: context.adaptiveTextTertiary,
--        size: context.responsiveIcon(AppConstants.iconSizeLg),
+-    return Container(
+-      color: AppColors.surfaceLight,
+-      child: const Center(
+-        child: FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -      ),
 -    );
 -  }
 -}
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index b2da91322..7e3950803 100644
+index a2f5d4e4b..3828e3b04 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -10,7 +10,6 @@ import 'package:flick/core/utils/responsive.dart';
@@ -786,7 +787,7 @@ index b2da91322..7e3950803 100644
  import 'package:flick/features/folders/screens/folders_screen.dart';
  import 'package:flick/features/playlists/screens/playlist_detail_screen.dart';
  import 'package:flick/features/playlists/screens/playlists_screen.dart';
-@@ -57,7 +56,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -59,7 +58,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      _isRefreshing = true;
      _refreshController.repeat();
      ref.invalidate(songsProvider);
@@ -794,7 +795,7 @@ index b2da91322..7e3950803 100644
      ref.invalidate(playlistsProvider);
      _refreshController.stop();
      _refreshController.animateBack(
-@@ -77,26 +75,21 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -79,26 +77,21 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    @override
    Widget build(BuildContext context) {
      final songsAsync = ref.watch(songsProvider);
@@ -821,7 +822,7 @@ index b2da91322..7e3950803 100644
              playlistsAsync.isLoading);
  
      return Scaffold(
-@@ -118,7 +111,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -120,7 +113,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                        child: _buildHeader(
                          context,
                          songCount: allSongs.length,
@@ -829,7 +830,7 @@ index b2da91322..7e3950803 100644
                          playlistCount: playlists.length,
                        ),
                      ),
-@@ -150,7 +142,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -152,7 +144,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                              child: _buildQuickAccessGrid(
                                context,
                                homeData: homeData,
@@ -837,7 +838,7 @@ index b2da91322..7e3950803 100644
                                playlistCount: playlists.length,
                              ),
                            ),
-@@ -304,7 +295,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -306,7 +297,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    Widget _buildHeader(
      BuildContext context, {
      required int songCount,
@@ -845,7 +846,7 @@ index b2da91322..7e3950803 100644
      required int playlistCount,
    }) {
      return Padding(
-@@ -330,7 +320,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -332,7 +322,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                  ),
                  const SizedBox(height: AppConstants.spacingXs),
                  Text(
@@ -854,7 +855,7 @@ index b2da91322..7e3950803 100644
                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                      color: context.adaptiveTextSecondary,
                      height: 1.45,
-@@ -365,19 +355,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -367,19 +357,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    Widget _buildQuickAccessGrid(
      BuildContext context, {
      required _MenuHomeData homeData,
@@ -874,7 +875,7 @@ index b2da91322..7e3950803 100644
        _QuickAccessItem(
          title: 'Playlists',
          subtitle: playlistCount == 0
-@@ -473,7 +453,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -475,7 +455,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
    _MenuHomeData _buildHomeData({
      required List<Song> allSongs,
@@ -882,7 +883,7 @@ index b2da91322..7e3950803 100644
      required List<Playlist> playlists,
    }) {
      final songById = {for (final song in allSongs) song.id: song};
-@@ -495,7 +474,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -497,7 +476,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
      return _MenuHomeData(
        playlistPreviews: playlistPreviews,
@@ -890,7 +891,7 @@ index b2da91322..7e3950803 100644
      );
    }
  
-@@ -590,7 +568,7 @@ class _MenuLoadingState extends StatelessWidget {
+@@ -592,7 +570,7 @@ class _MenuLoadingState extends StatelessWidget {
            ),
            const SizedBox(height: AppConstants.spacingXs),
            Text(
@@ -899,7 +900,7 @@ index b2da91322..7e3950803 100644
              textAlign: TextAlign.center,
              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                color: context.adaptiveTextTertiary,
-@@ -1025,11 +1003,9 @@ class _BrowseChip extends StatelessWidget {
+@@ -1027,11 +1005,9 @@ class _BrowseChip extends StatelessWidget {
  
  class _MenuHomeData {
    final List<_PlaylistPreview> playlistPreviews;
@@ -1140,10 +1141,10 @@ index 9cd68cc33..483e8f15c 100644
            SettingsCard(
              children: [
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 75082a99d..eaa61a395 100644
+index 4a9bb6ed6..6583259a7 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -447,9 +447,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -448,9 +448,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                    onQueued: () async {
                      await _queueSong(song);
                    },
@@ -1153,7 +1154,7 @@ index 75082a99d..eaa61a395 100644
                    child: _SongListTile(
                      song: song,
                      isSelected: isSelected,
-@@ -1169,31 +1166,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1170,31 +1167,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
      );
    }
  
@@ -1185,7 +1186,7 @@ index 75082a99d..eaa61a395 100644
    void _enterSelectionMode(String? songId) {
      setState(() {
        _selectionMode = true;
-@@ -1238,32 +1210,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1239,32 +1211,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
      }
    }
  
@@ -1218,7 +1219,7 @@ index 75082a99d..eaa61a395 100644
    List<Song> _selectedSongs() {
      final ids = _selectedIds;
      return _cachedDisplaySongs.where((s) => ids.contains(s.id)).toList();
-@@ -1916,14 +1862,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1919,14 +1865,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
              onPressed: count > 0 ? () => _queueSelected() : null,
              tooltip: 'Add to queue',
            ),
@@ -1233,7 +1234,7 @@ index 75082a99d..eaa61a395 100644
            IconButton(
              icon: Icon(
                LucideIcons.listMusic,
-@@ -2028,13 +1966,11 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -2032,13 +1970,11 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
  class _QueueSwipeListItem extends StatefulWidget {
    final Widget child;
    final Future<void> Function() onQueued;
@@ -1247,7 +1248,7 @@ index 75082a99d..eaa61a395 100644
      this.swipeActionsEnabled = false,
    });
  
-@@ -2185,14 +2121,12 @@ class _SongListTile extends StatelessWidget {
+@@ -2181,14 +2117,12 @@ class _SongListTile extends StatelessWidget {
  class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
    double _dragDx = 0;
    bool _queuedFlash = false;
@@ -1262,7 +1263,7 @@ index 75082a99d..eaa61a395 100644
  
      return Stack(
        children: [
-@@ -2204,26 +2138,12 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+@@ -2200,26 +2134,12 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
                  begin: Alignment.centerLeft,
                  end: Alignment.centerRight,
                  colors: [
@@ -1289,7 +1290,7 @@ index 75082a99d..eaa61a395 100644
              ),
              child: Padding(
                padding: const EdgeInsets.symmetric(
-@@ -2231,14 +2151,6 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+@@ -2227,14 +2147,6 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
                ),
                child: Row(
                  children: [
@@ -1304,7 +1305,7 @@ index 75082a99d..eaa61a395 100644
                    const Spacer(),
                    Opacity(
                      opacity: queueRevealProgress,
-@@ -2276,28 +2188,10 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+@@ -2272,28 +2184,10 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
              }
            },
            onHorizontalDragEnd: (details) async {
@@ -1333,7 +1334,7 @@ index 75082a99d..eaa61a395 100644
              if (shouldQueue) {
                setState(() {
                  _dragDx = 0;
-@@ -2330,18 +2224,16 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+@@ -2326,18 +2220,16 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
              offset: Offset(_dragDx / 360, 0),
              child: AnimatedScale(
                duration: AppConstants.animationFast,
@@ -1356,10 +1357,10 @@ index 75082a99d..eaa61a395 100644
                              blurRadius: 18,
                              spreadRadius: 1,
 diff --git a/lib/features/songs/widgets/song_actions_bottom_sheet.dart b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
-index ed6432431..07a144370 100644
+index 970b8153e..c735c0956 100644
 --- a/lib/features/songs/widgets/song_actions_bottom_sheet.dart
 +++ b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
-@@ -15,7 +15,7 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
+@@ -17,7 +17,7 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
  import 'package:flick/widgets/common/glass_bottom_sheet.dart';
  import 'package:lucide_icons_flutter/lucide_icons.dart';
  
@@ -1368,7 +1369,7 @@ index ed6432431..07a144370 100644
  class SongActionsBottomSheet extends ConsumerWidget {
    final Song song;
    final BuildContext rootContext;
-@@ -50,8 +50,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
+@@ -53,8 +53,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
  
    @override
    Widget build(BuildContext context, WidgetRef ref) {
@@ -1377,7 +1378,7 @@ index ed6432431..07a144370 100644
      return SingleChildScrollView(
        child: Column(
          mainAxisSize: MainAxisSize.min,
-@@ -59,22 +57,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
+@@ -62,22 +60,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
            _buildDragHandle(),
            const SizedBox(height: AppConstants.spacingMd),
            _buildSongHeader(context),
@@ -1401,10 +1402,10 @@ index ed6432431..07a144370 100644
              _buildActionTile(
                context: context,
 diff --git a/lib/features/songs/widgets/song_card.dart b/lib/features/songs/widgets/song_card.dart
-index 5da0fe4bb..b723bdf7d 100644
+index a28b66663..6ec0e3983 100644
 --- a/lib/features/songs/widgets/song_card.dart
 +++ b/lib/features/songs/widgets/song_card.dart
-@@ -30,7 +30,7 @@ class SongCard extends StatefulWidget {
+@@ -31,7 +31,7 @@ class SongCard extends StatefulWidget {
    /// Callback when the card is swiped right.
    final VoidCallback? onSwipeRight;
  
@@ -1413,7 +1414,7 @@ index 5da0fe4bb..b723bdf7d 100644
    final bool swipeActionsEnabled;
  
    /// Whether multiselect mode is active.
-@@ -76,7 +76,6 @@ class SongCard extends StatefulWidget {
+@@ -77,7 +77,6 @@ class SongCard extends StatefulWidget {
  class _SongCardState extends State<SongCard> {
    double _dragDx = 0;
    bool _queuedFlash = false;
@@ -1421,7 +1422,7 @@ index 5da0fe4bb..b723bdf7d 100644
  
    @override
    Widget build(BuildContext context) {
-@@ -87,7 +86,7 @@ class _SongCardState extends State<SongCard> {
+@@ -88,7 +87,7 @@ class _SongCardState extends State<SongCard> {
      const cardHeight = 130.0;
  
      final isSwiping = _dragDx.abs() > 0.001;
@@ -1430,7 +1431,7 @@ index 5da0fe4bb..b723bdf7d 100644
      final showSwipeOverlay = isSwiping || isFlashing;
  
      GestureDragUpdateCallback? dragUpdate;
-@@ -104,27 +103,10 @@ class _SongCardState extends State<SongCard> {
+@@ -105,27 +104,10 @@ class _SongCardState extends State<SongCard> {
        };
        dragEnd = (details) {
          unawaited(() async {
@@ -1458,7 +1459,7 @@ index 5da0fe4bb..b723bdf7d 100644
            if (shouldQueue) {
              setState(() {
                _dragDx = 0;
-@@ -232,10 +214,9 @@ class _SongCardState extends State<SongCard> {
+@@ -233,10 +215,9 @@ class _SongCardState extends State<SongCard> {
  
    Widget _buildSwipeStack(double cardWidth, double artSize) {
      final queueProgress = (-_dragDx / 110).clamp(0.0, 1.0);
@@ -1471,7 +1472,7 @@ index 5da0fe4bb..b723bdf7d 100644
          .withValues(alpha: 0.25);
  
      return Stack(
-@@ -249,33 +230,17 @@ class _SongCardState extends State<SongCard> {
+@@ -250,33 +231,17 @@ class _SongCardState extends State<SongCard> {
                  begin: Alignment.centerLeft,
                  end: Alignment.centerRight,
                  colors: [
@@ -1980,7 +1981,7 @@ index 91a5c5579..989273dcc 100644
  
        await _channel.invokeMethod('updateNotification', args);
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 31666d531..3fe28830d 100644
+index 1d7e2ef3e..a1a5286e3 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -19,7 +19,6 @@ import 'package:flick/services/bluetooth_service.dart';
@@ -2018,7 +2019,7 @@ index 31666d531..3fe28830d 100644
      );
      _sessionManager.selectedModeNotifier.addListener(() {
        unawaited(
-@@ -2140,10 +2133,6 @@ class PlayerService {
+@@ -2281,10 +2274,6 @@ class PlayerService {
      return song != null && !song.isExternal;
    }
  
@@ -2029,7 +2030,7 @@ index 31666d531..3fe28830d 100644
    void _clearReplayTracking() {
      _replayPlayTracker.clear();
    }
-@@ -2410,28 +2399,10 @@ class PlayerService {
+@@ -2551,28 +2540,10 @@ class PlayerService {
      return _updateNotificationState();
    }
  
@@ -2058,7 +2059,7 @@ index 31666d531..3fe28830d 100644
      int? notificationColor;
      try {
        final colorMode = await _albumColorModePreferenceService.getMode();
-@@ -2463,7 +2434,6 @@ class PlayerService {
+@@ -2604,7 +2575,6 @@ class PlayerService {
        duration: durationNotifier.value,
        position: positionNotifier.value,
        isShuffle: isShuffleNotifier.value,

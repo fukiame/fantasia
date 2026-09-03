@@ -6,7 +6,7 @@ Subject: [PATCH] drop url_launcher
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 28f3d0631..e530bc720 100644
+index bf7afe998..e530bc720 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
@@ -17,14 +17,13 @@ index 28f3d0631..e530bc720 100644
  import 'package:flick/core/theme/app_colors.dart';
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/features/settings/screens/privacy_policy_screen.dart';
-@@ -105,17 +104,14 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
+@@ -105,16 +104,14 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
            Row(
              mainAxisAlignment: MainAxisAlignment.center,
              children: [
 -              TextButton.icon(
--                onPressed: () => _launchUrl(
--                  'https://github.com/moss-apps/Flick',
--                ),
+-                onPressed: () =>
+-                    _launchUrl('https://github.com/moss-apps/Flick'),
 -                icon: const Icon(LucideIcons.squareCode, size: 18),
 -                label: const Text(
 -                  'GitHub',
@@ -43,7 +42,7 @@ index 28f3d0631..e530bc720 100644
                  ),
                ),
              ],
-@@ -183,26 +179,6 @@ SOFTWARE.
+@@ -182,26 +179,6 @@ SOFTWARE.
      );
    }
  

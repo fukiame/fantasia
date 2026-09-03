@@ -6,10 +6,10 @@ Subject: [PATCH] squ
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/album_art_box.dart b/lib/features/player/widgets/album_art_box.dart
-index 63ba6a3dd..dfde8a81f 100644
+index f61d170d9..0417e751a 100644
 --- a/lib/features/player/widgets/album_art_box.dart
 +++ b/lib/features/player/widgets/album_art_box.dart
-@@ -326,9 +326,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -327,9 +327,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
      _rotationRecognizer.discCenter = () =>
          Offset(resolvedSize / 2, resolvedSize / 2);
  

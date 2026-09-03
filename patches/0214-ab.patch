@@ -6,10 +6,10 @@ Subject: [PATCH] ab
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
-index 2d4ed9d74..7d5841e2c 100644
+index 6c28e41c7..a7909143c 100644
 --- a/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
 +++ b/lib/features/songs/widgets/album_art_picker_bottom_sheet.dart
-@@ -67,7 +67,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -68,7 +68,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
    void initState() {
      super.initState();
      _hasCustomArtwork = _service.isCustomArtworkPath(widget.song.albumArt);
@@ -17,7 +17,7 @@ index 2d4ed9d74..7d5841e2c 100644
    }
  
    AlbumArtCandidate? get _selectedCandidate {
-@@ -78,46 +77,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -79,46 +78,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
      return _candidates[_selectedCandidateIndex];
    }
  
@@ -64,7 +64,7 @@ index 2d4ed9d74..7d5841e2c 100644
    Future<void> _pickLocalImage() async {
      if (_isWorking) {
        return;
-@@ -157,28 +116,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -158,28 +117,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
      }
    }
  
@@ -93,7 +93,7 @@ index 2d4ed9d74..7d5841e2c 100644
    Future<void> _removeCustomArtwork() async {
      if (_isWorking) {
        return;
-@@ -303,14 +240,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -304,14 +241,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
                        ],
                      ),
                    ),
@@ -108,7 +108,7 @@ index 2d4ed9d74..7d5841e2c 100644
                  ],
                ),
                const SizedBox(height: AppConstants.spacingSm),
-@@ -345,7 +274,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -346,7 +275,7 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
                    ),
                    if (selectedCandidate != null)
                      OutlinedButton.icon(
@@ -117,7 +117,7 @@ index 2d4ed9d74..7d5841e2c 100644
                        icon: const Icon(LucideIcons.check, size: 18),
                        label: const Text('Apply Selected'),
                      ),
-@@ -357,30 +286,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -358,30 +287,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
                      ),
                  ],
                ),
@@ -148,7 +148,7 @@ index 2d4ed9d74..7d5841e2c 100644
              ],
            ),
          ),
-@@ -460,135 +365,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
+@@ -461,135 +366,6 @@ class _AlbumArtPickerBottomSheetState extends State<AlbumArtPickerBottomSheet> {
      );
    }
  

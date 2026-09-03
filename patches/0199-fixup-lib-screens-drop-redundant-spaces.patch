@@ -8,10 +8,10 @@ after dropping lance
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index 0627c2df5..e8f0042bf 100644
+index d245319c5..76aad7ed8 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -241,7 +241,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -242,7 +242,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
                ),
              ],
            ),
@@ -20,10 +20,10 @@ index 0627c2df5..e8f0042bf 100644
        ),
      );
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 28618080f..abc583fa0 100644
+index 52fdacbdb..f147f837d 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -298,7 +298,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -299,7 +299,6 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
                },
              ),
            ),

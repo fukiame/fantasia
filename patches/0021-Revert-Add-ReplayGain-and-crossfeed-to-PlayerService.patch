@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add ReplayGain and crossfeed to PlayerService"
 This reverts commit 6a86de55062e1cc4c245fe7620ad68f81c7e403e.
 
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index c7edf518f..b28507390 100644
+index 9c12854e7..164c9280c 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -23,7 +23,6 @@ import 'package:flick/services/equalizer_service.dart';
@@ -49,7 +49,7 @@ index c7edf518f..b28507390 100644
    Future<void> _loadFloatingPlayerPreference() async {
      final enabled = await _appPreferencesService.getFloatingPlayerEnabled();
      if (enabled) {
-@@ -1885,24 +1866,20 @@ class PlayerService {
+@@ -2026,24 +2007,20 @@ class PlayerService {
        await setVolume(1.0);
      } else {
        await _reconcileSystemVolumeBoost(
@@ -78,7 +78,7 @@ index c7edf518f..b28507390 100644
          ? AndroidJustAudioProcessingService.volumeToBoostMb(effectiveVolume)
          : 0;
      if (desiredMb == _currentBoostMb) return;
-@@ -2696,11 +2673,6 @@ class PlayerService {
+@@ -2837,11 +2814,6 @@ class PlayerService {
              state.currentTrack!,
              initialPosition: state.position,
            );
@@ -90,7 +90,7 @@ index c7edf518f..b28507390 100644
            unawaited(
              _syncUac2PlaybackStatus(
                state.currentTrack,
-@@ -3584,13 +3556,6 @@ class PlayerService {
+@@ -3725,13 +3697,6 @@ class PlayerService {
      }
  
      await reapplyEqualizer();
@@ -104,7 +104,7 @@ index c7edf518f..b28507390 100644
      await _rustAudioService.setPitchShiftSemitones(
        pitchSemitonesNotifier.value,
      );
-@@ -4117,16 +4082,10 @@ class PlayerService {
+@@ -4258,16 +4223,10 @@ class PlayerService {
          );
          if (_usingRustBackend) {
            await _applyRustPlaybackProcessingPolicy(activeEngine);
@@ -121,7 +121,7 @@ index c7edf518f..b28507390 100644
          _ensurePositionSaveTimer();
          _updatePriorityAnchor();
          if (_shouldQueueNextTrack && _playlist.length > 1) {
-@@ -4186,9 +4145,6 @@ class PlayerService {
+@@ -4327,9 +4286,6 @@ class PlayerService {
          final http = await RemoteSourceService.instance
              .resolveHttpPlayback(nextSong);
          if (http != null) {
@@ -131,7 +131,7 @@ index c7edf518f..b28507390 100644
            await _rustAudioService.queueNextHttp(
              url: http.url,
              headers: http.headers,
-@@ -4202,9 +4158,6 @@ class PlayerService {
+@@ -4343,9 +4299,6 @@ class PlayerService {
  
      final nextPath = await _resolveRustPath(nextSong);
      if (nextPath != null) {
@@ -141,7 +141,7 @@ index c7edf518f..b28507390 100644
        await _rustAudioService.queueNext(nextPath);
      }
    }
-@@ -4932,14 +4885,12 @@ class PlayerService {
+@@ -5073,14 +5026,12 @@ class PlayerService {
          break;
        case VolumeTier.system:
          final player = _justAudioPlayer;
@@ -160,7 +160,7 @@ index c7edf518f..b28507390 100644
          break;
        case VolumeTier.unavailable:
          _debugLog(
-@@ -4950,97 +4901,6 @@ class PlayerService {
+@@ -5091,97 +5042,6 @@ class PlayerService {
      }
    }
  

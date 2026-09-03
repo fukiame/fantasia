@@ -33,14 +33,13 @@ index 3905fbd42..dbc9fd153 100644
                      onPrevious: _animateToPreviousSong,
 diff --git a/lib/features/player/widgets/player_layout_sheet.dart b/lib/features/player/widgets/player_layout_sheet.dart
 deleted file mode 100644
-index 9e7f7dc67..000000000
+index 052c23eae..000000000
 --- a/lib/features/player/widgets/player_layout_sheet.dart
 +++ /dev/null
-@@ -1,1356 +0,0 @@
+@@ -1,1358 +0,0 @@
 -import 'dart:async';
 -import 'dart:math' as math;
 -import 'package:flutter/material.dart';
--import 'package:lucide_icons_flutter/lucide_icons.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
 -import 'package:flick/core/theme/app_colors.dart';
 -import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -52,6 +51,7 @@ index 9e7f7dc67..000000000
 -import 'package:flick/models/player_action_button.dart';
 -import 'package:flick/providers/providers.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -
 -class PlayerLayoutSheet extends ConsumerStatefulWidget {
 -  final PlayerService playerService;
@@ -75,6 +75,7 @@ index 9e7f7dc67..000000000
 -    required Song? song,
 -  }) {
 -    return showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      isScrollControlled: true,
 -      backgroundColor: Colors.transparent,
@@ -1075,10 +1076,11 @@ index 9e7f7dc67..000000000
 -          colors: [Color(0xFF4B3D7A), Color(0xFF111111)],
 -        ),
 -      ),
--      child: Icon(
--        LucideIcons.music,
--        color: Colors.white.withValues(alpha: 0.62),
--        size: size.isFinite ? math.max(18, size * 0.38) : 64,
+-      child: Center(
+-        child: FlickArtworkPlaceholder(
+-          size: size.isFinite ? math.max(22, size * 0.42) : 72,
+-          opacity: 0.9,
+-        ),
 -      ),
 -    );
 -  }
@@ -1394,10 +1396,10 @@ index 9e7f7dc67..000000000
 -  }
 -}
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index ffada77c8..91f558a33 100644
+index c0fd54a7a..15acb6f0d 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
-@@ -23,7 +23,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -24,7 +24,6 @@ class SongActionsSheet extends ConsumerWidget {
    final PlayerService playerService;
    final Song song;
    final VoidCallback onShowLyrics;
@@ -1405,7 +1407,7 @@ index ffada77c8..91f558a33 100644
    final PlayerNavigation navigation;
  
    const SongActionsSheet({
-@@ -32,7 +31,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -33,7 +32,6 @@ class SongActionsSheet extends ConsumerWidget {
      required this.playerService,
      required this.song,
      required this.onShowLyrics,
@@ -1413,7 +1415,7 @@ index ffada77c8..91f558a33 100644
      required this.navigation,
    });
  
-@@ -41,7 +39,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -42,7 +40,6 @@ class SongActionsSheet extends ConsumerWidget {
      required PlayerService playerService,
      required Song song,
      required VoidCallback onShowLyrics,
@@ -1421,7 +1423,7 @@ index ffada77c8..91f558a33 100644
      required PlayerNavigation navigation,
    }) {
      return showModalBottomSheet(
-@@ -53,7 +50,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -55,7 +52,6 @@ class SongActionsSheet extends ConsumerWidget {
          playerService: playerService,
          song: song,
          onShowLyrics: onShowLyrics,
@@ -1429,7 +1431,7 @@ index ffada77c8..91f558a33 100644
          navigation: navigation,
        ),
      );
-@@ -283,15 +279,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -280,15 +276,6 @@ class SongActionsSheet extends ConsumerWidget {
                                navigation.openAlbumFromSong(context, activeSong);
                              },
                            ),

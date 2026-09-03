@@ -6,14 +6,15 @@ Subject: [PATCH] Revert "Add loading indicator to mini player play button"
 This reverts commit e0ac4c03e8be50f7c42a2907a59c137247b1b050.
 
 diff --git a/lib/features/player/widgets/mini_player.dart b/lib/features/player/widgets/mini_player.dart
-index 38f095046..05f58e111 100644
+index db087ee3b..28e59cf0c 100644
 --- a/lib/features/player/widgets/mini_player.dart
 +++ b/lib/features/player/widgets/mini_player.dart
-@@ -260,60 +260,39 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
+@@ -279,69 +279,39 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
  
                        // Play/Pause button with circular background
                        ValueListenableBuilder<bool>(
--                        valueListenable: _playerService.isNetworkLoadingNotifier,
+-                        valueListenable:
+-                            _playerService.isNetworkLoadingNotifier,
 -                        builder: (context, isLoading, _) {
 -                          if (isLoading) {
 -                            return Container(
@@ -52,12 +53,16 @@ index 38f095046..05f58e111 100644
 -                                decoration: BoxDecoration(
 -                                  shape: BoxShape.circle,
 -                                  color: isPlaying
--                                    ? AppColors.accent.withValues(alpha: 0.15)
--                                    : AppColors.glassBackgroundStrong,
+-                                      ? AppColors.accent.withValues(alpha: 0.15)
+-                                      : AppColors.glassBackgroundStrong,
 -                                  border: Border.all(
 -                                    color: isPlaying
--                                      ? AppColors.accent.withValues(alpha: 0.3)
--                                      : AppColors.glassBorder.withValues(alpha: 0.2),
+-                                        ? AppColors.accent.withValues(
+-                                            alpha: 0.3,
+-                                          )
+-                                        : AppColors.glassBorder.withValues(
+-                                            alpha: 0.2,
+-                                          ),
 -                                  ),
 -                                ),
 -                                child: Material(
@@ -71,8 +76,12 @@ index 38f095046..05f58e111 100644
 -                                    child: Padding(
 -                                      padding: const EdgeInsets.all(10.0),
 -                                      child: Icon(
--                                        isPlaying ? LucideIcons.pause : LucideIcons.play,
--                                        color: isPlaying ? AppColors.accentLight : AppColors.textPrimary,
+-                                        isPlaying
+-                                            ? LucideIcons.pause
+-                                            : LucideIcons.play,
+-                                        color: isPlaying
+-                                            ? AppColors.accentLight
+-                                            : AppColors.textPrimary,
 -                                        size: 20,
 -                                      ),
 -                                    ),

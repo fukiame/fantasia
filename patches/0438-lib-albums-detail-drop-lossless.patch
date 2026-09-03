@@ -8,10 +8,10 @@ one song lossless = entire album lossless, ok
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 73531a226..195073eba 100644
+index e1935aca5..5fba7f114 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -114,17 +114,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -115,17 +115,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      return null;
    }
  
@@ -29,7 +29,7 @@ index 73531a226..195073eba 100644
    Future<void> _extractAlbumColor() async {
      String? source = widget.albumArt;
      if (source == null || source.isEmpty) {
-@@ -252,11 +241,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -253,11 +242,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
                              icon: LucideIcons.tags,
                              label: _albumGenre!,
                            ),

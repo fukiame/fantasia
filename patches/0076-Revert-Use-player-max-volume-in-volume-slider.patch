@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Use player max volume in volume slider"
 This reverts commit b161cfd8544bbf401b73fda1399c7136983f918f.
 
 diff --git a/lib/features/player/widgets/volume_bottom_sheet.dart b/lib/features/player/widgets/volume_bottom_sheet.dart
-index a0acbc6cc..e0e4f6852 100644
+index c96d84ace..78c40465f 100644
 --- a/lib/features/player/widgets/volume_bottom_sheet.dart
 +++ b/lib/features/player/widgets/volume_bottom_sheet.dart
-@@ -17,8 +17,7 @@ class VolumeBottomSheet extends StatelessWidget {
+@@ -18,8 +18,7 @@ class VolumeBottomSheet extends StatelessWidget {
  
    @override
    Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ index a0acbc6cc..e0e4f6852 100644
      final isAvailable = playerService.isVolumeAvailable;
      double currentVolume = initialVolume;
      return StatefulBuilder(
-@@ -77,8 +76,8 @@ class VolumeBottomSheet extends StatelessWidget {
+@@ -78,8 +77,8 @@ class VolumeBottomSheet extends StatelessWidget {
                      child: Slider(
                        value: currentVolume,
                        min: 0.0,

@@ -6,10 +6,10 @@ Subject: [PATCH] lib: song sel: when complete yeet offstage
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 685e0367a..c45c09dc8 100644
+index 915a08d10..5d531425d 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -2985,6 +2985,7 @@ class _AlbumLoadMoreIndicator extends StatelessWidget {
+@@ -2981,6 +2981,7 @@ class _AlbumLoadMoreIndicator extends StatelessWidget {
  
    @override
    Widget build(BuildContext context) {

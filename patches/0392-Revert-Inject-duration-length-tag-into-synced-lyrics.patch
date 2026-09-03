@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Inject duration length tag into synced lyrics"
 This reverts commit 02ccd2e9e7915720fa898a662706f78a30c3b627.
 
 diff --git a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
-index d1ac6f202..79f047da8 100644
+index 106eeaec0..cf5ed3a4e 100644
 --- a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
 +++ b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
-@@ -388,7 +388,6 @@ class _LyricsEditorBottomSheetState extends State<LyricsEditorBottomSheet> {
+@@ -389,7 +389,6 @@ class _LyricsEditorBottomSheetState extends State<LyricsEditorBottomSheet> {
        final lrcContent = widget.lyricsService.buildLrcContent(
          lines: normalizedLines,
          song: widget.song,

@@ -6,10 +6,10 @@ Subject: [PATCH] treewide: drop streaks and milestones
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index bf43a3a88..468b32975 100644
+index 68af33e82..bf980c441 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -36,12 +36,9 @@ import 'package:flick/models/song.dart';
+@@ -38,12 +38,9 @@ import 'package:flick/models/song.dart';
  import 'package:flick/services/library_scanner_service.dart';
  import 'package:flick/services/player_service.dart';
  import 'package:flick/services/app_preferences_service.dart';
@@ -22,7 +22,7 @@ index bf43a3a88..468b32975 100644
  import 'package:flick/core/utils/dev_log.dart';
  
  /// Main application widget for Flick Player.
-@@ -201,9 +198,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -208,9 +205,6 @@ class _MainShellState extends ConsumerState<MainShell>
        _previousSong = nextSong;
      });
  
@@ -32,7 +32,7 @@ index bf43a3a88..468b32975 100644
      ref.listenManual<NavBarConfig>(navBarConfigProvider, (previous, next) {
        if (previous == null || !mounted) return;
        final currentPageIndex = ref.read(navigationIndexProvider);
-@@ -298,7 +292,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -305,7 +299,6 @@ class _MainShellState extends ConsumerState<MainShell>
          ref.read(tutorialProvider.notifier).start();
        }
  
@@ -40,7 +40,7 @@ index bf43a3a88..468b32975 100644
      });
  
      _playerService.playbackDesyncedNotifier.addListener(
-@@ -337,78 +330,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -344,78 +337,6 @@ class _MainShellState extends ConsumerState<MainShell>
      }
    }
  
@@ -119,7 +119,7 @@ index bf43a3a88..468b32975 100644
    void _onPlaybackDesyncChanged() {
      if (!mounted) return;
      final desynced = _playerService.playbackDesyncedNotifier.value;
-@@ -470,8 +391,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -477,8 +398,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _playerService.playbackDesyncedNotifier.removeListener(
        _onPlaybackDesyncChanged,
      );
@@ -130,10 +130,10 @@ index bf43a3a88..468b32975 100644
      _navBarAlwaysVisibleSubscription.close();
 diff --git a/lib/features/milestone/screens/milestones_screen.dart b/lib/features/milestone/screens/milestones_screen.dart
 deleted file mode 100644
-index d21a4b5cc..000000000
+index b084a7b28..000000000
 --- a/lib/features/milestone/screens/milestones_screen.dart
 +++ /dev/null
-@@ -1,886 +0,0 @@
+@@ -1,887 +0,0 @@
 -import 'dart:math' as math;
 -
 -import 'package:flutter/material.dart';
@@ -392,6 +392,7 @@ index d21a4b5cc..000000000
 -    final unit = remaining == 1 ? type.category.unitSingular : type.unit;
 -    if (!mounted) return;
 -    await showModalBottomSheet<void>(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      isScrollControlled: false,
@@ -1845,12 +1846,12 @@ index b70978719..ac874b306 100644
                  icon: LucideIcons.navigation,
                  title: 'Bottom Bar',
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 4bc0c58ad..fae110d0a 100644
+index 469e0ae11..48a0f5869 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -16,9 +16,7 @@ import 'package:flick/features/settings/screens/player_layout_settings_screen.da
- import 'package:flick/features/settings/screens/widget_settings_screen.dart';
+@@ -17,9 +17,7 @@ import 'package:flick/features/settings/screens/widget_settings_screen.dart';
  import 'package:flick/features/settings/screens/support_flick_screen.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/features/settings/widgets/settings_widgets.dart';
 -import 'package:flick/features/milestone/screens/milestones_screen.dart';
  import 'package:flick/features/manual/screens/manual_screen.dart';
@@ -1858,7 +1859,7 @@ index 4bc0c58ad..fae110d0a 100644
  
  class SettingsScreen extends StatefulWidget {
    const SettingsScreen({super.key});
-@@ -28,26 +26,15 @@ class SettingsScreen extends StatefulWidget {
+@@ -29,26 +27,15 @@ class SettingsScreen extends StatefulWidget {
  }
  
  class _SettingsScreenState extends State<SettingsScreen> {
@@ -1885,7 +1886,7 @@ index 4bc0c58ad..fae110d0a 100644
    }
  
    @override
-@@ -220,20 +207,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -221,20 +208,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                      _buildSectionHeader(context, 'About'),
                      SettingsCard(
                        children: [
@@ -2517,7 +2518,7 @@ index 496f3c631..000000000
 -}
 \ No newline at end of file
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index ae64a8d75..7215be9df 100644
+index 4108b1ac7..5c202722b 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -26,7 +26,6 @@ import 'package:flick/data/repositories/recently_played_repository.dart';
@@ -2542,7 +2543,7 @@ index ae64a8d75..7215be9df 100644
    bool get _usingRustBackend => usingRustBackendNotifier.value;
    set _usingRustBackend(bool value) => usingRustBackendNotifier.value = value;
    bool _rustBackendAvailable = false;
-@@ -2347,38 +2339,6 @@ class PlayerService {
+@@ -2488,38 +2480,6 @@ class PlayerService {
      _replayPlayTracker.clear();
    }
  
@@ -2581,7 +2582,7 @@ index ae64a8d75..7215be9df 100644
    void _trackReplayProgress(Duration position) {
      final song = currentSongNotifier.value;
      if (song == null) {
-@@ -2397,7 +2357,6 @@ class PlayerService {
+@@ -2538,7 +2498,6 @@ class PlayerService {
      );
      if (counted && _shouldPersistSong(song)) {
        unawaited(_recentlyPlayedRepository.recordPlay(song.id));

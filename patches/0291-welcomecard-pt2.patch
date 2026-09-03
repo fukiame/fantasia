@@ -6,10 +6,10 @@ Subject: [PATCH] welcomecard pt2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 21708708a..8baa2b955 100644
+index d2afd41c5..ab9ba1712 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -54,33 +54,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -55,33 +55,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    bool _isHistoryLoading = true;
    Color? _heroDominantColor;
    String? _heroColorArtPath;
@@ -43,7 +43,7 @@ index 21708708a..8baa2b955 100644
      _refreshController = AnimationController(
        duration: const Duration(milliseconds: 600),
        vsync: this,
-@@ -93,7 +72,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -94,7 +73,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
    @override
    void dispose() {

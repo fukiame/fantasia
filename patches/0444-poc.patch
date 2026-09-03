@@ -6,10 +6,10 @@ Subject: [PATCH] poc
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index ba0d61a6e..c2ec38aec 100644
+index bdd53d11d..900da52f9 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -526,11 +526,8 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -533,11 +533,8 @@ class _MainShellState extends ConsumerState<MainShell>
  
                  // Persistent Background - always on for all bottom-bar screens
                  Positioned.fill(

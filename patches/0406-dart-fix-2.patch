@@ -6,10 +6,10 @@ Subject: [PATCH] dart fix 2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 2a10cd14f..2ec9f1e5a 100644
+index 3360ed94f..24e4a0e3b 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -1271,8 +1271,7 @@ class _BrowseChip extends StatelessWidget {
+@@ -1267,8 +1267,7 @@ class _BrowseChip extends StatelessWidget {
      required this.icon,
      required this.label,
      required this.onTap,
@@ -20,19 +20,18 @@ index 2a10cd14f..2ec9f1e5a 100644
    @override
    Widget build(BuildContext context) {
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 0162d0b0f..6aadc698a 100644
+index ff47603a0..85f69944a 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -13,8 +13,6 @@ import 'package:flick/models/album_color_mode.dart';
- import 'package:flick/services/player_service.dart';
+@@ -14,7 +14,6 @@ import 'package:flick/services/player_service.dart';
  import 'package:flick/features/player/widgets/album_color_helpers.dart';
  import 'package:flick/features/player/widgets/ambient_background.dart';
--import 'package:flick/features/player/widgets/bit_perfect_indicator.dart';
+ import 'package:flick/features/player/widgets/bit_perfect_indicator.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
  import 'package:flick/features/player/widgets/album_art_box.dart';
  import 'package:flick/features/player/widgets/waveform_layer.dart';
- import 'package:flick/features/player/widgets/player_controls.dart';
-@@ -95,7 +93,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -96,7 +95,7 @@ class AnimatedSongScene extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
      final direction = transitionDirection >= 0 ? 1.0 : -1.0;

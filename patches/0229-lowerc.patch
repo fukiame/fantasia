@@ -6,10 +6,10 @@ Subject: [PATCH] lowerc
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index 50f9e5164..ab7d0749c 100644
+index 2e491fe46..ee89585d3 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -218,7 +218,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -219,7 +219,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(
@@ -19,10 +19,10 @@ index 50f9e5164..ab7d0749c 100644
                            ?.copyWith(
                              fontWeight: FontWeight.w700,
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index d47d14f1f..64c6c687a 100644
+index 34ce14d30..a6c0e95f0 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -247,7 +247,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -248,7 +248,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(
@@ -32,10 +32,10 @@ index d47d14f1f..64c6c687a 100644
                            ?.copyWith(
                              fontWeight: FontWeight.w700,
 diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
-index b57635fc0..cb95e9d12 100644
+index db5a03b52..33c5427ad 100644
 --- a/lib/features/favorites/screens/favorites_screen.dart
 +++ b/lib/features/favorites/screens/favorites_screen.dart
-@@ -297,7 +297,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+@@ -299,7 +299,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -45,10 +45,10 @@ index b57635fc0..cb95e9d12 100644
                          fontWeight: FontWeight.w600,
                          color: context.adaptiveTextPrimary,
 diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
-index dafe75ffd..a47660bd5 100644
+index 5322db0f2..678b5422f 100644
 --- a/lib/features/folders/screens/folders_screen.dart
 +++ b/lib/features/folders/screens/folders_screen.dart
-@@ -314,7 +314,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
+@@ -316,7 +316,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -58,10 +58,10 @@ index dafe75ffd..a47660bd5 100644
                      fontWeight: FontWeight.w600,
                      color: context.adaptiveTextPrimary,
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index b5aa7c038..ffada77c8 100644
+index d767ae305..c0fd54a7a 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
-@@ -407,7 +407,7 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -405,7 +405,7 @@ class SongActionsSheet extends ConsumerWidget {
                const SizedBox(width: 12),
                Expanded(
                  child: Text(
@@ -71,10 +71,10 @@ index b5aa7c038..ffada77c8 100644
                      fontFamily: 'ProductSans',
                      fontSize: context.responsive(13.0, 14.0, 15.0),
 diff --git a/lib/features/playlists/screens/playlists_screen.dart b/lib/features/playlists/screens/playlists_screen.dart
-index 0269fbd0a..811e31746 100644
+index d69fdabb5..6450e4e0a 100644
 --- a/lib/features/playlists/screens/playlists_screen.dart
 +++ b/lib/features/playlists/screens/playlists_screen.dart
-@@ -81,16 +81,14 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -82,16 +82,14 @@ class PlaylistsScreen extends ConsumerWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -94,10 +94,10 @@ index 0269fbd0a..811e31746 100644
                      color: context.adaptiveTextTertiary,
                    ),
 diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
-index ec7b8f07f..a7d2d7b27 100644
+index 3cfc8f244..f6461ab16 100644
 --- a/lib/features/queue/screens/queue_screen.dart
 +++ b/lib/features/queue/screens/queue_screen.dart
-@@ -338,7 +338,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+@@ -339,7 +339,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -106,7 +106,7 @@ index ec7b8f07f..a7d2d7b27 100644
                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                          fontWeight: FontWeight.w600,
                          color: context.adaptiveTextPrimary,
-@@ -357,7 +357,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+@@ -358,7 +358,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
              TextButton(
                onPressed: _selectAll,
                child: Text(
@@ -115,7 +115,7 @@ index ec7b8f07f..a7d2d7b27 100644
                  style: TextStyle(color: context.adaptiveTextSecondary),
                ),
              ),
-@@ -408,7 +408,7 @@ class _Header extends StatelessWidget {
+@@ -409,7 +409,7 @@ class _Header extends StatelessWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -124,7 +124,7 @@ index ec7b8f07f..a7d2d7b27 100644
                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                          fontWeight: FontWeight.w600,
                          color: context.adaptiveTextPrimary,
-@@ -455,7 +455,7 @@ class _EmptyQueue extends StatelessWidget {
+@@ -456,7 +456,7 @@ class _EmptyQueue extends StatelessWidget {
              ),
              const SizedBox(height: AppConstants.spacingLg),
              Text(
@@ -133,7 +133,7 @@ index ec7b8f07f..a7d2d7b27 100644
                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                      color: context.adaptiveTextSecondary,
                      fontWeight: FontWeight.w600,
-@@ -463,7 +463,7 @@ class _EmptyQueue extends StatelessWidget {
+@@ -464,7 +464,7 @@ class _EmptyQueue extends StatelessWidget {
              ),
              const SizedBox(height: AppConstants.spacingSm),
              Text(
@@ -142,7 +142,7 @@ index ec7b8f07f..a7d2d7b27 100644
                textAlign: TextAlign.center,
                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                      color: context.adaptiveTextTertiary,
-@@ -503,7 +503,7 @@ class _EmptyUpcomingState extends StatelessWidget {
+@@ -504,7 +504,7 @@ class _EmptyUpcomingState extends StatelessWidget {
              const SizedBox(width: AppConstants.spacingSm),
              Expanded(
                child: Text(
@@ -151,7 +151,7 @@ index ec7b8f07f..a7d2d7b27 100644
                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                        color: context.adaptiveTextSecondary,
                      ),
-@@ -546,7 +546,7 @@ class _NowPlayingCard extends StatelessWidget {
+@@ -547,7 +547,7 @@ class _NowPlayingCard extends StatelessWidget {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -160,7 +160,7 @@ index ec7b8f07f..a7d2d7b27 100644
                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                          color: AppColors.accent,
                          fontWeight: FontWeight.w700,
-@@ -839,11 +839,11 @@ class _QueueTile extends StatelessWidget {
+@@ -840,11 +840,11 @@ class _QueueTile extends StatelessWidget {
                        if (onMoveToNext != null)
                          const PopupMenuItem(
                            value: _QueueAction.playNext,
@@ -175,10 +175,10 @@ index ec7b8f07f..a7d2d7b27 100644
                      ],
                      icon: Icon(
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 2466d66a9..34c8902ec 100644
+index beba3636a..6f766e19f 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -184,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -185,7 +185,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(
@@ -188,10 +188,10 @@ index 2466d66a9..34c8902ec 100644
                      fontWeight: FontWeight.w600,
                      color: context.adaptiveTextPrimary,
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 3fbadd24d..fc86f8bf8 100644
+index e4e53d25c..caccace0a 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -3149,7 +3149,7 @@ class _ContentStateWidget extends StatelessWidget {
+@@ -3145,7 +3145,7 @@ class _ContentStateWidget extends StatelessWidget {
            ),
            const SizedBox(height: AppConstants.spacingLg),
            Text(
@@ -200,7 +200,7 @@ index 3fbadd24d..fc86f8bf8 100644
              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                color: context.adaptiveTextSecondary,
                fontWeight: FontWeight.w600,
-@@ -3157,7 +3157,7 @@ class _ContentStateWidget extends StatelessWidget {
+@@ -3153,7 +3153,7 @@ class _ContentStateWidget extends StatelessWidget {
            ),
            const SizedBox(height: AppConstants.spacingSm),
            Text(

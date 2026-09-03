@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: playout: raise
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 0d3c410d8..0c040f483 100644
+index 8e97f8cb2..5d7c768ba 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -238,9 +238,9 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -239,9 +239,9 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                  subtitle: 'Scale the album art card',
                  value: appPrefs.artworkCardArtworkScale,
                  displayValue: _percentLabel(appPrefs.artworkCardArtworkScale),

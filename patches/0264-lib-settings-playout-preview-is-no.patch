@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: playout: preview is no
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index f5be1881f..1e9db7ddd 100644
+index 7ac152967..08ef49e35 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -32,66 +32,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -33,66 +33,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
        body: Column(
          crossAxisAlignment: CrossAxisAlignment.start,
          children: [
@@ -76,7 +76,7 @@ index f5be1881f..1e9db7ddd 100644
            const SettingsSectionHeader('Layout Mode'),
            SettingsCard(
              children: [
-@@ -468,112 +408,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -469,112 +409,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
        ),
      );
    }
@@ -189,7 +189,7 @@ index f5be1881f..1e9db7ddd 100644
  }
  
  String _fileInfoLabel(Song? song) {
-@@ -584,287 +418,6 @@ String _fileInfoLabel(Song? song) {
+@@ -585,287 +419,6 @@ String _fileInfoLabel(Song? song) {
    return type;
  }
  
@@ -477,7 +477,7 @@ index f5be1881f..1e9db7ddd 100644
  class _AlbumArtThumb extends StatelessWidget {
    const _AlbumArtThumb({
      required this.song,
-@@ -970,228 +523,3 @@ class _ActionButtonPickerScreen extends ConsumerWidget {
+@@ -967,228 +520,3 @@ class _ActionButtonPickerScreen extends ConsumerWidget {
      );
    }
  }

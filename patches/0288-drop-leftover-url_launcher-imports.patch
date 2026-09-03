@@ -6,7 +6,7 @@ Subject: [PATCH] drop leftover url_launcher imports
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 5d4e82cc4..21708708a 100644
+index b9ec07eea..d2afd41c5 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -4,7 +4,6 @@ import 'dart:math' as math;
@@ -18,11 +18,11 @@ index 5d4e82cc4..21708708a 100644
  import 'package:flick/core/theme/adaptive_color_provider.dart';
  import 'package:flick/core/theme/app_colors.dart';
 diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
-index 31fd0c9fd..ff732ee76 100644
+index b18cda32b..79e661859 100644
 --- a/lib/features/recap/screens/listening_recap_screen.dart
 +++ b/lib/features/recap/screens/listening_recap_screen.dart
-@@ -15,7 +15,6 @@ import 'package:flick/services/gallery_save_service.dart';
- import 'package:flick/widgets/common/cached_image_widget.dart';
+@@ -16,7 +16,6 @@ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
  import 'package:lucide_icons_flutter/lucide_icons.dart';
  import 'package:permission_handler/permission_handler.dart';
 -import 'package:url_launcher/url_launcher.dart';

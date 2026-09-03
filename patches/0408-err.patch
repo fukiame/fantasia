@@ -6,10 +6,10 @@ Subject: [PATCH] err
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index e68c37b53..725a02fac 100644
+index e8820a08e..355f76503 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -20,7 +20,7 @@ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
+@@ -21,7 +21,7 @@ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
  import 'package:flick/providers/navigation_provider.dart';
  import 'package:flick/providers/app_preferences_provider.dart';
  
@@ -18,7 +18,7 @@ index e68c37b53..725a02fac 100644
  class AlbumDetailScreen extends ConsumerStatefulWidget {
    final String albumName;
    final String albumArtist;
-@@ -60,7 +60,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -61,7 +61,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    void initState() {
      super.initState();
      _scrollController.addListener(_onScroll);
@@ -26,7 +26,7 @@ index e68c37b53..725a02fac 100644
      _extractAlbumColor();
      WidgetsBinding.instance.addPostFrameCallback((_) {
        if (mounted) ref.read(navBarVisibleProvider.notifier).setVisible(true);
-@@ -82,62 +81,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -83,62 +82,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      }
    }
  
@@ -90,10 +90,10 @@ index e68c37b53..725a02fac 100644
      var total = Duration.zero;
      for (final song in widget.songs) {
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index fe5e26735..7236ec0d7 100644
+index 994fb35bf..a3ba4afb0 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
-@@ -100,7 +100,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -101,7 +101,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
      if (mounted) {
        setState(() {
          _artistAlbums = artistAlbums;

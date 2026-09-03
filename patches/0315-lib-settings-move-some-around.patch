@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: move some around
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index e1467decd..d517a76ee 100644
+index da457061d..0bc326b05 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -66,16 +66,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -67,16 +67,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                            onTap: () =>
                                _navigate(context, const QueueSettingsScreen()),
                          ),
@@ -31,7 +31,7 @@ index e1467decd..d517a76ee 100644
                          _CategoryTile(
                            title: 'Audio',
                            subtitle: 'UAC2 and equalizer',
-@@ -96,9 +91,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -97,9 +92,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                            ),
                          ),
                          const SettingsDivider(),

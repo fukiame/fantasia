@@ -6,10 +6,10 @@ Subject: [PATCH] lib: never stretch artworks
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index ab7d0749c..fd7578014 100644
+index ee89585d3..22e5604df 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -360,9 +360,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -361,9 +361,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
                    songs: album.songs,
                    albumArt: _getAlbumArt(album.songs),
                    albumArtSourcePath: _getArtworkSourcePath(album.songs),
@@ -19,7 +19,7 @@ index ab7d0749c..fd7578014 100644
                    onTap: () => _openAlbumDetail(album),
                  );
                },
-@@ -380,7 +377,6 @@ class _AlbumCard extends StatefulWidget {
+@@ -381,7 +378,6 @@ class _AlbumCard extends StatefulWidget {
    final List<Song> songs;
    final String? albumArt;
    final String? albumArtSourcePath;
@@ -27,7 +27,7 @@ index ab7d0749c..fd7578014 100644
    final VoidCallback onTap;
  
    const _AlbumCard({
-@@ -389,7 +385,6 @@ class _AlbumCard extends StatefulWidget {
+@@ -390,7 +386,6 @@ class _AlbumCard extends StatefulWidget {
      required this.songs,
      required this.albumArt,
      required this.albumArtSourcePath,
@@ -35,7 +35,7 @@ index ab7d0749c..fd7578014 100644
      required this.onTap,
    });
  
-@@ -435,9 +430,7 @@ class _AlbumCardState extends State<_AlbumCard>
+@@ -436,9 +431,7 @@ class _AlbumCardState extends State<_AlbumCard>
      // cacheWidth+cacheHeight forces the decoder to a square bitmap, which
      // distorts non-square art. Null height lets aspect ratio survive so
      // BoxFit.cover can crop.
@@ -76,10 +76,10 @@ index 38a88279f..8dfbf6f1a 100644
          ],
        ),
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index c45c09dc8..6cf66e62f 100644
+index 5d531425d..525ef33ff 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -595,9 +595,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -596,9 +596,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                              scale: 1.0 + pinchDelta * 0.04,
                              child: _AlbumCard(
                                album: album,
@@ -89,7 +89,7 @@ index c45c09dc8..6cf66e62f 100644
                                onTap: () => _openAlbumDetail(album),
                              ),
                            ),
-@@ -671,9 +668,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -672,9 +669,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
            padding: const EdgeInsets.only(bottom: AppConstants.spacingSm),
            child: _AlbumListTile(
              album: album,
@@ -99,7 +99,7 @@ index c45c09dc8..6cf66e62f 100644
              onTap: () => _openAlbumDetail(album),
            ),
          );
-@@ -2373,12 +2367,10 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
+@@ -2369,12 +2363,10 @@ class _QueueSwipeListItemState extends State<_QueueSwipeListItem> {
  
  class _AlbumCard extends StatefulWidget {
    final AlbumGroup album;
@@ -112,7 +112,7 @@ index c45c09dc8..6cf66e62f 100644
      required this.onTap,
    });
  
-@@ -2495,9 +2487,7 @@ class _AlbumCardState extends State<_AlbumCard>
+@@ -2491,9 +2483,7 @@ class _AlbumCardState extends State<_AlbumCard>
                                      fit: BoxFit.cover,
                                      useThumbnail: true,
                                      thumbnailWidth: artworkTargetWidth,
@@ -123,7 +123,7 @@ index c45c09dc8..6cf66e62f 100644
                                      placeholder: _buildPlaceholder(context),
                                      errorWidget: _buildPlaceholder(context),
                                    ),
-@@ -2612,12 +2602,10 @@ class _AlbumCardState extends State<_AlbumCard>
+@@ -2608,12 +2598,10 @@ class _AlbumCardState extends State<_AlbumCard>
  
  class _AlbumListTile extends StatelessWidget {
    final AlbumGroup album;
@@ -136,7 +136,7 @@ index c45c09dc8..6cf66e62f 100644
      required this.onTap,
    });
  
-@@ -2679,7 +2667,7 @@ class _AlbumListTile extends StatelessWidget {
+@@ -2675,7 +2663,7 @@ class _AlbumListTile extends StatelessWidget {
                      fit: BoxFit.cover,
                      useThumbnail: true,
                      thumbnailWidth: 104,

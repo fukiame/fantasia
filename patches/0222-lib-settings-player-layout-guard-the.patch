@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: player layout: guard the
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 11e2d8db8..a4e10bfa3 100644
+index 3c88b940c..9766d1011 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -120,6 +120,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -121,6 +121,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ),
              ],
            ),
@@ -17,7 +17,7 @@ index 11e2d8db8..a4e10bfa3 100644
            const SizedBox(height: AppConstants.spacingLg),
            const SettingsSectionHeader('Immersive'),
            SettingsCard(
-@@ -227,6 +228,8 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -228,6 +229,8 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ),
              ],
            ),
@@ -26,7 +26,7 @@ index 11e2d8db8..a4e10bfa3 100644
            const SizedBox(height: AppConstants.spacingLg),
            const SettingsSectionHeader('Artwork Card'),
            SettingsCard(
-@@ -356,6 +359,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -357,6 +360,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ),
              ],
            ),

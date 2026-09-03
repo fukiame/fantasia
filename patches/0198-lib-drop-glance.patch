@@ -6,10 +6,10 @@ Subject: [PATCH] lib: drop glance
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index c1138b243..0627c2df5 100644
+index 6fcc521a6..d245319c5 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -242,119 +242,8 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -243,119 +243,8 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
              ],
            ),
            const SizedBox(height: AppConstants.spacingLg),
@@ -130,10 +130,10 @@ index c1138b243..0627c2df5 100644
    }
  
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index 8fdf428d8..28618080f 100644
+index 74f46b75b..52fdacbdb 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -299,125 +299,8 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+@@ -300,125 +300,8 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
              ),
            ),
            const SizedBox(height: AppConstants.spacingMd),

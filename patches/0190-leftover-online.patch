@@ -50,10 +50,10 @@ index fabab23b0..35c666ea5 100644
                icon: LucideIcons.refreshCcw,
 diff --git a/lib/features/player/widgets/online_lyrics_search_sheet.dart b/lib/features/player/widgets/online_lyrics_search_sheet.dart
 deleted file mode 100644
-index b04ccd4b9..000000000
+index 7dc96a434..000000000
 --- a/lib/features/player/widgets/online_lyrics_search_sheet.dart
 +++ /dev/null
-@@ -1,1263 +0,0 @@
+@@ -1,1264 +0,0 @@
 -import 'dart:math' as math;
 -
 -import 'package:flutter/material.dart';
@@ -81,6 +81,7 @@ index b04ccd4b9..000000000
 -    required LyricsService lyricsService,
 -  }) {
 -    return showModalBottomSheet<bool>(
+-      useRootNavigator: true,
 -      context: context,
 -      isScrollControlled: true,
 -      backgroundColor: Colors.transparent,
@@ -1318,10 +1319,10 @@ index b04ccd4b9..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/widgets/autoeq_search_sheet.dart b/lib/features/settings/screens/widgets/autoeq_search_sheet.dart
-index e6400d730..614ebdb77 100644
+index 52f155480..c08e7474e 100644
 --- a/lib/features/settings/screens/widgets/autoeq_search_sheet.dart
 +++ b/lib/features/settings/screens/widgets/autoeq_search_sheet.dart
-@@ -40,7 +40,6 @@ class _AutoEqSearchSheetState extends State<_AutoEqSearchSheet> {
+@@ -41,7 +41,6 @@ class _AutoEqSearchSheetState extends State<_AutoEqSearchSheet> {
    String? _brand;
    AutoEqEntry? _selected;
    bool _loading = true;
@@ -1329,7 +1330,7 @@ index e6400d730..614ebdb77 100644
  
    @override
    void initState() {
-@@ -87,45 +86,6 @@ class _AutoEqSearchSheetState extends State<_AutoEqSearchSheet> {
+@@ -88,45 +87,6 @@ class _AutoEqSearchSheetState extends State<_AutoEqSearchSheet> {
      Navigator.of(context).pop(entry);
    }
  
@@ -1375,7 +1376,7 @@ index e6400d730..614ebdb77 100644
    void _toast(String message) {
      if (!mounted) return;
      ScaffoldMessenger.of(context)
-@@ -396,22 +356,8 @@ class _AutoEqSearchSheetState extends State<_AutoEqSearchSheet> {
+@@ -397,22 +357,8 @@ class _AutoEqSearchSheetState extends State<_AutoEqSearchSheet> {
        child: Column(
          mainAxisSize: MainAxisSize.min,
          children: [

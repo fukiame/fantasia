@@ -6,10 +6,10 @@ Subject: [PATCH] quet
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 7033f4469..6816bd633 100644
+index b7b1d8b28..d6e4bc8ff 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -550,9 +550,10 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -545,9 +545,10 @@ class AnimatedSongScene extends StatelessWidget {
              size: context.responsive(12.0, 13.0, 14.0),
              color: Colors.white.withValues(alpha: highlighted ? 0.96 : 0.7),
            ),
@@ -21,7 +21,7 @@ index 7033f4469..6816bd633 100644
              style: TextStyle(
                fontFamily: 'ProductSans',
                fontSize: context.responsive(10.0, 11.0, 12.0),
-@@ -560,6 +561,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -555,6 +556,7 @@ class AnimatedSongScene extends StatelessWidget {
                color: Colors.white.withValues(alpha: highlighted ? 0.96 : 0.8),
              ),
            ),

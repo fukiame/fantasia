@@ -6,10 +6,10 @@ Subject: [PATCH] flutter analyze 2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 80744984b..8142a5966 100644
+index 8724bc330..122d0f6be 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -47,7 +47,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -48,7 +48,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    static const Color _darkBase = Color(0xFF121212);
    static const double _backgroundBlend = 0.22;
  
@@ -17,7 +17,7 @@ index 80744984b..8142a5966 100644
    final ColorExtractionService _colorService = ColorExtractionService();
  
    final ScrollController _scrollController = ScrollController();
-@@ -80,10 +79,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -81,10 +80,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      }
    }
  
@@ -29,10 +29,10 @@ index 80744984b..8142a5966 100644
      var total = Duration.zero;
      for (final song in widget.songs) {
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 6daaf0fac..9c41b90f2 100644
+index 99a9f8bdd..d56202785 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -35,9 +35,6 @@ class MenuScreen extends ConsumerStatefulWidget {
+@@ -37,9 +37,6 @@ class MenuScreen extends ConsumerStatefulWidget {
  
  class _MenuScreenState extends ConsumerState<MenuScreen>
      with TickerProviderStateMixin {
@@ -42,7 +42,7 @@ index 6daaf0fac..9c41b90f2 100644
    bool _isRefreshing = false;
    late final AnimationController _refreshController;
  
-@@ -557,19 +554,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -559,19 +556,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      final trimmed = rawArtist.trim();
      return trimmed.isEmpty ? 'Unknown Artist' : trimmed;
    }
@@ -62,7 +62,7 @@ index 6daaf0fac..9c41b90f2 100644
  }
  
  class _MenuLoadingState extends StatelessWidget {
-@@ -1050,22 +1034,6 @@ class _MenuHomeData {
+@@ -1052,22 +1036,6 @@ class _MenuHomeData {
    });
  }
  
@@ -86,7 +86,7 @@ index 6daaf0fac..9c41b90f2 100644
    final Playlist playlist;
    final String? coverArtPath;
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 0ecc4cd92..dd35c35e4 100644
+index f4566845c..7bcd324e9 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -616,9 +616,6 @@ class AnimatedSongScene extends StatelessWidget {
@@ -100,7 +100,7 @@ index 0ecc4cd92..dd35c35e4 100644
  
      return Column(
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index 9b6a4b1d4..c1dc0eea0 100644
+index 2735ca032..46009a8ac 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -31,7 +31,6 @@ class BitPerfectIndicator extends ConsumerWidget {
@@ -111,7 +111,7 @@ index 9b6a4b1d4..c1dc0eea0 100644
  
      final state = _resolveState(
        diagnostics,
-@@ -245,7 +244,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -246,7 +245,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
  
    @override
    Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ index 9b6a4b1d4..c1dc0eea0 100644
      final colorMode = ref.watch(albumColorModeProvider);
      final dominantColor = ref.watch(albumDominantColorSyncProvider);
      final Color? albumColor =
-@@ -322,7 +320,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -323,7 +321,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
                        child: _buildPageView(
                          context,
                          albumColor: albumColor,
@@ -127,7 +127,7 @@ index 9b6a4b1d4..c1dc0eea0 100644
                          expanded: _isExpanded,
                        ),
                      ),
-@@ -777,7 +774,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -778,7 +775,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
    Widget _buildPageView(
      BuildContext context, {
      required Color? albumColor,
@@ -162,10 +162,10 @@ index e7bce358e..4ce057bf2 100644
    }
  
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 1e35e08c9..75082a99d 100644
+index 49b1e6403..4a9bb6ed6 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -127,9 +127,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -128,9 +128,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
        NavBarButton.search,
      );
  

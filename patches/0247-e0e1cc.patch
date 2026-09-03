@@ -6,10 +6,10 @@ Subject: [PATCH] e0e1cc
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index a047eaa3a..abc2841c4 100644
+index 6e6758efa..8f645e3a2 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
-@@ -825,9 +825,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -826,9 +826,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      final bytes = _seededBytes(song.filePath ?? song.id, 16);
  
      const stageColors = [
@@ -22,7 +22,7 @@ index a047eaa3a..abc2841c4 100644
      ];
  
      final stages = <_FlowStageData>[
-@@ -901,11 +901,11 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -902,11 +902,11 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
          .toInt();
  
      const stageColors = [

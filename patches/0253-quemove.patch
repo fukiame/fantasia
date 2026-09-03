@@ -6,10 +6,10 @@ Subject: [PATCH] quemove
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
-index a7d2d7b27..b9909a928 100644
+index f6461ab16..036c0bac4 100644
 --- a/lib/features/queue/screens/queue_screen.dart
 +++ b/lib/features/queue/screens/queue_screen.dart
-@@ -428,9 +428,6 @@ class _Header extends StatelessWidget {
+@@ -429,9 +429,6 @@ class _Header extends StatelessWidget {
              onPressed: onSelectMode,
              iconColor: context.adaptiveTextPrimary,
            ),

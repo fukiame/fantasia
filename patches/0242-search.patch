@@ -6,10 +6,10 @@ Subject: [PATCH] search
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/search/screens/search_screen.dart b/lib/features/search/screens/search_screen.dart
-index d84fab03c..e158389a4 100644
+index 3f9e18be9..4d393fb7d 100644
 --- a/lib/features/search/screens/search_screen.dart
 +++ b/lib/features/search/screens/search_screen.dart
-@@ -90,7 +90,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
+@@ -91,7 +91,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                    color: context.adaptiveTextPrimary,
                  ),
                  decoration: InputDecoration(
@@ -18,7 +18,7 @@ index d84fab03c..e158389a4 100644
                    hintStyle: TextStyle(
                      color: context.adaptiveTextTertiary,
                      fontFamily: 'ProductSans',
-@@ -158,24 +158,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
+@@ -159,24 +159,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
              size: 48,
              color: context.adaptiveTextTertiary.withValues(alpha: 0.4),
            ),

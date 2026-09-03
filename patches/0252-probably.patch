@@ -6,10 +6,10 @@ Subject: [PATCH] probably
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 0c040f483..f5be1881f 100644
+index 5d7c768ba..7ac152967 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -957,6 +957,7 @@ class _ActionButtonPickerScreen extends ConsumerWidget {
+@@ -954,6 +954,7 @@ class _ActionButtonPickerScreen extends ConsumerWidget {
                        onSelected(action);
                        Navigator.of(context).pop();
                      },

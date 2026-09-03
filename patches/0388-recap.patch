@@ -607,7 +607,7 @@ index 37692717b..ced26e9b3 100644
 -  }
 -}
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 61e330b4e..accf3eedd 100644
+index 37496d41c..d31ca74f5 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -17,7 +17,6 @@ import 'package:flick/features/folders/screens/folders_screen.dart';
@@ -618,7 +618,7 @@ index 61e330b4e..accf3eedd 100644
  import 'package:flick/features/songs/screens/songs_screen.dart';
  import 'package:flick/models/playlist.dart';
  import 'package:flick/models/song.dart';
-@@ -45,7 +44,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -47,7 +46,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
    StreamSubscription<void>? _historySubscription;
    List<RecentlyPlayedEntry> _recentEntries = const [];
@@ -626,7 +626,7 @@ index 61e330b4e..accf3eedd 100644
    bool _isHistoryLoading = true;
    Color? _heroDominantColor;
    String? _heroColorArtPath;
-@@ -105,25 +103,16 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -107,25 +105,16 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        final recentEntries = await _recentlyPlayedRepository.getRecentHistory(
          limit: 240,
        );
@@ -652,7 +652,7 @@ index 61e330b4e..accf3eedd 100644
          _isHistoryLoading = false;
        });
      }
-@@ -193,7 +182,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -195,7 +184,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        favoriteSongs: favoriteSongs,
        playlists: playlists,
        recentEntries: _recentEntries,
@@ -660,7 +660,7 @@ index 61e330b4e..accf3eedd 100644
      );
  
      final isInitialLoading =
-@@ -334,7 +322,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -336,7 +324,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                                    horizontal: AppConstants.spacingLg,
                                  ),
                                  scrollDirection: Axis.horizontal,
@@ -669,7 +669,7 @@ index 61e330b4e..accf3eedd 100644
                                  separatorBuilder: (_, _) => const SizedBox(
                                    width: AppConstants.spacingSm,
                                  ),
-@@ -378,15 +366,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -380,15 +368,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                                          const QueueScreen(),
                                        ),
                                      ),
@@ -685,7 +685,7 @@ index 61e330b4e..accf3eedd 100644
                                      _ => _BrowseChip(
                                        icon: LucideIcons.users,
                                        label: 'Artists',
-@@ -592,7 +571,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -594,7 +573,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      required List<Song> favoriteSongs,
      required List<Playlist> playlists,
      required List<RecentlyPlayedEntry> recentEntries,
@@ -695,10 +695,10 @@ index 61e330b4e..accf3eedd 100644
      final songsByArtist = <String, List<Song>>{};
 diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
 deleted file mode 100644
-index 2301b585d..000000000
+index af0af4c62..000000000
 --- a/lib/features/recap/screens/listening_recap_screen.dart
 +++ /dev/null
-@@ -1,2511 +0,0 @@
+@@ -1,2503 +0,0 @@
 -import 'dart:async';
 -import 'dart:math' as math;
 -import 'dart:typed_data';
@@ -713,6 +713,7 @@ index 2301b585d..000000000
 -import 'package:flick/data/repositories/recently_played_repository.dart';
 -import 'package:flick/services/gallery_save_service.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
 -
 -/// Wrapped-style listening recap with daily, weekly, monthly, and yearly views.
@@ -2363,22 +2364,14 @@ index 2301b585d..000000000
 -          child: imagePath == null || imagePath!.isEmpty
 -              ? ColoredBox(
 -                  color: Colors.white.withValues(alpha: 0.1),
--                  child: Icon(
--                    Icons.music_note_rounded,
--                    size: 62,
--                    color: Colors.white.withValues(alpha: 0.78),
--                  ),
+-                  child: const FlickArtworkPlaceholder(size: 80, opacity: 0.9),
 -                )
 -              : CachedImageWidget(
 -                  imagePath: imagePath,
 -                  fit: BoxFit.cover,
 -                  errorWidget: ColoredBox(
 -                    color: Colors.white.withValues(alpha: 0.1),
--                    child: Icon(
--                      Icons.music_note_rounded,
--                      size: 62,
--                      color: Colors.white.withValues(alpha: 0.78),
--                    ),
+-                    child: const FlickArtworkPlaceholder(size: 80, opacity: 0.9),
 -                  ),
 -                ),
 -        ),
@@ -2980,10 +2973,9 @@ index 2301b585d..000000000
 -        child: imagePath == null || imagePath!.isEmpty
 -            ? Container(
 -                color: Colors.white.withValues(alpha: 0.08),
--                child: Icon(
--                  Icons.music_note_rounded,
--                  size: size * 0.34,
--                  color: Colors.white.withValues(alpha: 0.78),
+-                child: FlickArtworkPlaceholder(
+-                  size: size * 0.38,
+-                  opacity: 0.9,
 -                ),
 -              )
 -            : CachedImageWidget(imagePath: imagePath!, fit: BoxFit.cover),

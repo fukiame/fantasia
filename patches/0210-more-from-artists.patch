@@ -6,10 +6,10 @@ Subject: [PATCH] more(from)artists
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 17b48760d..146f7aa96 100644
+index bcee64bc9..85669699d 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -406,72 +406,11 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -407,72 +407,11 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
                      }, childCount: widget.songs.length),
                    ),
                  ),
@@ -85,10 +85,10 @@ index 17b48760d..146f7aa96 100644
                ),
                ),
 diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
-index abc583fa0..d47d14f1f 100644
+index f147f837d..34ce14d30 100644
 --- a/lib/features/artists/screens/artists_screen.dart
 +++ b/lib/features/artists/screens/artists_screen.dart
-@@ -622,29 +622,6 @@ class _ArtistSortSheet extends ConsumerWidget {
+@@ -623,29 +623,6 @@ class _ArtistSortSheet extends ConsumerWidget {
                ...ArtistSortOption.values.map(
                  (option) => _buildSortTile(context, option),
                ),

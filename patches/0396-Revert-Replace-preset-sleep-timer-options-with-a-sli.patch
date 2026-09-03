@@ -7,7 +7,7 @@ Subject: [PATCH] Revert "Replace preset sleep timer options with a slider for
 This reverts commit 6f1602dc160ce4a57ac4b1203de4ed69818c8ee8.
 
 diff --git a/lib/features/player/widgets/sleep_timer_bottom_sheet.dart b/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
-index c49589ee9..b2d23ef4c 100644
+index 5dc652cf6..68f79b01a 100644
 --- a/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
 +++ b/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
 @@ -4,7 +4,7 @@ import 'package:flick/core/theme/app_colors.dart';
@@ -19,7 +19,7 @@ index c49589ee9..b2d23ef4c 100644
    final PlayerService playerService;
    const SleepTimerBottomSheet({super.key, required this.playerService});
  
-@@ -16,18 +16,15 @@ class SleepTimerBottomSheet extends StatefulWidget {
+@@ -17,18 +17,15 @@ class SleepTimerBottomSheet extends StatefulWidget {
      );
    }
  
@@ -45,7 +45,7 @@ index c49589ee9..b2d23ef4c 100644
      return Container(
        decoration: BoxDecoration(
          color: AppColors.surface,
-@@ -61,28 +58,26 @@ class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
+@@ -62,28 +59,26 @@ class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
                    ),
                  ],
                ),
@@ -88,7 +88,7 @@ index c49589ee9..b2d23ef4c 100644
              builder: (context, remaining, _) {
                if (remaining != null) {
                  return Padding(
-@@ -125,59 +120,39 @@ class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
+@@ -126,59 +121,39 @@ class _SleepTimerBottomSheetState extends State<SleepTimerBottomSheet> {
                return const SizedBox.shrink();
              },
            ),

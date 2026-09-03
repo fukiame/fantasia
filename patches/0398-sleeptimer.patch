@@ -362,10 +362,10 @@ index 2c9dcaf57..d3ab70dd4 100644
      required EdgeInsets actionPadding,
      required double actionRadius,
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index f47d31d16..4842a2a00 100644
+index 9ff9a316b..6abc93574 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
-@@ -12,7 +12,6 @@ import 'package:flick/features/songs/widgets/album_art_picker_bottom_sheet.dart'
+@@ -13,7 +13,6 @@ import 'package:flick/features/songs/widgets/album_art_picker_bottom_sheet.dart'
  import 'package:flick/providers/providers.dart';
  import 'package:flick/features/player/widgets/song_metadata_sheet.dart';
  import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
@@ -544,7 +544,7 @@ index 3c5747ff3..5d1c824af 100644
 -  return ref.watch(playerProvider.select((state) => state.sleepTimerRemaining));
 -});
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 60e430114..2312ba4c5 100644
+index 8773281d1..3c03c0a21 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -453,13 +453,6 @@ class PlayerService {
@@ -561,7 +561,7 @@ index 60e430114..2312ba4c5 100644
    // Playlist Management
    final List<Song> _playlist = [];
    final List<Song> _originalPlaylist = []; // For shuffle restore
-@@ -2590,7 +2583,6 @@ class PlayerService {
+@@ -2731,7 +2724,6 @@ class PlayerService {
        _debugLog('Stop failed: $e');
      }
      await _refreshAudioOutputDiagnostics(reason: 'playback stopped');
@@ -569,7 +569,7 @@ index 60e430114..2312ba4c5 100644
    }
  
    /// Build audio sources for the playlist (gapless playback).
-@@ -4639,39 +4631,6 @@ class PlayerService {
+@@ -4780,39 +4772,6 @@ class PlayerService {
      _debounceQueueChanged();
    }
  
@@ -609,7 +609,7 @@ index 60e430114..2312ba4c5 100644
    void _armAutoSyncGuard(Song song) {
      _autoSyncGuardSongId = song.id;
    }
-@@ -4787,7 +4746,6 @@ class PlayerService {
+@@ -4928,7 +4887,6 @@ class PlayerService {
      unawaited(_bluetoothDeviceEventSubscription?.cancel());
      unawaited(_usbDacDetachSubscription?.cancel());
      unawaited(_usbDacAttachSubscription?.cancel());
@@ -617,7 +617,7 @@ index 60e430114..2312ba4c5 100644
      _notificationService.hideNotification();
      if (_usingRustBackend) {
        if (Uac2PreferencesService.isKillIsochronousUsbOnQuitSync) {
-@@ -4828,7 +4786,6 @@ class PlayerService {
+@@ -4969,7 +4927,6 @@ class PlayerService {
      positionNotifier.dispose();
      durationNotifier.dispose();
      bufferedPositionNotifier.dispose();

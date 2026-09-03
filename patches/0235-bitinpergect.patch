@@ -6,10 +6,10 @@ Subject: [PATCH] bitinpergect
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index b081260d1..38da4c662 100644
+index 7fd12e1e1..f25443a19 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -394,7 +394,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -389,7 +389,7 @@ class AnimatedSongScene extends StatelessWidget {
                      mainAxisSize: MainAxisSize.min,
                      children: [
                        Text(
@@ -18,7 +18,7 @@ index b081260d1..38da4c662 100644
                          style: TextStyle(
                            fontFamily: 'ProductSans',
                            fontSize: context.responsive(12.0, 13.0, 14.0),
-@@ -406,7 +406,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -401,7 +401,7 @@ class AnimatedSongScene extends StatelessWidget {
                        if (fromLocker) ...[
                          SizedBox(height: context.responsive(2.0, 3.0, 4.0)),
                          Text(
@@ -28,10 +28,10 @@ index b081260d1..38da4c662 100644
                              fontFamily: 'ProductSans',
                              fontSize: context.responsive(10.0, 10.5, 11.0),
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index b2e362c47..b8fddffdf 100644
+index 97e5ae702..f4e54c3fa 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
-@@ -546,7 +546,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -547,7 +547,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      rows.add(
        _buildRow(
          context,
@@ -40,7 +40,7 @@ index b2e362c47..b8fddffdf 100644
          value: widget.song.isDsd
              ? '${widget.song.fileType.toUpperCase()} (${widget.song.dsdRateLabel})'
              : widget.song.fileType.toUpperCase(),
-@@ -555,7 +555,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -556,7 +556,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
  
      if (widget.song.resolution != null && !widget.song.isDsd) {
        rows.add(
@@ -49,7 +49,7 @@ index b2e362c47..b8fddffdf 100644
        );
      }
  
-@@ -563,7 +563,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -564,7 +564,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
        rows.add(
          _buildRow(
            context,
@@ -58,7 +58,7 @@ index b2e362c47..b8fddffdf 100644
            value: _formatHz(widget.song.sampleRate!),
          ),
        );
-@@ -579,7 +579,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -580,7 +580,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
        rows.add(
          _buildRow(
            context,
@@ -67,7 +67,7 @@ index b2e362c47..b8fddffdf 100644
            value: _formatHz(outRate),
            trailing: matches
                ? Icon(Icons.check_circle_rounded, size: 14, color: Colors.green.shade400)
-@@ -590,7 +590,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -591,7 +591,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
  
      final bitDepth = widget.deviceStatus?.currentFormat?.bitDepth ?? widget.song.bitDepth;
      if (bitDepth != null) {
@@ -76,7 +76,7 @@ index b2e362c47..b8fddffdf 100644
      }
  
      final channels = widget.deviceStatus?.currentFormat?.channels;
-@@ -598,7 +598,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -599,7 +599,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
        rows.add(
          _buildRow(
            context,
@@ -85,7 +85,7 @@ index b2e362c47..b8fddffdf 100644
            value: channels == 1 ? 'Mono' : channels == 2 ? 'Stereo' : '$channels ch',
          ),
        );
-@@ -606,12 +606,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -607,12 +607,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
  
      final backendDesc = d?.backendDescription;
      if (backendDesc != null && backendDesc.isNotEmpty) {
@@ -100,7 +100,7 @@ index b2e362c47..b8fddffdf 100644
      }
  
      final deviceLabel =
-@@ -619,12 +619,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -620,12 +620,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
          d?.outputDeviceLabel ??
          d?.detectedDapBrand;
      if (deviceLabel != null && deviceLabel.isNotEmpty) {
@@ -115,7 +115,7 @@ index b2e362c47..b8fddffdf 100644
      }
  
      final routeLabel = d?.routeLabel;
-@@ -632,12 +632,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -633,12 +633,12 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
        rows.add(
          _buildRow(
            context,
@@ -131,7 +131,7 @@ index b2e362c47..b8fddffdf 100644
                    : null,
          ),
        );
-@@ -647,8 +647,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -648,8 +648,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
        rows.add(
          _buildRow(
            context,
@@ -142,7 +142,7 @@ index b2e362c47..b8fddffdf 100644
            trailing: d.resamplerActive
                ? Icon(Icons.warning_amber_rounded, size: 14, color: Colors.amber.shade400)
                : Icon(Icons.check_circle_rounded, size: 14, color: Colors.green.shade400),
-@@ -660,8 +660,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -661,8 +661,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
        rows.add(
          _buildRow(
            context,
@@ -153,7 +153,7 @@ index b2e362c47..b8fddffdf 100644
            trailing: d.passthroughAllowed
                ? Icon(Icons.check_circle_rounded, size: 14, color: Colors.green.shade400)
                : Icon(Icons.block_rounded, size: 14, color: Colors.red.shade400),
-@@ -671,8 +671,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -672,8 +672,8 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
  
      if (d?.directUsbRegistered == true) {
        final usbParts = <String>[
@@ -164,7 +164,7 @@ index b2e362c47..b8fddffdf 100644
        ];
        if (usbParts.isNotEmpty) {
          rows.add(_buildRow(context, label: 'USB', value: usbParts.join(' · ')));
-@@ -682,21 +682,21 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -683,21 +683,21 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      final verification = d?.verificationReason;
      final fallback = d?.fallbackReason;
      if (verification != null && verification.isNotEmpty) {
@@ -190,7 +190,7 @@ index b2e362c47..b8fddffdf 100644
        );
      }
  
-@@ -854,9 +854,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -855,9 +855,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      final bytes = _seededBytes(song.filePath ?? song.id, 16);
  
      const stageColors = [

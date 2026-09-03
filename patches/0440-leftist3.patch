@@ -6,10 +6,10 @@ Subject: [PATCH] leftist3
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 02ad56265..57c0da854 100644
+index 1b8fac6ad..57af63555 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -181,6 +181,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -182,6 +182,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
  
    @override
    Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ index 02ad56265..57c0da854 100644
      final bgColor = _tintBackground(_backgroundBlend);
  
      return TweenAnimationBuilder<Color?>(
-@@ -219,7 +220,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -220,7 +221,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
                        horizontal: AppConstants.spacingLg,
                      ),
                      child: Wrap(

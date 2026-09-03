@@ -210,7 +210,7 @@ index 3c0766e0f..a918da717 100644
                          PlayerActionButtonX.fromStorageValue(
                                appPrefs.leftActionButton,
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index db098e76d..120fa719d 100644
+index 5bc4b2612..53a0aa3b1 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -10,7 +10,6 @@ import 'package:flick/core/constants/app_constants.dart';
@@ -221,7 +221,7 @@ index db098e76d..120fa719d 100644
  import 'package:flick/services/player_service.dart';
  import 'package:flick/features/player/widgets/album_color_helpers.dart';
  import 'package:flick/features/player/widgets/ambient_background.dart';
-@@ -26,8 +25,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -27,8 +26,6 @@ class AnimatedSongScene extends StatelessWidget {
    static const double _shortHeightThreshold = 620.0;
  
    final Song song;
@@ -230,7 +230,7 @@ index db098e76d..120fa719d 100644
    final AlbumColorMode albumColorMode;
    final Color? albumColor;
    final int transitionDirection;
-@@ -46,7 +43,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -47,7 +44,7 @@ class AnimatedSongScene extends StatelessWidget {
    final Future<void> Function() onNext;
    final void Function(Song song) onNavigateToArtistDetail;
    final void Function(Song song) onNavigateToAlbumDetail;
@@ -239,7 +239,7 @@ index db098e76d..120fa719d 100644
    buildFileInfoRow;
    final double artworkCardArtworkScale;
    final double artworkCardTextScale;
-@@ -56,12 +53,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -57,12 +54,6 @@ class AnimatedSongScene extends StatelessWidget {
    final bool artworkCardShowAlbum;
    final bool artworkCardShowFileInfo;
    final bool artworkCardShowFrame;
@@ -252,7 +252,7 @@ index db098e76d..120fa719d 100644
    final bool hideQueueBadge;
    final void Function(bool enabled)? onRotationEnabledChanged;
    final bool vinylMode;
-@@ -70,8 +61,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -71,8 +62,6 @@ class AnimatedSongScene extends StatelessWidget {
    const AnimatedSongScene({
      super.key,
      required this.song,
@@ -261,7 +261,7 @@ index db098e76d..120fa719d 100644
      required this.albumColorMode,
      this.albumColor,
      required this.transitionDirection,
-@@ -98,12 +87,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -99,12 +88,6 @@ class AnimatedSongScene extends StatelessWidget {
      this.artworkCardShowAlbum = true,
      this.artworkCardShowFileInfo = true,
      this.artworkCardShowFrame = true,
@@ -274,7 +274,7 @@ index db098e76d..120fa719d 100644
      this.hideQueueBadge = false,
      this.onRotationEnabledChanged,
      this.vinylMode = false,
-@@ -113,13 +96,9 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -114,13 +97,9 @@ class AnimatedSongScene extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
      final direction = transitionDirection >= 0 ? 1.0 : -1.0;
@@ -289,7 +289,7 @@ index db098e76d..120fa719d 100644
  
      final scene = RepaintBoundary(
        key: sceneKey,
-@@ -137,11 +116,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -138,11 +117,7 @@ class AnimatedSongScene extends StatelessWidget {
                );
              },
              transitionBuilder: (Widget child, Animation<double> animation) {
@@ -302,7 +302,7 @@ index db098e76d..120fa719d 100644
                return SlideTransition(
                  position: Tween<Offset>(begin: slideOffset, end: Offset.zero)
                      .animate(
-@@ -153,14 +128,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -154,14 +129,7 @@ class AnimatedSongScene extends StatelessWidget {
                  child: FadeTransition(opacity: animation, child: child),
                );
              },
@@ -318,7 +318,7 @@ index db098e76d..120fa719d 100644
                      key: const ValueKey('immersive-default-layout'),
                      child: SafeArea(
                        child: Column(
-@@ -169,10 +137,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -170,10 +138,7 @@ class AnimatedSongScene extends StatelessWidget {
                            _buildTopChrome(context),
                            SizedBox(height: context.responsive(8.0, 10.0, 12.0)),
                            Expanded(
@@ -330,7 +330,7 @@ index db098e76d..120fa719d 100644
                            ),
                          ],
                        ),
-@@ -233,7 +198,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -234,7 +199,6 @@ class AnimatedSongScene extends StatelessWidget {
      final bgBlend = albumColorMode.backgroundBlend;
      final hasAlbumTint = albumColor != null && bgBlend > 0;
  
@@ -338,7 +338,7 @@ index db098e76d..120fa719d 100644
        return Stack(
          children: [
            Positioned.fill(
-@@ -281,79 +245,12 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -280,75 +244,12 @@ class AnimatedSongScene extends StatelessWidget {
            ),
          ],
        );
@@ -376,18 +376,14 @@ index db098e76d..120fa719d 100644
 -            fit: BoxFit.cover,
 -            placeholder: Container(
 -              color: AppColors.background,
--              child: Icon(
--                LucideIcons.music,
--                size: 120,
--                color: AppColors.textTertiary.withValues(alpha: 0.3),
+-              child: const Center(
+-                child: FlickArtworkPlaceholder(size: 96, opacity: 0.35),
 -              ),
 -            ),
 -            errorWidget: Container(
 -              color: AppColors.background,
--              child: Icon(
--                LucideIcons.music,
--                size: 120,
--                color: AppColors.textTertiary.withValues(alpha: 0.3),
+-              child: const Center(
+-                child: FlickArtworkPlaceholder(size: 96, opacity: 0.35),
 -              ),
 -            ),
 -          ),
@@ -419,7 +415,7 @@ index db098e76d..120fa719d 100644
          vertical: context.responsive(4.0, 6.0, 8.0),
        ),
        child: Row(
-@@ -526,304 +423,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -521,302 +422,6 @@ class AnimatedSongScene extends StatelessWidget {
      );
    }
  
@@ -599,18 +595,16 @@ index db098e76d..120fa719d 100644
 -                    fit: BoxFit.cover,
 -                    placeholder: Container(
 -                      color: Colors.white.withValues(alpha: 0.05),
--                      child: Icon(
--                        LucideIcons.music,
--                        color: Colors.white.withValues(alpha: 0.5),
+-                      child: FlickArtworkPlaceholder(
 -                        size: artworkSize * 0.44,
+-                        opacity: 0.92,
 -                      ),
 -                    ),
 -                    errorWidget: Container(
 -                      color: Colors.white.withValues(alpha: 0.05),
--                      child: Icon(
--                        LucideIcons.music,
--                        color: Colors.white.withValues(alpha: 0.5),
+-                      child: FlickArtworkPlaceholder(
 -                        size: artworkSize * 0.44,
+-                        opacity: 0.92,
 -                      ),
 -                    ),
 -                  ),
@@ -724,7 +718,7 @@ index db098e76d..120fa719d 100644
    Widget _buildArtworkCardLayout(BuildContext context) {
      return LayoutBuilder(
        builder: (context, constraints) {
-@@ -970,7 +569,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -963,7 +568,7 @@ class AnimatedSongScene extends StatelessWidget {
                  ),
                ),
                if (artworkCardShowFileInfo)
@@ -733,7 +727,7 @@ index db098e76d..120fa719d 100644
                if (artworkCardShowFileInfo) SizedBox(height: playbackSpacing),
                _buildPlaybackStack(context),
                SizedBox(height: directorySpacing),
-@@ -1160,10 +759,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -1153,10 +758,7 @@ class AnimatedSongScene extends StatelessWidget {
    }
  
    Widget _buildPlaybackStack(BuildContext context) {
@@ -819,7 +813,7 @@ index 7b211b1ca..fd376270c 100644
      switch (action) {
        // ponytail: none is filtered out by _buildSideButtons; unreachable here.
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index fdc7205dc..97e62ce6e 100644
+index a4c37ccde..f27d18cff 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
 @@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
@@ -830,7 +824,7 @@ index fdc7205dc..97e62ce6e 100644
  import 'package:flick/models/player_action_button.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/providers/providers.dart';
-@@ -23,170 +22,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -24,170 +23,12 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
    @override
    Widget build(BuildContext context, WidgetRef ref) {
      final appPrefs = ref.watch(appPreferencesProvider);
@@ -1001,7 +995,7 @@ index fdc7205dc..97e62ce6e 100644
            SettingsCard(
              children: [
                SliderSetting(
-@@ -314,9 +155,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -315,9 +156,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ),
              ],
            ),

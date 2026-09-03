@@ -65,7 +65,7 @@ index ee4961da6..4d81e96a7 100644
                  ),
                );
 diff --git a/lib/features/player/widgets/album_art_box.dart b/lib/features/player/widgets/album_art_box.dart
-index 8204eff3b..27488a7d3 100644
+index 1da6a77be..9c6b31fb3 100644
 --- a/lib/features/player/widgets/album_art_box.dart
 +++ b/lib/features/player/widgets/album_art_box.dart
 @@ -13,8 +13,6 @@ class AlbumArtBox extends StatefulWidget {
@@ -76,8 +76,8 @@ index 8204eff3b..27488a7d3 100644
 -  final ValueChanged<bool>? onVinylChanged;
    final bool showFrame;
  
-   const AlbumArtBox({super.key,
-@@ -22,8 +20,6 @@ class AlbumArtBox extends StatefulWidget {
+   const AlbumArtBox({
+@@ -23,8 +21,6 @@ class AlbumArtBox extends StatefulWidget {
      this.size,
      this.playerService,
      this.onRotationEnabledChanged,
@@ -86,7 +86,7 @@ index 8204eff3b..27488a7d3 100644
      this.showFrame = true,
    });
  
-@@ -34,283 +30,12 @@ class AlbumArtBox extends StatefulWidget {
+@@ -35,283 +31,12 @@ class AlbumArtBox extends StatefulWidget {
  class _AlbumArtBoxState extends State<AlbumArtBox>
      with TickerProviderStateMixin {
    static const double _labelRatio = 0.44;
@@ -370,7 +370,7 @@ index 8204eff3b..27488a7d3 100644
      final framePadding = resolvedSize < 220 ? 3.0 : 5.0;
      final outerRadius = resolvedSize < 220 ? 12.0 : 20.0;
      final innerRadius = math.max(outerRadius - 5.0, 5.0);
-@@ -320,49 +45,8 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -321,49 +46,8 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
      final labelSize = resolvedSize * _labelRatio;
      final labelRadius = labelSize / 2;
  
@@ -421,7 +421,7 @@ index 8204eff3b..27488a7d3 100644
  
                final artSize = resolvedSize - (resolvedSize - labelSize) * t;
                final artFramePadding = framePadding * glass;
-@@ -371,22 +55,13 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -372,22 +56,13 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
                final artInnerRadius =
                    innerRadius + (labelRadius - innerRadius) * t;
  
@@ -449,7 +449,7 @@ index 8204eff3b..27488a7d3 100644
                      widget.showFrame
                          ? Container(
                              width: artSize,
-@@ -499,239 +174,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -508,238 +183,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
                                ),
                              ),
                            ),
@@ -688,12 +688,11 @@ index 8204eff3b..27488a7d3 100644
 -  bool shouldRepaint(covariant _VinylOutlinePainter old) =>
 -      old.progress != progress;
 -}
--
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 78b042e60..f8ea7abe4 100644
+index 17a342afd..03d0e6459 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -49,8 +49,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -51,8 +51,6 @@ class AnimatedSongScene extends StatelessWidget {
    final bool artworkCardShowFileInfo;
    final bool artworkCardShowFrame;
    final void Function(bool enabled)? onRotationEnabledChanged;
@@ -702,7 +701,7 @@ index 78b042e60..f8ea7abe4 100644
  
    const AnimatedSongScene({
      super.key,
-@@ -82,8 +80,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -84,8 +82,6 @@ class AnimatedSongScene extends StatelessWidget {
      this.artworkCardShowFileInfo = true,
      this.artworkCardShowFrame = true,
      this.onRotationEnabledChanged,

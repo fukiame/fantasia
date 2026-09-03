@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: player layout: layoff some subtitle
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index f840baf46..11e2d8db8 100644
+index 839659fea..3c88b940c 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -175,7 +175,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -176,7 +176,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ToggleSetting(
                  icon: LucideIcons.fileText,
                  title: 'Show Title',
@@ -18,7 +18,7 @@ index f840baf46..11e2d8db8 100644
                  value: appPrefs.immersiveShowTitle,
                  onChanged: (value) {
                    ref
-@@ -187,7 +187,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -188,7 +188,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ToggleSetting(
                  icon: LucideIcons.mic,
                  title: 'Show Artist',
@@ -27,7 +27,7 @@ index f840baf46..11e2d8db8 100644
                  value: appPrefs.immersiveShowArtist,
                  onChanged: (value) {
                    ref
-@@ -199,7 +199,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -200,7 +200,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ToggleSetting(
                  icon: LucideIcons.info,
                  title: 'Show File Info',
@@ -36,7 +36,7 @@ index f840baf46..11e2d8db8 100644
                  value: appPrefs.immersiveShowFileInfo,
                  onChanged: (value) {
                    ref
-@@ -283,7 +283,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -284,7 +284,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ToggleSetting(
                  icon: LucideIcons.fileText,
                  title: 'Show Title',
@@ -45,7 +45,7 @@ index f840baf46..11e2d8db8 100644
                  value: appPrefs.artworkCardShowTitle,
                  onChanged: (value) {
                    ref
-@@ -295,7 +295,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -296,7 +296,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ToggleSetting(
                  icon: LucideIcons.mic,
                  title: 'Show Artist',
@@ -54,7 +54,7 @@ index f840baf46..11e2d8db8 100644
                  value: appPrefs.artworkCardShowArtist,
                  onChanged: (value) {
                    ref
-@@ -307,7 +307,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -308,7 +308,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                ToggleSetting(
                  icon: LucideIcons.disc,
                  title: 'Show Album',
@@ -63,7 +63,7 @@ index f840baf46..11e2d8db8 100644
                  value: appPrefs.artworkCardShowAlbum,
                  onChanged: (value) {
                    ref
-@@ -320,7 +320,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -321,7 +321,7 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                  icon: LucideIcons.info,
                  title: 'Show File Info',
                  subtitle:

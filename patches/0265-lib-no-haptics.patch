@@ -6,18 +6,18 @@ Subject: [PATCH] lib: no haptics
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 3af969be9..f69677540 100644
+index 1493446c6..f009364bd 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -20,7 +20,6 @@ import 'package:flick/features/playlists/screens/playlists_screen.dart';
- import 'package:flick/features/favorites/screens/favorites_screen.dart';
+@@ -21,7 +21,6 @@ import 'package:flick/features/favorites/screens/favorites_screen.dart';
  import 'package:flick/features/search/screens/search_screen.dart';
+ import 'package:flick/core/navigation/root_navigator.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
 -import 'package:flick/core/utils/app_haptics.dart';
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/features/player/widgets/ambient_background.dart';
  import 'package:flick/widgets/navigation/flick_nav_bar.dart';
-@@ -92,7 +91,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -95,7 +94,6 @@ class _MainShellState extends ConsumerState<MainShell>
    // Cleared once the target position is reached.
    int? _programmaticPageTarget;
  
@@ -25,7 +25,7 @@ index 3af969be9..f69677540 100644
    late final PlayerService _playerService;
  
    DateTime? _lastBackPressTime;
-@@ -123,7 +121,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -130,7 +128,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _pageController = PageController(
        initialPage: initialPosition >= 0 ? initialPosition : 0,
      );
@@ -33,7 +33,7 @@ index 3af969be9..f69677540 100644
      _pageController.addListener(_onPageScroll);
      _navBarAnimationController = AnimationController(
        vsync: this,
-@@ -208,7 +205,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -215,7 +212,6 @@ class _MainShellState extends ConsumerState<MainShell>
        if (newPosition < 0) {
          // Current page was removed, jump to first page in new order
          if (_pageController.hasClients && newOrder.isNotEmpty) {
@@ -41,7 +41,7 @@ index 3af969be9..f69677540 100644
            _pageController.jumpToPage(0);
            ref
                .read(navigationIndexProvider.notifier)
-@@ -218,7 +214,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -225,7 +221,6 @@ class _MainShellState extends ConsumerState<MainShell>
        }
  
        if (oldPosition != newPosition && _pageController.hasClients) {
@@ -49,7 +49,7 @@ index 3af969be9..f69677540 100644
          _pageController.jumpToPage(newPosition);
          ref.read(navigationIndexProvider.notifier).setIndex(currentPageIndex);
        }
-@@ -249,7 +244,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -256,7 +251,6 @@ class _MainShellState extends ConsumerState<MainShell>
            }
  
            _programmaticPageTarget = position;
@@ -57,7 +57,7 @@ index 3af969be9..f69677540 100644
            if (AppConstants.animationNormal == Duration.zero) {
              _pageController.jumpToPage(position);
            } else {
-@@ -398,10 +392,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -405,10 +399,6 @@ class _MainShellState extends ConsumerState<MainShell>
      final page = _pageController.page;
      if (page == null) return;
      final rounded = page.round();
@@ -68,19 +68,19 @@ index 3af969be9..f69677540 100644
    }
  
    void _startIdleTimer() {
-@@ -583,11 +573,6 @@ class _MainShellState extends ConsumerState<MainShell>
-                     final currentConfig = ref.read(navBarConfigProvider);
-                     final currentOrder = _getPageOrder(currentConfig);
-                     if (position < 0 || position >= currentOrder.length) return;
--                    if (_programmaticPageTarget == null &&
--                        position != _lastHapticPage) {
--                      AppHaptics.selection();
--                    }
--                    _lastHapticPage = position;
-                     final enabledCount = currentConfig.orderedButtons.length;
-                     if (position >= enabledCount) {
-                       if (_programmaticPageTarget == position) {
-@@ -1025,7 +1010,7 @@ class _RootRouter extends ConsumerWidget {
+@@ -630,11 +620,6 @@ class _MainShellState extends ConsumerState<MainShell>
+                                                   currentOrder.length) {
+                                             return;
+                                           }
+-                                          if (_programmaticPageTarget == null &&
+-                                              position != _lastHapticPage) {
+-                                            AppHaptics.selection();
+-                                          }
+-                                          _lastHapticPage = position;
+                                           final enabledCount = currentConfig
+                                               .orderedButtons.length;
+                                           if (position >= enabledCount) {
+@@ -1113,7 +1098,7 @@ class _RootRouter extends ConsumerWidget {
    Widget build(BuildContext context, WidgetRef ref) {
      final appPreferences = ref.watch(appPreferencesProvider);
  
@@ -89,7 +89,7 @@ index 3af969be9..f69677540 100644
      // When the OS requests reduced motion (e.g. Accessibility "remove
      // animations"), that flag wins over the in-app preference so the app
      // settles into a static state like native Android apps do.
-@@ -1033,7 +1018,6 @@ class _RootRouter extends ConsumerWidget {
+@@ -1121,7 +1106,6 @@ class _RootRouter extends ConsumerWidget {
      final animationsEnabled =
          appPreferences.animationsEnabled && !systemReducedMotion;
      AppConstants.setAnimationsEnabled(animationsEnabled);
@@ -152,7 +152,7 @@ index 23656aa69..000000000
 -  }
 -}
 diff --git a/lib/features/player/widgets/album_art_box.dart b/lib/features/player/widgets/album_art_box.dart
-index dfde8a81f..8204eff3b 100644
+index 0417e751a..1da6a77be 100644
 --- a/lib/features/player/widgets/album_art_box.dart
 +++ b/lib/features/player/widgets/album_art_box.dart
 @@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
@@ -161,9 +161,9 @@ index dfde8a81f..8204eff3b 100644
  import 'package:flick/models/song.dart';
 -import 'package:flick/core/utils/app_haptics.dart';
  import 'package:flick/core/utils/responsive.dart';
- import 'package:lucide_icons_flutter/lucide_icons.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
-@@ -52,8 +51,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+@@ -53,8 +52,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
    Duration _lastObservedPosition = Duration.zero;
    final ValueNotifier<double> _userRotationOffset = ValueNotifier(0.0);
    bool _isUserDragging = false;
@@ -172,7 +172,7 @@ index dfde8a81f..8204eff3b 100644
    late final DoubleTapGestureRecognizer _doubleTapRecognizer;
    late final TapGestureRecognizer _singleTapRecognizer;
    late final _RotationSeekRecognizer _rotationRecognizer;
-@@ -220,13 +217,11 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -221,13 +218,11 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
      final service = widget.playerService;
      if (service == null) return;
      _isUserDragging = true;
@@ -186,7 +186,7 @@ index dfde8a81f..8204eff3b 100644
    }
  
    void _onRotationUpdate(double delta) {
-@@ -235,12 +230,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -236,12 +231,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
      if (service == null) return;
      _userRotationOffset.value += delta;
  
@@ -199,7 +199,7 @@ index dfde8a81f..8204eff3b 100644
      final msPerRadian = (_secondsPerVinylRotation * 1000) / (2 * math.pi);
      final seekMsDelta = (delta * msPerRadian).round();
      if (seekMsDelta != 0) {
-@@ -262,11 +251,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -263,11 +252,9 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
    void _onRotationEnd() {
      _isUserDragging = false;
      widget.playerService?.endInteractiveSeek();
@@ -211,7 +211,7 @@ index dfde8a81f..8204eff3b 100644
    }
  
    void _animateSeek(int deltaMs) {
-@@ -288,7 +275,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -289,7 +276,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
    }
  
    void _toggle() {
@@ -219,7 +219,7 @@ index dfde8a81f..8204eff3b 100644
      setState(() {
        _isVinyl = !_isVinyl;
        if (_isVinyl) {
-@@ -309,7 +295,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
+@@ -310,7 +296,6 @@ class _AlbumArtBoxState extends State<AlbumArtBox>
    void _handleVinylSingleTap() {
      if (!_isVinyl) return;
      if (_outlineController.isAnimating) return;
@@ -228,7 +228,7 @@ index dfde8a81f..8204eff3b 100644
        _outlineController.reverse();
      } else {
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 967305fde..2898637bc 100644
+index 7cb78d0d8..b7a4c331f 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -7,7 +7,6 @@ import 'package:flick/widgets/uac2/uac2_error_notification.dart';
@@ -239,7 +239,7 @@ index 967305fde..2898637bc 100644
  import 'package:flick/core/utils/responsive.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/models/album_color_mode.dart';
-@@ -583,7 +582,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -578,7 +577,7 @@ class AnimatedSongScene extends StatelessWidget {
          shape: BoxShape.circle,
        ),
        child: IconButton(
@@ -249,7 +249,7 @@ index 967305fde..2898637bc 100644
          constraints: const BoxConstraints(),
          icon: Icon(
 diff --git a/lib/features/player/widgets/mini_player.dart b/lib/features/player/widgets/mini_player.dart
-index 05f58e111..86e3bbd48 100644
+index 28e59cf0c..c035da858 100644
 --- a/lib/features/player/widgets/mini_player.dart
 +++ b/lib/features/player/widgets/mini_player.dart
 @@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
@@ -260,7 +260,7 @@ index 05f58e111..86e3bbd48 100644
  import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/services/player_service.dart';
-@@ -29,7 +28,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
+@@ -30,7 +29,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
  
      return GestureDetector(
        onTap: () {
@@ -268,7 +268,7 @@ index 05f58e111..86e3bbd48 100644
          _openQueue(context);
        },
        child: AnimatedContainer(
-@@ -84,7 +82,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
+@@ -85,7 +83,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
  
          return GestureDetector(
            onTap: () {
@@ -276,7 +276,7 @@ index 05f58e111..86e3bbd48 100644
              NavigationHelper.navigateToFullPlayer(
                context,
                heroTag: 'song_art_${song.id}',
-@@ -280,7 +277,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
+@@ -299,7 +296,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                                child: InkWell(
                                  borderRadius: BorderRadius.circular(24),
                                  onTap: () {
@@ -425,10 +425,10 @@ index 35518a70d..477ef5153 100644
              if (source == null) {
                _sources.clear();
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index fecc7c6e7..c5de8d109 100644
+index 7c62a7b07..dcc1f2400 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -117,7 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -118,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                        children: [
                          _CategoryTile(
                            title: 'Interface',
@@ -498,7 +498,7 @@ index 04f37f50b..3bf38fffe 100644
              },
              icon: Icon(
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 6cf66e62f..f56902496 100644
+index 525ef33ff..2af84524d 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
@@ -509,7 +509,7 @@ index 6cf66e62f..f56902496 100644
  import 'package:flick/core/utils/responsive.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/models/song.dart';
-@@ -2083,7 +2082,6 @@ class _SongListTile extends StatelessWidget {
+@@ -2087,7 +2086,6 @@ class _SongListTile extends StatelessWidget {
        child: InkWell(
          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
          onTap: () async {
@@ -517,7 +517,7 @@ index 6cf66e62f..f56902496 100644
            await onTap();
          },
          onLongPress: onLongPress,
-@@ -2634,7 +2632,6 @@ class _AlbumListTile extends StatelessWidget {
+@@ -2630,7 +2628,6 @@ class _AlbumListTile extends StatelessWidget {
        child: InkWell(
          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
          onTap: () {
@@ -526,7 +526,7 @@ index 6cf66e62f..f56902496 100644
          },
          child: Container(
 diff --git a/lib/features/songs/widgets/song_card.dart b/lib/features/songs/widgets/song_card.dart
-index 5e468609a..5da0fe4bb 100644
+index 2f50e49a2..a28b66663 100644
 --- a/lib/features/songs/widgets/song_card.dart
 +++ b/lib/features/songs/widgets/song_card.dart
 @@ -3,7 +3,6 @@ import 'dart:async';
@@ -537,7 +537,7 @@ index 5e468609a..5da0fe4bb 100644
  import 'package:flick/models/song.dart';
  import 'package:flick/widgets/common/marquee_widget.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
-@@ -114,7 +113,6 @@ class _SongCardState extends State<SongCard> {
+@@ -115,7 +114,6 @@ class _SongCardState extends State<SongCard> {
                (details.primaryVelocity != null &&
                    details.primaryVelocity! < -400);
            if (shouldFavorite) {
@@ -545,7 +545,7 @@ index 5e468609a..5da0fe4bb 100644
              setState(() {
                _dragDx = 0;
                _favoriteFlash = true;
-@@ -128,7 +126,6 @@ class _SongCardState extends State<SongCard> {
+@@ -129,7 +127,6 @@ class _SongCardState extends State<SongCard> {
              return;
            }
            if (shouldQueue) {
@@ -553,7 +553,7 @@ index 5e468609a..5da0fe4bb 100644
              setState(() {
                _dragDx = 0;
                _queuedFlash = true;
-@@ -157,7 +154,6 @@ class _SongCardState extends State<SongCard> {
+@@ -158,7 +155,6 @@ class _SongCardState extends State<SongCard> {
  
      return GestureDetector(
        onTap: () {

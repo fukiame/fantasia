@@ -6,10 +6,10 @@ Subject: [PATCH] 1f1e33
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index abc2841c4..538a4c6e4 100644
+index 8f645e3a2..b1a3fee11 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
-@@ -174,11 +174,10 @@ class _IndicatorState {
+@@ -175,11 +175,10 @@ class _IndicatorState {
    });
  
    factory _IndicatorState.verified() => _IndicatorState(

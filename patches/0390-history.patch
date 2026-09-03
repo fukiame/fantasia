@@ -6,10 +6,10 @@ Subject: [PATCH] history
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 3b6cf0479..2a10cd14f 100644
+index 01ece8e41..3360ed94f 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -39,8 +39,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -41,8 +41,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      with TickerProviderStateMixin {
    final PlayerService _playerService = PlayerService();
  
@@ -18,7 +18,7 @@ index 3b6cf0479..2a10cd14f 100644
    Color? _heroDominantColor;
    String? _heroColorArtPath;
    bool _isRefreshing = false;
-@@ -53,23 +51,14 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -55,23 +53,14 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        duration: const Duration(milliseconds: 600),
        vsync: this,
      );
@@ -42,7 +42,7 @@ index 3b6cf0479..2a10cd14f 100644
    Future<void> _updateHeroColor(String? artPath, String? filePath) async {
      final resolvedPath = artPath ?? filePath;
      if (resolvedPath == _heroColorArtPath) return;
-@@ -85,26 +74,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -87,26 +76,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      }
    }
  
@@ -69,7 +69,7 @@ index 3b6cf0479..2a10cd14f 100644
    Future<void> _refreshHome() async {
      if (_isRefreshing) return;
      _isRefreshing = true;
-@@ -112,7 +81,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -114,7 +83,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      ref.invalidate(songsProvider);
      ref.invalidate(favoritesProvider);
      ref.invalidate(playlistsProvider);
@@ -77,7 +77,7 @@ index 3b6cf0479..2a10cd14f 100644
      _refreshController.stop();
      _refreshController.animateBack(
        0,
-@@ -176,8 +144,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -178,8 +146,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
          playlists.isEmpty &&
          (songsAsync.isLoading ||
              favoritesAsync.isLoading ||

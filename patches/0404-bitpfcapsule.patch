@@ -6,7 +6,7 @@ Subject: [PATCH] bitpfcapsule
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 120fa719d..0162d0b0f 100644
+index 53a0aa3b1..ff47603a0 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -13,7 +13,6 @@ import 'package:flick/models/album_color_mode.dart';
@@ -16,8 +16,8 @@ index 120fa719d..0162d0b0f 100644
 -import 'package:flick/features/player/widgets/bit_perfect_capsule.dart';
  import 'package:flick/features/player/widgets/bit_perfect_indicator.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
- import 'package:flick/features/player/widgets/album_art_box.dart';
-@@ -627,10 +626,6 @@ class AnimatedSongScene extends StatelessWidget {
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+@@ -626,10 +625,6 @@ class AnimatedSongScene extends StatelessWidget {
      ).read(appPreferencesProvider);
      final isBitPerfectVerified =
          diagnostics?.capabilityFlags.supportsVerifiedBitPerfect == true;
@@ -28,7 +28,7 @@ index 120fa719d..0162d0b0f 100644
      final hasAlbum = song.album != null && song.album!.trim().isNotEmpty;
  
      return Column(
-@@ -669,64 +664,9 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -668,64 +663,9 @@ class AnimatedSongScene extends StatelessWidget {
            ),
          if (artworkCardShowAlbum &&
              (artworkCardShowTitle || artworkCardShowArtist) &&
@@ -318,7 +318,7 @@ index d893cf3a8..000000000
 -  }
 -}
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index 31332b2a1..9b6a4b1d4 100644
+index 05631892f..2735ca032 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -12,7 +12,7 @@ import 'package:flick/services/player_service.dart';
@@ -365,10 +365,10 @@ index 31332b2a1..9b6a4b1d4 100644
        return _IndicatorState.locked();
      }
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 97e62ce6e..1017e89ec 100644
+index f27d18cff..9319f0854 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -139,20 +139,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -140,20 +140,6 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                        .setArtworkCardShowFrame(value);
                  },
                ),

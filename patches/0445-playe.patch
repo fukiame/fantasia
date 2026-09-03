@@ -6,10 +6,10 @@ Subject: [PATCH] playe
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index f8ea7abe4..2733ea30b 100644
+index 03d0e6459..12cd5093b 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -183,56 +183,11 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -185,54 +185,11 @@ class AnimatedSongScene extends StatelessWidget {
    }
  
    Widget _buildBackground(BuildContext context) {
@@ -29,10 +29,8 @@ index f8ea7abe4..2733ea30b 100644
 -                        colors: [Color(0xFF181818), AppColors.background],
 -                      ),
 -                    ),
--                    child: Icon(
--                      LucideIcons.music,
--                      size: 120,
--                      color: AppColors.textTertiary.withValues(alpha: 0.2),
+-                    child: const Center(
+-                      child: FlickArtworkPlaceholder(size: 96, opacity: 0.22),
 -                    ),
 -                  ),
 -          ),

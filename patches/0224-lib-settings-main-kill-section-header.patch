@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: main: kill section header
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index ea7665061..e11670900 100644
+index 0ac25498f..90a1fc93e 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -55,7 +55,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -56,7 +56,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
@@ -17,7 +17,7 @@ index ea7665061..e11670900 100644
                      SettingsCard(
                        children: [
                          _CategoryTile(
-@@ -115,7 +114,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -116,7 +115,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                        ],
                      ),
                      const SizedBox(height: AppConstants.spacingLg),
@@ -25,7 +25,7 @@ index ea7665061..e11670900 100644
                      SettingsCard(
                        children: [
                          _CategoryTile(
-@@ -145,7 +143,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -146,7 +144,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                        ],
                      ),
                      const SizedBox(height: AppConstants.spacingLg),
@@ -33,7 +33,7 @@ index ea7665061..e11670900 100644
                      SettingsCard(
                        children: [
                          _CategoryTile(
-@@ -208,23 +205,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -209,23 +206,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
      );
    }
  
@@ -55,8 +55,8 @@ index ea7665061..e11670900 100644
 -  }
 -
    void _navigate(BuildContext context, Widget screen) {
-     Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => screen));
-   }
+     NavigationHelper.pushOnRoot(
+       context,
 -- 
 2.55.0
 

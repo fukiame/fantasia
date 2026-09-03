@@ -8,10 +8,10 @@ track count alr there
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 35ddaf26b..73531a226 100644
+index 746ac09e5..e1935aca5 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -510,7 +510,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -511,7 +511,7 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
                ),
                const SizedBox(height: 4),
                Text(

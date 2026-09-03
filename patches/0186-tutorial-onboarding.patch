@@ -6,10 +6,10 @@ Subject: [PATCH] tutorial,onboarding
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 468b32975..27876c549 100644
+index bf980c441..1dc8efc78 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -27,9 +27,6 @@ import 'package:flick/features/player/widgets/audio_visualizer.dart';
+@@ -28,9 +28,6 @@ import 'package:flick/features/player/widgets/audio_visualizer.dart';
  import 'package:flick/widgets/navigation/flick_nav_bar.dart';
  import 'package:flick/providers/equalizer_provider.dart';
  import 'package:flick/providers/providers.dart';
@@ -17,9 +17,9 @@ index 468b32975..27876c549 100644
 -import 'package:flick/features/onboarding/tutorial_targets.dart';
 -import 'package:flick/features/onboarding/widgets/tutorial_overlay.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
  import 'package:flick/widgets/uac2/usb_bit_perfect_prompt.dart';
- import 'package:flick/models/song.dart';
-@@ -286,12 +283,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -293,12 +290,6 @@ class _MainShellState extends ConsumerState<MainShell>
        _refreshLibraryDeletions();
        ref.read(updateCheckProvider.notifier).refreshIfOnline();
        ref.read(autoLibrarySyncServiceProvider);
@@ -32,7 +32,7 @@ index 468b32975..27876c549 100644
      });
  
      _playerService.playbackDesyncedNotifier.addListener(
-@@ -686,9 +677,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -760,9 +751,6 @@ class _MainShellState extends ConsumerState<MainShell>
                    ),
                  ),
  
@@ -42,7 +42,7 @@ index 468b32975..27876c549 100644
                  // USB DAC attach → bit-perfect switch prompt
                  const UsbBitPerfectPrompt(),
                ],
-@@ -753,9 +741,7 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -827,9 +815,7 @@ class _MainShellState extends ConsumerState<MainShell>
      final currentIndex = ref.watch(navigationIndexProvider);
      final navBarConfig = ref.watch(navBarConfigProvider);
  
@@ -53,7 +53,7 @@ index 468b32975..27876c549 100644
          currentIndex: currentIndex,
          config: navBarConfig,
          collapsed: _isBottomBarCollapsed,
-@@ -772,13 +758,9 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -853,13 +839,9 @@ class _MainShellState extends ConsumerState<MainShell>
            );
          },
          showMiniPlayer: true,
@@ -68,7 +68,7 @@ index 468b32975..27876c549 100644
      );
    }
  }
-@@ -1100,7 +1082,6 @@ class _RootRouter extends ConsumerWidget {
+@@ -1188,7 +1170,6 @@ class _RootRouter extends ConsumerWidget {
  
    @override
    Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +76,7 @@ index 468b32975..27876c549 100644
      final appPreferences = ref.watch(appPreferencesProvider);
  
      // Apply animation and haptic preferences globally.
-@@ -1113,9 +1094,7 @@ class _RootRouter extends ConsumerWidget {
+@@ -1201,9 +1182,7 @@ class _RootRouter extends ConsumerWidget {
      AppConstants.setAnimationsEnabled(animationsEnabled);
      AppHaptics.setEnabled(appPreferences.hapticsEnabled);
  
@@ -1201,7 +1201,7 @@ index 49fde12b9..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 3014140a7..a5c5df206 100644
+index 2e45d0b9b..3e1f74eca 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -12,7 +12,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -1212,7 +1212,7 @@ index 3014140a7..a5c5df206 100644
  import 'package:flick/features/settings/screens/privacy_policy_screen.dart';
  import 'package:flick/features/settings/screens/support_flick_screen.dart';
  import 'package:flick/features/settings/widgets/settings_widgets.dart';
-@@ -660,30 +659,6 @@ SOFTWARE.
+@@ -661,30 +660,6 @@ SOFTWARE.
                    );
                  },
                ),
@@ -1244,7 +1244,7 @@ index 3014140a7..a5c5df206 100644
            ),
            const SizedBox(height: AppConstants.spacingLg),
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index 88a515d41..d2fc4610e 100644
+index f8f8a6d92..ad8828a70 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
 @@ -19,7 +19,6 @@ import 'package:flick/features/songs/widgets/orbit_scroll.dart';
@@ -1255,7 +1255,7 @@ index 88a515d41..d2fc4610e 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/features/albums/screens/album_detail_screen.dart';
  import 'package:flick/providers/providers.dart';
-@@ -170,8 +169,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -171,8 +170,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                      padding: const EdgeInsets.symmetric(
                        horizontal: AppConstants.spacingLg,
                      ),
@@ -1264,7 +1264,7 @@ index 88a515d41..d2fc4610e 100644
                        child: Container(
                          decoration: BoxDecoration(
                            gradient: LinearGradient(
-@@ -211,7 +208,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -212,7 +209,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                            },
                          ),
                        ),
@@ -1272,7 +1272,7 @@ index 88a515d41..d2fc4610e 100644
                    ),
                    const SizedBox(height: AppConstants.spacingMd),
                  ],
-@@ -1933,9 +1929,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1936,9 +1932,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                  onTap: () => _shufflePlayFromLibrary(songsAsync),
                ),
                SizedBox(width: buttonGap),
@@ -1283,7 +1283,7 @@ index 88a515d41..d2fc4610e 100644
                    context: context,
                    icon: Icons.sort_rounded,
                    onTap: () {
-@@ -1964,7 +1958,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1967,7 +1961,6 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                      );
                    },
                  ),

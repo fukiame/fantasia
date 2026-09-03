@@ -6,7 +6,7 @@ Subject: [PATCH] dart fix 3
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 8142a5966..35ddaf26b 100644
+index 122d0f6be..746ac09e5 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
 @@ -7,7 +7,6 @@ import 'package:flick/core/theme/adaptive_colors.dart';
@@ -18,7 +18,7 @@ index 8142a5966..35ddaf26b 100644
  import 'package:flick/models/song.dart';
  import 'package:flick/services/album_art_service.dart';
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 9c41b90f2..b2da91322 100644
+index d56202785..a2f5d4e4b 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -19,7 +19,6 @@ import 'package:flick/features/songs/screens/songs_screen.dart';
@@ -27,10 +27,10 @@ index 9c41b90f2..b2da91322 100644
  import 'package:flick/providers/providers.dart';
 -import 'package:flick/services/player_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
- 
- /// Music-home menu screen inspired by streaming app landing pages.
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+ import 'package:flick/widgets/common/glass_bottom_sheet.dart';
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index dd35c35e4..350e9d668 100644
+index 7bcd324e9..6fbe53345 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
 @@ -1,8 +1,6 @@
@@ -43,7 +43,7 @@ index dd35c35e4..350e9d668 100644
  import 'package:lucide_icons_flutter/lucide_icons.dart';
  import 'package:flick/core/theme/app_colors.dart';
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index c1dc0eea0..d50c0dc1e 100644
+index 46009a8ac..a38186c18 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -7,7 +7,6 @@ import 'package:flick/models/album_color_mode.dart';

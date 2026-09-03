@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add save location dialog for LRC file export"
 This reverts commit 657ef2472700a4eeda60ec8ccb4c465fdd89ab9a.
 
 diff --git a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
-index bf6b9d471..d1ac6f202 100644
+index c92db9322..106eeaec0 100644
 --- a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
 +++ b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
 @@ -1,6 +1,5 @@
@@ -16,7 +16,7 @@ index bf6b9d471..d1ac6f202 100644
  
  import 'package:file_picker/file_picker.dart';
  import 'package:flutter/foundation.dart';
-@@ -381,86 +380,26 @@ class _LyricsEditorBottomSheetState extends State<LyricsEditorBottomSheet> {
+@@ -382,86 +381,26 @@ class _LyricsEditorBottomSheetState extends State<LyricsEditorBottomSheet> {
        return;
      }
  

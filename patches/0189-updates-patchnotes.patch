@@ -6,10 +6,10 @@ Subject: [PATCH] updates,patchnotes
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 381072c59..064ab4587 100644
+index 2d2665b13..f0ec7f481 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -110,7 +110,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -117,7 +117,6 @@ class _MainShellState extends ConsumerState<MainShell>
      _previousSong = ref.read(currentSongProvider);
      _playerService = ref.read(playerServiceProvider);
      ref.read(equalizerProvider);
@@ -17,7 +17,7 @@ index 381072c59..064ab4587 100644
      final initialConfig = ref.read(navBarConfigProvider);
      final defaultPage =
          initialConfig.orderedButtons.contains(NavBarButton.songs)
-@@ -281,7 +280,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -288,7 +287,6 @@ class _MainShellState extends ConsumerState<MainShell>
        }
        _maybeOpenExternalPlayer(ref.read(currentSongProvider));
        _refreshLibraryDeletions();
@@ -25,7 +25,7 @@ index 381072c59..064ab4587 100644
        ref.read(autoLibrarySyncServiceProvider);
      });
  
-@@ -465,7 +463,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -472,7 +470,6 @@ class _MainShellState extends ConsumerState<MainShell>
      if (state == AppLifecycleState.resumed) {
        _startIdleTimer();
        unawaited(ref.read(playerServiceProvider).onAppResumed());
@@ -34,10 +34,10 @@ index 381072c59..064ab4587 100644
      }
    }
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 1c04ad39d..91fab68da 100644
+index e0b00618d..5da5f7cff 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -57,16 +57,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -58,16 +58,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    List<RecentlyPlayedEntry> _recentEntries = const [];
    Map<ListeningRecapPeriod, ListeningRecap> _recaps = const {};
    bool _isHistoryLoading = true;
@@ -54,7 +54,7 @@ index 1c04ad39d..91fab68da 100644
    bool _isRefreshing = false;
    late final AnimationController _refreshController;
  
-@@ -91,24 +87,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -92,24 +88,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        ),
      );
      _welcomeCardController.forward();
@@ -79,7 +79,7 @@ index 1c04ad39d..91fab68da 100644
      _refreshController = AnimationController(
        duration: const Duration(milliseconds: 600),
        vsync: this,
-@@ -122,7 +100,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -123,7 +101,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
    @override
    void dispose() {
      _welcomeCardController.dispose();
@@ -87,7 +87,7 @@ index 1c04ad39d..91fab68da 100644
      _refreshController.dispose();
      _historySubscription?.cancel();
      super.dispose();
-@@ -192,7 +169,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -193,7 +170,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      ref.invalidate(songsProvider);
      ref.invalidate(favoritesProvider);
      ref.invalidate(playlistsProvider);
@@ -95,7 +95,7 @@ index 1c04ad39d..91fab68da 100644
      await _loadHistoryData(showLoadingState: false);
      _refreshController.stop();
      _refreshController.animateBack(
-@@ -203,39 +179,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -204,39 +180,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      _isRefreshing = false;
    }
  
@@ -135,7 +135,7 @@ index 1c04ad39d..91fab68da 100644
    void _navigateTo(BuildContext context, Widget screen) {
      Navigator.of(context).push(
        MaterialPageRoute(builder: (_) => screen),
-@@ -630,7 +573,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -631,7 +574,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      final playlistsAsync = ref.watch(playlistsProvider);
      final currentSong = ref.watch(currentSongProvider);
      final appPreferences = ref.watch(appPreferencesProvider);
@@ -143,7 +143,7 @@ index 1c04ad39d..91fab68da 100644
      final enginePreferenceAsync = ref.watch(audioEnginePreferenceProvider);
  
      final allSongs = songsAsync.value?.songs ?? const <Song>[];
-@@ -721,29 +663,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -722,29 +664,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                            ),
                          ),
                        ),
@@ -173,7 +173,7 @@ index 1c04ad39d..91fab68da 100644
                      if (isInitialLoading)
                        const SliverFillRemaining(
                          hasScrollBody: false,
-@@ -1157,111 +1076,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1158,111 +1077,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      );
    }
  
@@ -286,7 +286,7 @@ index 1c04ad39d..91fab68da 100644
      BuildContext context, {
      required Song? currentSong,
 diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index a5c5df206..7fd892ef1 100644
+index 3e1f74eca..2a390a046 100644
 --- a/lib/features/settings/screens/app_info_settings_screen.dart
 +++ b/lib/features/settings/screens/app_info_settings_screen.dart
 @@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
@@ -309,7 +309,7 @@ index a5c5df206..7fd892ef1 100644
  
    late final AnimationController _donationPulseController;
    late final Animation<double> _donationPulseAnimation;
-@@ -67,349 +61,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
+@@ -67,351 +61,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
      );
    }
  
@@ -629,7 +629,9 @@ index a5c5df206..7fd892ef1 100644
 -                        color: context.adaptiveTextTertiary,
 -                        fontStyle: FontStyle.italic,
 -                      ),
--                      tableBorder: TableBorder.all(color: AppColors.glassBorder),
+-                      tableBorder: TableBorder.all(
+-                        color: AppColors.glassBorder,
+-                      ),
 -                      tableHead: const TextStyle(fontWeight: FontWeight.w700),
 -                    ),
 -                    selectable: true,
@@ -659,7 +661,7 @@ index a5c5df206..7fd892ef1 100644
    void _showAboutBottomSheet() {
      GlassBottomSheet.show(
        context: context,
-@@ -578,58 +229,11 @@ SOFTWARE.
+@@ -579,58 +228,11 @@ SOFTWARE.
  
    @override
    Widget build(BuildContext context) {
@@ -718,7 +720,7 @@ index a5c5df206..7fd892ef1 100644
            const SettingsSectionHeader('About'),
            SettingsCard(
              children: [
-@@ -697,15 +301,3 @@ SOFTWARE.
+@@ -698,15 +300,3 @@ SOFTWARE.
      );
    }
  }

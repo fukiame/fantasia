@@ -6,10 +6,10 @@ Subject: [PATCH] lib: albums: screen: drop redundant "Collection"
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
-index e8f0042bf..50f9e5164 100644
+index 76aad7ed8..2e491fe46 100644
 --- a/lib/features/albums/screens/albums_screen.dart
 +++ b/lib/features/albums/screens/albums_screen.dart
-@@ -336,21 +336,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+@@ -337,21 +337,6 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
      return Column(
        crossAxisAlignment: CrossAxisAlignment.start,
        children: [

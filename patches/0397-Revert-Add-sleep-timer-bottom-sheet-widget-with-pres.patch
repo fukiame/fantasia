@@ -8,10 +8,10 @@ This reverts commit c81cd344f4bca22e3b66445ba37ab63739c47c70.
 
 diff --git a/lib/features/player/widgets/sleep_timer_bottom_sheet.dart b/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
 deleted file mode 100644
-index b2d23ef4c..000000000
+index 68f79b01a..000000000
 --- a/lib/features/player/widgets/sleep_timer_bottom_sheet.dart
 +++ /dev/null
-@@ -1,162 +0,0 @@
+@@ -1,163 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
 -import 'package:flick/core/theme/app_colors.dart';
@@ -24,6 +24,7 @@ index b2d23ef4c..000000000
 -
 -  static Future<void> show(BuildContext context, PlayerService playerService) {
 -    return showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (context) => SleepTimerBottomSheet(playerService: playerService),

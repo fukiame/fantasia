@@ -6,10 +6,10 @@ Subject: [PATCH] whatever bro
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index a28c6010e..685e0367a 100644
+index 7877e2d1b..915a08d10 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -519,7 +519,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -520,7 +520,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
        return _buildAlbumListView(sortedAlbums);
      }
  
@@ -18,7 +18,7 @@ index a28c6010e..685e0367a 100644
      final visibleAlbums = sortedAlbums
          .take(visibleCount)
          .toList(growable: false);
-@@ -733,7 +733,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -734,7 +734,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
  
      if (_albumPaginationSignature != signature) {
        _albumPaginationSignature = signature;
@@ -27,7 +27,7 @@ index a28c6010e..685e0367a 100644
  
        if (_albumGridScrollController.hasClients) {
          WidgetsBinding.instance.addPostFrameCallback((_) {
-@@ -1985,7 +1985,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1989,7 +1989,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
            onSortChanged: (option) {
              _setAlbumSortOption(option);
              setState(() {
@@ -36,7 +36,7 @@ index a28c6010e..685e0367a 100644
                _albumPaginationSignature = '';
              });
            },
-@@ -2001,7 +2001,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -2005,7 +2005,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                  .read(appPreferencesProvider.notifier)
                  .setFolderGridPageSize(value);
              setState(() {
@@ -45,7 +45,7 @@ index a28c6010e..685e0367a 100644
                _albumPaginationSignature = '';
              });
            },
-@@ -2775,7 +2775,6 @@ class _AlbumFilterSheet extends StatefulWidget {
+@@ -2771,7 +2771,6 @@ class _AlbumFilterSheet extends StatefulWidget {
  class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
    late _AlbumGridSortOption _selectedSort;
    late SongFileTypeFilter _selectedFilter;
@@ -53,7 +53,7 @@ index a28c6010e..685e0367a 100644
  
    static const double _minPageSize = 1;
    static const double _maxPageSize = 30;
-@@ -2785,7 +2784,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+@@ -2781,7 +2780,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
      super.initState();
      _selectedSort = widget.currentSort;
      _selectedFilter = widget.currentFilter;
@@ -61,7 +61,7 @@ index a28c6010e..685e0367a 100644
    }
  
    @override
-@@ -2882,72 +2880,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
+@@ -2878,72 +2876,6 @@ class _AlbumFilterSheetState extends State<_AlbumFilterSheet> {
              ),
              const SizedBox(height: AppConstants.spacingLg),
              const Divider(color: AppColors.glassBorder, height: 1),

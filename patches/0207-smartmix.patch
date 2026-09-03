@@ -6,7 +6,7 @@ Subject: [PATCH] smartmix
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index f92bf6a87..2feb2a7db 100644
+index c6d8ed5f7..7606b7f34 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -17,7 +17,6 @@ import 'package:flick/features/artists/screens/artist_detail_screen.dart';
@@ -17,7 +17,7 @@ index f92bf6a87..2feb2a7db 100644
  import 'package:flick/features/playlists/screens/playlist_detail_screen.dart';
  import 'package:flick/features/playlists/screens/playlists_screen.dart';
  import 'package:flick/features/queue/screens/queue_screen.dart';
-@@ -718,49 +717,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -719,49 +718,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                              ),
                            ),
                          ),
@@ -67,7 +67,7 @@ index f92bf6a87..2feb2a7db 100644
                        if (appPreferences.showRecentArtists &&
                            homeData.recentArtists.isNotEmpty)
                          SliverToBoxAdapter(
-@@ -1231,14 +1187,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1232,14 +1188,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        songsByArtist: songsByArtist,
      );
  
@@ -82,7 +82,7 @@ index f92bf6a87..2feb2a7db 100644
      final playlistPreviews = _buildPlaylistPreviews(
        playlists: playlists,
        songById: songById,
-@@ -1247,7 +1195,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1248,7 +1196,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      return _MenuHomeData(
        recentTracks: recentTracks,
        recentArtists: recentArtists,
@@ -90,7 +90,7 @@ index f92bf6a87..2feb2a7db 100644
        playlistPreviews: playlistPreviews,
        favoriteArtPath: favoriteSongs.firstOrNull?.albumArt,
      );
-@@ -1285,182 +1232,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1286,182 +1233,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      return items.where((artist) => artist.songs.isNotEmpty).take(8).toList();
    }
  
@@ -273,7 +273,7 @@ index f92bf6a87..2feb2a7db 100644
    List<_PlaylistPreview> _buildPlaylistPreviews({
      required List<Playlist> playlists,
      required Map<String, Song> songById,
-@@ -1922,109 +1693,6 @@ class _QuickAccessCard extends StatelessWidget {
+@@ -1917,109 +1688,6 @@ class _QuickAccessCard extends StatelessWidget {
    }
  }
  
@@ -383,7 +383,7 @@ index f92bf6a87..2feb2a7db 100644
  class _ArtistShelfCard extends StatelessWidget {
    final _ArtistSpotlight artist;
    final VoidCallback onTap;
-@@ -2498,14 +2166,12 @@ class _BrowseChip extends StatelessWidget {
+@@ -2487,14 +2155,12 @@ class _BrowseChip extends StatelessWidget {
  class _MenuHomeData {
    final List<Song> recentTracks;
    final List<_ArtistSpotlight> recentArtists;
@@ -398,7 +398,7 @@ index f92bf6a87..2feb2a7db 100644
      required this.playlistPreviews,
      required this.favoriteArtPath,
    });
-@@ -2542,26 +2208,6 @@ class _ArtistSpotlightAccumulator {
+@@ -2531,26 +2197,6 @@ class _ArtistSpotlightAccumulator {
    }
  }
  
@@ -427,10 +427,10 @@ index f92bf6a87..2feb2a7db 100644
    final String? coverArtPath;
 diff --git a/lib/features/menu/screens/smart_mix_detail_screen.dart b/lib/features/menu/screens/smart_mix_detail_screen.dart
 deleted file mode 100644
-index a10f0d746..000000000
+index 97b22349c..000000000
 --- a/lib/features/menu/screens/smart_mix_detail_screen.dart
 +++ /dev/null
-@@ -1,847 +0,0 @@
+@@ -1,840 +0,0 @@
 -import 'dart:async';
 -import 'dart:ui';
 -
@@ -451,6 +451,7 @@ index a10f0d746..000000000
 -import 'package:flick/providers/navigation_provider.dart';
 -import 'package:flick/providers/app_preferences_provider.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -import 'package:flick/widgets/common/animated_album_art.dart';
 -import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
 -
@@ -1227,16 +1228,8 @@ index a10f0d746..000000000
 -                    imagePath: song.albumArt,
 -                    audioSourcePath: song.filePath,
 -                    fit: BoxFit.cover,
--                    placeholder: Icon(
--                      LucideIcons.music,
--                      color: context.adaptiveTextTertiary,
--                      size: context.responsiveIcon(AppConstants.iconSizeMd),
--                    ),
--                    errorWidget: Icon(
--                      LucideIcons.music,
--                      color: context.adaptiveTextTertiary,
--                      size: context.responsiveIcon(AppConstants.iconSizeMd),
--                    ),
+-                    placeholder: const FlickArtworkPlaceholder(size: 28, opacity: 0.9),
+-                    errorWidget: const FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -                  ),
 -                ),
 -              ),

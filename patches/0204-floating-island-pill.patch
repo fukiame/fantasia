@@ -532,106 +532,6 @@ index 2232d5ca8..5db3bc429 100644
      private fun sendCommandToFlutter(command: String, args: Map<String, Any>? = null) {
          android.os.Handler(mainLooper).post {
              try {
-diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 417a81ca7..17b48760d 100644
---- a/lib/features/albums/screens/album_detail_screen.dart
-+++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
- import 'package:flick/core/theme/adaptive_color_provider.dart';
- import 'package:flick/core/theme/adaptive_colors.dart';
- import 'package:flick/core/constants/app_constants.dart';
--import 'package:flick/widgets/common/floating_mini_player.dart';
- import 'package:flick/core/utils/responsive.dart';
- import 'package:flick/core/utils/navigation_helper.dart';
- import 'package:flick/data/repositories/song_repository.dart';
-@@ -479,7 +478,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
-             ),
-             ),
-             _buildOverlayTopBar(context, resolvedBg),
--            const FloatingMiniPlayer(),
-           ],
-         );
-       },
-diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 5fbfcb609..556fd2136 100644
---- a/lib/features/artists/screens/artist_detail_screen.dart
-+++ b/lib/features/artists/screens/artist_detail_screen.dart
-@@ -5,7 +5,6 @@ import 'package:flick/core/theme/app_colors.dart';
- import 'package:flick/core/theme/adaptive_color_provider.dart';
- import 'package:flick/core/theme/adaptive_colors.dart';
- import 'package:flick/core/constants/app_constants.dart';
--import 'package:flick/widgets/common/floating_mini_player.dart';
- import 'package:flick/core/utils/navigation_helper.dart';
- import 'package:flick/core/utils/responsive.dart';
- import 'package:flick/data/repositories/artist_repository.dart';
-@@ -541,7 +540,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
-                 ),
-               ),
-               _buildOverlayTopBar(context, resolvedBg),
--              const FloatingMiniPlayer(),
-             ],
-           );
-         },
-diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
-index f638fd182..dafe75ffd 100644
---- a/lib/features/folders/screens/folders_screen.dart
-+++ b/lib/features/folders/screens/folders_screen.dart
-@@ -17,7 +17,6 @@ import 'package:flick/features/player/widgets/ambient_background.dart';
- import 'package:flick/widgets/common/blurred_song_background.dart';
- import 'package:flick/widgets/common/surface_icon_button.dart';
- import 'package:flick/widgets/common/cached_image_widget.dart';
--import 'package:flick/widgets/common/floating_mini_player.dart';
- 
- /// Groups songs by immediate subfolder relative to [prefix] within [folderUri].
- ({List<FolderGroup> subfolders, List<Song> songs}) groupByImmediateFolder({
-@@ -1071,7 +1070,6 @@ class _FolderBrowserScreenState extends ConsumerState<FolderBrowserScreen> {
-             ),
-           ),
-         ),
--        const FloatingMiniPlayer(),
-       ],
-     );
-   }
-diff --git a/lib/features/menu/screens/smart_mix_detail_screen.dart b/lib/features/menu/screens/smart_mix_detail_screen.dart
-index ac075577c..a10f0d746 100644
---- a/lib/features/menu/screens/smart_mix_detail_screen.dart
-+++ b/lib/features/menu/screens/smart_mix_detail_screen.dart
-@@ -9,7 +9,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
- import 'package:flick/core/theme/adaptive_colors.dart';
- import 'package:flick/core/constants/app_constants.dart';
- import 'package:flick/core/utils/responsive.dart';
--import 'package:flick/widgets/common/floating_mini_player.dart';
- import 'package:flick/core/utils/navigation_helper.dart';
- import 'package:flick/models/playback_context.dart';
- import 'package:flick/models/song.dart';
-@@ -339,7 +338,6 @@ class _SmartMixDetailScreenState extends ConsumerState<SmartMixDetailScreen>
-                 ),
-               ),
-               _buildOverlayTopBar(context, resolvedBg),
--              const FloatingMiniPlayer(),
-             ],
-           );
-         },
-diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index 9fac4083e..ee852e4dd 100644
---- a/lib/features/playlists/screens/playlist_detail_screen.dart
-+++ b/lib/features/playlists/screens/playlist_detail_screen.dart
-@@ -9,7 +9,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
- import 'package:flick/core/theme/adaptive_colors.dart';
- import 'package:flick/core/constants/app_constants.dart';
- import 'package:flick/core/utils/responsive.dart';
--import 'package:flick/widgets/common/floating_mini_player.dart';
- import 'package:flick/core/utils/navigation_helper.dart';
- import 'package:flick/models/playback_context.dart';
- import 'package:flick/models/song.dart';
-@@ -599,7 +598,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
-               ),
-             ),
-             _buildOverlayTopBar(context, resolvedBg),
--            const FloatingMiniPlayer(),
-           ],
-         );
-       },
 diff --git a/lib/features/settings/screens/equalizer_screen.dart b/lib/features/settings/screens/equalizer_screen.dart
 index 830a2c445..c0225f788 100644
 --- a/lib/features/settings/screens/equalizer_screen.dart
@@ -930,7 +830,7 @@ index 2b4902e82..000000000
 -  }
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 7215be9df..6de7f3b67 100644
+index 5c202722b..1e316a213 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -14,7 +14,6 @@ import 'package:flick/models/shuffle_mode.dart';
@@ -1038,7 +938,7 @@ index 7215be9df..6de7f3b67 100644
      unawaited(_restoreBitPerfectEngineAfterForeground());
    }
  
-@@ -2669,8 +2613,6 @@ class PlayerService {
+@@ -2810,8 +2754,6 @@ class PlayerService {
        isFavorite: isFav,
        color: notificationColor,
      );
@@ -1047,7 +947,7 @@ index 7215be9df..6de7f3b67 100644
    }
  
    Future<void> _onSongFinished({String? endedPath}) {
-@@ -5099,7 +5041,6 @@ class PlayerService {
+@@ -5240,7 +5182,6 @@ class PlayerService {
      unawaited(_usbDacAttachSubscription?.cancel());
      cancelSleepTimer();
      _notificationService.hideNotification();
@@ -1057,20 +957,20 @@ index 7215be9df..6de7f3b67 100644
          unawaited(_rustAudioService.stop());
 diff --git a/lib/widgets/common/floating_mini_player.dart b/lib/widgets/common/floating_mini_player.dart
 deleted file mode 100644
-index b5dec4020..000000000
+index 9b476673b..000000000
 --- a/lib/widgets/common/floating_mini_player.dart
 +++ /dev/null
-@@ -1,389 +0,0 @@
+@@ -1,407 +0,0 @@
 -import 'dart:async';
 -import 'package:flutter/material.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
--import 'package:lucide_icons_flutter/lucide_icons.dart';
 -import 'package:flick/core/theme/adaptive_color_provider.dart';
 -import 'package:flick/core/theme/app_colors.dart';
 -import 'package:flick/features/player/screens/full_player_screen.dart';
 -import 'package:flick/features/player/widgets/audio_visualizer.dart';
 -import 'package:flick/providers/providers.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -
 -class FloatingMiniPlayer extends ConsumerStatefulWidget {
 -  const FloatingMiniPlayer({super.key});
@@ -1153,7 +1053,10 @@ index b5dec4020..000000000
 -            const begin = Offset(0.0, 1.0);
 -            const end = Offset.zero;
 -            const curve = Curves.easeOutCubic;
--            var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+-            var tween = Tween(
+-              begin: begin,
+-              end: end,
+-            ).chain(CurveTween(curve: curve));
 -            return SlideTransition(
 -              position: animation.drive(tween),
 -              child: child,
@@ -1245,8 +1148,7 @@ index b5dec4020..000000000
 -        screenSize.height - height - safeArea.bottom - safeArea.top - 16;
 -    final double absTop = safeArea.top + 8 + _offset.dy;
 -    final bool nearTop = absTop < screenSize.height * 0.25;
--    final bool nearBottom =
--        absTop > screenSize.height * 0.75 - safeArea.bottom;
+-    final bool nearBottom = absTop > screenSize.height * 0.75 - safeArea.bottom;
 -    final bool flingVertical = velocity.dy.abs() > 400;
 -
 -    double snapDy;
@@ -1354,11 +1256,27 @@ index b5dec4020..000000000
 -                                        useThumbnail: true,
 -                                        thumbnailWidth: 96,
 -                                        thumbnailHeight: 96,
+-                                        placeholder: Container(
+-                                          color: AppColors.surfaceDark,
+-                                          child: const FlickArtworkPlaceholder(
+-                                            size: 22,
+-                                            opacity: 0.85,
+-                                          ),
+-                                        ),
+-                                        errorWidget: Container(
+-                                          color: AppColors.surfaceDark,
+-                                          child: const FlickArtworkPlaceholder(
+-                                            size: 22,
+-                                            opacity: 0.85,
+-                                          ),
+-                                        ),
 -                                      )
--                                    : const Icon(
--                                        LucideIcons.music,
--                                        size: 16,
--                                        color: AppColors.textTertiary,
+-                                    : Container(
+-                                        color: AppColors.surfaceDark,
+-                                        child: const FlickArtworkPlaceholder(
+-                                          size: 20,
+-                                          opacity: 0.88,
+-                                        ),
 -                                      ),
 -                              ),
 -                            ),

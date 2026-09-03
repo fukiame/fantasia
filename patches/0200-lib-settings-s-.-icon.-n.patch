@@ -6,10 +6,10 @@ Subject: [PATCH] lib: settings: :%s/.*icon.*\n
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index fc172b82c..ea7665061 100644
+index b8e4f0725..0ac25498f 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
-@@ -59,9 +59,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -60,9 +60,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                      SettingsCard(
                        children: [
                          _CategoryTile(
@@ -19,7 +19,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Library',
                            subtitle: 'Folders, scanning, and duplicates',
                            onTap: () =>
-@@ -69,9 +66,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -70,9 +67,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -29,7 +29,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Playback & Display',
                            subtitle: 'Gapless, view mode, and appearance',
                            onTap: () => _navigate(
-@@ -81,9 +75,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -82,9 +76,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -39,7 +39,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Queue',
                            subtitle: 'Wrap-around and queue behavior',
                            onTap: () =>
-@@ -91,9 +82,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -92,9 +83,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -49,7 +49,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Player Layout',
                            subtitle: 'Layout mode, sizing, and quick actions',
                            onTap: () => _navigate(
-@@ -103,9 +91,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -104,9 +92,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -59,7 +59,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Audio',
                            subtitle: 'UAC2 and equalizer',
                            onTap: () =>
-@@ -113,9 +98,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -114,9 +99,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -69,7 +69,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Bluetooth',
                            subtitle: 'Disconnect behavior and codec info',
                            onTap: () => _navigate(
-@@ -125,9 +107,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -126,9 +108,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -79,7 +79,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Lyrics',
                            subtitle: 'Lyrics saving behavior',
                            onTap: () =>
-@@ -140,9 +119,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -141,9 +120,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                      SettingsCard(
                        children: [
                          _CategoryTile(
@@ -89,7 +89,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Interface',
                            subtitle: 'Animations and haptic feedback',
                            onTap: () => _navigate(
-@@ -152,9 +128,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -153,9 +129,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -99,7 +99,7 @@ index fc172b82c..ea7665061 100644
                            title: 'UI Customization',
                            subtitle: 'Show or hide home screen sections',
                            onTap: () => _navigate(
-@@ -164,9 +137,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -165,9 +138,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                          ),
                          const SettingsDivider(),
                          _CategoryTile(
@@ -109,7 +109,7 @@ index fc172b82c..ea7665061 100644
                            title: 'Widgets',
                            subtitle: 'Customize home screen widgets',
                            onTap: () =>
-@@ -179,9 +149,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -180,9 +150,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                      SettingsCard(
                        children: [
                          _CategoryTile(
@@ -119,13 +119,14 @@ index fc172b82c..ea7665061 100644
                            title: 'App Info',
                            subtitle: 'Updates, about, and support',
                            onTap: () =>
-@@ -236,17 +203,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -237,18 +204,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                ],
              ),
            ),
 -          IconButton(
 -            onPressed: () {
--              Navigator.of(context).push(
+-              NavigationHelper.pushOnRoot(
+-                context,
 -                MaterialPageRoute<void>(
 -                  builder: (_) => const SupportFlickScreen(),
 -                ),
@@ -137,7 +138,7 @@ index fc172b82c..ea7665061 100644
          ],
        ),
      );
-@@ -274,20 +230,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -279,20 +234,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
    }
  }
  
@@ -158,7 +159,7 @@ index fc172b82c..ea7665061 100644
    final String title;
    final String subtitle;
    final VoidCallback onTap;
-@@ -302,12 +251,6 @@ class _CategoryTile extends StatelessWidget {
+@@ -307,12 +255,6 @@ class _CategoryTile extends StatelessWidget {
            padding: const EdgeInsets.all(AppConstants.spacingMd),
            child: Row(
              children: [
@@ -171,7 +172,7 @@ index fc172b82c..ea7665061 100644
                Expanded(
                  child: Column(
                    crossAxisAlignment: CrossAxisAlignment.start,
-@@ -340,48 +283,3 @@ class _CategoryTile extends StatelessWidget {
+@@ -345,48 +287,3 @@ class _CategoryTile extends StatelessWidget {
      );
    }
  }

@@ -6,10 +6,10 @@ Subject: [PATCH] lib: onReorder -> onReorderItem
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index 4913acce0..93fed4e52 100644
+index f4011e4a1..a3146e716 100644
 --- a/lib/features/playlists/screens/playlist_detail_screen.dart
 +++ b/lib/features/playlists/screens/playlist_detail_screen.dart
-@@ -514,7 +514,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -515,7 +515,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
                                  child: child,
                                );
                              },
@@ -18,7 +18,7 @@ index 4913acce0..93fed4e52 100644
                                if (_sortOption != PlaylistSortOption.manual) {
                                  return;
                                }
-@@ -526,10 +526,8 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -527,10 +527,8 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
                                      newIndex,
                                    );
                                setState(() {
@@ -31,10 +31,10 @@ index 4913acce0..93fed4e52 100644
                              },
                              itemBuilder: (context, index) {
 diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
-index b9909a928..2369e40aa 100644
+index 036c0bac4..f3171935c 100644
 --- a/lib/features/queue/screens/queue_screen.dart
 +++ b/lib/features/queue/screens/queue_screen.dart
-@@ -176,13 +176,10 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+@@ -177,13 +177,10 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
                                    )
                                  : SliverReorderableList(
                                      itemCount: upNext.length,
@@ -50,7 +50,7 @@ index b9909a928..2369e40aa 100644
                                      },
                                      itemBuilder: (context, index) {
                                        final song = upNext[index];
-@@ -263,13 +260,10 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+@@ -264,13 +261,10 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
                                    )
                                  : SliverReorderableList(
                                      itemCount: queue.length,

@@ -6,10 +6,10 @@ Subject: [PATCH] lib: menu: kill hero card
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index f01667edb..f92bf6a87 100644
+index 724072d6d..c6d8ed5f7 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -699,13 +699,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -700,13 +700,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                              AppConstants.spacingLg,
                              AppConstants.spacingMd,
                            ),
@@ -23,7 +23,7 @@ index f01667edb..f92bf6a87 100644
                          ),
                        ),
                        if (appPreferences.showQuickAccess)
-@@ -1073,113 +1066,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1074,113 +1067,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      );
    }
  
@@ -137,7 +137,7 @@ index f01667edb..f92bf6a87 100644
    Widget _buildQuickAccessGrid(
      BuildContext context, {
      required _MenuHomeData homeData,
-@@ -1720,291 +1606,6 @@ List<Color> _heroGradientColors(Color? dominant) {
+@@ -1721,291 +1607,6 @@ List<Color> _heroGradientColors(Color? dominant) {
    return [darkened, darker, shifted];
  }
  

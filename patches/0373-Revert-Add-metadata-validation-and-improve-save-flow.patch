@@ -6,10 +6,30 @@ Subject: [PATCH] Revert "Add metadata validation and improve save flow"
 This reverts commit 6ef66844de5dcf1d463e839e18fb33abe49d8dc4.
 
 diff --git a/lib/features/songs/screens/metadata_editor_screen.dart b/lib/features/songs/screens/metadata_editor_screen.dart
-index 38251cab1..e2d7e8ac4 100644
+index 29fa9ca75..e2d7e8ac4 100644
 --- a/lib/features/songs/screens/metadata_editor_screen.dart
 +++ b/lib/features/songs/screens/metadata_editor_screen.dart
-@@ -29,8 +29,8 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -5,19 +5,10 @@ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/services/metadata_editor_service.dart';
+-import 'package:flick/services/player_service.dart';
+ import 'package:flick/src/rust/api/metadata_editor.dart' as rust_metadata;
+ import 'package:flick/providers/providers.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ 
+-/// Deprecated: use [MetadataEditorBottomSheet] (`lib/features/songs/widgets/metadata_editor_bottom_sheet.dart:12`).
+-///
+-/// Kept temporarily for backward compatibility; will be deleted once the
+-/// bottom-sheet rollout is confirmed. New code should call
+-/// `MetadataEditorBottomSheet.show(context, song)`.
+-@Deprecated(
+-  'Use MetadataEditorBottomSheet.show instead – full-screen editor will be removed',
+-)
+ class MetadataEditorScreen extends ConsumerStatefulWidget {
+   final Song song;
+ 
+@@ -38,8 +29,8 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
    late TextEditingController _trackNumberController;
    late TextEditingController _discNumberController;
  
@@ -19,7 +39,7 @@ index 38251cab1..e2d7e8ac4 100644
    String? _error;
  
    bool get _isEditable =>
-@@ -54,8 +54,6 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -63,8 +54,6 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
      _discNumberController =
          TextEditingController(text: s.discNumber?.toString() ?? '');
  
@@ -28,7 +48,7 @@ index 38251cab1..e2d7e8ac4 100644
      for (final c in [
        _titleController,
        _artistController,
-@@ -67,7 +65,18 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -76,7 +65,18 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
        _discNumberController,
      ]) {
        c.addListener(() {
@@ -48,7 +68,7 @@ index 38251cab1..e2d7e8ac4 100644
        });
      }
    }
-@@ -82,46 +91,11 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -91,46 +91,11 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
      _yearController.dispose();
      _trackNumberController.dispose();
      _discNumberController.dispose();
@@ -96,7 +116,7 @@ index 38251cab1..e2d7e8ac4 100644
      setState(() {
        _isSaving = true;
        _error = null;
-@@ -148,36 +122,18 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -157,50 +122,18 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
        discNumber: int.tryParse(_discNumberController.text.trim()),
      );
  
@@ -108,6 +128,20 @@ index 38251cab1..e2d7e8ac4 100644
  
 -    if (result.saved) {
 -      final messenger = ScaffoldMessenger.of(context);
+-      final path = widget.song.filePath;
+-      if (path != null && path.isNotEmpty) {
+-        PlayerService().syncSongMetadata(
+-          filePath: path,
+-          title: fields.title,
+-          artist: fields.artist,
+-          album: fields.album,
+-          albumArtist: fields.albumArtist,
+-          genre: fields.genre,
+-          year: fields.year,
+-          trackNumber: fields.trackNumber,
+-          discNumber: fields.discNumber,
+-        );
+-      }
 +    if (success) {
        ref.invalidate(songsProvider);
        Navigator.of(context).pop(true);
@@ -136,7 +170,7 @@ index 38251cab1..e2d7e8ac4 100644
        });
      }
    }
-@@ -185,8 +141,6 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -208,8 +141,6 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
    @override
    Widget build(BuildContext context) {
      final accent = context.adaptiveTextPrimary;
@@ -145,7 +179,7 @@ index 38251cab1..e2d7e8ac4 100644
  
      return PopScope(
        canPop: !_isSaving,
-@@ -219,114 +173,124 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -242,114 +173,124 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
                color: accent,
              ),
            ),
@@ -374,7 +408,7 @@ index 38251cab1..e2d7e8ac4 100644
        ),
      );
    }
-@@ -335,10 +299,8 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -358,10 +299,8 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
      BuildContext context,
      String label,
      TextEditingController controller, {
@@ -385,7 +419,7 @@ index 38251cab1..e2d7e8ac4 100644
    }) {
      return Padding(
        padding: const EdgeInsets.only(bottom: AppConstants.spacingMd),
-@@ -357,10 +319,8 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -380,10 +319,8 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
            const SizedBox(height: 4),
            TextField(
              controller: controller,
@@ -396,7 +430,7 @@ index 38251cab1..e2d7e8ac4 100644
              style: TextStyle(
                fontFamily: 'ProductSans',
                fontSize: 15,
-@@ -378,31 +338,20 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -401,31 +338,20 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
                  vertical: AppConstants.spacingSm + 2,
                ),
                border: OutlineInputBorder(
@@ -434,7 +468,7 @@ index 38251cab1..e2d7e8ac4 100644
              ),
            ),
          ],
-@@ -471,67 +420,6 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -494,67 +420,6 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
      );
    }
  
@@ -502,7 +536,7 @@ index 38251cab1..e2d7e8ac4 100644
    void _showDiscardDialog(BuildContext context) {
      showDialog(
        context: context,
-@@ -563,4 +451,4 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
+@@ -586,4 +451,4 @@ class _MetadataEditorScreenState extends ConsumerState<MetadataEditorScreen> {
        ),
      );
    }

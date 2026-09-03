@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add server playlist storage and sync"
 This reverts commit 20befc068f2f091b45f3cdf2696b29a96da86c8a.
 
 diff --git a/lib/features/playlists/screens/playlists_screen.dart b/lib/features/playlists/screens/playlists_screen.dart
-index bb34b5f5e..0269fbd0a 100644
+index e359942cb..d69fdabb5 100644
 --- a/lib/features/playlists/screens/playlists_screen.dart
 +++ b/lib/features/playlists/screens/playlists_screen.dart
 @@ -10,7 +10,6 @@ import 'package:flick/models/playlist.dart';
@@ -15,9 +15,9 @@ index bb34b5f5e..0269fbd0a 100644
  import 'package:flick/providers/navigation_provider.dart';
 -import 'package:flick/services/sources/network_source_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
  import 'package:flick/widgets/common/surface_icon_button.dart';
- import 'package:flick/features/playlists/screens/playlist_detail_screen.dart';
-@@ -112,8 +111,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -113,8 +112,6 @@ class PlaylistsScreen extends ConsumerWidget {
                    _showCreatePlaylistDialog(context, ref);
                  } else if (value == 'import_m3u') {
                    _importPlaylist(context, ref);
@@ -26,7 +26,7 @@ index bb34b5f5e..0269fbd0a 100644
                  }
                },
                itemBuilder: (context) => [
-@@ -137,16 +134,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -138,16 +135,6 @@ class PlaylistsScreen extends ConsumerWidget {
                      ],
                    ),
                  ),
@@ -43,7 +43,7 @@ index bb34b5f5e..0269fbd0a 100644
                ],
              ),
            ),
-@@ -285,21 +272,9 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -286,21 +273,9 @@ class PlaylistsScreen extends ConsumerWidget {
          itemCount: playlists.length,
        itemBuilder: (context, index) {
          final playlist = playlists[index];
@@ -65,7 +65,7 @@ index bb34b5f5e..0269fbd0a 100644
            onTap: () {
              NavigationHelper.pushFade(
                context,
-@@ -359,13 +334,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -360,13 +335,6 @@ class PlaylistsScreen extends ConsumerWidget {
  
    void _showCreatePlaylistDialog(BuildContext context, WidgetRef ref) {
      final controller = TextEditingController();
@@ -79,7 +79,7 @@ index bb34b5f5e..0269fbd0a 100644
  
      showDialog(
        context: context,
-@@ -378,59 +346,22 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -379,59 +347,22 @@ class PlaylistsScreen extends ConsumerWidget {
            'Create Playlist',
            style: TextStyle(color: context.adaptiveTextPrimary),
          ),
@@ -154,7 +154,7 @@ index bb34b5f5e..0269fbd0a 100644
          ),
          actions: [
            TextButton(
-@@ -447,7 +378,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -448,7 +379,6 @@ class PlaylistsScreen extends ConsumerWidget {
                controller.text,
                controller,
                dialogContext: dialogContext,
@@ -162,7 +162,7 @@ index bb34b5f5e..0269fbd0a 100644
              ),
              child: Text(
                'Create',
-@@ -465,7 +395,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -466,7 +396,6 @@ class PlaylistsScreen extends ConsumerWidget {
      String name,
      TextEditingController controller, {
      BuildContext? dialogContext,
@@ -170,7 +170,7 @@ index bb34b5f5e..0269fbd0a 100644
    }) async {
      if (name.trim().isEmpty) {
        ScaffoldMessenger.of(context).showSnackBar(
-@@ -474,10 +403,9 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -475,10 +404,9 @@ class PlaylistsScreen extends ConsumerWidget {
        return;
      }
  
@@ -184,7 +184,7 @@ index bb34b5f5e..0269fbd0a 100644
  
      if (playlist == null) {
        if (context.mounted) {
-@@ -501,29 +429,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -502,29 +430,6 @@ class PlaylistsScreen extends ConsumerWidget {
      }
    }
  
@@ -214,7 +214,7 @@ index bb34b5f5e..0269fbd0a 100644
    Future<void> _importPlaylist(BuildContext context, WidgetRef ref) async {
      try {
        final result = await ref
-@@ -579,7 +484,6 @@ class PlaylistsScreen extends ConsumerWidget {
+@@ -580,7 +485,6 @@ class PlaylistsScreen extends ConsumerWidget {
  
  class _PlaylistCard extends StatelessWidget {
    final Playlist playlist;
@@ -222,7 +222,7 @@ index bb34b5f5e..0269fbd0a 100644
    final VoidCallback onTap;
    final VoidCallback onDelete;
    final VoidCallback onExportM3u;
-@@ -588,7 +492,6 @@ class _PlaylistCard extends StatelessWidget {
+@@ -589,7 +493,6 @@ class _PlaylistCard extends StatelessWidget {
    const _PlaylistCard({
      super.key,
      required this.playlist,
@@ -230,7 +230,7 @@ index bb34b5f5e..0269fbd0a 100644
      required this.onTap,
      required this.onDelete,
      required this.onExportM3u,
-@@ -630,9 +533,7 @@ class _PlaylistCard extends StatelessWidget {
+@@ -631,9 +534,7 @@ class _PlaylistCard extends StatelessWidget {
                        ),
                        const SizedBox(height: 4),
                        Text(

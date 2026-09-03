@@ -6,10 +6,10 @@ Subject: [PATCH] lib: recap: do not round
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
-index bc1397657..2301b585d 100644
+index 4cba10644..af0af4c62 100644
 --- a/lib/features/recap/screens/listening_recap_screen.dart
 +++ b/lib/features/recap/screens/listening_recap_screen.dart
-@@ -896,7 +896,6 @@ class _ListeningRecapHeroCard extends StatelessWidget {
+@@ -897,7 +897,6 @@ class _ListeningRecapHeroCard extends StatelessWidget {
          topSong?.song.albumArt ?? recap.topAlbum?.representativeSong.albumArt;
  
      final card = ClipRRect(

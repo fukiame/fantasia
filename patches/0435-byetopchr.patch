@@ -6,10 +6,10 @@ Subject: [PATCH] byetopchr
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 6b0f564e1..78b042e60 100644
+index 0159ce1a2..17a342afd 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -127,7 +127,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -129,7 +129,6 @@ class AnimatedSongScene extends StatelessWidget {
                        child: Column(
                          children: [
                            const Uac2ErrorNotification(),

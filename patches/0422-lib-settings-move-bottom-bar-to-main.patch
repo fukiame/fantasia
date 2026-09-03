@@ -38,7 +38,7 @@ index 488e6d82d..9cd68cc33 100644
            ),
            const SizedBox(height: AppConstants.spacingLg),
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index 969b2506c..2c61d0439 100644
+index dc5aa6c1f..3a4c2edca 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -4,6 +4,7 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -49,7 +49,7 @@ index 969b2506c..2c61d0439 100644
  import 'package:flick/features/settings/screens/interface_settings_screen.dart';
  import 'package:flick/features/settings/screens/library_settings_screen.dart';
  import 'package:flick/features/settings/screens/queue_settings_screen.dart';
-@@ -98,6 +99,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -100,6 +101,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                            ),
                          ),
                          const SettingsDivider(),

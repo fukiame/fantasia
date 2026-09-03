@@ -19,10 +19,10 @@ index fdeada354..23ffa47e8 100644
      <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
      <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
-index 47f80285f..8adc2fe86 100644
+index 875d131b9..ed3a35470 100644
 --- a/lib/features/recap/screens/listening_recap_screen.dart
 +++ b/lib/features/recap/screens/listening_recap_screen.dart
-@@ -44,7 +44,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+@@ -45,7 +45,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
    bool _isSaving = false;
    bool _isExportingCsv = false;
    bool _isExportingTxt = false;
@@ -30,7 +30,7 @@ index 47f80285f..8adc2fe86 100644
    String? _galleryBackgroundPath;
    _RecapRankingPosterType? _savingPosterType;
    _RecapRankingPosterType? _savedPosterType;
-@@ -113,7 +112,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+@@ -114,7 +113,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
      return switch (_posterBackgroundMode) {
        _RecapPosterBackgroundMode.defaultArt => null,
        _RecapPosterBackgroundMode.albumArt => _recapAlbumArtPath(recap),
@@ -38,7 +38,7 @@ index 47f80285f..8adc2fe86 100644
        _RecapPosterBackgroundMode.galleryPhoto => _galleryBackgroundPath,
      };
    }
-@@ -138,40 +136,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+@@ -139,40 +137,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
      });
    }
  
@@ -79,7 +79,7 @@ index 47f80285f..8adc2fe86 100644
    Future<void> _pickPosterBackgroundImage() async {
      final image = await _imagePicker.pickImage(
        source: ImageSource.gallery,
-@@ -666,11 +630,9 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+@@ -667,11 +631,9 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
          _PosterBackgroundSelector(
            mode: _posterBackgroundMode,
            hasAlbumArt: _recapAlbumArtPath(recap) != null,
@@ -91,7 +91,7 @@ index 47f80285f..8adc2fe86 100644
            onGalleryTap: _pickPosterBackgroundImage,
          ),
          const SizedBox(height: AppConstants.spacingSm),
-@@ -880,14 +842,13 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+@@ -881,14 +843,13 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
    }
  }
  
@@ -107,7 +107,7 @@ index 47f80285f..8adc2fe86 100644
        _RecapPosterBackgroundMode.galleryPhoto => 'Gallery',
      };
    }
-@@ -896,7 +857,6 @@ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
+@@ -897,7 +858,6 @@ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
      return switch (this) {
        _RecapPosterBackgroundMode.defaultArt => Icons.auto_awesome_rounded,
        _RecapPosterBackgroundMode.albumArt => LucideIcons.disc,
@@ -115,7 +115,7 @@ index 47f80285f..8adc2fe86 100644
        _RecapPosterBackgroundMode.galleryPhoto => Icons.photo_library_rounded,
      };
    }
-@@ -905,21 +865,17 @@ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
+@@ -906,21 +866,17 @@ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
  class _PosterBackgroundSelector extends StatelessWidget {
    final _RecapPosterBackgroundMode mode;
    final bool hasAlbumArt;
@@ -137,7 +137,7 @@ index 47f80285f..8adc2fe86 100644
      required this.onGalleryTap,
    });
  
-@@ -950,12 +906,6 @@ class _PosterBackgroundSelector extends StatelessWidget {
+@@ -951,12 +907,6 @@ class _PosterBackgroundSelector extends StatelessWidget {
                isSelected: mode == _RecapPosterBackgroundMode.albumArt,
                onTap: hasAlbumArt ? onAlbumArtTap : null,
              ),

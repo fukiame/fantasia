@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add casting settings category to settings screen"
 This reverts commit 591669499a6449a274de12623cc377d5f7f8dcbe.
 
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index f1d1abe67..4d5a34af9 100644
+index 0ddacaf62..5e6a9ac82 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -5,7 +5,6 @@ import 'package:flick/core/constants/app_constants.dart';
@@ -17,7 +17,7 @@ index f1d1abe67..4d5a34af9 100644
  import 'package:flick/features/settings/screens/interface_settings_screen.dart';
  import 'package:flick/features/settings/screens/library_settings_screen.dart';
  import 'package:flick/features/settings/screens/playback_display_settings_screen.dart';
-@@ -151,18 +150,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -152,18 +151,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                            ),
                          ),
                          const SettingsDivider(),

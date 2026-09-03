@@ -6,10 +6,10 @@ Subject: [PATCH] recent tracks
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index 4bb8996f9..d52c452b9 100644
+index fb34f92a1..76dec9537 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -717,48 +717,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -718,48 +718,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
                              ),
                            ),
                          ),
@@ -58,7 +58,7 @@ index 4bb8996f9..d52c452b9 100644
                        if (appPreferences.showPlaylistPreviews)
                          SliverToBoxAdapter(
                            child: _buildSection(
-@@ -995,16 +953,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -996,16 +954,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
          artPath: homeData.favoriteArtPath,
          onTap: () => _navigateTo(context, const FavoritesScreen()),
        ),
@@ -75,7 +75,7 @@ index 4bb8996f9..d52c452b9 100644
        _QuickAccessItem(
          title: 'Recently Added',
          subtitle: 'Your latest library scans',
-@@ -1124,17 +1072,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -1125,17 +1073,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        songsByArtist[entry.key] = SongRepository.sortSongsByAlbum(entry.value);
      }
  
@@ -93,7 +93,7 @@ index 4bb8996f9..d52c452b9 100644
        playlistPreviews: playlistPreviews,
        favoriteArtPath: favoriteSongs.firstOrNull?.albumArt,
      );
-@@ -1678,86 +1621,6 @@ class _ArtistShelfCard extends StatelessWidget {
+@@ -1673,80 +1616,6 @@ class _ArtistShelfCard extends StatelessWidget {
    }
  }
  
@@ -135,17 +135,11 @@ index 4bb8996f9..d52c452b9 100644
 -                    thumbnailHeight: 240,
 -                    placeholder: Container(
 -                      color: AppColors.glassBackgroundStrong,
--                      child: Icon(
--                        LucideIcons.music4,
--                        color: context.adaptiveTextSecondary,
--                      ),
+-                      child: const FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -                    ),
 -                    errorWidget: Container(
 -                      color: AppColors.glassBackgroundStrong,
--                      child: Icon(
--                        LucideIcons.music4,
--                        color: context.adaptiveTextSecondary,
--                      ),
+-                      child: const FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -                    ),
 -                  ),
 -                ),
@@ -180,7 +174,7 @@ index 4bb8996f9..d52c452b9 100644
  class _PlaylistPreviewCard extends StatelessWidget {
    final _PlaylistPreview preview;
    final VoidCallback onTap;
-@@ -2072,12 +1935,10 @@ class _BrowseChip extends StatelessWidget {
+@@ -2061,12 +1930,10 @@ class _BrowseChip extends StatelessWidget {
  }
  
  class _MenuHomeData {

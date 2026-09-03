@@ -1229,7 +1229,7 @@ index ced26e9b3..000000000
 -  }
 -}
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
-index 556fd2136..927371143 100644
+index 68609dc24..f5c06bb9b 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
 +++ b/lib/features/artists/screens/artist_detail_screen.dart
 @@ -8,7 +8,6 @@ import 'package:flick/core/constants/app_constants.dart';
@@ -1240,7 +1240,7 @@ index 556fd2136..927371143 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/features/albums/screens/album_detail_screen.dart';
  import 'package:flick/models/playback_context.dart';
-@@ -22,7 +21,7 @@ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
+@@ -23,7 +22,7 @@ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
  import 'package:flick/providers/navigation_provider.dart';
  import 'package:flick/providers/app_preferences_provider.dart';
  
@@ -1249,7 +1249,7 @@ index 556fd2136..927371143 100644
  class ArtistDetailScreen extends ConsumerStatefulWidget {
    final String artistName;
    final List<Song> songs;
-@@ -49,15 +48,12 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -50,15 +49,12 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
    static const double _backgroundBlend = 0.22;
  
    final SongRepository _songRepository = SongRepository();
@@ -1265,7 +1265,7 @@ index 556fd2136..927371143 100644
    List<AlbumGroup> _artistAlbums = [];
    bool _isLoadingExtras = true;
    String? _artistArt;
-@@ -95,9 +91,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -96,9 +92,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
    }
  
    Future<void> _loadExtras() async {
@@ -1275,7 +1275,7 @@ index 556fd2136..927371143 100644
      final allAlbums = await _songRepository.getAlbumGroups();
      final artistAlbums = allAlbums
          .where(
-@@ -107,7 +100,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -108,7 +101,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
  
      if (mounted) {
        setState(() {
@@ -1283,7 +1283,7 @@ index 556fd2136..927371143 100644
          _artistAlbums = artistAlbums;
          _isLoadingExtras = false;
        });
-@@ -486,35 +478,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+@@ -487,35 +479,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
                            const SliverToBoxAdapter(
                              child: SizedBox(height: AppConstants.spacingLg),
                            ),
@@ -1319,7 +1319,7 @@ index 556fd2136..927371143 100644
                          _buildSectionTitle(context, 'Songs'),
                          SliverPadding(
                            padding: EdgeInsets.only(
-@@ -1022,124 +985,6 @@ class _AlbumCardState extends State<_AlbumCard>
+@@ -1023,116 +986,6 @@ class _AlbumCardState extends State<_AlbumCard>
    }
  }
  
@@ -1388,16 +1388,8 @@ index 556fd2136..927371143 100644
 -                    imagePath: widget.song.albumArt,
 -                    audioSourcePath: widget.song.filePath,
 -                    fit: BoxFit.cover,
--                    placeholder: Icon(
--                      LucideIcons.music,
--                      color: context.adaptiveTextTertiary,
--                      size: 18,
--                    ),
--                    errorWidget: Icon(
--                      LucideIcons.music,
--                      color: context.adaptiveTextTertiary,
--                      size: 18,
--                    ),
+-                    placeholder: const FlickArtworkPlaceholder(size: 22, opacity: 0.9),
+-                    errorWidget: const FlickArtworkPlaceholder(size: 22, opacity: 0.9),
 -                  ),
 -                ),
 -              ),
@@ -1445,7 +1437,7 @@ index 556fd2136..927371143 100644
    final String albumName;
    final List<Song> songs;
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index accf3eedd..3b6cf0479 100644
+index d31ca74f5..01ece8e41 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
 @@ -8,7 +8,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
@@ -1456,7 +1448,7 @@ index accf3eedd..3b6cf0479 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/features/albums/screens/albums_screen.dart';
  import 'package:flick/features/artists/screens/artists_screen.dart';
-@@ -38,12 +37,9 @@ class MenuScreen extends ConsumerStatefulWidget {
+@@ -40,12 +39,9 @@ class MenuScreen extends ConsumerStatefulWidget {
  
  class _MenuScreenState extends ConsumerState<MenuScreen>
      with TickerProviderStateMixin {
@@ -1469,7 +1461,7 @@ index accf3eedd..3b6cf0479 100644
    bool _isHistoryLoading = true;
    Color? _heroDominantColor;
    String? _heroColorArtPath;
-@@ -72,9 +68,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -74,9 +70,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
  
    void _watchHistory() {
      _historySubscription?.cancel();
@@ -1479,7 +1471,7 @@ index accf3eedd..3b6cf0479 100644
    }
  
    Future<void> _updateHeroColor(String? artPath, String? filePath) async {
-@@ -100,19 +93,13 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -102,19 +95,13 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      }
  
      try {
@@ -1499,7 +1491,7 @@ index accf3eedd..3b6cf0479 100644
          _isHistoryLoading = false;
        });
      }
-@@ -181,14 +168,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -183,14 +170,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
        allSongs: allSongs,
        favoriteSongs: favoriteSongs,
        playlists: playlists,
@@ -1514,7 +1506,7 @@ index accf3eedd..3b6cf0479 100644
          (songsAsync.isLoading ||
              favoritesAsync.isLoading ||
              playlistsAsync.isLoading ||
-@@ -570,7 +555,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -572,7 +557,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      required List<Song> allSongs,
      required List<Song> favoriteSongs,
      required List<Playlist> playlists,
@@ -1522,7 +1514,7 @@ index accf3eedd..3b6cf0479 100644
    }) {
      final songById = {for (final song in allSongs) song.id: song};
      final songsByArtist = <String, List<Song>>{};
-@@ -667,47 +651,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+@@ -669,47 +653,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
      return _dedupeSongs(songs).take(limit).toList();
    }
  
@@ -1571,10 +1563,10 @@ index accf3eedd..3b6cf0479 100644
      final hour = playedAt.hour;
      return hour >= 21 || hour <= 4;
 diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
-index ee852e4dd..4913acce0 100644
+index 4d91f8f28..f4011e4a1 100644
 --- a/lib/features/playlists/screens/playlist_detail_screen.dart
 +++ b/lib/features/playlists/screens/playlist_detail_screen.dart
-@@ -16,7 +16,6 @@ import 'package:flick/models/playlist.dart';
+@@ -17,7 +17,6 @@ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
  import 'package:flick/services/album_art_service.dart';
  import 'package:flick/services/color_extraction_service.dart';
  import 'package:flick/services/player_service.dart';
@@ -1582,7 +1574,7 @@ index ee852e4dd..4913acce0 100644
  import 'package:flick/data/repositories/song_repository.dart';
  import 'package:flick/providers/playlist_provider.dart';
  import 'package:flick/providers/navigation_provider.dart';
-@@ -45,8 +44,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -46,8 +45,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
  
    final PlayerService _playerService = PlayerService();
    final SongRepository _songRepository = SongRepository();
@@ -1591,7 +1583,7 @@ index ee852e4dd..4913acce0 100644
    final ColorExtractionService _colorService = ColorExtractionService();
  
    final ScrollController _scrollController = ScrollController();
-@@ -237,11 +234,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+@@ -238,11 +235,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
    Future<void> _extractPlaylistColor(List<String> songIds) async {
      if (songIds.isEmpty) return;
  
@@ -1605,7 +1597,7 @@ index ee852e4dd..4913acce0 100644
            orElse: () => _songs.isEmpty
 diff --git a/lib/features/recently_played/screens/recently_played_screen.dart b/lib/features/recently_played/screens/recently_played_screen.dart
 deleted file mode 100644
-index 2d3148177..000000000
+index 8b7ad252a..000000000
 --- a/lib/features/recently_played/screens/recently_played_screen.dart
 +++ /dev/null
 @@ -1,753 +0,0 @@
@@ -1623,6 +1615,7 @@ index 2d3148177..000000000
 -import 'package:flick/services/player_service.dart';
 -import 'package:flick/data/repositories/recently_played_repository.dart';
 -import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -import 'package:flick/widgets/common/glass_dialog.dart';
 -import 'package:flick/widgets/common/surface_icon_button.dart';
 -
@@ -2312,11 +2305,10 @@ index 2d3148177..000000000
 -  }
 -
 -  Widget _buildPlaceholder(BuildContext context) {
--    return Center(
--      child: Icon(
--        LucideIcons.music,
--        size: context.responsiveIcon(AppConstants.iconSizeLg),
--        color: context.adaptiveTextTertiary.withValues(alpha: 0.5),
+-    return Container(
+-      color: AppColors.surfaceLight,
+-      child: const Center(
+-        child: FlickArtworkPlaceholder(size: 28, opacity: 0.9),
 -      ),
 -    );
 -  }
@@ -2363,7 +2355,7 @@ index 2d3148177..000000000
 -  bool get isHeader => entry == null;
 -}
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index 08274ccaf..60e430114 100644
+index f42d18791..8773281d1 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -20,7 +20,6 @@ import 'package:flick/services/audio_engine_manager.dart';
@@ -2383,7 +2375,7 @@ index 08274ccaf..60e430114 100644
    final ReplayPlayTracker _replayPlayTracker = ReplayPlayTracker();
    static const MethodChannel _storageChannel = MethodChannel(
      'com.mossapps.flick/storage',
-@@ -2179,9 +2176,6 @@ class PlayerService {
+@@ -2320,9 +2317,6 @@ class PlayerService {
        songId: song.id,
        position: position,
      );

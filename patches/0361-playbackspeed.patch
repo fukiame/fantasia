@@ -6,10 +6,10 @@ Subject: [PATCH] playbackspeed
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index e1134c5d3..2c1d4d901 100644
+index 403b77558..3781fa7e8 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
-@@ -13,7 +13,6 @@ import 'package:flick/features/songs/screens/metadata_editor_screen.dart';
+@@ -14,7 +14,6 @@ import 'package:flick/features/songs/widgets/metadata_editor_bottom_sheet.dart';
  import 'package:flick/providers/providers.dart';
  import 'package:flick/features/player/widgets/song_metadata_sheet.dart';
  import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
@@ -17,7 +17,7 @@ index e1134c5d3..2c1d4d901 100644
  import 'package:flick/features/player/widgets/sleep_timer_bottom_sheet.dart';
  
  class SongActionsSheet extends ConsumerWidget {
-@@ -276,15 +275,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -273,15 +272,6 @@ class SongActionsSheet extends ConsumerWidget {
                                navigation.openAlbumFromSong(context, activeSong);
                              },
                            ),
@@ -35,10 +35,10 @@ index e1134c5d3..2c1d4d901 100644
                              icon: LucideIcons.moonStar,
 diff --git a/lib/features/player/widgets/speed_bottom_sheet.dart b/lib/features/player/widgets/speed_bottom_sheet.dart
 deleted file mode 100644
-index 326cde2b3..000000000
+index 45a81a2d7..000000000
 --- a/lib/features/player/widgets/speed_bottom_sheet.dart
 +++ /dev/null
-@@ -1,110 +0,0 @@
+@@ -1,111 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:lucide_icons_flutter/lucide_icons.dart';
 -import 'package:flick/core/theme/app_colors.dart';
@@ -50,6 +50,7 @@ index 326cde2b3..000000000
 -
 -  static Future<void> show(BuildContext context, PlayerService playerService) {
 -    return showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (context) => SpeedBottomSheet(playerService: playerService),
@@ -247,7 +248,7 @@ index 2905a5c61..3c5747ff3 100644
  final shuffleModeProvider = Provider<ShuffleMode>((ref) {
    return ref.watch(playerProvider.select((state) => state.shuffleMode));
 diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
-index d34bf16ef..9678706ce 100644
+index e130e9301..7c4fadcae 100644
 --- a/lib/services/player_service.dart
 +++ b/lib/services/player_service.dart
 @@ -451,9 +451,6 @@ class PlayerService {
@@ -268,7 +269,7 @@ index d34bf16ef..9678706ce 100644
        }
      }
  
-@@ -1362,7 +1358,6 @@ class PlayerService {
+@@ -1503,7 +1499,6 @@ class PlayerService {
      final player = just_audio.AudioPlayer();
      _justAudioPlayer = player;
      await player.setVolume(_currentVolume);
@@ -276,7 +277,7 @@ index d34bf16ef..9678706ce 100644
      await _updateLoopMode();
      return player;
    }
-@@ -1382,7 +1377,6 @@ class PlayerService {
+@@ -1523,7 +1518,6 @@ class PlayerService {
      }
  
      await player.setVolume(_currentVolume);
@@ -284,7 +285,7 @@ index d34bf16ef..9678706ce 100644
      await _updateLoopMode();
    }
  
-@@ -3180,13 +3174,10 @@ class PlayerService {
+@@ -3321,13 +3315,10 @@ class PlayerService {
          await _rustAudioService.setPipelineModePassthrough(true);
        }
        await _reconcileVolumeForTier(_determineCurrentTier());
@@ -298,7 +299,7 @@ index d34bf16ef..9678706ce 100644
      }
  
      await reapplyEqualizer();
-@@ -4659,42 +4650,6 @@ class PlayerService {
+@@ -4800,42 +4791,6 @@ class PlayerService {
      _debounceQueueChanged();
    }
  
@@ -341,7 +342,7 @@ index d34bf16ef..9678706ce 100644
    // ==================== Sleep Timer ====================
  
    void setSleepTimer(Duration duration) {
-@@ -4884,7 +4839,6 @@ class PlayerService {
+@@ -5025,7 +4980,6 @@ class PlayerService {
      positionNotifier.dispose();
      durationNotifier.dispose();
      bufferedPositionNotifier.dispose();

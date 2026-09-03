@@ -18,10 +18,10 @@ index 637458ff4..167453127 100644
    });
  }
 diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
-index fc86f8bf8..a28c6010e 100644
+index caccace0a..7877e2d1b 100644
 --- a/lib/features/songs/screens/songs_screen.dart
 +++ b/lib/features/songs/screens/songs_screen.dart
-@@ -1811,7 +1811,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+@@ -1814,7 +1814,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
                crossAxisAlignment: CrossAxisAlignment.start,
                children: [
                  Text(

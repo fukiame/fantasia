@@ -79,10 +79,10 @@ index dbc9fd153..3f0f64a81 100644
                        context,
                        playerService: _playerService,
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 2898637bc..14217d706 100644
+index b7a4c331f..20e41084c 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -47,7 +47,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -48,7 +48,6 @@ class AnimatedSongScene extends StatelessWidget {
    final VoidCallback onOpenQueue;
    final VoidCallback onToggleLyrics;
    final Future<void> Function() onQueueSwipe;
@@ -90,7 +90,7 @@ index 2898637bc..14217d706 100644
    final VoidCallback onShowSongActions;
    final Future<void> Function() onPrevious;
    final Future<void> Function() onNext;
-@@ -94,7 +93,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -95,7 +94,6 @@ class AnimatedSongScene extends StatelessWidget {
      required this.onOpenQueue,
      required this.onToggleLyrics,
      required this.onQueueSwipe,
@@ -98,7 +98,7 @@ index 2898637bc..14217d706 100644
      required this.onShowSongActions,
      required this.onPrevious,
      required this.onNext,
-@@ -377,10 +375,8 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -372,10 +370,8 @@ class AnimatedSongScene extends StatelessWidget {
            SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
            Expanded(
              child: GestureDetector(
@@ -111,7 +111,7 @@ index 2898637bc..14217d706 100644
                        if (details.primaryVelocity != null &&
                            details.primaryVelocity! < -400) {
                          await onQueueSwipe();
-@@ -390,7 +386,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -385,7 +381,6 @@ class AnimatedSongScene extends StatelessWidget {
                  valueListenable: playerService.upNextNotifier,
                  builder: (context, upNext, _) {
                    final hasQueue = upNext.isNotEmpty;
@@ -119,7 +119,7 @@ index 2898637bc..14217d706 100644
                    final nowPlayingContent = Column(
                      mainAxisSize: MainAxisSize.min,
                      children: [
-@@ -404,17 +399,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -399,17 +394,6 @@ class AnimatedSongScene extends StatelessWidget {
                            letterSpacing: 0.8,
                          ),
                        ),
@@ -137,7 +137,7 @@ index 2898637bc..14217d706 100644
                      ],
                    );
  
-@@ -423,7 +407,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -418,7 +402,7 @@ class AnimatedSongScene extends StatelessWidget {
                      padding: EdgeInsets.fromLTRB(
                        context.responsive(12.0, 14.0, 16.0),
                        context.responsive(6.0, 7.0, 8.0),
@@ -146,7 +146,7 @@ index 2898637bc..14217d706 100644
                            ? context.responsive(10.0, 11.0, 12.0)
                            : context.responsive(12.0, 14.0, 16.0),
                        context.responsive(6.0, 7.0, 8.0),
-@@ -441,7 +425,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -436,7 +420,7 @@ class AnimatedSongScene extends StatelessWidget {
                        mainAxisSize: MainAxisSize.min,
                        children: [
                          nowPlayingContent,
@@ -155,7 +155,7 @@ index 2898637bc..14217d706 100644
                            SizedBox(width: context.responsive(8.0, 10.0, 12.0)),
                            _buildQueueSummaryBadge(
                              context,
-@@ -466,10 +450,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -461,10 +445,6 @@ class AnimatedSongScene extends StatelessWidget {
            Row(
              mainAxisSize: MainAxisSize.min,
              children: [
@@ -166,7 +166,7 @@ index 2898637bc..14217d706 100644
                _buildChromeButton(
                  context,
                  icon: Icons.more_vert,
-@@ -482,45 +462,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -477,45 +457,6 @@ class AnimatedSongScene extends StatelessWidget {
      );
    }
  
@@ -213,10 +213,10 @@ index 2898637bc..14217d706 100644
      BuildContext context, {
      required int count,
 diff --git a/lib/features/player/widgets/mini_player.dart b/lib/features/player/widgets/mini_player.dart
-index 86e3bbd48..5b1f67df5 100644
+index c035da858..c119b1dff 100644
 --- a/lib/features/player/widgets/mini_player.dart
 +++ b/lib/features/player/widgets/mini_player.dart
-@@ -244,7 +244,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
+@@ -263,7 +263,6 @@ class _MiniPlayerState extends ConsumerState<MiniPlayer> {
                        ),
  
                        // Controls
@@ -225,7 +225,7 @@ index 86e3bbd48..5b1f67df5 100644
                            valueListenable: _playerService.upNextNotifier,
                            builder: (context, upNext, _) {
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index d9b5750b2..8baf18661 100644
+index 48be12302..db902cebf 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
 @@ -181,7 +181,6 @@ class SongActionsSheet extends ConsumerWidget {

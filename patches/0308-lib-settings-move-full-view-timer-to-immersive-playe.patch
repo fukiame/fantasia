@@ -37,10 +37,10 @@ index 8719196b5..249a442e3 100644
            ),
            const SizedBox(height: AppConstants.spacingLg),
 diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
-index 1e9db7ddd..f81f1f84b 100644
+index 08ef49e35..2294e2623 100644
 --- a/lib/features/settings/screens/player_layout_settings_screen.dart
 +++ b/lib/features/settings/screens/player_layout_settings_screen.dart
-@@ -112,6 +112,25 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
+@@ -113,6 +113,25 @@ class PlayerLayoutSettingsScreen extends ConsumerWidget {
                  },
                ),
                const SettingsDivider(),

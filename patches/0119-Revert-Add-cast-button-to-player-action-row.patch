@@ -6,7 +6,7 @@ Subject: [PATCH] Revert "Add cast button to player action row"
 This reverts commit 3bb67fe5c8851f4f07480825c4c9339150d24c10.
 
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index 62d08b3a5..ca700d191 100644
+index 154031bc9..f2f760852 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
 @@ -20,7 +20,6 @@ import 'package:flick/features/player/widgets/sleep_timer_bottom_sheet.dart';
@@ -33,7 +33,7 @@ index 62d08b3a5..ca700d191 100644
      }
    }
  
-@@ -828,46 +818,4 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
+@@ -829,46 +819,4 @@ class _PlayerActionButtonRowState extends ConsumerState<PlayerActionButtonRow> {
        ),
      );
    }

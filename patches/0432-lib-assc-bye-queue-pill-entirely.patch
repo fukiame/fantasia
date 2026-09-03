@@ -34,10 +34,10 @@ index 2193e1ffe..ee4961da6 100644
                        _isVinylRotationActive = enabled;
                      },
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index e9e2a2a89..3cd541f34 100644
+index ee7a5c174..bc10247c7 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -48,7 +48,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -50,7 +50,6 @@ class AnimatedSongScene extends StatelessWidget {
    final bool artworkCardShowAlbum;
    final bool artworkCardShowFileInfo;
    final bool artworkCardShowFrame;
@@ -45,7 +45,7 @@ index e9e2a2a89..3cd541f34 100644
    final void Function(bool enabled)? onRotationEnabledChanged;
    final bool vinylMode;
    final ValueChanged<bool>? onVinylChanged;
-@@ -82,7 +81,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -84,7 +83,6 @@ class AnimatedSongScene extends StatelessWidget {
      this.artworkCardShowAlbum = true,
      this.artworkCardShowFileInfo = true,
      this.artworkCardShowFrame = true,

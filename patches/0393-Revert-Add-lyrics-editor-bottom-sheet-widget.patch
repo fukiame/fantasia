@@ -7,10 +7,10 @@ This reverts commit 7c9386655887ec23bdeeb0864271b2db0c289fd6.
 
 diff --git a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
 deleted file mode 100644
-index 79f047da8..000000000
+index cf5ed3a4e..000000000
 --- a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
 +++ /dev/null
-@@ -1,1215 +0,0 @@
+@@ -1,1216 +0,0 @@
 -import 'dart:convert';
 -import 'dart:io';
 -
@@ -57,6 +57,7 @@ index 79f047da8..000000000
 -    LyricsData? initialLyrics,
 -  }) {
 -    return showModalBottomSheet<LyricsEditorResult>(
+-      useRootNavigator: true,
 -      context: context,
 -      isScrollControlled: true,
 -      backgroundColor: Colors.transparent,

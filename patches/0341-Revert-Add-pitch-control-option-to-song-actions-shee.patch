@@ -6,10 +6,10 @@ Subject: [PATCH] Revert "Add pitch control option to song actions sheet"
 This reverts commit 14195414acbdad0e2b5c918e0e6f31da97ef6506.
 
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index 8baf18661..e1134c5d3 100644
+index db902cebf..403b77558 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
-@@ -14,7 +14,6 @@ import 'package:flick/providers/providers.dart';
+@@ -15,7 +15,6 @@ import 'package:flick/providers/providers.dart';
  import 'package:flick/features/player/widgets/song_metadata_sheet.dart';
  import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
  import 'package:flick/features/player/widgets/speed_bottom_sheet.dart';
@@ -17,7 +17,7 @@ index 8baf18661..e1134c5d3 100644
  import 'package:flick/features/player/widgets/sleep_timer_bottom_sheet.dart';
  
  class SongActionsSheet extends ConsumerWidget {
-@@ -286,15 +285,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -283,15 +282,6 @@ class SongActionsSheet extends ConsumerWidget {
                                SpeedBottomSheet.show(context, playerService);
                              },
                            ),

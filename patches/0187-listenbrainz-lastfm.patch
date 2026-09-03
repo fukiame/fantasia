@@ -6,10 +6,10 @@ Subject: [PATCH] listenbrainz,lastfm
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 27876c549..381072c59 100644
+index 1dc8efc78..2d2665b13 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -460,38 +460,12 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -467,38 +467,12 @@ class _MainShellState extends ConsumerState<MainShell>
        final song = playerState.currentSong;
        if (song != null && !song.isExternal && !playerState.isPlaying) {
          final notifier = ref.read(playerProvider.notifier);
@@ -97,7 +97,7 @@ index 1102f7a61..000000000
 -  }
 -}
 diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
-index fae110d0a..a3078a802 100644
+index 48a0f5869..939a2c44f 100644
 --- a/lib/features/settings/screens/settings_screen.dart
 +++ b/lib/features/settings/screens/settings_screen.dart
 @@ -10,7 +10,6 @@ import 'package:flick/features/settings/screens/library_settings_screen.dart';
@@ -108,7 +108,7 @@ index fae110d0a..a3078a802 100644
  import 'package:flick/features/settings/screens/lyrics_settings_screen.dart';
  import 'package:flick/features/settings/screens/player_layout_settings_screen.dart';
  import 'package:flick/features/settings/screens/widget_settings_screen.dart';
-@@ -165,18 +164,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
+@@ -166,18 +165,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                            ),
                          ),
                          const SettingsDivider(),
@@ -129,10 +129,10 @@ index fae110d0a..a3078a802 100644
                            iconBg: const Color(0xFF2D4A6F),
 diff --git a/lib/features/settings/widgets/lastfm_settings_tile.dart b/lib/features/settings/widgets/lastfm_settings_tile.dart
 deleted file mode 100644
-index 6a6833d4a..000000000
+index a70b28a7c..000000000
 --- a/lib/features/settings/widgets/lastfm_settings_tile.dart
 +++ /dev/null
-@@ -1,1069 +0,0 @@
+@@ -1,1072 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
 -import 'package:url_launcher/url_launcher.dart';
@@ -241,6 +241,7 @@ index 6a6833d4a..000000000
 -
 -  Future<void> _disconnect() async {
 -    final confirmed = await showModalBottomSheet<bool>(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (ctx) => Container(
@@ -424,6 +425,7 @@ index 6a6833d4a..000000000
 -
 -    try {
 -      await showModalBottomSheet(
+-      useRootNavigator: true,
 -        context: context,
 -        isScrollControlled: true,
 -        backgroundColor: Colors.transparent,
@@ -912,6 +914,7 @@ index 6a6833d4a..000000000
 -
 -  Future<void> _showConnectedBottomSheet(String username) async {
 -    await showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (ctx) => Container(
@@ -1204,10 +1207,10 @@ index 6a6833d4a..000000000
 -}
 diff --git a/lib/features/settings/widgets/listenbrainz_settings_tile.dart b/lib/features/settings/widgets/listenbrainz_settings_tile.dart
 deleted file mode 100644
-index d28df38e2..000000000
+index 168ec9d31..000000000
 --- a/lib/features/settings/widgets/listenbrainz_settings_tile.dart
 +++ /dev/null
-@@ -1,793 +0,0 @@
+@@ -1,796 +0,0 @@
 -import 'package:flutter/material.dart';
 -import 'package:flutter_riverpod/flutter_riverpod.dart';
 -
@@ -1240,6 +1243,7 @@ index d28df38e2..000000000
 -    if (!mounted) return;
 -
 -    await showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      isScrollControlled: true,
 -      backgroundColor: Colors.transparent,
@@ -1257,6 +1261,7 @@ index d28df38e2..000000000
 -
 -  Future<void> _disconnect() async {
 -    final confirmed = await showModalBottomSheet<bool>(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (ctx) => Container(
@@ -1420,6 +1425,7 @@ index d28df38e2..000000000
 -
 -  Future<void> _showConnectedBottomSheet(String username) async {
 -    await showModalBottomSheet(
+-      useRootNavigator: true,
 -      context: context,
 -      backgroundColor: Colors.transparent,
 -      builder: (ctx) => Container(

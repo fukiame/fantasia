@@ -144,10 +144,10 @@ index 8f361bc02..62ac50831 100644
          usbPermissionReceiver = null
          try {
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 064ab4587..3af969be9 100644
+index f0ec7f481..1493446c6 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -23,7 +23,6 @@ import 'package:flick/core/utils/navigation_helper.dart';
+@@ -24,7 +24,6 @@ import 'package:flick/core/utils/navigation_helper.dart';
  import 'package:flick/core/utils/app_haptics.dart';
  import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/features/player/widgets/ambient_background.dart';
@@ -155,7 +155,7 @@ index 064ab4587..3af969be9 100644
  import 'package:flick/widgets/navigation/flick_nav_bar.dart';
  import 'package:flick/providers/equalizer_provider.dart';
  import 'package:flick/providers/providers.dart';
-@@ -748,7 +747,6 @@ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
+@@ -829,7 +828,6 @@ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
  }
  
  class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
@@ -163,7 +163,7 @@ index 064ab4587..3af969be9 100644
    int _songChangeDirection = 0; // 1=next, -1=previous, 0=none
    String? _currentSongId;
  
-@@ -765,10 +763,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -846,10 +844,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
          _songChangeDirection = 1;
          ref.read(playerProvider.notifier).previous();
        }
@@ -174,7 +174,7 @@ index 064ab4587..3af969be9 100644
      }
    }
  
-@@ -915,25 +909,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1003,25 +997,6 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
        );
    }
  
@@ -200,7 +200,7 @@ index 064ab4587..3af969be9 100644
    @override
    Widget build(BuildContext context) {
      final currentSong = ref.watch(currentSongProvider);
-@@ -1017,10 +992,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1105,10 +1080,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
                  switchInCurve: Curves.easeOutCubic,
                  switchOutCurve: Curves.easeOutCubic,
                  transitionBuilder: (child, animation) {
@@ -212,7 +212,7 @@ index 064ab4587..3af969be9 100644
                    return SlideTransition(
                      position: Tween<Offset>(
                        begin: offset,
-@@ -1035,9 +1007,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+@@ -1123,9 +1095,7 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
                      ),
                    );
                  },
@@ -326,10 +326,10 @@ index 6ff189a0a..3905fbd42 100644
                      artworkCardTextScale: appPrefs.artworkCardTextScale,
                      artworkCardVerticalOffset:
 diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 8c2bcd404..b081260d1 100644
+index 9e0c90bdd..7fd12e1e1 100644
 --- a/lib/features/player/widgets/animated_song_scene.dart
 +++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -16,11 +16,9 @@ import 'package:flick/services/player_service.dart';
+@@ -16,12 +16,10 @@ import 'package:flick/services/player_service.dart';
  import 'package:flick/services/lyrics_service.dart';
  import 'package:flick/features/player/widgets/album_color_helpers.dart';
  import 'package:flick/features/player/widgets/ambient_background.dart';
@@ -337,11 +337,12 @@ index 8c2bcd404..b081260d1 100644
  import 'package:flick/features/player/widgets/bit_perfect_capsule.dart';
  import 'package:flick/features/player/widgets/bit_perfect_indicator.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
 -import 'package:flick/features/player/widgets/visualizer_art_box.dart';
  import 'package:flick/features/player/widgets/album_art_box.dart';
  import 'package:flick/features/player/widgets/waveform_layer.dart';
  import 'package:flick/features/player/widgets/player_controls.dart';
-@@ -33,7 +31,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -34,7 +32,6 @@ class AnimatedSongScene extends StatelessWidget {
  
    final Song song;
    final bool lyricsMode;
@@ -349,7 +350,7 @@ index 8c2bcd404..b081260d1 100644
    final bool immersiveFullView;
    final PlayerScreenMode playerScreenMode;
    final AlbumColorMode albumColorMode;
-@@ -59,9 +56,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -60,9 +57,6 @@ class AnimatedSongScene extends StatelessWidget {
    final void Function(Song song) onNavigateToAlbumDetail;
    final Widget Function(Song song, bool lyricsMode, PlayerScreenMode mode)
    buildFileInfoRow;
@@ -359,7 +360,7 @@ index 8c2bcd404..b081260d1 100644
    final double artworkCardArtworkScale;
    final double artworkCardTextScale;
    final double artworkCardVerticalOffset;
-@@ -85,7 +79,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -86,7 +80,6 @@ class AnimatedSongScene extends StatelessWidget {
      super.key,
      required this.song,
      required this.lyricsMode,
@@ -367,7 +368,7 @@ index 8c2bcd404..b081260d1 100644
      required this.immersiveFullView,
      required this.playerScreenMode,
      required this.albumColorMode,
-@@ -109,9 +102,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -110,9 +103,6 @@ class AnimatedSongScene extends StatelessWidget {
      required this.onNavigateToArtistDetail,
      required this.onNavigateToAlbumDetail,
      required this.buildFileInfoRow,
@@ -377,7 +378,7 @@ index 8c2bcd404..b081260d1 100644
      this.artworkCardArtworkScale = 1.0,
      this.artworkCardTextScale = 1.0,
      this.artworkCardVerticalOffset = 0.0,
-@@ -142,7 +132,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -143,7 +133,6 @@ class AnimatedSongScene extends StatelessWidget {
          immersiveFullView &&
          playerScreenMode == PlayerScreenMode.immersive &&
          !isShortHeight;
@@ -385,7 +386,7 @@ index 8c2bcd404..b081260d1 100644
  
      final scene = RepaintBoundary(
        key: sceneKey,
-@@ -176,12 +165,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -177,12 +166,7 @@ class AnimatedSongScene extends StatelessWidget {
                  child: FadeTransition(opacity: animation, child: child),
                );
              },
@@ -399,7 +400,7 @@ index 8c2bcd404..b081260d1 100644
                  ? KeyedSubtree(
                      key: const ValueKey('immersive-full-view'),
                      child: SafeArea(
-@@ -261,44 +245,6 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -262,44 +246,6 @@ class AnimatedSongScene extends StatelessWidget {
      final bgBlend = albumColorMode.backgroundBlend;
      final hasAlbumTint = albumColor != null && bgBlend > 0;
  
@@ -444,7 +445,7 @@ index 8c2bcd404..b081260d1 100644
      if (playerScreenMode == PlayerScreenMode.artworkCard) {
        return Stack(
          children: [
-@@ -1109,22 +1055,7 @@ class AnimatedSongScene extends StatelessWidget {
+@@ -1102,22 +1048,7 @@ class AnimatedSongScene extends StatelessWidget {
                                            child: OverflowBox(
                                              maxWidth: artworkSize,
                                              maxHeight: artworkSize,
@@ -1207,7 +1208,7 @@ index 77e86cfc7..000000000
 -  bool shouldRepaint(_VisualizerBarPainter oldDelegate) => true;
 -}
 diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index f0527fdca..b2e362c47 100644
+index 81a9c3867..97e5ae702 100644
 --- a/lib/features/player/widgets/bit_perfect_indicator.dart
 +++ b/lib/features/player/widgets/bit_perfect_indicator.dart
 @@ -10,7 +10,6 @@ import 'package:flick/providers/providers.dart';
@@ -1218,7 +1219,7 @@ index f0527fdca..b2e362c47 100644
  import 'package:lucide_icons_flutter/lucide_icons.dart';
  
  /// Compact bit-perfect indicator capsule for the player file-info row.
-@@ -770,7 +769,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -771,7 +770,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
    // ---- PageView area ----
  
    Widget _buildPageLabelBadge(BuildContext context) {
@@ -1227,7 +1228,7 @@ index f0527fdca..b2e362c47 100644
      return Container(
        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
        decoration: BoxDecoration(
-@@ -790,7 +789,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -791,7 +790,7 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
    }
  
    Widget _buildPageDots(BuildContext context) {
@@ -1236,7 +1237,7 @@ index f0527fdca..b2e362c47 100644
      return Row(
        mainAxisAlignment: MainAxisAlignment.center,
        children: List.generate(pageCount, (i) {
-@@ -817,21 +816,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -818,21 +817,9 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
      required AppPreferences prefs,
      required bool expanded,
    }) {
@@ -1258,7 +1259,7 @@ index f0527fdca..b2e362c47 100644
          _buildSourceFlowPage(context, expanded),
          _buildUrbFlowPage(context, expanded),
          _buildRecordedFlowPage(context, expanded),
-@@ -842,12 +829,10 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -843,12 +830,10 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
    String _pageLabel(int page) {
      switch (page) {
        case 0:
@@ -1273,7 +1274,7 @@ index f0527fdca..b2e362c47 100644
          return 'Recorded';
        default:
          return '';
-@@ -856,17 +841,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
+@@ -857,17 +842,6 @@ class _AudioInfoBottomSheetState extends ConsumerState<_AudioInfoBottomSheet> {
  
    // ---- Flow diagram pages ----
  
@@ -1292,7 +1293,7 @@ index f0527fdca..b2e362c47 100644
      final song = widget.song;
      final fmt = song.isDsd
 diff --git a/lib/features/player/widgets/player_action_button_row.dart b/lib/features/player/widgets/player_action_button_row.dart
-index ca700d191..e1e0b117f 100644
+index f2f760852..d06e8c6d4 100644
 --- a/lib/features/player/widgets/player_action_button_row.dart
 +++ b/lib/features/player/widgets/player_action_button_row.dart
 @@ -24,7 +24,6 @@ import 'package:flick/features/settings/screens/equalizer_screen.dart';
@@ -1402,10 +1403,10 @@ index ca700d191..e1e0b117f 100644
      required Song song,
      required EdgeInsets actionPadding,
 diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
-index ff706d03e..b5aa7c038 100644
+index fee0f5169..d767ae305 100644
 --- a/lib/features/player/widgets/song_actions_sheet.dart
 +++ b/lib/features/player/widgets/song_actions_sheet.dart
-@@ -22,9 +22,7 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -23,9 +23,7 @@ class SongActionsSheet extends ConsumerWidget {
    final BuildContext parentContext;
    final PlayerService playerService;
    final Song song;
@@ -1415,7 +1416,7 @@ index ff706d03e..b5aa7c038 100644
    final void Function(BuildContext) onShowPlayerLayout;
    final PlayerNavigation navigation;
  
-@@ -33,9 +31,7 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -34,9 +32,7 @@ class SongActionsSheet extends ConsumerWidget {
      required this.parentContext,
      required this.playerService,
      required this.song,
@@ -1425,7 +1426,7 @@ index ff706d03e..b5aa7c038 100644
      required this.onShowPlayerLayout,
      required this.navigation,
    });
-@@ -44,9 +40,7 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -45,9 +41,7 @@ class SongActionsSheet extends ConsumerWidget {
      BuildContext context, {
      required PlayerService playerService,
      required Song song,
@@ -1435,7 +1436,7 @@ index ff706d03e..b5aa7c038 100644
      required void Function(BuildContext) onShowPlayerLayout,
      required PlayerNavigation navigation,
    }) {
-@@ -58,9 +52,7 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -60,9 +54,7 @@ class SongActionsSheet extends ConsumerWidget {
          parentContext: context,
          playerService: playerService,
          song: song,
@@ -1445,7 +1446,7 @@ index ff706d03e..b5aa7c038 100644
          onShowPlayerLayout: onShowPlayerLayout,
          navigation: navigation,
        ),
-@@ -273,17 +265,6 @@ class SongActionsSheet extends ConsumerWidget {
+@@ -270,17 +262,6 @@ class SongActionsSheet extends ConsumerWidget {
                                onShowLyrics();
                              },
                            ),

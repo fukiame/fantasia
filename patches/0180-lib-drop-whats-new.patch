@@ -6,10 +6,10 @@ Subject: [PATCH] lib: drop whats new
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/app/app.dart b/lib/app/app.dart
-index 45e1f382d..bf43a3a88 100644
+index 600bb6bb2..68af33e82 100644
 --- a/lib/app/app.dart
 +++ b/lib/app/app.dart
-@@ -42,7 +42,6 @@ import 'package:flick/services/widget_intent_handler.dart';
+@@ -44,7 +44,6 @@ import 'package:flick/services/widget_intent_handler.dart';
  import 'package:flick/models/nav_bar_config.dart';
  import 'package:flick/features/milestone/widgets/milestone_card.dart';
  import 'package:flick/features/milestone/widgets/streak_popup.dart';
@@ -17,7 +17,7 @@ index 45e1f382d..bf43a3a88 100644
  import 'package:flick/core/utils/dev_log.dart';
  
  /// Main application widget for Flick Player.
-@@ -299,7 +298,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -306,7 +305,6 @@ class _MainShellState extends ConsumerState<MainShell>
          ref.read(tutorialProvider.notifier).start();
        }
  
@@ -25,7 +25,7 @@ index 45e1f382d..bf43a3a88 100644
        unawaited(_playerService.recordActivityDayAndCheckMilestones());
      });
  
-@@ -411,36 +409,6 @@ class _MainShellState extends ConsumerState<MainShell>
+@@ -418,36 +416,6 @@ class _MainShellState extends ConsumerState<MainShell>
      );
    }
  
