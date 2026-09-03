@@ -1,0 +1,273 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 23:21:51 +0700
+Subject: [PATCH] Revert "Add save location dialog for LRC file export"
+
+This reverts commit 657ef2472700a4eeda60ec8ccb4c465fdd89ab9a.
+
+diff --git a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
+index c6a092f67..d1ac6f202 100644
+--- a/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
++++ b/lib/features/player/widgets/lyrics_editor_bottom_sheet.dart
+@@ -1,10 +1,8 @@
+ import 'dart:convert';
+ import 'dart:io';
+-import 'dart:typed_data';
+ 
+ import 'package:file_picker/file_picker.dart';
+ import 'package:flutter/foundation.dart';
+-import 'package:flick/widgets/common/flick_dialog.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+@@ -46,7 +44,6 @@ class LyricsEditorBottomSheet extends StatefulWidget {
+     LyricsData? initialLyrics,
+   }) {
+     return showModalBottomSheet<LyricsEditorResult>(
+-      useRootNavigator: true,
+       context: context,
+       isScrollControlled: true,
+       backgroundColor: Colors.transparent,
+@@ -383,88 +380,26 @@ class _LyricsEditorBottomSheetState extends State<LyricsEditorBottomSheet> {
+       return;
+     }
+ 
+-    final lrcContent = widget.lyricsService.buildLrcContent(
+-      lines: normalizedLines,
+-      song: widget.song,
+-      length: widget.song.duration,
+-    );
+-    final sidecarPath = widget.lyricsService.suggestSidecarLrcPath(widget.song);
+-
+-    final choice = await showFlickDialog<String>(
+-      context: context,
+-      barrierLabel: 'Save LRC File',
+-      builder: (ctx) => FlickDialog(
+-        title: 'Save LRC File',
+-        content: const Text('Where should the .lrc file be saved?'),
+-        actions: [
+-          FlickDialogButton(
+-            label: 'Choose location\u2026',
+-            onPressed: () => Navigator.pop(ctx, 'custom'),
+-          ),
+-          if (sidecarPath != null)
+-            FlickDialogButton(
+-              label: 'Beside the song',
+-              onPressed: () => Navigator.pop(ctx, 'beside'),
+-            ),
+-          FlickDialogButton(
+-            label: 'Save in Flick',
+-            style: FlickDialogButtonStyle.primary,
+-            onPressed: () => Navigator.pop(ctx, 'managed'),
+-          ),
+-        ],
+-      ),
+-    );
+-
+-    if (choice == null) return;
+-
+     setState(() {
+       _isSaving = true;
+     });
+ 
+     try {
+-      late final LyricsSaveResult result;
+-
+-      if (choice == 'custom') {
+-        final safeStem = widget.song.title.isNotEmpty
+-            ? widget.song.title
+-            : 'lyrics';
+-        final savePath = await FilePicker.saveFile(
+-          dialogTitle: 'Save LRC file',
+-          fileName: '$safeStem.lrc',
+-          type: FileType.custom,
+-          allowedExtensions: const ['lrc'],
+-          bytes: Uint8List.fromList(utf8.encode(lrcContent)),
+-        );
+-        if (savePath == null) {
+-          if (mounted) setState(() => _isSaving = false);
+-          return;
+-        }
+-        result = await widget.lyricsService.saveLyricsToPath(
+-          song: widget.song,
+-          content: lrcContent,
+-          path: savePath,
+-        );
+-      } else if (choice == 'managed') {
+-        result = await widget.lyricsService.saveLyricsToManaged(
+-          song: widget.song,
+-          content: lrcContent,
+-        );
+-      } else {
+-        result = await widget.lyricsService.saveLyricsForSong(
+-          song: widget.song,
+-          content: lrcContent,
+-        );
+-      }
+-
++      final lrcContent = widget.lyricsService.buildLrcContent(
++        lines: normalizedLines,
++        song: widget.song,
++        length: widget.song.duration,
++      );
++      final result = await widget.lyricsService.saveLyricsForSong(
++        song: widget.song,
++        content: lrcContent,
++      );
+       if (!mounted) return;
+-      final message = choice == 'custom'
+-          ? 'Saved lyrics to the chosen location.'
+-          : result.savedBesideSong
+-              ? 'Saved lyrics beside the song as an `.lrc` file.'
+-              : 'Saved lyrics and linked them to this song.';
+       Navigator.of(context).pop(
+         LyricsEditorResult(
+-          message: message,
++          message: result.savedBesideSong
++              ? 'Saved lyrics beside the song as an `.lrc` file.'
++              : 'Saved lyrics in Flick and linked them to this song.',
+           lyricsData: result.data,
+         ),
+       );
+@@ -488,68 +423,82 @@ class _LyricsEditorBottomSheetState extends State<LyricsEditorBottomSheet> {
+   }
+ 
+   Future<void> _showInstructions() async {
+-    await showFlickDialog<void>(
++    await showDialog<void>(
+       context: context,
+-      barrierLabel: 'Lyrics Sync Help',
+-      builder: (dialogContext) => FlickDialog(
+-        title: 'Lyrics Sync Help',
+-        content: Column(
+-          mainAxisSize: MainAxisSize.min,
+-          crossAxisAlignment: CrossAxisAlignment.start,
+-          children: [
+-            Text(
+-              'Simple mode',
+-              style: TextStyle(
+-                color: AppColors.textPrimary,
+-                fontWeight: FontWeight.w700,
++      builder: (context) => AlertDialog(
++        backgroundColor: AppColors.surface,
++        shape: RoundedRectangleBorder(
++          borderRadius: BorderRadius.circular(AppConstants.radiusLg),
++        ),
++        title: const Text('Lyrics Sync Help'),
++        content: SingleChildScrollView(
++          child: Column(
++            mainAxisSize: MainAxisSize.min,
++            crossAxisAlignment: CrossAxisAlignment.start,
++            children: [
++              Text(
++                'Simple mode',
++                style: TextStyle(
++                  color: context.adaptiveTextPrimary,
++                  fontWeight: FontWeight.w700,
++                ),
+               ),
+-            ),
+-            const SizedBox(height: 6),
+-            Text(
+-              '1. Paste or type one lyric line per row.\n'
+-              '2. Play the song.\n'
+-              '3. Select the current lyric line.\n'
+-              '4. Tap "Stamp & Next" when you hear that line.\n'
+-              '5. Save when done.',
+-              style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+-            ),
+-            const SizedBox(height: 16),
+-            Text(
+-              'Advanced mode',
+-              style: TextStyle(
+-                color: AppColors.textPrimary,
+-                fontWeight: FontWeight.w700,
++              const SizedBox(height: 6),
++              Text(
++                '1. Paste or type one lyric line per row.\n'
++                '2. Play the song.\n'
++                '3. Select the current lyric line.\n'
++                '4. Tap "Stamp & Next" when you hear that line.\n'
++                '5. Save when done.',
++                style: TextStyle(
++                  color: context.adaptiveTextSecondary,
++                  height: 1.5,
++                ),
+               ),
+-            ),
+-            const SizedBox(height: 6),
+-            Text(
+-              '1. Edit timestamps directly for each line.\n'
+-              '2. Use "Use Current Time" to capture the live playback time.\n'
+-              '3. Use the shift controls to move all stamped lyrics together.\n'
+-              '4. Save to generate the final `.lrc` file.',
+-              style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+-            ),
+-            const SizedBox(height: 16),
+-            Text(
+-              'Tips',
+-              style: TextStyle(
+-                color: AppColors.textPrimary,
+-                fontWeight: FontWeight.w700,
++              const SizedBox(height: 16),
++              Text(
++                'Advanced mode',
++                style: TextStyle(
++                  color: context.adaptiveTextPrimary,
++                  fontWeight: FontWeight.w700,
++                ),
+               ),
+-            ),
+-            const SizedBox(height: 6),
+-            Text(
+-              '- "Use Existing File" links an `.lrc`, `.txt`, or `.xml` file.\n'
+-              '- If some lines are not stamped, Flick fills their times automatically.\n'
+-              '- Save writes beside the song when possible, otherwise Flick stores a linked copy.',
+-              style: TextStyle(color: AppColors.textSecondary, height: 1.5),
+-            ),
+-          ],
++              const SizedBox(height: 6),
++              Text(
++                '1. Edit timestamps directly for each line.\n'
++                '2. Use "Use Current Time" to capture the live playback time.\n'
++                '3. Use the shift controls to move all stamped lyrics together.\n'
++                '4. Save to generate the final `.lrc` file.',
++                style: TextStyle(
++                  color: context.adaptiveTextSecondary,
++                  height: 1.5,
++                ),
++              ),
++              const SizedBox(height: 16),
++              Text(
++                'Tips',
++                style: TextStyle(
++                  color: context.adaptiveTextPrimary,
++                  fontWeight: FontWeight.w700,
++                ),
++              ),
++              const SizedBox(height: 6),
++              Text(
++                '- "Use Existing File" links an `.lrc`, `.txt`, or `.xml` file.\n'
++                '- If some lines are not stamped, Flick fills their times automatically.\n'
++                '- Save writes beside the song when possible, otherwise Flick stores a linked copy.',
++                style: TextStyle(
++                  color: context.adaptiveTextSecondary,
++                  height: 1.5,
++                ),
++              ),
++            ],
++          ),
+         ),
+         actions: [
+-          FlickDialogButton(
+-            label: 'Got it',
+-            onPressed: () => Navigator.of(dialogContext).pop(),
++          TextButton(
++            onPressed: () => Navigator.of(context).pop(),
++            child: const Text('Got it'),
+           ),
+         ],
+       ),
+-- 
+2.55.0
+

@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 4 Sep 2026 00:20:15 +0700
+Subject: [PATCH] Revert "Trigger first sync for fresh Tidal servers"
+
+This reverts commit d4db3ac5c6d45ea75d901d36dad8292913d90447.
+
+diff --git a/lib/features/settings/screens/network_sources_screen.dart b/lib/features/settings/screens/network_sources_screen.dart
+index 184fce7d4..eae99d56f 100644
+--- a/lib/features/settings/screens/network_sources_screen.dart
++++ b/lib/features/settings/screens/network_sources_screen.dart
+@@ -59,23 +59,9 @@ class _NetworkSourcesScreenState extends State<NetworkSourcesScreen> {
+     );
+     if (changed == true) {
+       await _loadServers();
+-      await _autoSyncFreshTidal();
+     }
+   }
+ 
+-  /// A just-connected Tidal server has favorites waiting — kick the first
+-  /// sync automatically so signing in visibly leads to a library (bug report:
+-  /// "signed in but nothing happens"). Only fires for servers that have
+-  /// never synced.
+-  Future<void> _autoSyncFreshTidal() async {
+-    if (_syncingId != null) return;
+-    final fresh = _servers.where(
+-      (s) => s.protocol == NetworkProtocol.tidal && s.lastSyncedAt == null,
+-    );
+-    if (fresh.isEmpty) return;
+-    await _syncServer(fresh.first);
+-  }
+-
+   // ponytail: string sniffing across the per-protocol exception types; a
+   // shared AuthException hierarchy is the upgrade path.
+   bool _isAuthFailure(Object e) {
+-- 
+2.55.0
+

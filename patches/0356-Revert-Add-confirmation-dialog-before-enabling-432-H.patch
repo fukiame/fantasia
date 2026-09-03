@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 15:23:39 +0700
+Subject: [PATCH] Revert "Add confirmation dialog before enabling 432 Hz
+ tuning"
+
+This reverts commit 7bc625e6c41e0e16e652a9181a196f3156433edc.
+
+diff --git a/lib/features/settings/screens/uac2_preferences_screen.dart b/lib/features/settings/screens/uac2_preferences_screen.dart
+index 079a9f7d0..7e8590e33 100644
+--- a/lib/features/settings/screens/uac2_preferences_screen.dart
++++ b/lib/features/settings/screens/uac2_preferences_screen.dart
+@@ -1461,10 +1461,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+               'Experimental — down-tune playback by 432/440. This disables bit-perfect passthrough and runs the DSP path.',
+           value: enabled,
+           onChanged: (value) async {
+-            if (value && !enabled && !_awaiting432HzConfirm) {
+-              final confirmed = await _confirmEnable432HzTuning(context);
+-              if (!confirmed || !context.mounted) return;
+-            }
+             await service.set432HzTuningEnabled(value);
+             rust_audio.audioSet432HzTuningEnabled(enabled: value);
+             ref.invalidate(uac2432HzTuningEnabledProvider);
+@@ -1476,27 +1472,6 @@ ref.invalidate(uac2ExclusiveDacModeProvider);
+     );
+   }
+ 
+-  bool _awaiting432HzConfirm = false;
+-
+-  Future<bool> _confirmEnable432HzTuning(BuildContext context) {
+-    if (_awaiting432HzConfirm) return Future.value(false);
+-    _awaiting432HzConfirm = true;
+-    return FlickDialogs.confirm(
+-      context,
+-      title: 'Enable 432 Hz Tuning?',
+-      message:
+-          'This slows playback to 432/440 (~1.8% lower pitch and tempo) and '
+-          'disables bit-perfect passthrough. Music will sound slightly lower '
+-          'in tone. Only enable this if you intentionally want A=432 tuning.',
+-      confirmLabel: 'Enable',
+-      icon: Icons.warning_amber_rounded,
+-      iconColor: Colors.amber,
+-    ).then((result) {
+-      _awaiting432HzConfirm = false;
+-      return result;
+-    });
+-  }
+-
+   Widget _buildExperimentalWarning(BuildContext context) {
+     const warnColor = Colors.amber;
+     return Padding(
+-- 
+2.55.0
+

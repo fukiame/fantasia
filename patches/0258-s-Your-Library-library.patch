@@ -1,0 +1,35 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 28 Jul 2026 04:20:01 +0700
+Subject: [PATCH] s/Your Library/library/
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/integration_test/simple_test.dart b/integration_test/simple_test.dart
+index 637458ff4..167453127 100644
+--- a/integration_test/simple_test.dart
++++ b/integration_test/simple_test.dart
+@@ -11,6 +11,6 @@ void main() {
+     await tester.pumpWidget(const FlickPlayerApp());
+ 
+     // Verify the app launches with the Songs screen
+-    expect(find.text('Your Library'), findsOneWidget);
++    expect(find.text('library'), findsOneWidget);
+   });
+ }
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index 6860bc3b1..909386e1d 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -1782,7 +1782,7 @@ class _SongsScreenState extends ConsumerState<SongsScreen>
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Your Library',
++                  'library',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                     fontWeight: FontWeight.w600,
+                     color: context.adaptiveTextPrimary,
+-- 
+2.55.0
+

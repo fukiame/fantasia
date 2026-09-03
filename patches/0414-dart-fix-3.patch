@@ -1,86 +1,69 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: fukiame <fukiame@proton.me>
-Date: Sat, 1 Aug 2026 15:33:38 +0700
+Date: Sat, 1 Aug 2026 15:22:37 +0700
 Subject: [PATCH] dart fix 3
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 122d0f6be..746ac09e5 100644
+index d4d583f04..db4acb69d 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -7,7 +7,6 @@ import 'package:flick/core/theme/adaptive_colors.dart';
- import 'package:flick/core/constants/app_constants.dart';
+@@ -7,7 +7,6 @@ import 'package:flick/core/constants/app_constants.dart';
  import 'package:flick/core/utils/responsive.dart';
  import 'package:flick/core/utils/navigation_helper.dart';
--import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+-import 'package:flick/features/artists/screens/artist_detail_screen.dart';
  import 'package:flick/models/playback_context.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/services/album_art_service.dart';
 diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
-index d56202785..a2f5d4e4b 100644
+index 69e1b7b9b..99a9f8bdd 100644
 --- a/lib/features/menu/screens/menu_screen.dart
 +++ b/lib/features/menu/screens/menu_screen.dart
-@@ -19,7 +19,6 @@ import 'package:flick/features/songs/screens/songs_screen.dart';
+@@ -6,7 +6,6 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/features/albums/screens/albums_screen.dart';
+@@ -20,7 +19,6 @@ import 'package:flick/features/songs/screens/songs_screen.dart';
  import 'package:flick/models/playlist.dart';
  import 'package:flick/models/song.dart';
  import 'package:flick/providers/providers.dart';
--import 'package:flick/services/player_service.dart';
+-import 'package:flick/services/color_extraction_service.dart';
+ import 'package:flick/services/player_service.dart';
  import 'package:flick/widgets/common/cached_image_widget.dart';
  import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
- import 'package:flick/widgets/common/glass_bottom_sheet.dart';
-diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
-index 7bcd324e9..6fbe53345 100644
---- a/lib/features/player/widgets/animated_song_scene.dart
-+++ b/lib/features/player/widgets/animated_song_scene.dart
-@@ -1,8 +1,6 @@
- import 'dart:async';
- import 'dart:math' as math;
- import 'package:flutter/material.dart';
--import 'package:flutter_riverpod/flutter_riverpod.dart';
--import 'package:flick/providers/providers.dart';
- import 'package:flick/widgets/uac2/uac2_error_notification.dart';
- import 'package:lucide_icons_flutter/lucide_icons.dart';
- import 'package:flick/core/theme/app_colors.dart';
-diff --git a/lib/features/player/widgets/bit_perfect_indicator.dart b/lib/features/player/widgets/bit_perfect_indicator.dart
-index 46009a8ac..a38186c18 100644
---- a/lib/features/player/widgets/bit_perfect_indicator.dart
-+++ b/lib/features/player/widgets/bit_perfect_indicator.dart
-@@ -7,7 +7,6 @@ import 'package:flick/models/album_color_mode.dart';
- import 'package:flick/models/audio_output_diagnostics.dart';
- import 'package:flick/models/song.dart';
- import 'package:flick/providers/providers.dart';
--import 'package:flick/services/app_preferences_service.dart';
+diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
+index ec62c13a1..a06eae57b 100644
+--- a/lib/features/player/widgets/waveform_layer.dart
++++ b/lib/features/player/widgets/waveform_layer.dart
+@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
  import 'package:flick/services/player_service.dart';
- import 'package:flick/services/uac2_service.dart';
+ import 'package:flick/models/song.dart';
+ import 'package:flick/features/player/widgets/line_seek_bar.dart';
+-import 'package:flick/providers/providers.dart';
+ 
+ class WaveformLayer extends StatefulWidget {
+   final PlayerService playerService;
+diff --git a/lib/features/settings/screens/player_layout_settings_screen.dart b/lib/features/settings/screens/player_layout_settings_screen.dart
+index 91e0d07f3..5cde78c04 100644
+--- a/lib/features/settings/screens/player_layout_settings_screen.dart
++++ b/lib/features/settings/screens/player_layout_settings_screen.dart
+@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
  import 'package:lucide_icons_flutter/lucide_icons.dart';
-diff --git a/lib/features/settings/screens/app_info_settings_screen.dart b/lib/features/settings/screens/app_info_settings_screen.dart
-index 4ce057bf2..904475d71 100644
---- a/lib/features/settings/screens/app_info_settings_screen.dart
-+++ b/lib/features/settings/screens/app_info_settings_screen.dart
-@@ -25,10 +25,6 @@ class _AppInfoSettingsScreenState extends ConsumerState<AppInfoSettingsScreen>
-     super.initState();
-   }
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/models/player_action_button.dart';
+-import 'package:flick/models/song.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+-import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
  
--  @override
--  void dispose() {
--    super.dispose();
--  }
- 
-   static const String _flickLicenseText = '''
- MIT License
-diff --git a/lib/services/audio_preload_service.dart b/lib/services/audio_preload_service.dart
-index 73e38a271..afe4c846a 100644
---- a/lib/services/audio_preload_service.dart
-+++ b/lib/services/audio_preload_service.dart
-@@ -1,7 +1,6 @@
- import 'dart:async';
- 
- import '../data/entities/song_entity.dart';
--import '../data/repositories/song_repository.dart';
- import 'album_art_service.dart';
- import 'artwork_gate.dart';
- 
+ String _placementLabel(double value) {
 -- 
 2.55.0
 

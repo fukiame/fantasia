@@ -1,0 +1,227 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 12:24:23 +0700
+Subject: [PATCH] lowerc
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
+index 2e491fe46..ee89585d3 100644
+--- a/lib/features/albums/screens/albums_screen.dart
++++ b/lib/features/albums/screens/albums_screen.dart
+@@ -219,7 +219,7 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      'Albums',
++                      'albums',
+                       style: Theme.of(context).textTheme.headlineSmall
+                           ?.copyWith(
+                             fontWeight: FontWeight.w700,
+diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
+index 34ce14d30..a6c0e95f0 100644
+--- a/lib/features/artists/screens/artists_screen.dart
++++ b/lib/features/artists/screens/artists_screen.dart
+@@ -248,7 +248,7 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     Text(
+-                      'Artists',
++                      'artists',
+                       style: Theme.of(context).textTheme.headlineSmall
+                           ?.copyWith(
+                             fontWeight: FontWeight.w700,
+diff --git a/lib/features/favorites/screens/favorites_screen.dart b/lib/features/favorites/screens/favorites_screen.dart
+index db5a03b52..33c5427ad 100644
+--- a/lib/features/favorites/screens/favorites_screen.dart
++++ b/lib/features/favorites/screens/favorites_screen.dart
+@@ -299,7 +299,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Favorites',
++                  'favorites',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                         fontWeight: FontWeight.w600,
+                         color: context.adaptiveTextPrimary,
+diff --git a/lib/features/folders/screens/folders_screen.dart b/lib/features/folders/screens/folders_screen.dart
+index 5322db0f2..678b5422f 100644
+--- a/lib/features/folders/screens/folders_screen.dart
++++ b/lib/features/folders/screens/folders_screen.dart
+@@ -316,7 +316,7 @@ class _FoldersScreenState extends ConsumerState<FoldersScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Folders',
++                  'folders',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                     fontWeight: FontWeight.w600,
+                     color: context.adaptiveTextPrimary,
+diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
+index d767ae305..c0fd54a7a 100644
+--- a/lib/features/player/widgets/song_actions_sheet.dart
++++ b/lib/features/player/widgets/song_actions_sheet.dart
+@@ -405,7 +405,7 @@ class SongActionsSheet extends ConsumerWidget {
+               const SizedBox(width: 12),
+               Expanded(
+                 child: Text(
+-                  label,
++                  label.toLowerCase(),
+                   style: TextStyle(
+                     fontFamily: 'ProductSans',
+                     fontSize: context.responsive(13.0, 14.0, 15.0),
+diff --git a/lib/features/playlists/screens/playlists_screen.dart b/lib/features/playlists/screens/playlists_screen.dart
+index c22c4d541..ffd0ec1d5 100644
+--- a/lib/features/playlists/screens/playlists_screen.dart
++++ b/lib/features/playlists/screens/playlists_screen.dart
+@@ -83,16 +83,14 @@ class PlaylistsScreen extends ConsumerWidget {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Playlists',
++                  'playlists',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                     fontWeight: FontWeight.w600,
+                     color: context.adaptiveTextPrimary,
+                   ),
+                 ),
+                 Text(
+-                  count == 0
+-                      ? 'Your custom collections'
+-                      : '$count playlist${count == 1 ? '' : 's'}',
++                  '$count playlist${count == 1 ? '' : 's'}',
+                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                     color: context.adaptiveTextTertiary,
+                   ),
+diff --git a/lib/features/queue/screens/queue_screen.dart b/lib/features/queue/screens/queue_screen.dart
+index 3cfc8f244..f6461ab16 100644
+--- a/lib/features/queue/screens/queue_screen.dart
++++ b/lib/features/queue/screens/queue_screen.dart
+@@ -339,7 +339,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Queue',
++                  'queue',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                         fontWeight: FontWeight.w600,
+                         color: context.adaptiveTextPrimary,
+@@ -358,7 +358,7 @@ class _QueueScreenState extends ConsumerState<QueueScreen> {
+             TextButton(
+               onPressed: _selectAll,
+               child: Text(
+-                'Select All',
++                'select all',
+                 style: TextStyle(color: context.adaptiveTextSecondary),
+               ),
+             ),
+@@ -409,7 +409,7 @@ class _Header extends StatelessWidget {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Queue',
++                  'queue',
+                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                         fontWeight: FontWeight.w600,
+                         color: context.adaptiveTextPrimary,
+@@ -456,7 +456,7 @@ class _EmptyQueue extends StatelessWidget {
+             ),
+             const SizedBox(height: AppConstants.spacingLg),
+             Text(
+-              'Queue is empty',
++              'queue is empty',
+               style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                     color: context.adaptiveTextSecondary,
+                     fontWeight: FontWeight.w600,
+@@ -464,7 +464,7 @@ class _EmptyQueue extends StatelessWidget {
+             ),
+             const SizedBox(height: AppConstants.spacingSm),
+             Text(
+-              'Add songs from the player or song actions menu.',
++              'add songs from the player or song actions menu.',
+               textAlign: TextAlign.center,
+               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                     color: context.adaptiveTextTertiary,
+@@ -504,7 +504,7 @@ class _EmptyUpcomingState extends StatelessWidget {
+             const SizedBox(width: AppConstants.spacingSm),
+             Expanded(
+               child: Text(
+-                'No upcoming queue items yet.',
++                'no upcoming queue items yet.',
+                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                       color: context.adaptiveTextSecondary,
+                     ),
+@@ -547,7 +547,7 @@ class _NowPlayingCard extends StatelessWidget {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Now playing',
++                  'now playing',
+                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                         color: AppColors.accent,
+                         fontWeight: FontWeight.w700,
+@@ -840,11 +840,11 @@ class _QueueTile extends StatelessWidget {
+                       if (onMoveToNext != null)
+                         const PopupMenuItem(
+                           value: _QueueAction.playNext,
+-                          child: Text('Play next'),
++                          child: Text('play next'),
+                         ),
+                       const PopupMenuItem(
+                         value: _QueueAction.remove,
+-                        child: Text('Remove'),
++                        child: Text('remove'),
+                       ),
+                     ],
+                     icon: Icon(
+diff --git a/lib/features/settings/screens/settings_screen.dart b/lib/features/settings/screens/settings_screen.dart
+index c893e3793..e58132beb 100644
+--- a/lib/features/settings/screens/settings_screen.dart
++++ b/lib/features/settings/screens/settings_screen.dart
+@@ -184,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  'Settings',
++                  'settings',
+                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                     fontWeight: FontWeight.w600,
+                     color: context.adaptiveTextPrimary,
+diff --git a/lib/features/songs/screens/songs_screen.dart b/lib/features/songs/screens/songs_screen.dart
+index ac4d21538..6860bc3b1 100644
+--- a/lib/features/songs/screens/songs_screen.dart
++++ b/lib/features/songs/screens/songs_screen.dart
+@@ -3113,7 +3113,7 @@ class _ContentStateWidget extends StatelessWidget {
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+           Text(
+-            title,
++            title.toLowerCase(),
+             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+               color: context.adaptiveTextSecondary,
+               fontWeight: FontWeight.w600,
+@@ -3121,7 +3121,7 @@ class _ContentStateWidget extends StatelessWidget {
+           ),
+           const SizedBox(height: AppConstants.spacingSm),
+           Text(
+-            subtitle,
++            subtitle.toLowerCase(),
+             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+               color: context.adaptiveTextTertiary,
+             ),
+diff --git a/lib/widgets/common/glass_search_bar.dart b/lib/widgets/common/glass_search_bar.dart
+index 14f63bffa..adfd001af 100644
+--- a/lib/widgets/common/glass_search_bar.dart
++++ b/lib/widgets/common/glass_search_bar.dart
+@@ -87,7 +87,7 @@ class _GlassSearchBarState extends State<GlassSearchBar> {
+                 fontSize: 16,
+               ),
+               decoration: InputDecoration(
+-                hintText: widget.hintText,
++                hintText: widget.hintText.toLowerCase(),
+                 hintStyle: TextStyle(color: context.adaptiveTextTertiary),
+                 border: InputBorder.none,
+                 isDense: true,
+-- 
+2.55.0
+

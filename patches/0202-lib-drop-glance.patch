@@ -1,0 +1,397 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 14:05:52 +0700
+Subject: [PATCH] lib: drop glance
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/albums_screen.dart b/lib/features/albums/screens/albums_screen.dart
+index 6fcc521a6..d245319c5 100644
+--- a/lib/features/albums/screens/albums_screen.dart
++++ b/lib/features/albums/screens/albums_screen.dart
+@@ -243,119 +243,8 @@ class _AlbumsScreenState extends ConsumerState<AlbumsScreen> {
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          if (!ref.watch(appPreferencesProvider).glanceCardHidden)
+-            GestureDetector(
+-              onTap: () {
+-                ref
+-                    .read(appPreferencesProvider.notifier)
+-                    .setGlanceCardMinimized(
+-                      !ref.read(appPreferencesProvider).glanceCardMinimized,
+-                    );
+-              },
+-              child: AnimatedCrossFade(
+-                firstChild: _buildGlanceCard(context, expanded: true),
+-                secondChild: _buildGlanceCard(context, expanded: false),
+-                crossFadeState:
+-                    ref.watch(appPreferencesProvider).glanceCardMinimized
+-                    ? CrossFadeState.showSecond
+-                    : CrossFadeState.showFirst,
+-                duration: AppConstants.animationNormal,
+-              ),
+-            ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildGlanceCard(BuildContext context, {required bool expanded}) {
+-    return Container(
+-      width: double.infinity,
+-      padding: EdgeInsets.all(
+-        expanded ? AppConstants.spacingLg : AppConstants.spacingMd,
+-      ),
+-      decoration: BoxDecoration(
+-        borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+-        gradient: LinearGradient(
+-          begin: Alignment.topLeft,
+-          end: Alignment.bottomRight,
+-          colors: [
+-            AppColors.surfaceLight.withValues(alpha: 0.86),
+-            AppColors.surface.withValues(alpha: 0.96),
+-          ],
+-        ),
+-        border: Border.all(color: AppColors.glassBorder),
+-        boxShadow: [
+-          BoxShadow(
+-            color: Colors.black.withValues(alpha: 0.18),
+-            blurRadius: 22,
+-            offset: const Offset(0, 10),
+-          ),
+         ],
+       ),
+-      child: expanded
+-          ? Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                Row(
+-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                  children: [
+-                    Text(
+-                      'Your collection at a glance',
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                        color: context.adaptiveTextPrimary,
+-                        fontWeight: FontWeight.w700,
+-                      ),
+-                    ),
+-                    Icon(
+-                      LucideIcons.chevronUp,
+-                      color: context.adaptiveTextSecondary,
+-                      size: 20,
+-                    ),
+-                  ],
+-                ),
+-                const SizedBox(height: AppConstants.spacingXs),
+-                Text(
+-                  'Browse by artwork, open any album, and jump straight into the tracklist.',
+-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                    color: context.adaptiveTextSecondary,
+-                  ),
+-                ),
+-                const SizedBox(height: AppConstants.spacingMd),
+-                Wrap(
+-                  spacing: AppConstants.spacingSm,
+-                  runSpacing: AppConstants.spacingSm,
+-                  children: [
+-                    _buildInfoChip(
+-                      context,
+-                      icon: LucideIcons.disc3,
+-                      label: '${_albums.length} albums',
+-                    ),
+-                    _buildInfoChip(
+-                      context,
+-                      icon: LucideIcons.music4,
+-                      label: '$_totalTracks tracks',
+-                    ),
+-                  ],
+-                ),
+-              ],
+-            )
+-          : Row(
+-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-              children: [
+-                Text(
+-                  'Your collection at a glance',
+-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                    color: context.adaptiveTextPrimary,
+-                    fontWeight: FontWeight.w700,
+-                  ),
+-                ),
+-                Icon(
+-                  LucideIcons.chevronDown,
+-                  color: context.adaptiveTextSecondary,
+-                  size: 20,
+-                ),
+-              ],
+-            ),
+     );
+   }
+ 
+diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
+index 74f46b75b..52fdacbdb 100644
+--- a/lib/features/artists/screens/artists_screen.dart
++++ b/lib/features/artists/screens/artists_screen.dart
+@@ -300,125 +300,8 @@ class _ArtistsScreenState extends ConsumerState<ArtistsScreen> {
+             ),
+           ),
+           const SizedBox(height: AppConstants.spacingMd),
+-          if (!ref.watch(appPreferencesProvider).glanceCardHidden)
+-            GestureDetector(
+-              onTap: () {
+-                ref
+-                    .read(appPreferencesProvider.notifier)
+-                    .setGlanceCardMinimized(
+-                      !ref.read(appPreferencesProvider).glanceCardMinimized,
+-                    );
+-              },
+-              child: AnimatedCrossFade(
+-                firstChild: _buildGlanceCard(context, expanded: true),
+-                secondChild: _buildGlanceCard(context, expanded: false),
+-                crossFadeState: ref
+-                        .watch(appPreferencesProvider)
+-                        .glanceCardMinimized
+-                    ? CrossFadeState.showSecond
+-                    : CrossFadeState.showFirst,
+-                duration: AppConstants.animationNormal,
+-              ),
+-            ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildGlanceCard(BuildContext context, {required bool expanded}) {
+-    return Container(
+-      width: double.infinity,
+-      padding: EdgeInsets.all(
+-        expanded ? AppConstants.spacingLg : AppConstants.spacingMd,
+-      ),
+-      decoration: BoxDecoration(
+-        borderRadius: BorderRadius.circular(AppConstants.radiusXl),
+-        gradient: LinearGradient(
+-          begin: Alignment.topLeft,
+-          end: Alignment.bottomRight,
+-          colors: [
+-            AppColors.surfaceLight.withValues(alpha: 0.86),
+-            AppColors.surface.withValues(alpha: 0.96),
+-          ],
+-        ),
+-        border: Border.all(color: AppColors.glassBorder),
+-        boxShadow: [
+-          BoxShadow(
+-            color: Colors.black.withValues(alpha: 0.18),
+-            blurRadius: 22,
+-            offset: const Offset(0, 10),
+-          ),
+         ],
+       ),
+-      child: expanded
+-          ? Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                Row(
+-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-                  children: [
+-                    Text(
+-                      'Your library at a glance',
+-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                        color: context.adaptiveTextPrimary,
+-                        fontWeight: FontWeight.w700,
+-                      ),
+-                    ),
+-                    Icon(
+-                      LucideIcons.chevronUp,
+-                      color: context.adaptiveTextSecondary,
+-                      size: 20,
+-                    ),
+-                  ],
+-                ),
+-                const SizedBox(height: AppConstants.spacingXs),
+-                Text(
+-                  'Browse your artists, explore their discographies, and play their tracks.',
+-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                    color: context.adaptiveTextSecondary,
+-                  ),
+-                ),
+-                const SizedBox(height: AppConstants.spacingMd),
+-                Wrap(
+-                  spacing: AppConstants.spacingSm,
+-                  runSpacing: AppConstants.spacingSm,
+-                  children: [
+-                    _buildInfoChip(
+-                      context,
+-                      icon: LucideIcons.mic,
+-                      label: '${_artists.length} artists',
+-                    ),
+-                    _buildInfoChip(
+-                      context,
+-                      icon: LucideIcons.music4,
+-                      label: '$_totalSongs songs',
+-                    ),
+-                    _buildInfoChip(
+-                      context,
+-                      icon: LucideIcons.disc3,
+-                      label: '$_totalAlbums albums',
+-                    ),
+-                  ],
+-                ),
+-              ],
+-            )
+-          : Row(
+-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+-              children: [
+-                Text(
+-                  'Your library at a glance',
+-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-                    color: context.adaptiveTextPrimary,
+-                    fontWeight: FontWeight.w700,
+-                  ),
+-                ),
+-                Icon(
+-                  LucideIcons.chevronDown,
+-                  color: context.adaptiveTextSecondary,
+-                  size: 20,
+-                ),
+-              ],
+-            ),
+     );
+   }
+ 
+diff --git a/lib/features/settings/screens/interface_settings_screen.dart b/lib/features/settings/screens/interface_settings_screen.dart
+index ef8404643..3cb604517 100644
+--- a/lib/features/settings/screens/interface_settings_screen.dart
++++ b/lib/features/settings/screens/interface_settings_screen.dart
+@@ -74,18 +74,6 @@ class InterfaceSettingsScreen extends ConsumerWidget {
+                 },
+               ),
+               const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.layoutGrid,
+-                title: 'Library Glance Card',
+-                subtitle: 'Show the "at a glance" summary on Artists/Albums',
+-                value: !appPreferences.glanceCardHidden,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setGlanceCardHidden(!value);
+-                },
+-              ),
+-              const SettingsDivider(),
+               NavigationSetting(
+                 icon: LucideIcons.navigation,
+                 title: 'Bottom Bar',
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index f5bdf01c2..91af28db2 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -429,20 +429,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+         .setWelcomeCardDismissed(value);
+   }
+ 
+-  Future<void> setGlanceCardHidden(bool value) async {
+-    if (state.glanceCardHidden == value) return;
+-    state = state.copyWith(glanceCardHidden: value);
+-    await ref.read(appPreferencesServiceProvider).setGlanceCardHidden(value);
+-  }
+-
+-  Future<void> setGlanceCardMinimized(bool value) async {
+-    if (state.glanceCardMinimized == value) return;
+-    state = state.copyWith(glanceCardMinimized: value);
+-    await ref
+-        .read(appPreferencesServiceProvider)
+-        .setGlanceCardMinimized(value);
+-  }
+-
+   Future<void> setReplaceAlbumWithBitPerfectCapsule(bool value) async {
+     if (state.replaceAlbumWithBitPerfectCapsule == value) return;
+     state = state.copyWith(replaceAlbumWithBitPerfectCapsule: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 77d36f473..f9f4dc6d0 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -57,8 +57,6 @@ class AppPreferences {
+   final String leftTopActionButton;
+   final String rightTopActionButton;
+   final bool welcomeCardDismissed;
+-  final bool glanceCardHidden;
+-  final bool glanceCardMinimized;
+   final bool replaceAlbumWithBitPerfectCapsule;
+   final bool albumsStretchArtwork;
+   final bool animatedAlbumArt;
+@@ -148,8 +146,6 @@ class AppPreferences {
+     this.leftTopActionButton = 'none',
+     this.rightTopActionButton = 'none',
+     this.welcomeCardDismissed = false,
+-    this.glanceCardHidden = false,
+-    this.glanceCardMinimized = false,
+     this.replaceAlbumWithBitPerfectCapsule = false,
+     this.albumsStretchArtwork = false,
+     this.animatedAlbumArt = true,
+@@ -240,8 +236,6 @@ class AppPreferences {
+     String? leftTopActionButton,
+     String? rightTopActionButton,
+     bool? welcomeCardDismissed,
+-    bool? glanceCardHidden,
+-    bool? glanceCardMinimized,
+     bool? replaceAlbumWithBitPerfectCapsule,
+     bool? albumsStretchArtwork,
+     bool? animatedAlbumArt,
+@@ -353,8 +347,6 @@ class AppPreferences {
+       leftTopActionButton: leftTopActionButton ?? this.leftTopActionButton,
+       rightTopActionButton: rightTopActionButton ?? this.rightTopActionButton,
+       welcomeCardDismissed: welcomeCardDismissed ?? this.welcomeCardDismissed,
+-      glanceCardHidden: glanceCardHidden ?? this.glanceCardHidden,
+-      glanceCardMinimized: glanceCardMinimized ?? this.glanceCardMinimized,
+       replaceAlbumWithBitPerfectCapsule:
+           replaceAlbumWithBitPerfectCapsule ??
+           this.replaceAlbumWithBitPerfectCapsule,
+@@ -469,8 +461,6 @@ class AppPreferencesService {
+   static const _leftTopActionButtonKey = 'left_top_action_button';
+   static const _rightTopActionButtonKey = 'right_top_action_button';
+   static const _welcomeCardDismissedKey = 'welcome_card_dismissed';
+-  static const _glanceCardHiddenKey = 'glance_card_hidden';
+-  static const _glanceCardMinimizedKey = 'glance_card_minimized';
+   static const _replaceAlbumWithBitPerfectCapsuleKey =
+       'replace_album_with_bit_perfect_capsule';
+   static const _albumsStretchArtworkKey = 'albums_stretch_artwork';
+@@ -594,8 +584,6 @@ class AppPreferencesService {
+       rightTopActionButton:
+           prefs.getString(_rightTopActionButtonKey) ?? 'none',
+       welcomeCardDismissed: prefs.getBool(_welcomeCardDismissedKey) ?? false,
+-      glanceCardHidden: prefs.getBool(_glanceCardHiddenKey) ?? false,
+-      glanceCardMinimized: prefs.getBool(_glanceCardMinimizedKey) ?? false,
+       replaceAlbumWithBitPerfectCapsule:
+           prefs.getBool(_replaceAlbumWithBitPerfectCapsuleKey) ?? false,
+       albumsStretchArtwork:
+@@ -1144,26 +1132,6 @@ class AppPreferencesService {
+     await prefs.setBool(_welcomeCardDismissedKey, value);
+   }
+ 
+-  Future<bool> getGlanceCardHidden() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_glanceCardHiddenKey) ?? false;
+-  }
+-
+-  Future<void> setGlanceCardHidden(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_glanceCardHiddenKey, value);
+-  }
+-
+-  Future<bool> getGlanceCardMinimized() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_glanceCardMinimizedKey) ?? false;
+-  }
+-
+-  Future<void> setGlanceCardMinimized(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_glanceCardMinimizedKey, value);
+-  }
+-
+   Future<bool> getReplaceAlbumWithBitPerfectCapsule() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_replaceAlbumWithBitPerfectCapsuleKey) ?? false;
+-- 
+2.55.0
+

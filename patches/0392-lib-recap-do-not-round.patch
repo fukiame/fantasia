@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 22:47:35 +0700
+Subject: [PATCH] lib: recap: do not round
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
+index 5cec00ae7..7b8812798 100644
+--- a/lib/features/recap/screens/listening_recap_screen.dart
++++ b/lib/features/recap/screens/listening_recap_screen.dart
+@@ -864,7 +864,6 @@ class _ListeningRecapHeroCard extends StatelessWidget {
+         topSong?.song.albumArt ?? recap.topAlbum?.representativeSong.albumArt;
+ 
+     final card = ClipRRect(
+-      borderRadius: BorderRadius.circular(28),
+       child: Stack(
+         children: [
+           const Positioned.fill(child: _PosterDefaultBackground()),
+-- 
+2.55.0
+

@@ -6,10 +6,10 @@ Subject: [PATCH] lib: albums: detail: sum with seconds
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 5fba7f114..1b8fac6ad 100644
+index 61743bc6a..32dbffb84 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -90,10 +90,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -93,10 +93,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    String get _formattedTotalDuration {
      final hours = _totalDuration.inHours;
      final minutes = _totalDuration.inMinutes.remainder(60);

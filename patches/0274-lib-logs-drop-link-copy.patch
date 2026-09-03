@@ -1,0 +1,142 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 09:24:34 +0700
+Subject: [PATCH] lib: logs: drop link copy
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/settings/screens/logs_screen.dart b/lib/features/settings/screens/logs_screen.dart
+index 1b844f2a8..cddfb5183 100644
+--- a/lib/features/settings/screens/logs_screen.dart
++++ b/lib/features/settings/screens/logs_screen.dart
+@@ -5,7 +5,6 @@ import 'package:flick/widgets/common/flick_dialog.dart';
+ import 'package:flutter/material.dart';
+ import 'package:flutter/services.dart';
+ import 'package:flutter_riverpod/flutter_riverpod.dart';
+-import 'package:http/http.dart' as http;
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:share_plus/share_plus.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+@@ -26,7 +25,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+   String _query = '';
+   final Set<LogSource> _sources = {};
+   bool _stickToBottom = true;
+-  bool _isUploading = false;
+ 
+   @override
+   void dispose() {
+@@ -97,88 +95,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+   }
+ 
+-  // ponytail: unlisted dpaste paste, anonymous, 30-day expiry. Not private —
+-  // anyone with the link reads it — so we warn + consent before upload instead
+-  // of building a lossy scrubber that would strip diagnostic file paths.
+-  Future<void> _uploadAsLink(List<LogEntry> entries) async {
+-    if (entries.isEmpty) return;
+-    final ok = await FlickDialogs.confirm(
+-      context,
+-      title: 'Upload logs as a link?',
+-      message:
+-          'Your logs are uploaded to dpaste.com as an unlisted link that expires in 30 days. '
+-          'Anyone you share the link with can read them — logs may contain file paths and device details.',
+-      confirmLabel: 'Upload',
+-      icon: Icons.warning_amber_rounded,
+-    );
+-    if (!ok) return;
+-
+-    setState(() => _isUploading = true);
+-    try {
+-      final res = await http
+-          .post(
+-            Uri.parse('https://dpaste.com/api/v2/'),
+-            headers: {'User-Agent': 'Flick/$kAppVersionLabel'},
+-            body: {
+-              'content': entries.map(_format).join('\n'),
+-              'syntax': 'text',
+-              'expiry_days': '30',
+-            },
+-          )
+-          .timeout(const Duration(seconds: 20));
+-      if (res.statusCode == 201) {
+-        final url = res.body.trim();
+-        await Clipboard.setData(ClipboardData(text: url));
+-        if (!mounted) return;
+-        _showLinkDialog(url);
+-      } else {
+-        _snack('Upload failed (${res.statusCode}).');
+-      }
+-    } catch (e) {
+-      _snack('Upload failed: $e');
+-    } finally {
+-      if (mounted) setState(() => _isUploading = false);
+-    }
+-  }
+-
+-  void _showLinkDialog(String url) {
+-    showFlickDialog<void>(
+-      context: context,
+-      barrierLabel: 'Link ready',
+-      builder: (ctx) => FlickDialog(
+-        title: 'Link ready',
+-        content: SelectableText(
+-          url,
+-          style: TextStyle(
+-            color: AppColors.accent,
+-            fontFamily: 'monospace',
+-          ),
+-        ),
+-        actions: [
+-          FlickDialogButton(
+-            label: 'Copy',
+-            onPressed: () async {
+-              await Clipboard.setData(ClipboardData(text: url));
+-              if (ctx.mounted) Navigator.pop(ctx);
+-            },
+-          ),
+-          FlickDialogButton(
+-            label: 'Share',
+-            onPressed: () {
+-              Navigator.pop(ctx);
+-              Share.share(url, subject: 'Flick logs');
+-            },
+-          ),
+-          FlickDialogButton(
+-            label: 'Done',
+-            style: FlickDialogButtonStyle.primary,
+-            onPressed: () => Navigator.pop(ctx),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+   Future<void> _saveAsText(List<LogEntry> entries) async {
+     if (entries.isEmpty) return;
+     final stamp = DateTime.now().toIso8601String().replaceAll(':', '-').split('.').first;
+@@ -271,22 +187,6 @@ class _LogsScreenState extends ConsumerState<LogsScreen> {
+                         : () => _copyAll(_filtered(AppLog.instance.entries)),
+                     icon: Icon(LucideIcons.copy, color: context.adaptiveTextSecondary),
+                   ),
+-                  IconButton(
+-                    tooltip: 'Copy link',
+-                    onPressed: (count == 0 || _isUploading)
+-                        ? null
+-                        : () => _uploadAsLink(_filtered(AppLog.instance.entries)),
+-                    icon: _isUploading
+-                        ? SizedBox(
+-                            width: 18,
+-                            height: 18,
+-                            child: CircularProgressIndicator(
+-                              strokeWidth: 2,
+-                              color: context.adaptiveTextSecondary,
+-                            ),
+-                          )
+-                        : Icon(LucideIcons.link2, color: context.adaptiveTextSecondary),
+-                  ),
+                   IconButton(
+                     tooltip: 'Share',
+                     onPressed: count == 0
+-- 
+2.55.0
+

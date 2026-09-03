@@ -1,0 +1,2378 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 23:11:04 +0700
+Subject: [PATCH] recentlyplayed
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/data/database.dart b/lib/data/database.dart
+index 1d036226c..7718afac1 100644
+--- a/lib/data/database.dart
++++ b/lib/data/database.dart
+@@ -5,12 +5,10 @@ import 'package:path_provider/path_provider.dart';
+ 
+ import 'entities/artist_entity.dart';
+ import 'entities/folder_entity.dart';
+-import 'entities/recently_played_entity.dart';
+ import 'entities/song_entity.dart';
+ 
+ export 'entities/artist_entity.dart';
+ export 'entities/folder_entity.dart';
+-export 'entities/recently_played_entity.dart';
+ export 'entities/song_entity.dart';
+ 
+ /// Database singleton for Isar operations.
+@@ -34,7 +32,6 @@ class Database {
+     final schemas = [
+       SongEntitySchema,
+       FolderEntitySchema,
+-      RecentlyPlayedEntitySchema,
+       ArtistEntitySchema,
+     ];
+ 
+@@ -101,10 +98,6 @@ class Database {
+   /// Get the folders collection.
+   static IsarCollection<FolderEntity> get folders => instance.folderEntitys;
+ 
+-  /// Get the recently played collection.
+-  static IsarCollection<RecentlyPlayedEntity> get recentlyPlayed =>
+-      _instance!.recentlyPlayedEntitys;
+-
+   /// Get the artists collection.
+   static IsarCollection<ArtistEntity> get artists => _instance!.artistEntitys;
+ }
+diff --git a/lib/data/entities/recently_played_entity.dart b/lib/data/entities/recently_played_entity.dart
+deleted file mode 100644
+index b889ca6a8..000000000
+--- a/lib/data/entities/recently_played_entity.dart
++++ /dev/null
+@@ -1,17 +0,0 @@
+-import 'package:isar_community/isar.dart';
+-
+-part 'recently_played_entity.g.dart';
+-
+-/// Database entity for storing recently played song history.
+-@collection
+-class RecentlyPlayedEntity {
+-  Id id = Isar.autoIncrement;
+-
+-  /// Song ID (references SongEntity.id)
+-  @Index()
+-  late int songId;
+-
+-  /// Timestamp when the song was played
+-  @Index()
+-  late DateTime playedAt;
+-}
+diff --git a/lib/data/entities/recently_played_entity.g.dart b/lib/data/entities/recently_played_entity.g.dart
+deleted file mode 100644
+index 9c42878d6..000000000
+--- a/lib/data/entities/recently_played_entity.g.dart
++++ /dev/null
+@@ -1,790 +0,0 @@
+-// GENERATED CODE - DO NOT MODIFY BY HAND
+-
+-part of 'recently_played_entity.dart';
+-
+-// **************************************************************************
+-// IsarCollectionGenerator
+-// **************************************************************************
+-
+-// coverage:ignore-file
+-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+-
+-extension GetRecentlyPlayedEntityCollection on Isar {
+-  IsarCollection<RecentlyPlayedEntity> get recentlyPlayedEntitys =>
+-      this.collection();
+-}
+-
+-const RecentlyPlayedEntitySchema = CollectionSchema(
+-  name: r'RecentlyPlayedEntity',
+-  id: 2313323638749217169,
+-  properties: {
+-    r'playedAt': PropertySchema(
+-      id: 0,
+-      name: r'playedAt',
+-      type: IsarType.dateTime,
+-    ),
+-    r'songId': PropertySchema(id: 1, name: r'songId', type: IsarType.long),
+-  },
+-
+-  estimateSize: _recentlyPlayedEntityEstimateSize,
+-  serialize: _recentlyPlayedEntitySerialize,
+-  deserialize: _recentlyPlayedEntityDeserialize,
+-  deserializeProp: _recentlyPlayedEntityDeserializeProp,
+-  idName: r'id',
+-  indexes: {
+-    r'songId': IndexSchema(
+-      id: -4588889454650216128,
+-      name: r'songId',
+-      unique: false,
+-      replace: false,
+-      properties: [
+-        IndexPropertySchema(
+-          name: r'songId',
+-          type: IndexType.value,
+-          caseSensitive: false,
+-        ),
+-      ],
+-    ),
+-    r'playedAt': IndexSchema(
+-      id: -3711549563919110219,
+-      name: r'playedAt',
+-      unique: false,
+-      replace: false,
+-      properties: [
+-        IndexPropertySchema(
+-          name: r'playedAt',
+-          type: IndexType.value,
+-          caseSensitive: false,
+-        ),
+-      ],
+-    ),
+-  },
+-  links: {},
+-  embeddedSchemas: {},
+-
+-  getId: _recentlyPlayedEntityGetId,
+-  getLinks: _recentlyPlayedEntityGetLinks,
+-  attach: _recentlyPlayedEntityAttach,
+-  version: '3.3.2',
+-);
+-
+-int _recentlyPlayedEntityEstimateSize(
+-  RecentlyPlayedEntity object,
+-  List<int> offsets,
+-  Map<Type, List<int>> allOffsets,
+-) {
+-  var bytesCount = offsets.last;
+-  return bytesCount;
+-}
+-
+-void _recentlyPlayedEntitySerialize(
+-  RecentlyPlayedEntity object,
+-  IsarWriter writer,
+-  List<int> offsets,
+-  Map<Type, List<int>> allOffsets,
+-) {
+-  writer.writeDateTime(offsets[0], object.playedAt);
+-  writer.writeLong(offsets[1], object.songId);
+-}
+-
+-RecentlyPlayedEntity _recentlyPlayedEntityDeserialize(
+-  Id id,
+-  IsarReader reader,
+-  List<int> offsets,
+-  Map<Type, List<int>> allOffsets,
+-) {
+-  final object = RecentlyPlayedEntity();
+-  object.id = id;
+-  object.playedAt = reader.readDateTime(offsets[0]);
+-  object.songId = reader.readLong(offsets[1]);
+-  return object;
+-}
+-
+-P _recentlyPlayedEntityDeserializeProp<P>(
+-  IsarReader reader,
+-  int propertyId,
+-  int offset,
+-  Map<Type, List<int>> allOffsets,
+-) {
+-  switch (propertyId) {
+-    case 0:
+-      return (reader.readDateTime(offset)) as P;
+-    case 1:
+-      return (reader.readLong(offset)) as P;
+-    default:
+-      throw IsarError('Unknown property with id $propertyId');
+-  }
+-}
+-
+-Id _recentlyPlayedEntityGetId(RecentlyPlayedEntity object) {
+-  return object.id;
+-}
+-
+-List<IsarLinkBase<dynamic>> _recentlyPlayedEntityGetLinks(
+-  RecentlyPlayedEntity object,
+-) {
+-  return [];
+-}
+-
+-void _recentlyPlayedEntityAttach(
+-  IsarCollection<dynamic> col,
+-  Id id,
+-  RecentlyPlayedEntity object,
+-) {
+-  object.id = id;
+-}
+-
+-extension RecentlyPlayedEntityQueryWhereSort
+-    on QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QWhere> {
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhere>
+-  anyId() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(const IdWhereClause.any());
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhere>
+-  anySongId() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        const IndexWhereClause.any(indexName: r'songId'),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhere>
+-  anyPlayedAt() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        const IndexWhereClause.any(indexName: r'playedAt'),
+-      );
+-    });
+-  }
+-}
+-
+-extension RecentlyPlayedEntityQueryWhere
+-    on QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QWhereClause> {
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  idEqualTo(Id id) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(IdWhereClause.between(lower: id, upper: id));
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  idNotEqualTo(Id id) {
+-    return QueryBuilder.apply(this, (query) {
+-      if (query.whereSort == Sort.asc) {
+-        return query
+-            .addWhereClause(
+-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+-            )
+-            .addWhereClause(
+-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+-            );
+-      } else {
+-        return query
+-            .addWhereClause(
+-              IdWhereClause.greaterThan(lower: id, includeLower: false),
+-            )
+-            .addWhereClause(
+-              IdWhereClause.lessThan(upper: id, includeUpper: false),
+-            );
+-      }
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  idGreaterThan(Id id, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IdWhereClause.greaterThan(lower: id, includeLower: include),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  idLessThan(Id id, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IdWhereClause.lessThan(upper: id, includeUpper: include),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  idBetween(
+-    Id lowerId,
+-    Id upperId, {
+-    bool includeLower = true,
+-    bool includeUpper = true,
+-  }) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IdWhereClause.between(
+-          lower: lowerId,
+-          includeLower: includeLower,
+-          upper: upperId,
+-          includeUpper: includeUpper,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  songIdEqualTo(int songId) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.equalTo(indexName: r'songId', value: [songId]),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  songIdNotEqualTo(int songId) {
+-    return QueryBuilder.apply(this, (query) {
+-      if (query.whereSort == Sort.asc) {
+-        return query
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'songId',
+-                lower: [],
+-                upper: [songId],
+-                includeUpper: false,
+-              ),
+-            )
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'songId',
+-                lower: [songId],
+-                includeLower: false,
+-                upper: [],
+-              ),
+-            );
+-      } else {
+-        return query
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'songId',
+-                lower: [songId],
+-                includeLower: false,
+-                upper: [],
+-              ),
+-            )
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'songId',
+-                lower: [],
+-                upper: [songId],
+-                includeUpper: false,
+-              ),
+-            );
+-      }
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  songIdGreaterThan(int songId, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.between(
+-          indexName: r'songId',
+-          lower: [songId],
+-          includeLower: include,
+-          upper: [],
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  songIdLessThan(int songId, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.between(
+-          indexName: r'songId',
+-          lower: [],
+-          upper: [songId],
+-          includeUpper: include,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  songIdBetween(
+-    int lowerSongId,
+-    int upperSongId, {
+-    bool includeLower = true,
+-    bool includeUpper = true,
+-  }) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.between(
+-          indexName: r'songId',
+-          lower: [lowerSongId],
+-          includeLower: includeLower,
+-          upper: [upperSongId],
+-          includeUpper: includeUpper,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  playedAtEqualTo(DateTime playedAt) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.equalTo(indexName: r'playedAt', value: [playedAt]),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  playedAtNotEqualTo(DateTime playedAt) {
+-    return QueryBuilder.apply(this, (query) {
+-      if (query.whereSort == Sort.asc) {
+-        return query
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'playedAt',
+-                lower: [],
+-                upper: [playedAt],
+-                includeUpper: false,
+-              ),
+-            )
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'playedAt',
+-                lower: [playedAt],
+-                includeLower: false,
+-                upper: [],
+-              ),
+-            );
+-      } else {
+-        return query
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'playedAt',
+-                lower: [playedAt],
+-                includeLower: false,
+-                upper: [],
+-              ),
+-            )
+-            .addWhereClause(
+-              IndexWhereClause.between(
+-                indexName: r'playedAt',
+-                lower: [],
+-                upper: [playedAt],
+-                includeUpper: false,
+-              ),
+-            );
+-      }
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  playedAtGreaterThan(DateTime playedAt, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.between(
+-          indexName: r'playedAt',
+-          lower: [playedAt],
+-          includeLower: include,
+-          upper: [],
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  playedAtLessThan(DateTime playedAt, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.between(
+-          indexName: r'playedAt',
+-          lower: [],
+-          upper: [playedAt],
+-          includeUpper: include,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterWhereClause>
+-  playedAtBetween(
+-    DateTime lowerPlayedAt,
+-    DateTime upperPlayedAt, {
+-    bool includeLower = true,
+-    bool includeUpper = true,
+-  }) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addWhereClause(
+-        IndexWhereClause.between(
+-          indexName: r'playedAt',
+-          lower: [lowerPlayedAt],
+-          includeLower: includeLower,
+-          upper: [upperPlayedAt],
+-          includeUpper: includeUpper,
+-        ),
+-      );
+-    });
+-  }
+-}
+-
+-extension RecentlyPlayedEntityQueryFilter
+-    on
+-        QueryBuilder<
+-          RecentlyPlayedEntity,
+-          RecentlyPlayedEntity,
+-          QFilterCondition
+-        > {
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  idEqualTo(Id value) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.equalTo(property: r'id', value: value),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  idGreaterThan(Id value, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.greaterThan(
+-          include: include,
+-          property: r'id',
+-          value: value,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  idLessThan(Id value, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.lessThan(
+-          include: include,
+-          property: r'id',
+-          value: value,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  idBetween(
+-    Id lower,
+-    Id upper, {
+-    bool includeLower = true,
+-    bool includeUpper = true,
+-  }) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.between(
+-          property: r'id',
+-          lower: lower,
+-          includeLower: includeLower,
+-          upper: upper,
+-          includeUpper: includeUpper,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  playedAtEqualTo(DateTime value) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.equalTo(property: r'playedAt', value: value),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  playedAtGreaterThan(DateTime value, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.greaterThan(
+-          include: include,
+-          property: r'playedAt',
+-          value: value,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  playedAtLessThan(DateTime value, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.lessThan(
+-          include: include,
+-          property: r'playedAt',
+-          value: value,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  playedAtBetween(
+-    DateTime lower,
+-    DateTime upper, {
+-    bool includeLower = true,
+-    bool includeUpper = true,
+-  }) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.between(
+-          property: r'playedAt',
+-          lower: lower,
+-          includeLower: includeLower,
+-          upper: upper,
+-          includeUpper: includeUpper,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  songIdEqualTo(int value) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.equalTo(property: r'songId', value: value),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  songIdGreaterThan(int value, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.greaterThan(
+-          include: include,
+-          property: r'songId',
+-          value: value,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  songIdLessThan(int value, {bool include = false}) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.lessThan(
+-          include: include,
+-          property: r'songId',
+-          value: value,
+-        ),
+-      );
+-    });
+-  }
+-
+-  QueryBuilder<
+-    RecentlyPlayedEntity,
+-    RecentlyPlayedEntity,
+-    QAfterFilterCondition
+-  >
+-  songIdBetween(
+-    int lower,
+-    int upper, {
+-    bool includeLower = true,
+-    bool includeUpper = true,
+-  }) {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addFilterCondition(
+-        FilterCondition.between(
+-          property: r'songId',
+-          lower: lower,
+-          includeLower: includeLower,
+-          upper: upper,
+-          includeUpper: includeUpper,
+-        ),
+-      );
+-    });
+-  }
+-}
+-
+-extension RecentlyPlayedEntityQueryObject
+-    on
+-        QueryBuilder<
+-          RecentlyPlayedEntity,
+-          RecentlyPlayedEntity,
+-          QFilterCondition
+-        > {}
+-
+-extension RecentlyPlayedEntityQueryLinks
+-    on
+-        QueryBuilder<
+-          RecentlyPlayedEntity,
+-          RecentlyPlayedEntity,
+-          QFilterCondition
+-        > {}
+-
+-extension RecentlyPlayedEntityQuerySortBy
+-    on QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QSortBy> {
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  sortByPlayedAt() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'playedAt', Sort.asc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  sortByPlayedAtDesc() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'playedAt', Sort.desc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  sortBySongId() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'songId', Sort.asc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  sortBySongIdDesc() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'songId', Sort.desc);
+-    });
+-  }
+-}
+-
+-extension RecentlyPlayedEntityQuerySortThenBy
+-    on QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QSortThenBy> {
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  thenById() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'id', Sort.asc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  thenByIdDesc() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'id', Sort.desc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  thenByPlayedAt() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'playedAt', Sort.asc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  thenByPlayedAtDesc() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'playedAt', Sort.desc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  thenBySongId() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'songId', Sort.asc);
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QAfterSortBy>
+-  thenBySongIdDesc() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addSortBy(r'songId', Sort.desc);
+-    });
+-  }
+-}
+-
+-extension RecentlyPlayedEntityQueryWhereDistinct
+-    on QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QDistinct> {
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QDistinct>
+-  distinctByPlayedAt() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addDistinctBy(r'playedAt');
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, RecentlyPlayedEntity, QDistinct>
+-  distinctBySongId() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addDistinctBy(r'songId');
+-    });
+-  }
+-}
+-
+-extension RecentlyPlayedEntityQueryProperty
+-    on
+-        QueryBuilder<
+-          RecentlyPlayedEntity,
+-          RecentlyPlayedEntity,
+-          QQueryProperty
+-        > {
+-  QueryBuilder<RecentlyPlayedEntity, int, QQueryOperations> idProperty() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addPropertyName(r'id');
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, DateTime, QQueryOperations>
+-  playedAtProperty() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addPropertyName(r'playedAt');
+-    });
+-  }
+-
+-  QueryBuilder<RecentlyPlayedEntity, int, QQueryOperations> songIdProperty() {
+-    return QueryBuilder.apply(this, (query) {
+-      return query.addPropertyName(r'songId');
+-    });
+-  }
+-}
+diff --git a/lib/data/repositories/recently_played_repository.dart b/lib/data/repositories/recently_played_repository.dart
+deleted file mode 100644
+index ced26e9b3..000000000
+--- a/lib/data/repositories/recently_played_repository.dart
++++ /dev/null
+@@ -1,362 +0,0 @@
+-import 'package:isar_community/isar.dart';
+-
+-import '../../core/utils/audio_metadata_utils.dart';
+-import '../database.dart';
+-import '../../models/song.dart';
+-import 'song_repository.dart';
+-
+-/// Entry representing a recently played song with its timestamp.
+-class RecentlyPlayedEntry {
+-  final Song song;
+-  final DateTime playedAt;
+-
+-  RecentlyPlayedEntry({required this.song, required this.playedAt});
+-}
+-
+-/// Repository for recently played history operations.
+-class RecentlyPlayedRepository {
+-  final Isar _isar;
+-  final SongRepository _songRepository;
+-
+-  /// Maximum number of history entries to keep
+-  static const int maxHistoryEntries = 50000;
+-
+-  RecentlyPlayedRepository({Isar? isar, SongRepository? songRepository})
+-    : _isar = isar ?? Database.instance,
+-      _songRepository = songRepository ?? SongRepository();
+-
+-  /// Record a song as played.
+-  Future<void> recordPlay(String songId) async {
+-    final id = int.tryParse(songId);
+-    if (id == null) return;
+-
+-    await _isar.writeTxn(() async {
+-      final entity = RecentlyPlayedEntity()
+-        ..songId = id
+-        ..playedAt = DateTime.now();
+-
+-      await _isar.recentlyPlayedEntitys.put(entity);
+-
+-      // Cleanup old entries if we exceed max
+-      final count = await _isar.recentlyPlayedEntitys.count();
+-      if (count > maxHistoryEntries) {
+-        final toDelete = count - maxHistoryEntries;
+-        final oldEntries = await _isar.recentlyPlayedEntitys
+-            .where()
+-            .sortByPlayedAt()
+-            .limit(toDelete)
+-            .findAll();
+-
+-        await _isar.recentlyPlayedEntitys.deleteAll(
+-          oldEntries.map((e) => e.id).toList(),
+-        );
+-      }
+-    });
+-  }
+-
+-  /// Get recently played songs grouped by time period.
+-  /// Returns a map with keys like "Today", "Yesterday", "This Week", etc.
+-  Future<Map<String, List<RecentlyPlayedEntry>>> getGroupedHistory() async {
+-    final entries = await _isar.recentlyPlayedEntitys
+-        .where()
+-        .sortByPlayedAtDesc()
+-        .findAll();
+-
+-    if (entries.isEmpty) return {};
+-
+-    // Get all song entities
+-    final allSongEntities = await _songRepository.getAllSongEntities();
+-    final songMap = {for (var e in allSongEntities) e.id: e};
+-
+-    final now = DateTime.now();
+-    final today = DateTime(now.year, now.month, now.day);
+-    final yesterday = today.subtract(const Duration(days: 1));
+-    final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
+-    final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
+-    final thisMonthStart = DateTime(now.year, now.month, 1);
+-
+-    final grouped = <String, List<RecentlyPlayedEntry>>{};
+-
+-    for (final entry in entries) {
+-      final songEntity = songMap[entry.songId];
+-      if (songEntity == null) continue;
+-
+-      final song = _entityToSong(songEntity);
+-      final recentEntry = RecentlyPlayedEntry(
+-        song: song,
+-        playedAt: entry.playedAt,
+-      );
+-
+-      final playedDate = DateTime(
+-        entry.playedAt.year,
+-        entry.playedAt.month,
+-        entry.playedAt.day,
+-      );
+-
+-      String groupKey;
+-      if (playedDate == today) {
+-        groupKey = 'Today';
+-      } else if (playedDate == yesterday) {
+-        groupKey = 'Yesterday';
+-      } else if (playedDate.isAfter(thisWeekStart) ||
+-          playedDate == thisWeekStart) {
+-        groupKey = 'This Week';
+-      } else if (playedDate.isAfter(lastWeekStart) ||
+-          playedDate == lastWeekStart) {
+-        groupKey = 'Last Week';
+-      } else if (playedDate.isAfter(thisMonthStart) ||
+-          playedDate == thisMonthStart) {
+-        groupKey = 'This Month';
+-      } else {
+-        groupKey = 'Earlier';
+-      }
+-
+-      grouped.putIfAbsent(groupKey, () => []).add(recentEntry);
+-    }
+-
+-    return grouped;
+-  }
+-
+-  /// Get flat list of recently played entries (most recent first).
+-  Future<List<RecentlyPlayedEntry>> getRecentHistory({int limit = 50}) async {
+-    return getRecentHistoryPaginated(offset: 0, limit: limit);
+-  }
+-
+-  /// Get a paginated slice of recently played entries (most recent first).
+-  Future<List<RecentlyPlayedEntry>> getRecentHistoryPaginated({
+-    int offset = 0,
+-    int limit = 50,
+-  }) async {
+-    final entries = await _isar.recentlyPlayedEntitys
+-        .where()
+-        .sortByPlayedAtDesc()
+-        .offset(offset)
+-        .limit(limit)
+-        .findAll();
+-
+-    if (entries.isEmpty) return const [];
+-
+-    final allSongEntities = await _songRepository.getAllSongEntities();
+-    final songMap = {for (var e in allSongEntities) e.id: e};
+-
+-    final result = <RecentlyPlayedEntry>[];
+-    for (final entry in entries) {
+-      final songEntity = songMap[entry.songId];
+-      if (songEntity == null) continue;
+-
+-      result.add(
+-        RecentlyPlayedEntry(
+-          song: _entityToSong(songEntity),
+-          playedAt: entry.playedAt,
+-        ),
+-      );
+-    }
+-
+-    return result;
+-  }
+-
+-  /// Clear all play history.
+-  Future<void> clearHistory() async {
+-    await _isar.writeTxn(() async {
+-      await _isar.recentlyPlayedEntitys.clear();
+-    });
+-  }
+-
+-  /// Get history count.
+-  Future<int> getHistoryCount() async {
+-    return await _isar.recentlyPlayedEntitys.count();
+-  }
+-
+-  /// Count distinct, non-empty artist names across the entire play history.
+-  Future<int> getDistinctArtistCount() async {
+-    final entries = await _isar.recentlyPlayedEntitys.where().findAll();
+-    if (entries.isEmpty) return 0;
+-
+-    final allSongEntities = await _songRepository.getAllSongEntities();
+-    final songMap = {for (final e in allSongEntities) e.id: e};
+-
+-    final artists = <String>{};
+-    for (final entry in entries) {
+-      final entity = songMap[entry.songId];
+-      if (entity == null) continue;
+-      final name = entity.artist.trim();
+-      if (name.isNotEmpty) artists.add(name);
+-    }
+-    return artists.length;
+-  }
+-
+-  /// Watch for changes in the history collection.
+-  Stream<void> watchHistory() {
+-    return _isar.recentlyPlayedEntitys.watchLazy();
+-  }
+-
+-  /// Get the most-played songs for a specific artist.
+-  /// Returns songs sorted by play count, most played first.
+-  Future<List<Song>> getMostPlayedSongsByArtist(
+-    String artistName, {
+-    int limit = 5,
+-  }) async {
+-    final entries = await _isar.recentlyPlayedEntitys
+-        .where()
+-        .sortByPlayedAtDesc()
+-        .findAll();
+-
+-    if (entries.isEmpty) return const [];
+-
+-    final allSongEntities = await _songRepository.getAllSongEntities();
+-    final songMap = {for (final entity in allSongEntities) entity.id: entity};
+-
+-    final playCounts = <String, int>{};
+-    final songEntities = <String, SongEntity>{};
+-
+-    for (final entry in entries) {
+-      final songEntity = songMap[entry.songId];
+-      if (songEntity == null) continue;
+-      if (songEntity.artist != artistName) continue;
+-
+-      final id = songEntity.id.toString();
+-      songEntities[id] = songEntity;
+-      playCounts[id] = (playCounts[id] ?? 0) + 1;
+-    }
+-
+-    final sortedIds = playCounts.entries.toList()
+-      ..sort((a, b) => b.value.compareTo(a.value));
+-
+-    final result = <Song>[];
+-    for (final entry in sortedIds.take(limit)) {
+-      final entity = songEntities[entry.key];
+-      if (entity != null) {
+-        result.add(_entityToSong(entity));
+-      }
+-    }
+-
+-    return result;
+-  }
+-
+-  /// Get the most-played song from a specific set of song IDs.
+-  /// Ties are broken by the most recent play. Returns null if no
+-  /// songs in the given IDs have been played yet.
+-  Future<Song?> getMostPlayedSongAmong(Iterable<String> songIds) async {
+-    final ids = songIds.toSet();
+-    if (ids.isEmpty) return null;
+-
+-    final entries = await _isar.recentlyPlayedEntitys
+-        .where()
+-        .sortByPlayedAtDesc()
+-        .findAll();
+-
+-    if (entries.isEmpty) return null;
+-
+-    final allSongEntities = await _songRepository.getAllSongEntities();
+-    final songMap = {for (final entity in allSongEntities) entity.id: entity};
+-
+-    final playCounts = <String, int>{};
+-    final songEntities = <String, SongEntity>{};
+-    final lastPlayedAt = <String, DateTime>{};
+-
+-    for (final entry in entries) {
+-      final songEntity = songMap[entry.songId];
+-      if (songEntity == null) continue;
+-      final id = songEntity.id.toString();
+-      if (!ids.contains(id)) continue;
+-
+-      songEntities[id] = songEntity;
+-      playCounts[id] = (playCounts[id] ?? 0) + 1;
+-      final existing = lastPlayedAt[id];
+-      if (existing == null || entry.playedAt.isAfter(existing)) {
+-        lastPlayedAt[id] = entry.playedAt;
+-      }
+-    }
+-
+-    if (playCounts.isEmpty) return null;
+-
+-    final sortedIds = playCounts.entries.toList()
+-      ..sort((a, b) {
+-        final playCompare = b.value.compareTo(a.value);
+-        if (playCompare != 0) return playCompare;
+-        return lastPlayedAt[b.key]!.compareTo(lastPlayedAt[a.key]!);
+-      });
+-
+-    final topEntity = songEntities[sortedIds.first.key];
+-    if (topEntity == null) return null;
+-    return _entityToSong(topEntity);
+-  }
+-
+-  Future<List<RecentlyPlayedEntry>> _getEntriesBetween({
+-    required DateTime start,
+-    required DateTime endExclusive,
+-  }) async {
+-    final entries = await _isar.recentlyPlayedEntitys
+-        .where()
+-        .playedAtBetween(start, endExclusive, includeUpper: false)
+-        .sortByPlayedAtDesc()
+-        .findAll();
+-
+-    if (entries.isEmpty) {
+-      return const [];
+-    }
+-
+-    final allSongEntities = await _songRepository.getAllSongEntities();
+-    final songMap = {for (final entity in allSongEntities) entity.id: entity};
+-
+-    final result = <RecentlyPlayedEntry>[];
+-    for (final entry in entries) {
+-      final songEntity = songMap[entry.songId];
+-      if (songEntity == null) continue;
+-      result.add(
+-        RecentlyPlayedEntry(
+-          song: _entityToSong(songEntity),
+-          playedAt: entry.playedAt,
+-        ),
+-      );
+-    }
+-
+-    return result;
+-  }
+-
+-  /// Convert entity to Song model.
+-  Song _entityToSong(SongEntity entity) {
+-    return Song(
+-      id: entity.id.toString(),
+-      title: entity.title,
+-      artist: entity.artist,
+-      albumArt: entity.albumArtPath,
+-      duration: Duration(milliseconds: entity.durationMs ?? 0),
+-      fileType: entity.fileType ?? 'unknown',
+-      resolution: _buildResolutionString(entity),
+-      sampleRate: entity.sampleRate,
+-      bitDepth: entity.bitDepth,
+-      album: entity.album,
+-      filePath: entity.filePath,
+-      dateAdded: entity.dateAdded,
+-    );
+-  }
+-
+-  /// Build a resolution string from entity properties.
+-  String _buildResolutionString(SongEntity entity) {
+-    final parts = <String>[];
+-    if (entity.bitDepth != null) {
+-      parts.add('${entity.bitDepth}-bit');
+-    }
+-    if (entity.sampleRate != null) {
+-      parts.add('${_formatSampleRateKhz(entity.sampleRate!)}kHz');
+-    }
+-    final bitrateLabel = AudioMetadataUtils.formatBitrateLabel(
+-      entity.bitrate,
+-      sampleRate: entity.sampleRate,
+-      bitDepth: entity.bitDepth,
+-    );
+-    if (bitrateLabel != null) {
+-      parts.add(bitrateLabel);
+-    }
+-    return parts.isEmpty ? 'Unknown' : parts.join(' / ');
+-  }
+-
+-  String _formatSampleRateKhz(int sampleRateHz) {
+-    final khz = sampleRateHz / 1000;
+-    if (sampleRateHz % 1000 == 0) {
+-      return khz.toStringAsFixed(0);
+-    }
+-    return khz.toStringAsFixed(1);
+-  }
+-}
+diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
+index 888df2f6a..775af507b 100644
+--- a/lib/features/artists/screens/artist_detail_screen.dart
++++ b/lib/features/artists/screens/artist_detail_screen.dart
+@@ -7,7 +7,6 @@ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/data/repositories/artist_repository.dart';
+-import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/features/albums/screens/album_detail_screen.dart';
+ import 'package:flick/models/playback_context.dart';
+@@ -26,7 +25,7 @@ import 'package:flick/providers/favorites_provider.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+ import 'package:flick/providers/app_preferences_provider.dart';
+ 
+-/// Artist detail screen showing songs, albums, and most played tracks.
++/// Artist detail screen showing songs, albums.
+ class ArtistDetailScreen extends ConsumerStatefulWidget {
+   final String artistName;
+   final List<Song> songs;
+@@ -53,15 +52,12 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+   static const double _backgroundBlend = 0.22;
+ 
+   final SongRepository _songRepository = SongRepository();
+-  final RecentlyPlayedRepository _recentlyPlayedRepository =
+-      RecentlyPlayedRepository();
+   final ArtistRepository _artistRepository = ArtistRepository();
+   final ColorExtractionService _colorService = ColorExtractionService();
+ 
+   final ScrollController _scrollController = ScrollController();
+   bool _showAppBarActions = false;
+ 
+-  List<Song> _mostPlayedSongs = [];
+   List<AlbumGroup> _artistAlbums = [];
+   bool _isLoadingExtras = true;
+   String? _artistArt;
+@@ -99,9 +95,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+   }
+ 
+   Future<void> _loadExtras() async {
+-    final mostPlayed = await _recentlyPlayedRepository
+-        .getMostPlayedSongsByArtist(widget.artistName, limit: 5);
+-
+     final allAlbums = await _songRepository.getAlbumGroups();
+     final artistAlbums = allAlbums
+         .where(
+@@ -111,7 +104,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+ 
+     if (mounted) {
+       setState(() {
+-        _mostPlayedSongs = mostPlayed;
+         _artistAlbums = artistAlbums;
+         _isLoadingExtras = false;
+       });
+@@ -495,35 +487,6 @@ class _ArtistDetailScreenState extends ConsumerState<ArtistDetailScreen>
+                           const SliverToBoxAdapter(
+                             child: SizedBox(height: AppConstants.spacingLg),
+                           ),
+-                        if (!_isLoadingExtras && _mostPlayedSongs.isNotEmpty)
+-                          _buildSectionTitle(context, 'Most Played'),
+-                        if (!_isLoadingExtras && _mostPlayedSongs.isNotEmpty)
+-                          SliverToBoxAdapter(
+-                            child: SizedBox(
+-                              height: 72,
+-                              child: ListView.separated(
+-                                padding: const EdgeInsets.symmetric(
+-                                  horizontal: AppConstants.spacingLg,
+-                                ),
+-                                scrollDirection: Axis.horizontal,
+-                                itemCount: _mostPlayedSongs.length,
+-                                separatorBuilder: (_, __) => const SizedBox(
+-                                  width: AppConstants.spacingMd,
+-                                ),
+-                                itemBuilder: (context, index) {
+-                                  final song = _mostPlayedSongs[index];
+-                                  return _MostPlayedCard(
+-                                    song: song,
+-                                    onTap: () => _playSong(song),
+-                                  );
+-                                },
+-                              ),
+-                            ),
+-                          ),
+-                        if (!_isLoadingExtras && _mostPlayedSongs.isNotEmpty)
+-                          const SliverToBoxAdapter(
+-                            child: SizedBox(height: AppConstants.spacingLg),
+-                          ),
+                         _buildSectionTitle(context, 'Songs'),
+                         SliverPadding(
+                           padding: EdgeInsets.only(
+@@ -800,116 +763,6 @@ class _AlbumCardState extends State<_AlbumCard>
+   }
+ }
+ 
+-class _MostPlayedCard extends StatefulWidget {
+-  final Song song;
+-  final VoidCallback onTap;
+-
+-  const _MostPlayedCard({required this.song, required this.onTap});
+-
+-  @override
+-  State<_MostPlayedCard> createState() => _MostPlayedCardState();
+-}
+-
+-class _MostPlayedCardState extends State<_MostPlayedCard>
+-    with SingleTickerProviderStateMixin {
+-  late AnimationController _controller;
+-  late Animation<double> _scaleAnimation;
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    _controller = AnimationController(
+-      duration: AppConstants.animationFast,
+-      vsync: this,
+-    );
+-    _scaleAnimation = Tween<double>(
+-      begin: 1.0,
+-      end: 0.95,
+-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+-  }
+-
+-  @override
+-  void dispose() {
+-    _controller.dispose();
+-    super.dispose();
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return ScaleTransition(
+-      scale: _scaleAnimation,
+-      child: GestureDetector(
+-        onTapDown: (_) => _controller.forward(),
+-        onTapUp: (_) => _controller.reverse(),
+-        onTapCancel: () => _controller.reverse(),
+-        onTap: widget.onTap,
+-        child: Container(
+-          width: 240,
+-          padding: const EdgeInsets.all(AppConstants.spacingSm),
+-          decoration: BoxDecoration(
+-            color: AppColors.surface,
+-            borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-          ),
+-          child: Row(
+-            children: [
+-              Container(
+-                width: 48,
+-                height: 48,
+-                decoration: BoxDecoration(
+-                  color: AppColors.glassBackground,
+-                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-                ),
+-                child: ClipRRect(
+-                  borderRadius: BorderRadius.circular(AppConstants.radiusSm),
+-                  child: CachedImageWidget(
+-                    imagePath: widget.song.albumArt,
+-                    audioSourcePath: widget.song.filePath,
+-                    fit: BoxFit.cover,
+-                    placeholder: const FlickArtworkPlaceholder(size: 22, opacity: 0.9),
+-                    errorWidget: const FlickArtworkPlaceholder(size: 22, opacity: 0.9),
+-                  ),
+-                ),
+-              ),
+-              const SizedBox(width: AppConstants.spacingSm),
+-              Expanded(
+-                child: Column(
+-                  crossAxisAlignment: CrossAxisAlignment.start,
+-                  mainAxisAlignment: MainAxisAlignment.center,
+-                  children: [
+-                    Text(
+-                      widget.song.title,
+-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                        color: context.adaptiveTextPrimary,
+-                        fontWeight: FontWeight.w600,
+-                      ),
+-                      maxLines: 1,
+-                      overflow: TextOverflow.ellipsis,
+-                    ),
+-                    const SizedBox(height: 2),
+-                    Text(
+-                      widget.song.album ?? '',
+-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                        color: context.adaptiveTextTertiary,
+-                      ),
+-                      maxLines: 1,
+-                      overflow: TextOverflow.ellipsis,
+-                    ),
+-                  ],
+-                ),
+-              ),
+-              Icon(
+-                LucideIcons.play,
+-                color: context.adaptiveTextSecondary,
+-                size: 20,
+-              ),
+-            ],
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+ class _AlbumSection extends StatelessWidget {
+   final String albumName;
+   final List<Song> songs;
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index d31ca74f5..01ece8e41 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -8,7 +8,6 @@ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/features/albums/screens/albums_screen.dart';
+ import 'package:flick/features/artists/screens/artists_screen.dart';
+@@ -40,12 +39,9 @@ class MenuScreen extends ConsumerStatefulWidget {
+ 
+ class _MenuScreenState extends ConsumerState<MenuScreen>
+     with TickerProviderStateMixin {
+-  final RecentlyPlayedRepository _recentlyPlayedRepository =
+-      RecentlyPlayedRepository();
+   final PlayerService _playerService = PlayerService();
+ 
+   StreamSubscription<void>? _historySubscription;
+-  List<RecentlyPlayedEntry> _recentEntries = const [];
+   bool _isHistoryLoading = true;
+   Color? _heroDominantColor;
+   String? _heroColorArtPath;
+@@ -74,9 +70,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+ 
+   void _watchHistory() {
+     _historySubscription?.cancel();
+-    _historySubscription = _recentlyPlayedRepository.watchHistory().listen((_) {
+-      _loadHistoryData(showLoadingState: false);
+-    });
+   }
+ 
+   Future<void> _updateHeroColor(String? artPath, String? filePath) async {
+@@ -102,19 +95,13 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     }
+ 
+     try {
+-      final recentEntries = await _recentlyPlayedRepository.getRecentHistory(
+-        limit: 240,
+-      );
+-
+       if (!mounted) return;
+       setState(() {
+-        _recentEntries = recentEntries;
+         _isHistoryLoading = false;
+       });
+     } catch (_) {
+       if (!mounted) return;
+       setState(() {
+-        _recentEntries = const [];
+         _isHistoryLoading = false;
+       });
+     }
+@@ -183,14 +170,12 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+       allSongs: allSongs,
+       favoriteSongs: favoriteSongs,
+       playlists: playlists,
+-      recentEntries: _recentEntries,
+     );
+ 
+     final isInitialLoading =
+         allSongs.isEmpty &&
+         favoriteSongs.isEmpty &&
+         playlists.isEmpty &&
+-        _recentEntries.isEmpty &&
+         (songsAsync.isLoading ||
+             favoritesAsync.isLoading ||
+             playlistsAsync.isLoading ||
+@@ -572,7 +557,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     required List<Song> allSongs,
+     required List<Song> favoriteSongs,
+     required List<Playlist> playlists,
+-    required List<RecentlyPlayedEntry> recentEntries,
+   }) {
+     final songById = {for (final song in allSongs) song.id: song};
+     final songsByArtist = <String, List<Song>>{};
+@@ -669,47 +653,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     return _dedupeSongs(songs).take(limit).toList();
+   }
+ 
+-  List<Song> _rankSongsFromEntries(List<RecentlyPlayedEntry> entries) {
+-    final countBySongId = <String, int>{};
+-    final lastPlayedAt = <String, DateTime>{};
+-    final songById = <String, Song>{};
+-
+-    for (final entry in entries) {
+-      countBySongId.update(
+-        entry.song.id,
+-        (count) => count + 1,
+-        ifAbsent: () {
+-          return 1;
+-        },
+-      );
+-
+-      final previous = lastPlayedAt[entry.song.id];
+-      if (previous == null || entry.playedAt.isAfter(previous)) {
+-        lastPlayedAt[entry.song.id] = entry.playedAt;
+-      }
+-      songById[entry.song.id] = entry.song;
+-    }
+-
+-    final ranked = countBySongId.entries.toList()
+-      ..sort((left, right) {
+-        final playCompare = right.value.compareTo(left.value);
+-        if (playCompare != 0) return playCompare;
+-
+-        final leftPlayed = lastPlayedAt[left.key];
+-        final rightPlayed = lastPlayedAt[right.key];
+-        if (leftPlayed != null && rightPlayed != null) {
+-          return rightPlayed.compareTo(leftPlayed);
+-        }
+-
+-        return left.key.compareTo(right.key);
+-      });
+-
+-    return ranked
+-        .map((entry) => songById[entry.key])
+-        .whereType<Song>()
+-        .toList();
+-  }
+-
+   bool _isAfterHours(DateTime playedAt) {
+     final hour = playedAt.hour;
+     return hour >= 21 || hour <= 4;
+diff --git a/lib/features/playlists/screens/playlist_detail_screen.dart b/lib/features/playlists/screens/playlist_detail_screen.dart
+index 959209ae2..f6396b6ed 100644
+--- a/lib/features/playlists/screens/playlist_detail_screen.dart
++++ b/lib/features/playlists/screens/playlist_detail_screen.dart
+@@ -16,7 +16,6 @@ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+ import 'package:flick/services/album_art_service.dart';
+ import 'package:flick/services/color_extraction_service.dart';
+ import 'package:flick/services/player_service.dart';
+-import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/providers/playlist_provider.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+@@ -48,8 +47,6 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+ 
+   final PlayerService _playerService = PlayerService();
+   final SongRepository _songRepository = SongRepository();
+-  final RecentlyPlayedRepository _recentlyPlayedRepository =
+-      RecentlyPlayedRepository();
+   final ColorExtractionService _colorService = ColorExtractionService();
+ 
+   final ScrollController _scrollController = ScrollController();
+@@ -240,11 +237,7 @@ class _PlaylistDetailScreenState extends ConsumerState<PlaylistDetailScreen>
+   Future<void> _extractPlaylistColor(List<String> songIds) async {
+     if (songIds.isEmpty) return;
+ 
+-    final mostPlayed = await _recentlyPlayedRepository.getMostPlayedSongAmong(
+-      songIds,
+-    );
+     final topSong =
+-        mostPlayed ??
+         _songs.firstWhere(
+           (s) => s.albumArt != null && s.albumArt!.isNotEmpty,
+           orElse: () => _songs.isEmpty
+diff --git a/lib/features/recently_played/screens/recently_played_screen.dart b/lib/features/recently_played/screens/recently_played_screen.dart
+deleted file mode 100644
+index 0703bc764..000000000
+--- a/lib/features/recently_played/screens/recently_played_screen.dart
++++ /dev/null
+@@ -1,741 +0,0 @@
+-import 'dart:async';
+-
+-import 'package:flutter/material.dart';
+-import 'package:lucide_icons_flutter/lucide_icons.dart';
+-import 'package:flick/core/theme/app_colors.dart';
+-import 'package:flick/core/theme/adaptive_color_provider.dart';
+-import 'package:flick/core/constants/app_constants.dart';
+-import 'package:flick/core/utils/responsive.dart';
+-import 'package:flick/core/utils/navigation_helper.dart';
+-import 'package:flick/widgets/common/blurred_song_background.dart';
+-import 'package:flick/models/song.dart';
+-import 'package:flick/services/player_service.dart';
+-import 'package:flick/data/repositories/recently_played_repository.dart';
+-import 'package:flick/widgets/common/cached_image_widget.dart';
+-import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+-import 'package:flick/widgets/common/flick_dialog.dart';
+-import 'package:flick/widgets/common/surface_icon_button.dart';
+-
+-/// Number of history entries fetched per page.
+-const int _kPageSize = 50;
+-
+-/// Pixels from the bottom of the list that trigger the next page load.
+-const double _kLoadMoreThreshold = 300;
+-
+-/// Recently Played screen with a grouped list layout and paginated loading.
+-class RecentlyPlayedScreen extends StatefulWidget {
+-  const RecentlyPlayedScreen({super.key});
+-
+-  @override
+-  State<RecentlyPlayedScreen> createState() => _RecentlyPlayedScreenState();
+-}
+-
+-class _RecentlyPlayedScreenState extends State<RecentlyPlayedScreen> {
+-  final PlayerService _playerService = PlayerService();
+-  final RecentlyPlayedRepository _recentlyPlayedRepository =
+-      RecentlyPlayedRepository();
+-  final ScrollController _scrollController = ScrollController();
+-
+-  List<RecentlyPlayedEntry> _entries = [];
+-  Map<String, List<RecentlyPlayedEntry>> _groupedHistory = {};
+-  bool _isLoading = true;
+-  bool _isLoadingMore = false;
+-  bool _hasMore = true;
+-  int _totalCount = 0;
+-  StreamSubscription<void>? _historySubscription;
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    _scrollController.addListener(_onScroll);
+-    // Defer data loading to avoid jank during navigation.
+-    WidgetsBinding.instance.addPostFrameCallback((_) {
+-      _loadInitialHistory();
+-      _watchHistory();
+-    });
+-  }
+-
+-  @override
+-  void dispose() {
+-    _historySubscription?.cancel();
+-    _scrollController.removeListener(_onScroll);
+-    _scrollController.dispose();
+-    super.dispose();
+-  }
+-
+-  void _watchHistory() {
+-    _historySubscription = _recentlyPlayedRepository.watchHistory().listen((_) {
+-      _resetPagination();
+-      _loadInitialHistory();
+-    });
+-  }
+-
+-  Future<void> _loadInitialHistory() async {
+-    if (!mounted) return;
+-
+-    setState(() {
+-      _isLoading = true;
+-      _hasMore = true;
+-    });
+-
+-    try {
+-      final count = await _recentlyPlayedRepository.getHistoryCount();
+-      final entries = await _recentlyPlayedRepository.getRecentHistoryPaginated(
+-        offset: 0,
+-        limit: _kPageSize,
+-      );
+-      if (mounted) {
+-        setState(() {
+-          _entries = entries;
+-          _groupedHistory = _groupEntries(entries);
+-          _totalCount = count;
+-          _hasMore = entries.length < count;
+-          _isLoading = false;
+-        });
+-      }
+-    } catch (e) {
+-      if (mounted) {
+-        setState(() {
+-          _entries = [];
+-          _groupedHistory = {};
+-          _totalCount = 0;
+-          _hasMore = false;
+-          _isLoading = false;
+-        });
+-      }
+-    }
+-  }
+-
+-  Future<void> _loadMoreHistory() async {
+-    if (!mounted || _isLoadingMore || !_hasMore) return;
+-
+-    setState(() => _isLoadingMore = true);
+-
+-    try {
+-      final nextEntries = await _recentlyPlayedRepository
+-          .getRecentHistoryPaginated(
+-            offset: _entries.length,
+-            limit: _kPageSize,
+-          );
+-      if (mounted) {
+-        setState(() {
+-          _entries.addAll(nextEntries);
+-          _groupedHistory = _groupEntries(_entries);
+-          _hasMore = _entries.length < _totalCount;
+-          _isLoadingMore = false;
+-        });
+-      }
+-    } catch (e) {
+-      if (mounted) {
+-        setState(() => _isLoadingMore = false);
+-      }
+-    }
+-  }
+-
+-  void _resetPagination() {
+-    _entries = [];
+-    _groupedHistory = {};
+-    _hasMore = true;
+-  }
+-
+-  void _onScroll() {
+-    if (!_scrollController.hasClients) return;
+-    final position = _scrollController.position;
+-    if (position.pixels >= position.maxScrollExtent - _kLoadMoreThreshold) {
+-      _loadMoreHistory();
+-    }
+-  }
+-
+-  Map<String, List<RecentlyPlayedEntry>> _groupEntries(
+-    List<RecentlyPlayedEntry> entries,
+-  ) {
+-    final now = DateTime.now();
+-    final today = DateTime(now.year, now.month, now.day);
+-    final yesterday = today.subtract(const Duration(days: 1));
+-    final thisWeekStart = today.subtract(Duration(days: today.weekday - 1));
+-    final lastWeekStart = thisWeekStart.subtract(const Duration(days: 7));
+-    final thisMonthStart = DateTime(now.year, now.month, 1);
+-
+-    final grouped = <String, List<RecentlyPlayedEntry>>{};
+-
+-    for (final entry in entries) {
+-      final playedDate = DateTime(
+-        entry.playedAt.year,
+-        entry.playedAt.month,
+-        entry.playedAt.day,
+-      );
+-
+-      final String groupKey;
+-      if (playedDate == today) {
+-        groupKey = 'Today';
+-      } else if (playedDate == yesterday) {
+-        groupKey = 'Yesterday';
+-      } else if (playedDate.isAfter(thisWeekStart) ||
+-          playedDate == thisWeekStart) {
+-        groupKey = 'This Week';
+-      } else if (playedDate.isAfter(lastWeekStart) ||
+-          playedDate == lastWeekStart) {
+-        groupKey = 'Last Week';
+-      } else if (playedDate.isAfter(thisMonthStart) ||
+-          playedDate == thisMonthStart) {
+-        groupKey = 'This Month';
+-      } else {
+-        groupKey = 'Earlier';
+-      }
+-
+-      grouped.putIfAbsent(groupKey, () => []).add(entry);
+-    }
+-
+-    return grouped;
+-  }
+-
+-  Future<void> _clearHistory() async {
+-    final confirmed = await FlickDialogs.confirm(
+-      context,
+-      title: 'Clear History',
+-      message:
+-          'Are you sure you want to clear your entire listening history? This cannot be undone.',
+-      confirmLabel: 'Clear',
+-      destructive: true,
+-    );
+-
+-    if (confirmed == true) {
+-      await _recentlyPlayedRepository.clearHistory();
+-      if (mounted) {
+-        ScaffoldMessenger.of(
+-          context,
+-        ).showSnackBar(const SnackBar(content: Text('History cleared')));
+-      }
+-    }
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Scaffold(
+-        backgroundColor: Colors.transparent,
+-        body: BlurredSongBackground(
+-          child: SafeArea(
+-            bottom: false,
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                _buildHeader(context),
+-                Expanded(
+-                  child: _isLoading
+-                      ? _buildLoadingState()
+-                      : _groupedHistory.isEmpty
+-                      ? _buildEmptyState()
+-                      : _buildHistoryList(),
+-                ),
+-              ],
+-            ),
+-          ),
+-        ),
+-    );
+-  }
+-
+-  Widget _buildHeader(BuildContext context) {
+-    return Padding(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingLg,
+-        vertical: AppConstants.spacingMd,
+-      ),
+-      child: Row(
+-        children: [
+-          if (Navigator.of(context).canPop()) ...[
+-            SurfaceIconButton.icon(
+-              icon: LucideIcons.chevronLeft,
+-              onPressed: () => Navigator.of(context).pop(),
+-              iconColor: context.adaptiveTextPrimary,
+-            ),
+-            const SizedBox(width: AppConstants.spacingMd),
+-          ],
+-          Expanded(
+-            child: Column(
+-              crossAxisAlignment: CrossAxisAlignment.start,
+-              children: [
+-                Text(
+-                  'Recently Played',
+-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+-                    fontWeight: FontWeight.w600,
+-                    color: context.adaptiveTextPrimary,
+-                  ),
+-                ),
+-                Text(
+-                  '$_totalCount ${_totalCount == 1 ? 'song' : 'songs'} played',
+-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-                    color: context.adaptiveTextTertiary,
+-                  ),
+-                ),
+-              ],
+-            ),
+-          ),
+-          if (_groupedHistory.isNotEmpty)
+-            SurfaceIconButton.icon(
+-              icon: LucideIcons.trash2,
+-              onPressed: _clearHistory,
+-              iconColor: context.adaptiveTextSecondary,
+-            ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildLoadingState() {
+-    return Center(
+-      child: CircularProgressIndicator(color: context.adaptiveTextSecondary),
+-    );
+-  }
+-
+-  Widget _buildEmptyState() {
+-    return Center(
+-      child: Padding(
+-        padding: const EdgeInsets.all(AppConstants.spacingXl),
+-        child: Column(
+-          mainAxisAlignment: MainAxisAlignment.center,
+-          children: [
+-            // Timeline illustration
+-            SizedBox(
+-              height: 120,
+-              child: Stack(
+-                alignment: Alignment.center,
+-                children: [
+-                  // Timeline line
+-                  Container(
+-                    width: 3,
+-                    height: 100,
+-                    decoration: BoxDecoration(
+-                      gradient: LinearGradient(
+-                        begin: Alignment.topCenter,
+-                        end: Alignment.bottomCenter,
+-                        colors: [
+-                          AppColors.glassBorder.withValues(alpha: 0),
+-                          AppColors.glassBorder,
+-                          AppColors.glassBorder.withValues(alpha: 0),
+-                        ],
+-                      ),
+-                      borderRadius: BorderRadius.circular(2),
+-                    ),
+-                  ),
+-                  // Center icon
+-                  Container(
+-                    width: context.scaleSize(AppConstants.containerSizeXl),
+-                    height: context.scaleSize(AppConstants.containerSizeXl),
+-                    decoration: BoxDecoration(
+-                      shape: BoxShape.circle,
+-                      color: AppColors.glassBackground,
+-                      border: Border.all(
+-                        color: AppColors.glassBorder,
+-                        width: 2,
+-                      ),
+-                    ),
+-                    child: Icon(
+-                      LucideIcons.clock,
+-                      size: context.responsiveIcon(AppConstants.iconSizeXl),
+-                      color: context.adaptiveTextTertiary,
+-                    ),
+-                  ),
+-                ],
+-              ),
+-            ),
+-            const SizedBox(height: AppConstants.spacingLg),
+-            Text(
+-              'No History Yet',
+-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+-                color: context.adaptiveTextSecondary,
+-                fontWeight: FontWeight.w600,
+-              ),
+-            ),
+-            const SizedBox(height: AppConstants.spacingSm),
+-            Text(
+-              'Songs you play will appear here',
+-              textAlign: TextAlign.center,
+-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+-                color: context.adaptiveTextTertiary,
+-                height: 1.5,
+-              ),
+-            ),
+-          ],
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildHistoryList() {
+-    const sectionOrder = [
+-      'Today',
+-      'Yesterday',
+-      'This Week',
+-      'Last Week',
+-      'This Month',
+-      'Earlier',
+-    ];
+-
+-    final sortedSections = _groupedHistory.entries.toList()
+-      ..sort((a, b) {
+-        final aIndex = sectionOrder.indexOf(a.key);
+-        final bIndex = sectionOrder.indexOf(b.key);
+-        return aIndex.compareTo(bIndex);
+-      });
+-
+-    final rows = <_RecentlyPlayedRow>[];
+-    for (final section in sortedSections) {
+-      rows.add(_RecentlyPlayedRow.header(section.key, section.value.length));
+-      for (final entry in section.value) {
+-        rows.add(_RecentlyPlayedRow.entry(entry));
+-      }
+-    }
+-
+-    return ListView.builder(
+-      controller: _scrollController,
+-      padding: EdgeInsets.only(
+-        left: AppConstants.spacingMd,
+-        right: AppConstants.spacingMd,
+-        bottom: AppConstants.navBarHeight + 120,
+-      ),
+-      itemCount: rows.length + (_isLoadingMore ? 1 : 0),
+-      itemBuilder: (context, index) {
+-        if (index >= rows.length) {
+-          return _buildLoadMoreIndicator();
+-        }
+-        final row = rows[index];
+-        if (row.isHeader) {
+-          return _buildSectionHeader(row.title!, row.count);
+-        }
+-        final entry = row.entry!;
+-        return _RecentlyPlayedTile(
+-          key: ValueKey(
+-            'recent_${entry.song.id}_${entry.playedAt.millisecondsSinceEpoch}',
+-          ),
+-          song: entry.song,
+-          playedAt: entry.playedAt,
+-          onTap: () async {
+-            await _playerService.play(
+-              entry.song,
+-              playlist: _entries.map((e) => e.song).toList(),
+-            );
+-            if (context.mounted) {
+-              await NavigationHelper.navigateToFullPlayer(
+-                context,
+-                heroTag: 'recent_song_${entry.song.id}',
+-              );
+-            }
+-          },
+-        );
+-      },
+-    );
+-  }
+-
+-  Widget _buildSectionHeader(String title, int count) {
+-    return Padding(
+-      padding: const EdgeInsets.fromLTRB(
+-        AppConstants.spacingSm,
+-        AppConstants.spacingLg,
+-        AppConstants.spacingSm,
+-        AppConstants.spacingMd,
+-      ),
+-      child: Row(
+-        children: [
+-          Container(
+-            width: 8,
+-            height: 8,
+-            decoration: BoxDecoration(
+-              shape: BoxShape.circle,
+-              color: context.adaptiveTextSecondary,
+-            ),
+-          ),
+-          const SizedBox(width: AppConstants.spacingSm),
+-          Text(
+-            title,
+-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+-              color: context.adaptiveTextSecondary,
+-              fontWeight: FontWeight.w600,
+-            ),
+-          ),
+-          const Spacer(),
+-          Text(
+-            '$count ${count == 1 ? 'song' : 'songs'}',
+-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-              color: context.adaptiveTextTertiary,
+-            ),
+-          ),
+-        ],
+-      ),
+-    );
+-  }
+-
+-  Widget _buildLoadMoreIndicator() {
+-    return Padding(
+-      padding: const EdgeInsets.symmetric(vertical: AppConstants.spacingLg),
+-      child: Center(
+-        child: SizedBox(
+-          width: 24,
+-          height: 24,
+-          child: CircularProgressIndicator(
+-            strokeWidth: 2.5,
+-            color: context.adaptiveTextSecondary,
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+-class _RecentlyPlayedTile extends StatefulWidget {
+-  final Song song;
+-  final DateTime playedAt;
+-  final VoidCallback onTap;
+-
+-  const _RecentlyPlayedTile({
+-    super.key,
+-    required this.song,
+-    required this.playedAt,
+-    required this.onTap,
+-  });
+-
+-  @override
+-  State<_RecentlyPlayedTile> createState() => _RecentlyPlayedTileState();
+-}
+-
+-class _RecentlyPlayedTileState extends State<_RecentlyPlayedTile>
+-    with SingleTickerProviderStateMixin {
+-  late AnimationController _controller;
+-  late Animation<double> _scaleAnimation;
+-
+-  @override
+-  void initState() {
+-    super.initState();
+-    _controller = AnimationController(
+-      duration: AppConstants.animationFast,
+-      vsync: this,
+-    );
+-    _scaleAnimation = Tween<double>(
+-      begin: 1.0,
+-      end: 0.98,
+-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+-  }
+-
+-  @override
+-  void dispose() {
+-    _controller.dispose();
+-    super.dispose();
+-  }
+-
+-  String _formatTime(DateTime time) {
+-    final now = DateTime.now();
+-    final diff = now.difference(time);
+-
+-    if (diff.inMinutes < 1) {
+-      return 'Just now';
+-    } else if (diff.inMinutes < 60) {
+-      return '${diff.inMinutes}m ago';
+-    } else if (diff.inHours < 24) {
+-      return '${diff.inHours}h ago';
+-    } else if (diff.inDays < 7) {
+-      return '${diff.inDays}d ago';
+-    } else {
+-      return '${time.day.toString().padLeft(2, '0')}/'
+-          '${time.month.toString().padLeft(2, '0')}/'
+-          '${time.year}';
+-    }
+-  }
+-
+-  String _formatTimestamp(DateTime time) {
+-    final hour = time.hour.toString().padLeft(2, '0');
+-    final minute = time.minute.toString().padLeft(2, '0');
+-    return '$hour:$minute';
+-  }
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+-    final artSize = context.scaleSize(56);
+-    final artworkTargetSize = (artSize * devicePixelRatio).round();
+-
+-    return GestureDetector(
+-      onTapDown: (_) => _controller.forward(),
+-      onTapUp: (_) {
+-        _controller.reverse();
+-        widget.onTap();
+-      },
+-      onTapCancel: () => _controller.reverse(),
+-      child: AnimatedBuilder(
+-        animation: _controller,
+-        builder: (context, child) {
+-          return Transform.scale(
+-            scale: _scaleAnimation.value,
+-            alignment: Alignment.center,
+-            child: child,
+-          );
+-        },
+-        child: RepaintBoundary(
+-          child: Padding(
+-            padding: const EdgeInsets.only(bottom: AppConstants.spacingSm),
+-            child: Material(
+-              color: AppColors.surface,
+-              borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-              child: InkWell(
+-                onTap: widget.onTap,
+-                borderRadius: BorderRadius.circular(AppConstants.radiusLg),
+-                child: Padding(
+-                  padding: const EdgeInsets.all(AppConstants.spacingMd),
+-                  child: Row(
+-                    children: [
+-                      Container(
+-                        width: artSize,
+-                        height: artSize,
+-                        decoration: BoxDecoration(
+-                          color: AppColors.surfaceLight,
+-                          borderRadius: BorderRadius.circular(
+-                            AppConstants.radiusMd,
+-                          ),
+-                        ),
+-                        child: ClipRRect(
+-                          borderRadius: BorderRadius.circular(
+-                            AppConstants.radiusMd,
+-                          ),
+-                          child: CachedImageWidget(
+-                            imagePath: widget.song.albumArt,
+-                            audioSourcePath: widget.song.filePath,
+-                            fit: BoxFit.cover,
+-                            useThumbnail: true,
+-                            thumbnailWidth: artworkTargetSize,
+-                            thumbnailHeight: artworkTargetSize,
+-                            placeholder: _buildPlaceholder(context),
+-                            errorWidget: _buildPlaceholder(context),
+-                          ),
+-                        ),
+-                      ),
+-                      const SizedBox(width: AppConstants.spacingMd),
+-                      Expanded(
+-                        child: Column(
+-                          crossAxisAlignment: CrossAxisAlignment.start,
+-                          children: [
+-                            Text(
+-                              widget.song.title,
+-                              style: Theme.of(context).textTheme.titleSmall
+-                                  ?.copyWith(
+-                                    color: context.adaptiveTextPrimary,
+-                                    fontWeight: FontWeight.w600,
+-                                  ),
+-                              maxLines: 1,
+-                              overflow: TextOverflow.ellipsis,
+-                            ),
+-                            const SizedBox(height: AppConstants.spacingXxs),
+-                            Text(
+-                              widget.song.artist,
+-                              style: Theme.of(context).textTheme.bodySmall
+-                                  ?.copyWith(
+-                                    color: context.adaptiveTextTertiary,
+-                                  ),
+-                              maxLines: 1,
+-                              overflow: TextOverflow.ellipsis,
+-                            ),
+-                            const SizedBox(height: AppConstants.spacingXs),
+-                            Row(
+-                              children: [
+-                                _MetadataChip(text: widget.song.fileType),
+-                                if (widget.song.resolution != null &&
+-                                    widget.song.resolution != 'Unknown') ...[
+-                                  const SizedBox(width: AppConstants.spacingXs),
+-                                  _MetadataChip(text: widget.song.resolution!),
+-                                ],
+-                              ],
+-                            ),
+-                          ],
+-                        ),
+-                      ),
+-                      const SizedBox(width: AppConstants.spacingSm),
+-                      Column(
+-                        crossAxisAlignment: CrossAxisAlignment.end,
+-                        children: [
+-                          Row(
+-                            mainAxisSize: MainAxisSize.min,
+-                            children: [
+-                              Icon(
+-                                LucideIcons.clock,
+-                                size: context.responsiveIcon(
+-                                  AppConstants.iconSizeXs,
+-                                ),
+-                                color: context.adaptiveTextTertiary,
+-                              ),
+-                              const SizedBox(width: 4),
+-                              Text(
+-                                _formatTime(widget.playedAt),
+-                                style: Theme.of(context).textTheme.bodySmall
+-                                    ?.copyWith(
+-                                      color: context.adaptiveTextSecondary,
+-                                      fontWeight: FontWeight.w500,
+-                                    ),
+-                              ),
+-                            ],
+-                          ),
+-                          const SizedBox(height: AppConstants.spacingXxs),
+-                          Text(
+-                            _formatTimestamp(widget.playedAt),
+-                            style: Theme.of(context).textTheme.bodySmall
+-                                ?.copyWith(color: context.adaptiveTextTertiary),
+-                          ),
+-                        ],
+-                      ),
+-                    ],
+-                  ),
+-                ),
+-              ),
+-            ),
+-          ),
+-        ),
+-      ),
+-    );
+-  }
+-
+-  Widget _buildPlaceholder(BuildContext context) {
+-    return Container(
+-      color: AppColors.surfaceLight,
+-      child: const Center(
+-        child: FlickArtworkPlaceholder(size: 28, opacity: 0.9),
+-      ),
+-    );
+-  }
+-}
+-
+-class _MetadataChip extends StatelessWidget {
+-  final String text;
+-
+-  const _MetadataChip({required this.text});
+-
+-  @override
+-  Widget build(BuildContext context) {
+-    return Container(
+-      padding: const EdgeInsets.symmetric(
+-        horizontal: AppConstants.spacingXs,
+-        vertical: 2,
+-      ),
+-      decoration: BoxDecoration(
+-        color: AppColors.glassBackground,
+-        borderRadius: BorderRadius.circular(AppConstants.radiusXs),
+-        border: Border.all(color: AppColors.glassBorder),
+-      ),
+-      child: Text(
+-        text,
+-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+-          fontSize: AppConstants.fontSizeXs,
+-          color: context.adaptiveTextTertiary,
+-          fontWeight: FontWeight.w500,
+-        ),
+-      ),
+-    );
+-  }
+-}
+-
+-class _RecentlyPlayedRow {
+-  const _RecentlyPlayedRow.header(this.title, this.count) : entry = null;
+-  const _RecentlyPlayedRow.entry(this.entry)
+-      : title = null,
+-        count = 0;
+-
+-  final String? title;
+-  final int count;
+-  final RecentlyPlayedEntry? entry;
+-  bool get isHeader => entry == null;
+-}
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index a530195b0..bb1c17956 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -20,7 +20,6 @@ import 'package:flick/services/audio_engine_manager.dart';
+ import 'package:flick/services/audio_session_manager.dart';
+ import 'package:flick/services/last_played_service.dart';
+ import 'package:flick/services/favorites_service.dart';
+-import 'package:flick/data/repositories/recently_played_repository.dart';
+ import 'package:flick/data/repositories/song_repository.dart';
+ import 'package:flick/services/playlist_service.dart';
+ import 'package:flick/services/replay_play_tracker.dart';
+@@ -335,8 +334,6 @@ class PlayerService {
+   );
+   Timer? _queueDebounceTimer;
+   static const Duration _queueDebounce = Duration(milliseconds: 150);
+-  final RecentlyPlayedRepository _recentlyPlayedRepository =
+-      RecentlyPlayedRepository();
+   final ReplayPlayTracker _replayPlayTracker = ReplayPlayTracker();
+   static const MethodChannel _storageChannel = MethodChannel(
+     'com.mossapps.flick/storage',
+@@ -2309,9 +2306,6 @@ class PlayerService {
+       songId: song.id,
+       position: position,
+     );
+-    if (counted && _shouldPersistSong(song)) {
+-      unawaited(_recentlyPlayedRepository.recordPlay(song.id));
+-    }
+   }
+ 
+   void _setupRustAudioListeners() {
+-- 
+2.55.0
+
