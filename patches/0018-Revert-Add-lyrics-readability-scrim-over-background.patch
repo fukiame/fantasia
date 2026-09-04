@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 4 Sep 2026 07:22:30 +0700
+Subject: [PATCH] Revert "Add lyrics readability scrim over background"
+
+This reverts commit 154570b94094136c2bca7d0c1b539e2f5c596791.
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index 8901278d2..9e0c90bdd 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -259,25 +259,6 @@ class AnimatedSongScene extends StatelessWidget {
+   }
+ 
+   Widget _buildBackground(BuildContext context) {
+-    return Stack(
+-      children: [
+-        Positioned.fill(child: _buildBaseBackground(context)),
+-        // Lyrics readability scrim: fades in over any background variant so
+-        // white lyric text keeps contrast against bright album art.
+-        Positioned.fill(
+-          child: IgnorePointer(
+-            child: AnimatedOpacity(
+-              duration: AppConstants.animationNormal,
+-              opacity: lyricsMode ? 1.0 : 0.0,
+-              child: ColoredBox(color: Colors.black.withValues(alpha: 0.45)),
+-            ),
+-          ),
+-        ),
+-      ],
+-    );
+-  }
+-
+-  Widget _buildBaseBackground(BuildContext context) {
+     final bgBlend = albumColorMode.backgroundBlend;
+     final hasAlbumTint = albumColor != null && bgBlend > 0;
+ 
+-- 
+2.55.0
+

@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 23:56:48 +0700
+Subject: [PATCH] Revert "Add autoplay on queue end preference"
+
+This reverts commit 86782f2dc237e76f432c868e814ec2247020ce84.
+
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index c395ec1ab..46c3e1a50 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -590,7 +590,6 @@ class AppPreferencesService {
+   static const _loopModeKey = 'playback_loop_mode';
+   static const _advanceListOrderKey = 'playback_advance_list_order';
+   static const _wrapAroundQueueKey = 'playback_wrap_around_queue';
+-  static const _autoplayOnQueueEndKey = 'playback_autoplay_on_queue_end';
+ 
+   Future<AppPreferences> getPreferences() async {
+     final prefs = await SharedPreferences.getInstance();
+@@ -1386,16 +1385,6 @@ class AppPreferencesService {
+     await prefs.setBool(_wrapAroundQueueKey, value);
+   }
+ 
+-  Future<bool> getAutoplayOnQueueEnd() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_autoplayOnQueueEndKey) ?? true;
+-  }
+-
+-  Future<void> setAutoplayOnQueueEnd(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_autoplayOnQueueEndKey, value);
+-  }
+-
+   Future<bool> getKeepPlayingOnQuit() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_keepPlayingOnQuitKey) ?? false;
+-- 
+2.55.0
+

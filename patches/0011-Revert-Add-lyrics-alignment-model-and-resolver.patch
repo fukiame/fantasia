@@ -1,0 +1,51 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 4 Sep 2026 07:22:30 +0700
+Subject: [PATCH] Revert "Add lyrics alignment model and resolver"
+
+This reverts commit 73d2f1f1db7e23c64b27672c47d618a643d28409.
+
+diff --git a/lib/features/player/widgets/lyrics_alignment.dart b/lib/features/player/widgets/lyrics_alignment.dart
+deleted file mode 100644
+index e6ea4cf12..000000000
+--- a/lib/features/player/widgets/lyrics_alignment.dart
++++ /dev/null
+@@ -1,35 +0,0 @@
+-import 'package:flutter/widgets.dart';
+-
+-/// Screen-edge anchoring for the lyrics views: one preference value maps to
+-/// both text alignment inside a line and how the line box itself sits in the
+-/// panel, so "left" means the words hug the left edge of the screen.
+-class LyricsAlignment {
+-  final TextAlign textAlign;
+-  final WrapAlignment wrapAlignment;
+-
+-  const LyricsAlignment._(this.textAlign, this.wrapAlignment);
+-
+-  static const LyricsAlignment left = LyricsAlignment._(
+-    TextAlign.left,
+-    WrapAlignment.start,
+-  );
+-  static const LyricsAlignment center = LyricsAlignment._(
+-    TextAlign.center,
+-    WrapAlignment.center,
+-  );
+-  static const LyricsAlignment right = LyricsAlignment._(
+-    TextAlign.right,
+-    WrapAlignment.end,
+-  );
+-}
+-
+-LyricsAlignment resolveLyricsAlignment(String pref) {
+-  switch (pref) {
+-    case 'left':
+-      return LyricsAlignment.left;
+-    case 'right':
+-      return LyricsAlignment.right;
+-    default:
+-      return LyricsAlignment.center;
+-  }
+-}
+-- 
+2.55.0
+

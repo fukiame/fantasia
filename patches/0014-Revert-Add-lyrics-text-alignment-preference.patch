@@ -1,0 +1,96 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 4 Sep 2026 07:22:30 +0700
+Subject: [PATCH] Revert "Add lyrics text alignment preference"
+
+This reverts commit f87319ad47a377e5070440614008eec869345e9c.
+
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index b2bb215dd..3f118c04d 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -139,12 +139,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setReplayGainMode(value);
+   }
+ 
+-  Future<void> setLyricsTextAlign(String value) async {
+-    if (state.lyricsTextAlign == value) return;
+-    state = state.copyWith(lyricsTextAlign: value);
+-    await ref.read(appPreferencesServiceProvider).setLyricsTextAlign(value);
+-  }
+-
+   Future<void> setReplayGainPreampDb(double value) async {
+     if (state.replayGainPreampDb == value) return;
+     state = state.copyWith(replayGainPreampDb: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 772c36659..ed99c7bb3 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -109,7 +109,6 @@ class AppPreferences {
+   final String songTileThumbnailMode; // 'artwork', 'trackNumber', or 'trackNumberOnArt'
+   final bool extendedVolumeEnabled;
+   final String replayGainMode; // 'off', 'track', or 'album'
+-  final String lyricsTextAlign; // 'left', 'center', or 'right'
+   final double replayGainPreampDb;
+   final bool replayGainPreventClipping;
+ 
+@@ -222,7 +221,6 @@ class AppPreferences {
+     this.songTileThumbnailMode = 'artwork',
+     this.extendedVolumeEnabled = false,
+     this.replayGainMode = 'off',
+-    this.lyricsTextAlign = 'center',
+     this.replayGainPreampDb = 0.0,
+     this.replayGainPreventClipping = true,
+   });
+@@ -336,7 +334,6 @@ class AppPreferences {
+     String? songTileThumbnailMode,
+     bool? extendedVolumeEnabled,
+     String? replayGainMode,
+-    String? lyricsTextAlign,
+     double? replayGainPreampDb,
+     bool? replayGainPreventClipping,
+   }) {
+@@ -498,7 +495,6 @@ class AppPreferences {
+       extendedVolumeEnabled:
+           extendedVolumeEnabled ?? this.extendedVolumeEnabled,
+       replayGainMode: replayGainMode ?? this.replayGainMode,
+-      lyricsTextAlign: lyricsTextAlign ?? this.lyricsTextAlign,
+       replayGainPreampDb: replayGainPreampDb ?? this.replayGainPreampDb,
+       replayGainPreventClipping:
+           replayGainPreventClipping ?? this.replayGainPreventClipping,
+@@ -622,7 +618,6 @@ class AppPreferencesService {
+   static const _songTileThumbnailModeKey = 'song_tile_thumbnail_mode';
+   static const _extendedVolumeEnabledKey = 'audio_extended_volume_enabled';
+   static const _replayGainModeKey = 'audio_replaygain_mode';
+-  static const _lyricsTextAlignKey = 'lyrics_text_align';
+   static const _replayGainPreampKey = 'audio_replaygain_preamp_db';
+   static const _replayGainPreventClippingKey =
+       'audio_replaygain_prevent_clipping';
+@@ -790,7 +785,6 @@ class AppPreferencesService {
+       extendedVolumeEnabled:
+           prefs.getBool(_extendedVolumeEnabledKey) ?? false,
+       replayGainMode: prefs.getString(_replayGainModeKey) ?? 'off',
+-      lyricsTextAlign: prefs.getString(_lyricsTextAlignKey) ?? 'center',
+       replayGainPreampDb: prefs.getDouble(_replayGainPreampKey) ?? 0.0,
+       replayGainPreventClipping:
+           prefs.getBool(_replayGainPreventClippingKey) ?? true,
+@@ -967,16 +961,6 @@ class AppPreferencesService {
+     await prefs.setString(_replayGainModeKey, value);
+   }
+ 
+-  Future<String> getLyricsTextAlign() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getString(_lyricsTextAlignKey) ?? 'center';
+-  }
+-
+-  Future<void> setLyricsTextAlign(String value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setString(_lyricsTextAlignKey, value);
+-  }
+-
+   Future<double> getReplayGainPreampDb() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getDouble(_replayGainPreampKey) ?? 0.0;
+-- 
+2.55.0
+

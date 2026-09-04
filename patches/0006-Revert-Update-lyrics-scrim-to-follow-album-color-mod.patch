@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 4 Sep 2026 07:22:27 +0700
+Subject: [PATCH] Revert "Update lyrics scrim to follow album color mode"
+
+This reverts commit 76f31792b2551e4d276b32ff386032d9589c9de9.
+
+diff --git a/lib/features/player/widgets/animated_song_scene.dart b/lib/features/player/widgets/animated_song_scene.dart
+index fbfb66ec7..8901278d2 100644
+--- a/lib/features/player/widgets/animated_song_scene.dart
++++ b/lib/features/player/widgets/animated_song_scene.dart
+@@ -259,29 +259,17 @@ class AnimatedSongScene extends StatelessWidget {
+   }
+ 
+   Widget _buildBackground(BuildContext context) {
+-    final bgBlend = albumColorMode.backgroundBlend;
+-    final hasAlbumTint = albumColor != null && bgBlend > 0;
+-    // Lyrics readability scrim: fades in over any background variant so white
+-    // lyric text keeps contrast. Follows the album color mode — flat black
+-    // when off, increasingly album-hued toward vibrant, but always lerped
+-    // from black so the tint stays dark enough to read text over.
+-    final scrimColor =
+-        hasAlbumTint
+-            ? Color.lerp(Colors.black, albumColor!, (bgBlend * 1.2).clamp(0.0, 0.35))!
+-            : Colors.black;
+-
+     return Stack(
+       children: [
+         Positioned.fill(child: _buildBaseBackground(context)),
++        // Lyrics readability scrim: fades in over any background variant so
++        // white lyric text keeps contrast against bright album art.
+         Positioned.fill(
+           child: IgnorePointer(
+             child: AnimatedOpacity(
+               duration: AppConstants.animationNormal,
+               opacity: lyricsMode ? 1.0 : 0.0,
+-              child: AnimatedContainer(
+-                duration: AppConstants.animationNormal,
+-                color: scrimColor.withValues(alpha: 0.45),
+-              ),
++              child: ColoredBox(color: Colors.black.withValues(alpha: 0.45)),
+             ),
+           ),
+         ),
+-- 
+2.55.0
+

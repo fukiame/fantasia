@@ -1,0 +1,154 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 19:56:40 +0700
+Subject: [PATCH] waveform seekbar
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/waveform_layer.dart b/lib/features/player/widgets/waveform_layer.dart
+index 24ff080da..57079d90b 100644
+--- a/lib/features/player/widgets/waveform_layer.dart
++++ b/lib/features/player/widgets/waveform_layer.dart
+@@ -104,8 +104,7 @@ class _WaveformLayerState extends State<WaveformLayer>
+                 return ValueListenableBuilder<Duration>(
+                   valueListenable: widget.positionNotifier,
+                   builder: (context, position, _) {
+-                    final seekBar = switch (style) {
+-                      ProgressBarStyle.line => LineSeekBar(
++                    final seekBar = LineSeekBar(
+                         position: position,
+                         duration: duration,
+                         appearProgress: t,
+@@ -113,19 +112,7 @@ class _WaveformLayerState extends State<WaveformLayer>
+                           widget.positionNotifier.value = newPos;
+                           unawaited(widget.playerService.seek(newPos));
+                         },
+-                      ),
+-                      ProgressBarStyle.waveform => WaveformSeekBar(
+-                        barCount: 60,
+-                        position: position,
+-                        duration: duration,
+-                        appearProgress: t,
+-                        cachedPeaks: _cachedPeaks,
+-                        onChanged: (newPos) {
+-                          widget.positionNotifier.value = newPos;
+-                          unawaited(widget.playerService.seek(newPos));
+-                        },
+-                      ),
+-                    };
++                      );
+                     return Padding(
+                       padding: const EdgeInsets.symmetric(vertical: 4),
+                       child: RepaintBoundary(child: seekBar),
+diff --git a/lib/features/settings/screens/ui_customization_settings_screen.dart b/lib/features/settings/screens/ui_customization_settings_screen.dart
+index 37129597a..8aa25ebd7 100644
+--- a/lib/features/settings/screens/ui_customization_settings_screen.dart
++++ b/lib/features/settings/screens/ui_customization_settings_screen.dart
+@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
+ import 'package:lucide_icons_flutter/lucide_icons.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/models/album_color_mode.dart';
+-import 'package:flick/models/progress_bar_style.dart';
+ import 'package:flick/models/song_tile_thumbnail_mode.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/features/settings/widgets/settings_widgets.dart';
+@@ -206,37 +205,6 @@ class UiCustomizationSettingsScreen extends ConsumerWidget {
+             }).toList(),
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Progress Bar'),
+-          SettingsCard(
+-            children: [
+-              SelectionSetting(
+-                icon: LucideIcons.audioWaveform,
+-                title: ProgressBarStyle.waveform.label,
+-                subtitle: ProgressBarStyle.waveform.description,
+-                selected: ref.watch(progressBarStyleProvider) ==
+-                    ProgressBarStyle.waveform,
+-                onTap: () {
+-                  ref
+-                      .read(progressBarStyleProvider.notifier)
+-                      .setStyle(ProgressBarStyle.waveform);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: LucideIcons.minus,
+-                title: ProgressBarStyle.line.label,
+-                subtitle: ProgressBarStyle.line.description,
+-                selected: ref.watch(progressBarStyleProvider) ==
+-                    ProgressBarStyle.line,
+-                onTap: () {
+-                  ref
+-                      .read(progressBarStyleProvider.notifier)
+-                      .setStyle(ProgressBarStyle.line);
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SettingsSectionHeader('Album Colors'),
+           SettingsCard(
+             children: AlbumColorMode.values.map((mode) {
+diff --git a/lib/models/progress_bar_style.dart b/lib/models/progress_bar_style.dart
+index 6b83092f1..7848915ba 100644
+--- a/lib/models/progress_bar_style.dart
++++ b/lib/models/progress_bar_style.dart
+@@ -1,40 +1,19 @@
+-enum ProgressBarStyle { waveform, line }
++enum ProgressBarStyle { line }
+ 
+ extension ProgressBarStyleX on ProgressBarStyle {
+   String get storageValue {
+-    switch (this) {
+-      case ProgressBarStyle.waveform:
+-        return 'waveform';
+-      case ProgressBarStyle.line:
+         return 'line';
+-    }
+   }
+ 
+   String get label {
+-    switch (this) {
+-      case ProgressBarStyle.waveform:
+-        return 'Waveform';
+-      case ProgressBarStyle.line:
+         return 'Line';
+-    }
+   }
+ 
+   String get description {
+-    switch (this) {
+-      case ProgressBarStyle.waveform:
+-        return 'Vertical bars that animate across the screen.';
+-      case ProgressBarStyle.line:
+         return 'Clean straight line with precision scrubbing.';
+-    }
+   }
+ 
+   static ProgressBarStyle fromStorageValue(String? value) {
+-    switch (value) {
+-      case 'line':
+         return ProgressBarStyle.line;
+-      case 'waveform':
+-      default:
+-        return ProgressBarStyle.waveform;
+-    }
+   }
+ }
+diff --git a/lib/providers/progress_bar_style_provider.dart b/lib/providers/progress_bar_style_provider.dart
+index 180a94fca..456c8fa32 100644
+--- a/lib/providers/progress_bar_style_provider.dart
++++ b/lib/providers/progress_bar_style_provider.dart
+@@ -17,7 +17,7 @@ class ProgressBarStyleNotifier extends Notifier<ProgressBarStyle> {
+       _initialized = true;
+       Future<void>.microtask(_loadFromPreferences);
+     }
+-    return ProgressBarStyle.waveform;
++    return ProgressBarStyle.line;
+   }
+ 
+   Future<void> _loadFromPreferences() async {
+-- 
+2.55.0
+

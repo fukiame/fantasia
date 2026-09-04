@@ -1,0 +1,266 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 25 Jul 2026 20:11:45 +0700
+Subject: [PATCH] more(from)artists
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index 1ac6ea108..b6925c852 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -356,72 +356,11 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+                     }, childCount: widget.songs.length),
+                   ),
+                 ),
+-                if (_moreAlbums.isNotEmpty &&
+-                    ref.watch(appPreferencesProvider).showMoreFromArtist) ...[
+-                  _buildSectionTitle(
+-                    context,
+-                    'More from ${widget.albumArtist}',
+-                  ),
+-                  SliverToBoxAdapter(
+-                    child: SizedBox(
+-                      height: 200,
+-                      child: ListView.separated(
+-                        padding: const EdgeInsets.symmetric(
+-                          horizontal: AppConstants.spacingLg,
+-                        ),
+-                        scrollDirection: Axis.horizontal,
+-                        itemCount: _moreAlbums.length,
+-                        separatorBuilder: (_, __) => const SizedBox(
+-                          width: AppConstants.spacingMd,
+-                        ),
+-                        itemBuilder: (context, index) {
+-                          final album = _moreAlbums[index];
+-                          return _AlbumCard(
+-                            albumName: album.albumName,
+-                            albumArtist: album.albumArtist,
+-                            songCount: album.songs.length,
+-                            albumArt: _getArt(album.songs),
+-                            albumArtSourcePath: _getSourcePath(album.songs),
+-                            onTap: () => _openAlbum(album),
+-                          );
+-                        },
+-                      ),
+-                    ),
+-                  ),
+-                ],
+-                if (_moreArtists.isNotEmpty &&
+-                    ref.watch(appPreferencesProvider).showMoreArtists) ...[
+-                  const SliverToBoxAdapter(
+-                    child: SizedBox(height: AppConstants.spacingLg),
+-                  ),
+-                  _buildSectionTitle(context, 'More Artists'),
+-                  SliverToBoxAdapter(
+-                    child: SizedBox(
+-                      height: 160,
+-                      child: ListView.separated(
+-                        padding: const EdgeInsets.symmetric(
+-                          horizontal: AppConstants.spacingLg,
+-                        ),
+-                        scrollDirection: Axis.horizontal,
+-                        itemCount: _moreArtists.length,
+-                        separatorBuilder: (_, __) => const SizedBox(
+-                          width: AppConstants.spacingMd,
+-                        ),
+-                        itemBuilder: (context, index) {
+-                          final entry = _moreArtists.entries.toList()[index];
+-                          return _ArtistCard(
+-                            artistName: entry.key,
+-                            songs: entry.value,
+-                            onTap: () => _openArtist(entry.key, entry.value),
+-                          );
+-                        },
+-                      ),
+-                    ),
+-                  ),
+-                ],
++		/*
+                 const SliverToBoxAdapter(
+                   child: SizedBox(height: AppConstants.navBarHeight + 120),
+                 ),
++		*/
+               ],
+               ),
+               ),
+diff --git a/lib/features/artists/screens/artists_screen.dart b/lib/features/artists/screens/artists_screen.dart
+index f147f837d..34ce14d30 100644
+--- a/lib/features/artists/screens/artists_screen.dart
++++ b/lib/features/artists/screens/artists_screen.dart
+@@ -623,29 +623,6 @@ class _ArtistSortSheet extends ConsumerWidget {
+               ...ArtistSortOption.values.map(
+                 (option) => _buildSortTile(context, option),
+               ),
+-              const SizedBox(height: 16),
+-              _buildSectionHeader(context, 'DISPLAY'),
+-              const SizedBox(height: 8),
+-              _buildToggleTile(
+-                context,
+-                icon: LucideIcons.disc3,
+-                label: 'More from artist',
+-                subtitle: 'Show related albums on album pages',
+-                value: prefs.showMoreFromArtist,
+-                onChanged: ref
+-                    .read(appPreferencesProvider.notifier)
+-                    .setShowMoreFromArtist,
+-              ),
+-              _buildToggleTile(
+-                context,
+-                icon: LucideIcons.users,
+-                label: 'More artists',
+-                subtitle: 'Show other artists on album pages',
+-                value: prefs.showMoreArtists,
+-                onChanged: ref
+-                    .read(appPreferencesProvider.notifier)
+-                    .setShowMoreArtists,
+-              ),
+             ],
+           ),
+         ),
+diff --git a/lib/features/settings/screens/ui_customization_settings_screen.dart b/lib/features/settings/screens/ui_customization_settings_screen.dart
+index 8960b2904..ebaaf5ff7 100644
+--- a/lib/features/settings/screens/ui_customization_settings_screen.dart
++++ b/lib/features/settings/screens/ui_customization_settings_screen.dart
+@@ -75,30 +75,6 @@ class UiCustomizationSettingsScreen extends ConsumerWidget {
+           const SettingsSectionHeader('Detail Screens'),
+           SettingsCard(
+             children: [
+-              ToggleSetting(
+-                icon: LucideIcons.disc3,
+-                title: 'More from Artist',
+-                subtitle: 'Show related albums on album pages',
+-                value: appPreferences.showMoreFromArtist,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setShowMoreFromArtist(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+-              ToggleSetting(
+-                icon: LucideIcons.users,
+-                title: 'More Artists',
+-                subtitle: 'Show other artists on album pages',
+-                value: appPreferences.showMoreArtists,
+-                onChanged: (value) {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setShowMoreArtists(value);
+-                },
+-              ),
+-              const SettingsDivider(),
+               ToggleSetting(
+                 icon: LucideIcons.sparkles,
+                 title: 'Animated Album Art',
+diff --git a/lib/providers/app_preferences_provider.dart b/lib/providers/app_preferences_provider.dart
+index f2d0d7de0..083c6d275 100644
+--- a/lib/providers/app_preferences_provider.dart
++++ b/lib/providers/app_preferences_provider.dart
+@@ -555,18 +555,6 @@ class AppPreferencesNotifier extends Notifier<AppPreferences> {
+     await ref.read(appPreferencesServiceProvider).setAutoFocusSearch(value);
+   }
+ 
+-  Future<void> setShowMoreFromArtist(bool value) async {
+-    if (state.showMoreFromArtist == value) return;
+-    state = state.copyWith(showMoreFromArtist: value);
+-    await ref.read(appPreferencesServiceProvider).setShowMoreFromArtist(value);
+-  }
+-
+-  Future<void> setShowMoreArtists(bool value) async {
+-    if (state.showMoreArtists == value) return;
+-    state = state.copyWith(showMoreArtists: value);
+-    await ref.read(appPreferencesServiceProvider).setShowMoreArtists(value);
+-  }
+-
+   Future<void> setDetailHeaderArtExpanded(bool value) async {
+     if (state.detailHeaderArtExpanded == value) return;
+     state = state.copyWith(detailHeaderArtExpanded: value);
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index 036face66..d70089386 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -75,8 +75,6 @@ class AppPreferences {
+   final int btLdacBitsPerSample;
+   final bool autoFocusSearch;
+   final String searchPlaybackMode; // 'results', 'library', or 'queue'
+-  final bool showMoreFromArtist;
+-  final bool showMoreArtists;
+   final bool detailHeaderArtExpanded;
+   final bool detailHeaderCenteredTitle;
+   final String songTileThumbnailMode; // 'artwork', 'trackNumber', or 'trackNumberOnArt'
+@@ -156,8 +154,6 @@ class AppPreferences {
+     this.btLdacBitsPerSample = 0,
+     this.autoFocusSearch = false,
+     this.searchPlaybackMode = 'results',
+-    this.showMoreFromArtist = true,
+-    this.showMoreArtists = true,
+     this.detailHeaderArtExpanded = true,
+     this.detailHeaderCenteredTitle = false,
+     this.songTileThumbnailMode = 'artwork',
+@@ -238,8 +234,6 @@ class AppPreferences {
+     int? btLdacBitsPerSample,
+     bool? autoFocusSearch,
+     String? searchPlaybackMode,
+-    bool? showMoreFromArtist,
+-    bool? showMoreArtists,
+     bool? detailHeaderArtExpanded,
+     bool? detailHeaderCenteredTitle,
+     String? songTileThumbnailMode,
+@@ -356,8 +350,6 @@ class AppPreferences {
+       autoFocusSearch: autoFocusSearch ?? this.autoFocusSearch,
+       searchPlaybackMode:
+           searchPlaybackMode ?? this.searchPlaybackMode,
+-      showMoreFromArtist: showMoreFromArtist ?? this.showMoreFromArtist,
+-      showMoreArtists: showMoreArtists ?? this.showMoreArtists,
+       detailHeaderArtExpanded:
+           detailHeaderArtExpanded ?? this.detailHeaderArtExpanded,
+       detailHeaderCenteredTitle:
+@@ -448,8 +440,6 @@ class AppPreferencesService {
+   static const _btLdacBitsPerSampleKey = 'app_bt_ldac_bits_per_sample';
+   static const _autoFocusSearchKey = 'app_auto_focus_search';
+   static const _searchPlaybackModeKey = 'app_search_playback_mode';
+-  static const _showMoreFromArtistKey = 'album_show_more_from_artist';
+-  static const _showMoreArtistsKey = 'album_show_more_artists';
+   static const _detailHeaderArtExpandedKey = 'detail_header_art_expanded';
+   static const _detailHeaderCenteredTitleKey = 'detail_header_centered_title';
+   static const _songTileThumbnailModeKey = 'song_tile_thumbnail_mode';
+@@ -570,8 +560,6 @@ class AppPreferencesService {
+       autoFocusSearch: prefs.getBool(_autoFocusSearchKey) ?? false,
+       searchPlaybackMode:
+           prefs.getString(_searchPlaybackModeKey) ?? 'results',
+-      showMoreFromArtist: prefs.getBool(_showMoreFromArtistKey) ?? true,
+-      showMoreArtists: prefs.getBool(_showMoreArtistsKey) ?? true,
+       detailHeaderArtExpanded:
+           prefs.getBool(_detailHeaderArtExpandedKey) ?? true,
+       detailHeaderCenteredTitle:
+@@ -1300,26 +1288,6 @@ class AppPreferencesService {
+     await prefs.setString(_searchPlaybackModeKey, value);
+   }
+ 
+-  Future<bool> getShowMoreFromArtist() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_showMoreFromArtistKey) ?? true;
+-  }
+-
+-  Future<void> setShowMoreFromArtist(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_showMoreFromArtistKey, value);
+-  }
+-
+-  Future<bool> getShowMoreArtists() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_showMoreArtistsKey) ?? true;
+-  }
+-
+-  Future<void> setShowMoreArtists(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_showMoreArtistsKey, value);
+-  }
+-
+   Future<bool> getDetailHeaderArtExpanded() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_detailHeaderArtExpandedKey) ?? true;
+-- 
+2.55.0
+

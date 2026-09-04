@@ -1,0 +1,179 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Mon, 24 Aug 2026 15:46:18 +0700
+Subject: [PATCH] Revert "Add crossfeed and replay gain preferences"
+
+This reverts commit 43ce337c39d7a2a95e065a0f1c3b854b2343948a.
+
+diff --git a/lib/services/app_preferences_service.dart b/lib/services/app_preferences_service.dart
+index ed99c7bb3..9c5b5fbc0 100644
+--- a/lib/services/app_preferences_service.dart
++++ b/lib/services/app_preferences_service.dart
+@@ -15,7 +15,6 @@ class AppPreferences {
+   final bool crossfadeEnabled;
+   final double crossfadeDurationSecs;
+   final int crossfadeCurveIndex;
+-  final int crossfeedLevel;
+   final bool swipeActionsEnabled;
+   final String favoriteRemovalMode; // 'swipe' or 'longpress'
+   final bool fastIndexEnabled;
+@@ -108,9 +107,6 @@ class AppPreferences {
+   final bool detailHeaderCenteredTitle;
+   final String songTileThumbnailMode; // 'artwork', 'trackNumber', or 'trackNumberOnArt'
+   final bool extendedVolumeEnabled;
+-  final String replayGainMode; // 'off', 'track', or 'album'
+-  final double replayGainPreampDb;
+-  final bool replayGainPreventClipping;
+ 
+   const AppPreferences({
+     this.animationsEnabled = true,
+@@ -127,7 +123,6 @@ class AppPreferences {
+     this.crossfadeEnabled = false,
+     this.crossfadeDurationSecs = 3.0,
+     this.crossfadeCurveIndex = 0,
+-    this.crossfeedLevel = 0,
+     this.swipeActionsEnabled = false,
+     this.favoriteRemovalMode = 'longpress',
+     this.fastIndexEnabled = true,
+@@ -220,9 +215,6 @@ class AppPreferences {
+     this.detailHeaderCenteredTitle = false,
+     this.songTileThumbnailMode = 'artwork',
+     this.extendedVolumeEnabled = false,
+-    this.replayGainMode = 'off',
+-    this.replayGainPreampDb = 0.0,
+-    this.replayGainPreventClipping = true,
+   });
+ 
+   AppPreferences copyWith({
+@@ -240,7 +232,6 @@ class AppPreferences {
+     bool? crossfadeEnabled,
+     double? crossfadeDurationSecs,
+     int? crossfadeCurveIndex,
+-    int? crossfeedLevel,
+     bool? swipeActionsEnabled,
+     String? favoriteRemovalMode,
+     bool? fastIndexEnabled,
+@@ -333,9 +324,6 @@ class AppPreferences {
+     bool? detailHeaderCenteredTitle,
+     String? songTileThumbnailMode,
+     bool? extendedVolumeEnabled,
+-    String? replayGainMode,
+-    double? replayGainPreampDb,
+-    bool? replayGainPreventClipping,
+   }) {
+     return AppPreferences(
+       animationsEnabled: animationsEnabled ?? this.animationsEnabled,
+@@ -355,7 +343,6 @@ class AppPreferences {
+       crossfadeDurationSecs:
+           crossfadeDurationSecs ?? this.crossfadeDurationSecs,
+       crossfadeCurveIndex: crossfadeCurveIndex ?? this.crossfadeCurveIndex,
+-      crossfeedLevel: crossfeedLevel ?? this.crossfeedLevel,
+       swipeActionsEnabled: swipeActionsEnabled ?? this.swipeActionsEnabled,
+       favoriteRemovalMode: favoriteRemovalMode ?? this.favoriteRemovalMode,
+       fastIndexEnabled: fastIndexEnabled ?? this.fastIndexEnabled,
+@@ -494,10 +481,6 @@ class AppPreferences {
+           songTileThumbnailMode ?? this.songTileThumbnailMode,
+       extendedVolumeEnabled:
+           extendedVolumeEnabled ?? this.extendedVolumeEnabled,
+-      replayGainMode: replayGainMode ?? this.replayGainMode,
+-      replayGainPreampDb: replayGainPreampDb ?? this.replayGainPreampDb,
+-      replayGainPreventClipping:
+-          replayGainPreventClipping ?? this.replayGainPreventClipping,
+     );
+   }
+ }
+@@ -517,7 +500,6 @@ class AppPreferencesService {
+   static const _crossfadeEnabledKey = 'audio_crossfade_enabled';
+   static const _crossfadeDurationKey = 'audio_crossfade_duration_secs';
+   static const _crossfadeCurveKey = 'audio_crossfade_curve_index';
+-  static const _crossfeedLevelKey = 'audio_crossfeed_level';
+   static const _swipeActionsEnabledKey = 'swipe_actions_enabled';
+   static const _favoriteRemovalModeKey = 'favorite_removal_mode';
+   static const _fastIndexEnabledKey = 'fast_index_enabled';
+@@ -617,10 +599,6 @@ class AppPreferencesService {
+   static const _detailHeaderCenteredTitleKey = 'detail_header_centered_title';
+   static const _songTileThumbnailModeKey = 'song_tile_thumbnail_mode';
+   static const _extendedVolumeEnabledKey = 'audio_extended_volume_enabled';
+-  static const _replayGainModeKey = 'audio_replaygain_mode';
+-  static const _replayGainPreampKey = 'audio_replaygain_preamp_db';
+-  static const _replayGainPreventClippingKey =
+-      'audio_replaygain_prevent_clipping';
+   static const _shuffleModeKey = 'playback_shuffle_mode';
+   static const _loopModeKey = 'playback_loop_mode';
+   static const _advanceListOrderKey = 'playback_advance_list_order';
+@@ -645,7 +623,6 @@ class AppPreferencesService {
+       crossfadeEnabled: prefs.getBool(_crossfadeEnabledKey) ?? false,
+       crossfadeDurationSecs: prefs.getDouble(_crossfadeDurationKey) ?? 3.0,
+       crossfadeCurveIndex: prefs.getInt(_crossfadeCurveKey) ?? 0,
+-      crossfeedLevel: prefs.getInt(_crossfeedLevelKey) ?? 0,
+       swipeActionsEnabled: prefs.getBool(_swipeActionsEnabledKey) ?? false,
+       favoriteRemovalMode:
+           prefs.getString(_favoriteRemovalModeKey) ?? 'longpress',
+@@ -784,10 +761,6 @@ class AppPreferencesService {
+           prefs.getString(_songTileThumbnailModeKey) ?? 'artwork',
+       extendedVolumeEnabled:
+           prefs.getBool(_extendedVolumeEnabledKey) ?? false,
+-      replayGainMode: prefs.getString(_replayGainModeKey) ?? 'off',
+-      replayGainPreampDb: prefs.getDouble(_replayGainPreampKey) ?? 0.0,
+-      replayGainPreventClipping:
+-          prefs.getBool(_replayGainPreventClippingKey) ?? true,
+     );
+   }
+ 
+@@ -931,16 +904,6 @@ class AppPreferencesService {
+     await prefs.setInt(_crossfadeCurveKey, value);
+   }
+ 
+-  Future<int> getCrossfeedLevel() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getInt(_crossfeedLevelKey) ?? 0;
+-  }
+-
+-  Future<void> setCrossfeedLevel(int value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setInt(_crossfeedLevelKey, value.clamp(0, 3));
+-  }
+-
+   Future<bool> getExtendedVolumeEnabled() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_extendedVolumeEnabledKey) ?? false;
+@@ -951,36 +914,6 @@ class AppPreferencesService {
+     await prefs.setBool(_extendedVolumeEnabledKey, value);
+   }
+ 
+-  Future<String> getReplayGainMode() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getString(_replayGainModeKey) ?? 'off';
+-  }
+-
+-  Future<void> setReplayGainMode(String value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setString(_replayGainModeKey, value);
+-  }
+-
+-  Future<double> getReplayGainPreampDb() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getDouble(_replayGainPreampKey) ?? 0.0;
+-  }
+-
+-  Future<void> setReplayGainPreampDb(double value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setDouble(_replayGainPreampKey, value);
+-  }
+-
+-  Future<bool> getReplayGainPreventClipping() async {
+-    final prefs = await SharedPreferences.getInstance();
+-    return prefs.getBool(_replayGainPreventClippingKey) ?? true;
+-  }
+-
+-  Future<void> setReplayGainPreventClipping(bool value) async {
+-    final prefs = await SharedPreferences.getInstance();
+-    await prefs.setBool(_replayGainPreventClippingKey, value);
+-  }
+-
+   Future<bool> getSwipeActionsEnabled() async {
+     final prefs = await SharedPreferences.getInstance();
+     return prefs.getBool(_swipeActionsEnabledKey) ?? false;
+-- 
+2.55.0
+

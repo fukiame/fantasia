@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 4 Sep 2026 07:22:30 +0700
+Subject: [PATCH] Revert "Add lyric text alignment settings"
+
+This reverts commit 7804ae11347eaef81054e681fd7b6a46bb901631.
+
+diff --git a/lib/features/settings/screens/lyrics_settings_screen.dart b/lib/features/settings/screens/lyrics_settings_screen.dart
+index 0d966e38c..218091767 100644
+--- a/lib/features/settings/screens/lyrics_settings_screen.dart
++++ b/lib/features/settings/screens/lyrics_settings_screen.dart
+@@ -35,47 +35,6 @@ class LyricsSettingsScreen extends ConsumerWidget {
+             ],
+           ),
+           const SizedBox(height: AppConstants.spacingLg),
+-          const SettingsSectionHeader('Display'),
+-          SettingsCard(
+-            children: [
+-              SelectionSetting(
+-                icon: Icons.format_align_left_rounded,
+-                title: 'Left',
+-                subtitle: 'Align lyric text to the left edge',
+-                selected: appPrefs.lyricsTextAlign == 'left',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setLyricsTextAlign('left');
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: Icons.format_align_center_rounded,
+-                title: 'Center',
+-                subtitle: 'Align lyric text to the center',
+-                selected: appPrefs.lyricsTextAlign == 'center',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setLyricsTextAlign('center');
+-                },
+-              ),
+-              const SettingsDivider(),
+-              SelectionSetting(
+-                icon: Icons.format_align_right_rounded,
+-                title: 'Right',
+-                subtitle: 'Align lyric text to the right edge',
+-                selected: appPrefs.lyricsTextAlign == 'right',
+-                onTap: () {
+-                  ref
+-                      .read(appPreferencesProvider.notifier)
+-                      .setLyricsTextAlign('right');
+-                },
+-              ),
+-            ],
+-          ),
+-          const SizedBox(height: AppConstants.spacingLg),
+           const SizedBox(height: AppConstants.navBarHeight + 40),
+         ],
+       ),
+-- 
+2.55.0
+
