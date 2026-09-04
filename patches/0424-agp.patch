@@ -1,0 +1,81 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sat, 1 Aug 2026 17:52:15 +0700
+Subject: [PATCH] agp
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/build.gradle.kts b/android/app/build.gradle.kts
+index deb9ceb20..a902eb15d 100644
+--- a/android/app/build.gradle.kts
++++ b/android/app/build.gradle.kts
+@@ -6,6 +6,7 @@ plugins {
+ 
+ import java.io.File
+ import java.util.Properties
++import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+ 
+ val keystoreProperties = Properties()
+ val keystoreFile = rootProject.file("key.properties")
+@@ -23,8 +24,10 @@ android {
+         targetCompatibility = JavaVersion.VERSION_17
+     }
+ 
+-    kotlinOptions {
+-        jvmTarget = "17"
++    kotlin {
++      compilerOptions {
++        jvmTarget = JvmTarget.JVM_17
++      }
+     }
+ 
+     signingConfigs {
+diff --git a/android/gradle.properties b/android/gradle.properties
+index db7a19eff..9db65030c 100644
+--- a/android/gradle.properties
++++ b/android/gradle.properties
+@@ -1,4 +1,6 @@
+ org.gradle.jvmargs=-Xmx8G -XX:MaxMetaspaceSize=4G -XX:ReservedCodeCacheSize=512m -XX:+HeapDumpOnOutOfMemoryError
++android.enableR8.fullMode=true
++android.r8.optimizedResourceShrinking=true
+ android.useAndroidX=true
+ android.nonTransitiveRClass=false
+ android.defaults.buildfeatures.buildconfig=true
+diff --git a/android/settings.gradle.kts b/android/settings.gradle.kts
+index 8bed66a6b..7432e4492 100644
+--- a/android/settings.gradle.kts
++++ b/android/settings.gradle.kts
+@@ -27,8 +27,8 @@ dependencyResolutionManagement {
+ 
+ plugins {
+     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
+-    id("com.android.application") version "8.11.1" apply false
+-    id("org.jetbrains.kotlin.android") version "2.2.20" apply false
++    id("com.android.application") version "8.13.2" apply false
++    id("org.jetbrains.kotlin.android") version "2.4.10" apply false
+ }
+ 
+ include(":app")
+diff --git a/rust_builder/android/build.gradle b/rust_builder/android/build.gradle
+index 8454ecae3..c2fd312a3 100644
+--- a/rust_builder/android/build.gradle
++++ b/rust_builder/android/build.gradle
+@@ -26,7 +26,7 @@ android {
+ 
+     // Bumping the plugin compileSdkVersion requires all clients of this plugin
+     // to bump the version in their app.
+-    compileSdkVersion 33
++    compileSdkVersion 36
+ 
+     // Use the NDK version
+     // declared in /android/app/build.gradle file of the Flutter project.
+@@ -59,4 +59,4 @@ apply from: "../cargokit/gradle/plugin.gradle"
+ cargokit {
+     manifestDir = "../../rust"
+     libname = "rust_lib_flick_player"
+-}
+\ No newline at end of file
++}
+-- 
+2.55.0
+

@@ -1,0 +1,72 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 23:42:33 +0700
+Subject: [PATCH] Revert "Add http_origin field to SourceInfo for remote stream
+ handling"
+
+This reverts commit bb853aeff7b5853d65c0ee8bbdfe5867f3a7c5b9.
+
+diff --git a/rust/src/audio/manager.rs b/rust/src/audio/manager.rs
+index 4fc764abc..d3b312391 100644
+--- a/rust/src/audio/manager.rs
++++ b/rust/src/audio/manager.rs
+@@ -374,9 +374,7 @@ impl EngineManager {
+         let mut state = self.state.lock();
+         state.current = Some(AudioEngine::Rust);
+         state.rust_handle = Some(new_handle);
+-        if let Some(volume) = crate::api::audio_api::take_pending_volume()
+-            .or_else(|| Some(crate::api::audio_api::last_volume()))
+-        {
++        if let Some(volume) = crate::api::audio_api::take_pending_volume() {
+             if let Some(handle) = state.rust_handle.as_ref() {
+                 let _ = handle.set_volume(volume);
+             }
+diff --git a/rust/src/audio/source.rs b/rust/src/audio/source.rs
+index 7a0a18f18..83b7cae69 100644
+--- a/rust/src/audio/source.rs
++++ b/rust/src/audio/source.rs
+@@ -5,7 +5,6 @@
+ 
+ use ringbuf::traits::{Consumer, Observer, Producer, Split};
+ use ringbuf::HeapRb;
+-use std::collections::HashMap;
+ use std::path::PathBuf;
+ use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+ use std::sync::Arc;
+@@ -29,13 +28,6 @@ pub struct SourceInfo {
+     pub total_samples: u64,
+     /// Total duration in seconds
+     pub duration_secs: f64,
+-    // ponytail: HTTP origin (full url + auth headers/query) for remote streams.
+-    // None for local files. Lets handle_seek re-spawn the decoder over HTTP
+-    // instead of mistaking the URL label (SourceInfo.path) for a local path,
+-    // which fails and drops the engine to Idle. Per-source so it auto-clears
+-    // on track change. Note: HashMap Debug would print headers — never log
+-    // SourceInfo wholesale in release paths.
+-    pub http_origin: Option<(String, HashMap<String, String>)>,
+ }
+ 
+ /// State of an audio source.
+@@ -467,7 +459,6 @@ mod tests {
+             channels: 2,
+             total_samples: 4,
+             duration_secs: 4.0 / 48_000.0 / 2.0,
+-            http_origin: None,
+         }
+     }
+ 
+diff --git a/rust/src/audio/wavpack_thread.rs b/rust/src/audio/wavpack_thread.rs
+index e100e70ab..2e1741d59 100644
+--- a/rust/src/audio/wavpack_thread.rs
++++ b/rust/src/audio/wavpack_thread.rs
+@@ -110,7 +110,6 @@ impl WavpackDecoderThread {
+             total_samples: (duration_secs * output_sample_rate as f64 * output_channels as f64)
+                 as u64,
+             duration_secs,
+-            http_origin: None,
+         };
+ 
+         let (source, producer) = AudioSource::new(source_info);
+-- 
+2.55.0
+

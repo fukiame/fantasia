@@ -1,0 +1,41 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Tue, 11 Aug 2026 23:42:36 +0700
+Subject: [PATCH] Revert "probe_http: store HTTP origin in ProbeResult"
+
+This reverts commit b83ea840eef32d89754713db24a5cd66f421df19.
+
+diff --git a/rust/src/audio/decoder.rs b/rust/src/audio/decoder.rs
+index d142eafad..1783ab966 100644
+--- a/rust/src/audio/decoder.rs
++++ b/rust/src/audio/decoder.rs
+@@ -129,16 +129,14 @@ pub fn probe_http(url: &str, headers: HashMap<String, String>) -> Result<ProbeRe
+         hint.with_extension(&hint_ext);
+     }
+ 
+-    let src = HttpMediaSource::new(url.to_string(), headers.clone());
++    let src = HttpMediaSource::new(url.to_string(), headers);
+     let mss = MediaSourceStream::new(Box::new(src), Default::default());
+ 
+     let probed = symphonia::default::get_probe()
+         .format(&hint, mss, &format_opts, &metadata_opts)
+         .map_err(|e| DecoderError::UnsupportedFormat(format!("HTTP probe failed: {}", e)))?;
+ 
+-    let mut result = build_probe_result(probed, PathBuf::from(url_label(url)))?;
+-    result.source_info.http_origin = Some((url.to_string(), headers));
+-    Ok(result)
++    build_probe_result(probed, PathBuf::from(url_label(url)))
+ }
+ 
+ /// Build a [`ProbeResult`] from a probed format reader: locate the audio track,
+@@ -241,7 +239,6 @@ fn build_probe_result(
+         channels,
+         total_samples,
+         duration_secs,
+-        http_origin: None,
+     };
+ 
+     Ok(ProbeResult {
+-- 
+2.55.0
+

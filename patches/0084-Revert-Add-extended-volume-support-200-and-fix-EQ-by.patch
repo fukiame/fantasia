@@ -7,7 +7,7 @@ Subject: [PATCH] Revert "Add extended volume support (200%) and fix EQ bypass
 This reverts commit dd527ca7f4d3b9cb04cbacf9a6db5f3f2f14b5a8.
 
 diff --git a/rust/src/audio/engine.rs b/rust/src/audio/engine.rs
-index 48996cabb..e6e1061b1 100644
+index bb085bd2f..5b7bdf4d9 100644
 --- a/rust/src/audio/engine.rs
 +++ b/rust/src/audio/engine.rs
 @@ -57,10 +57,6 @@ pub static XRUN_COUNT: AtomicU64 = AtomicU64::new(0);
@@ -33,7 +33,7 @@ index 48996cabb..e6e1061b1 100644
      /// Channel for sending finished tracks to command thread
      finished_tracks: Sender<AudioSource>,
      /// Experimental 432 Hz tuning override. When enabled the callback leaves
-@@ -235,7 +226,6 @@ impl AudioCallbackData {
+@@ -236,7 +227,6 @@ impl AudioCallbackData {
              dynamics: Mutex::new(DynamicsChain::new(sample_rate)),
              pitch_shifter: Mutex::new(PitchShifter::new(sample_rate, channels)),
              pitch_shift_forces_dsp: AtomicBool::new(false),
@@ -41,7 +41,7 @@ index 48996cabb..e6e1061b1 100644
              finished_tracks,
              tuning_432hz_enabled: AtomicBool::new(tuning_enabled),
              crossfade_forces_dsp: AtomicBool::new(false),
-@@ -264,7 +254,7 @@ impl AudioCallbackData {
+@@ -265,7 +255,7 @@ impl AudioCallbackData {
      #[inline]
      pub fn set_volume(&self, volume: f32) {
          debug_assert!(
@@ -50,7 +50,7 @@ index 48996cabb..e6e1061b1 100644
              "Volume out of range: {volume}"
          );
          self.volume.store(volume.to_bits(), Ordering::Relaxed);
-@@ -331,8 +321,7 @@ impl AudioCallbackData {
+@@ -332,8 +322,7 @@ impl AudioCallbackData {
          let tuning = self.tuning_432hz_enabled.load(Ordering::Relaxed);
          let crossfade = self.crossfade_forces_dsp.load(Ordering::Relaxed);
          let pitch = self.pitch_shift_forces_dsp.load(Ordering::Relaxed);
@@ -60,7 +60,7 @@ index 48996cabb..e6e1061b1 100644
      }
  
      /// Whether crossfade may run. Crossfade requires the DSP path (not
-@@ -2979,18 +2968,12 @@ fn sharing_label(sharing: SharingMode) -> &'static str {
+@@ -3042,18 +3031,12 @@ fn sharing_label(sharing: SharingMode) -> &'static str {
  /// Convert a linear volume slider value (0.0–1.0) to an exponential gain.
  /// 1.0 → 0 dB, 0.0 → -∞ dB (silence). The slider position maps linearly to dB.
  /// Exponent 2.0 gives a −40 dB range so 50 % slider → −20 dB (perceived ~¼ loudness).
@@ -80,7 +80,7 @@ index 48996cabb..e6e1061b1 100644
      }
  }
  
-@@ -3416,12 +3399,6 @@ fn command_processing_loop(
+@@ -3479,12 +3462,6 @@ fn command_processing_loop(
                          if let Some(mut eq) = callback_data.equalizer.try_lock() {
                              eq.set(enabled, &specs, sample_rate);
                          }
@@ -93,7 +93,7 @@ index 48996cabb..e6e1061b1 100644
                      }
                      AudioCommand::SetPitchShift { semitones } => {
                          log::info!("[PITCH] command handler: SetPitchShift({semitones})");
-@@ -4065,15 +4042,6 @@ mod tests {
+@@ -4128,15 +4105,6 @@ mod tests {
          assert_eq!(output, expected);
      }
  

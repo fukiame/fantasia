@@ -1,0 +1,155 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 12:10:20 +0700
+Subject: [PATCH] lib: recap: drop camera
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/android/app/src/main/AndroidManifest.xml b/android/app/src/main/AndroidManifest.xml
+index 252299010..87f1a71da 100644
+--- a/android/app/src/main/AndroidManifest.xml
++++ b/android/app/src/main/AndroidManifest.xml
+@@ -15,8 +15,6 @@
+          whose MediaScanner never indexes DSD). Scoped storage stays fully functional
+          without it; this only unlocks the faster, more complete filesystem scan path. -->
+     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+-    <!-- Camera permission for Flick Replay custom poster backgrounds -->
+-    <uses-permission android:name="android.permission.CAMERA" />
+     <!-- Background playback permissions -->
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+diff --git a/lib/features/recap/screens/listening_recap_screen.dart b/lib/features/recap/screens/listening_recap_screen.dart
+index 7afc1a08f..87f05391d 100644
+--- a/lib/features/recap/screens/listening_recap_screen.dart
++++ b/lib/features/recap/screens/listening_recap_screen.dart
+@@ -46,7 +46,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+   bool _isSaving = false;
+   bool _isExportingCsv = false;
+   bool _isExportingTxt = false;
+-  String? _cameraBackgroundPath;
+   String? _galleryBackgroundPath;
+   _RecapRankingPosterType? _savingPosterType;
+   _RecapRankingPosterType? _savedPosterType;
+@@ -123,7 +122,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+     return switch (_posterBackgroundMode) {
+       _RecapPosterBackgroundMode.defaultArt => null,
+       _RecapPosterBackgroundMode.albumArt => _recapAlbumArtPath(recap),
+-      _RecapPosterBackgroundMode.cameraPhoto => _cameraBackgroundPath,
+       _RecapPosterBackgroundMode.galleryPhoto => _galleryBackgroundPath,
+     };
+   }
+@@ -148,40 +146,6 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+     });
+   }
+ 
+-  Future<void> _takePosterBackgroundPhoto() async {
+-    final status = await Permission.camera.request();
+-    if (!mounted) return;
+-
+-    if (!status.isGranted) {
+-      final canOpenSettings = status.isPermanentlyDenied || status.isRestricted;
+-      ScaffoldMessenger.of(context).showSnackBar(
+-        SnackBar(
+-          content: Text(
+-            canOpenSettings
+-                ? 'Camera permission is disabled. Enable it in settings to take a poster background photo.'
+-                : 'Camera permission is needed to take a poster background photo.',
+-          ),
+-          action: canOpenSettings
+-              ? SnackBarAction(label: 'Settings', onPressed: openAppSettings)
+-              : null,
+-        ),
+-      );
+-      return;
+-    }
+-
+-    final image = await _imagePicker.pickImage(
+-      source: ImageSource.camera,
+-      imageQuality: 88,
+-      maxWidth: 1800,
+-    );
+-    if (!mounted || image == null) return;
+-
+-    setState(() {
+-      _cameraBackgroundPath = image.path;
+-      _posterBackgroundMode = _RecapPosterBackgroundMode.cameraPhoto;
+-    });
+-  }
+-
+   Future<void> _pickPosterBackgroundImage() async {
+     final image = await _imagePicker.pickImage(
+       source: ImageSource.gallery,
+@@ -634,11 +598,9 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+         _PosterBackgroundSelector(
+           mode: _posterBackgroundMode,
+           hasAlbumArt: _recapAlbumArtPath(recap) != null,
+-          hasCameraPhoto: _cameraBackgroundPath != null,
+           hasGalleryPhoto: _galleryBackgroundPath != null,
+           onDefaultTap: _selectDefaultPosterBackground,
+           onAlbumArtTap: _selectAlbumArtPosterBackground,
+-          onCameraTap: _takePosterBackgroundPhoto,
+           onGalleryTap: _pickPosterBackgroundImage,
+         ),
+         const SizedBox(height: AppConstants.spacingSm),
+@@ -848,14 +810,13 @@ class _ListeningRecapScreenState extends State<ListeningRecapScreen> {
+   }
+ }
+ 
+-enum _RecapPosterBackgroundMode { defaultArt, albumArt, cameraPhoto, galleryPhoto }
++enum _RecapPosterBackgroundMode { defaultArt, albumArt, galleryPhoto }
+ 
+ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
+   String get label {
+     return switch (this) {
+       _RecapPosterBackgroundMode.defaultArt => 'Default',
+       _RecapPosterBackgroundMode.albumArt => 'Album Art',
+-      _RecapPosterBackgroundMode.cameraPhoto => 'Camera',
+       _RecapPosterBackgroundMode.galleryPhoto => 'Gallery',
+     };
+   }
+@@ -864,7 +825,6 @@ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
+     return switch (this) {
+       _RecapPosterBackgroundMode.defaultArt => Icons.auto_awesome_rounded,
+       _RecapPosterBackgroundMode.albumArt => LucideIcons.disc,
+-      _RecapPosterBackgroundMode.cameraPhoto => Icons.photo_camera_rounded,
+       _RecapPosterBackgroundMode.galleryPhoto => Icons.photo_library_rounded,
+     };
+   }
+@@ -873,21 +833,17 @@ extension _RecapPosterBackgroundModeX on _RecapPosterBackgroundMode {
+ class _PosterBackgroundSelector extends StatelessWidget {
+   final _RecapPosterBackgroundMode mode;
+   final bool hasAlbumArt;
+-  final bool hasCameraPhoto;
+   final bool hasGalleryPhoto;
+   final VoidCallback onDefaultTap;
+   final VoidCallback onAlbumArtTap;
+-  final VoidCallback onCameraTap;
+   final VoidCallback onGalleryTap;
+ 
+   const _PosterBackgroundSelector({
+     required this.mode,
+     required this.hasAlbumArt,
+-    required this.hasCameraPhoto,
+     required this.hasGalleryPhoto,
+     required this.onDefaultTap,
+     required this.onAlbumArtTap,
+-    required this.onCameraTap,
+     required this.onGalleryTap,
+   });
+ 
+@@ -918,12 +874,6 @@ class _PosterBackgroundSelector extends StatelessWidget {
+               isSelected: mode == _RecapPosterBackgroundMode.albumArt,
+               onTap: hasAlbumArt ? onAlbumArtTap : null,
+             ),
+-            _PosterBackgroundChoice(
+-              mode: _RecapPosterBackgroundMode.cameraPhoto,
+-              isSelected: mode == _RecapPosterBackgroundMode.cameraPhoto,
+-              label: hasCameraPhoto ? 'Retake' : null,
+-              onTap: onCameraTap,
+-            ),
+             _PosterBackgroundChoice(
+               mode: _RecapPosterBackgroundMode.galleryPhoto,
+               isSelected: mode == _RecapPosterBackgroundMode.galleryPhoto,
+-- 
+2.55.0
+

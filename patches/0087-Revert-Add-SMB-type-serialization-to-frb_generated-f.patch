@@ -6,18 +6,18 @@ Subject: [PATCH] Revert "Add SMB type serialization to frb_generated files"
 This reverts commit 5bb3e09210a02496fb3410534c8a25a3fa3488c2.
 
 diff --git a/lib/src/rust/frb_generated.io.dart b/lib/src/rust/frb_generated.io.dart
-index 80c973192..50a0e14b2 100644
+index 24730c6e4..b4f1bb708 100644
 --- a/lib/src/rust/frb_generated.io.dart
 +++ b/lib/src/rust/frb_generated.io.dart
-@@ -10,7 +10,6 @@ import 'api/logging.dart';
- import 'api/metadata_editor.dart';
+@@ -11,7 +11,6 @@ import 'api/metadata_editor.dart';
+ import 'api/replaygain.dart';
  import 'api/scanner.dart';
  import 'api/simple.dart';
 -import 'api/smb_api.dart';
  import 'api/uac2_api.dart';
  import 'audio/crossfader.dart';
  import 'audio/dsd_engine/dsd.dart';
-@@ -45,14 +44,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -46,14 +45,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    RustStreamSink<ScanChunk> dco_decode_StreamSink_scan_chunk_Sse(dynamic raw);
  
@@ -32,7 +32,7 @@ index 80c973192..50a0e14b2 100644
    @protected
    String dco_decode_String(dynamic raw);
  
-@@ -277,12 +268,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -313,12 +304,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    ScanResult dco_decode_scan_result(dynamic raw);
  
@@ -45,7 +45,7 @@ index 80c973192..50a0e14b2 100644
    @protected
    TagEditFields dco_decode_tag_edit_fields(dynamic raw);
  
-@@ -351,16 +336,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -387,16 +372,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
      SseDeserializer deserializer,
    );
  
@@ -62,7 +62,7 @@ index 80c973192..50a0e14b2 100644
    @protected
    String sse_decode_String(SseDeserializer deserializer);
  
-@@ -637,12 +612,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -714,12 +689,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    ScanResult sse_decode_scan_result(SseDeserializer deserializer);
  
@@ -75,7 +75,7 @@ index 80c973192..50a0e14b2 100644
    @protected
    TagEditFields sse_decode_tag_edit_fields(SseDeserializer deserializer);
  
-@@ -722,18 +691,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -799,18 +768,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
      SseSerializer serializer,
    );
  
@@ -94,7 +94,7 @@ index 80c973192..50a0e14b2 100644
    @protected
    void sse_encode_String(String self, SseSerializer serializer);
  
-@@ -1070,12 +1027,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -1195,12 +1152,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    void sse_encode_scan_result(ScanResult self, SseSerializer serializer);
  
@@ -108,18 +108,18 @@ index 80c973192..50a0e14b2 100644
    void sse_encode_tag_edit_fields(TagEditFields self, SseSerializer serializer);
  
 diff --git a/lib/src/rust/frb_generated.web.dart b/lib/src/rust/frb_generated.web.dart
-index fb8493041..71b87e63b 100644
+index 711ff026c..133837d92 100644
 --- a/lib/src/rust/frb_generated.web.dart
 +++ b/lib/src/rust/frb_generated.web.dart
-@@ -13,7 +13,6 @@ import 'api/logging.dart';
- import 'api/metadata_editor.dart';
+@@ -14,7 +14,6 @@ import 'api/metadata_editor.dart';
+ import 'api/replaygain.dart';
  import 'api/scanner.dart';
  import 'api/simple.dart';
 -import 'api/smb_api.dart';
  import 'api/uac2_api.dart';
  import 'audio/crossfader.dart';
  import 'audio/dsd_engine/dsd.dart';
-@@ -47,14 +46,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -48,14 +47,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    RustStreamSink<ScanChunk> dco_decode_StreamSink_scan_chunk_Sse(dynamic raw);
  
@@ -134,7 +134,7 @@ index fb8493041..71b87e63b 100644
    @protected
    String dco_decode_String(dynamic raw);
  
-@@ -279,12 +270,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -315,12 +306,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    ScanResult dco_decode_scan_result(dynamic raw);
  
@@ -147,7 +147,7 @@ index fb8493041..71b87e63b 100644
    @protected
    TagEditFields dco_decode_tag_edit_fields(dynamic raw);
  
-@@ -353,16 +338,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -389,16 +374,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
      SseDeserializer deserializer,
    );
  
@@ -164,7 +164,7 @@ index fb8493041..71b87e63b 100644
    @protected
    String sse_decode_String(SseDeserializer deserializer);
  
-@@ -639,12 +614,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -716,12 +691,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    ScanResult sse_decode_scan_result(SseDeserializer deserializer);
  
@@ -177,7 +177,7 @@ index fb8493041..71b87e63b 100644
    @protected
    TagEditFields sse_decode_tag_edit_fields(SseDeserializer deserializer);
  
-@@ -724,18 +693,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -801,18 +770,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
      SseSerializer serializer,
    );
  
@@ -196,7 +196,7 @@ index fb8493041..71b87e63b 100644
    @protected
    void sse_encode_String(String self, SseSerializer serializer);
  
-@@ -1072,12 +1029,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+@@ -1197,12 +1154,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
    @protected
    void sse_encode_scan_result(ScanResult self, SseSerializer serializer);
  

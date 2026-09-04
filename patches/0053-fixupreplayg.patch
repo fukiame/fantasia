@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Thu, 3 Sep 2026 23:46:29 +0700
+Subject: [PATCH] fixupreplayg
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/player_service.dart b/lib/services/player_service.dart
+index 85c68adb0..b3d8b980e 100644
+--- a/lib/services/player_service.dart
++++ b/lib/services/player_service.dart
+@@ -1141,10 +1141,6 @@ class PlayerService {
+       resolution: song.resolution,
+       sampleRate: song.sampleRate,
+       bitDepth: song.bitDepth,
+-      replaygainTrackGain: song.replaygainTrackGain,
+-      replaygainTrackPeak: song.replaygainTrackPeak,
+-      replaygainAlbumGain: song.replaygainAlbumGain,
+-      replaygainAlbumPeak: song.replaygainAlbumPeak,
+       startOffsetMs: song.startOffsetMs,
+       endOffsetMs: song.endOffsetMs,
+       ripper: song.ripper,
+@@ -1229,10 +1225,6 @@ class PlayerService {
+         resolution: song.resolution,
+         sampleRate: song.sampleRate,
+         bitDepth: song.bitDepth,
+-        replaygainTrackGain: song.replaygainTrackGain,
+-        replaygainTrackPeak: song.replaygainTrackPeak,
+-        replaygainAlbumGain: song.replaygainAlbumGain,
+-        replaygainAlbumPeak: song.replaygainAlbumPeak,
+         startOffsetMs: song.startOffsetMs,
+         endOffsetMs: song.endOffsetMs,
+         ripper: song.ripper,
+-- 
+2.55.0
+

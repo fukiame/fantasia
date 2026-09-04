@@ -1,0 +1,37 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Sun, 26 Jul 2026 14:56:56 +0700
+Subject: [PATCH] lib: menu: swap greetings for app name
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/menu/screens/menu_screen.dart b/lib/features/menu/screens/menu_screen.dart
+index 2d4228174..5efdcc231 100644
+--- a/lib/features/menu/screens/menu_screen.dart
++++ b/lib/features/menu/screens/menu_screen.dart
+@@ -207,13 +207,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+     );
+   }
+ 
+-  String _greetingForNow() {
+-    final hour = DateTime.now().hour;
+-    if (hour < 12) return 'Good morning';
+-    if (hour < 18) return 'Good afternoon';
+-    return 'Good evening';
+-  }
+-
+   Widget _buildEngineSelector(
+     BuildContext context,
+     AudioEnginePreference engine, {
+@@ -775,7 +768,7 @@ class _MenuScreenState extends ConsumerState<MenuScreen>
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+                 Text(
+-                  _greetingForNow(),
++                  'fantasia',
+                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                     fontWeight: FontWeight.w700,
+                     color: context.adaptiveTextPrimary,
+-- 
+2.55.0
+

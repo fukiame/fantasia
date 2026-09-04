@@ -1,0 +1,94 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 21:11:59 +0700
+Subject: [PATCH] Revert "Preserve local edits when matching scanned songs to
+ existing entries"
+
+This reverts commit aaf5731bf8c241b8e606dc281dc91c6b890f4819.
+
+diff --git a/lib/services/library_scanner_service.dart b/lib/services/library_scanner_service.dart
+index 1d7618d0c..1d80325df 100644
+--- a/lib/services/library_scanner_service.dart
++++ b/lib/services/library_scanner_service.dart
+@@ -627,7 +627,6 @@ class LibraryScannerService {
+ 
+       if (existing != null) {
+         song.id = existing.id;
+-        _preserveLocalEdits(song, existing);
+         modifiedSongs++;
+       } else {
+         newSongs++;
+@@ -793,7 +792,6 @@ class LibraryScannerService {
+             int.tryParse(meta.bitrate!),
+           );
+         }
+-        if (!existing.hasLocalEdits) {
+           existing.discNumber = meta.discNumber ?? existing.discNumber;
+           existing.albumArtist =
+               (meta.albumArtist?.trim().isNotEmpty ?? false)
+@@ -814,7 +812,6 @@ class LibraryScannerService {
+             existing.album = meta.album!.trim();
+           }
+           existing.trackNumber = meta.trackNumber ?? existing.trackNumber;
+-        }
+         existing.metadataComplete = true;
+         updateBatch.add(existing);
+       }
+@@ -1142,8 +1139,6 @@ class LibraryScannerService {
+         existing.metadataComplete =
+             meta.sampleRate != null && meta.bitDepth != null;
+ 
+-        // Text fields respect manual edits.
+-        if (!existing.hasLocalEdits) {
+           if (meta.title?.trim().isNotEmpty ?? false) {
+             existing.title = meta.title!.trim();
+           }
+@@ -1159,7 +1154,6 @@ class LibraryScannerService {
+                   : existing.artist;
+           existing.trackNumber = meta.trackNumber ?? existing.trackNumber;
+           existing.discNumber = meta.discNumber ?? existing.discNumber;
+-        }
+ 
+         updateBatch.add(existing);
+       }
+@@ -1520,7 +1514,6 @@ class LibraryScannerService {
+ 
+         if (existing != null) {
+           song.id = existing.id;
+-          _preserveLocalEdits(song, existing);
+           modifiedSongs++;
+         } else {
+           newSongs++;
+@@ -1747,7 +1740,6 @@ class LibraryScannerService {
+ 
+           if (existing != null) {
+             song.id = existing.id;
+-            _preserveLocalEdits(song, existing);
+             modifiedSongs++;
+           } else {
+             newSongs++;
+@@ -2823,21 +2815,6 @@ class LibraryScannerService {
+     return fileName.substring(0, lastDot);
+   }
+ 
+-  /// When an existing song has `hasLocalEdits == true`, preserve its text
+-  /// metadata fields instead of overwriting them with scanned file tags.
+-  void _preserveLocalEdits(SongEntity song, SongEntity? existing) {
+-    if (existing == null || !existing.hasLocalEdits) return;
+-    song.title = existing.title;
+-    song.artist = existing.artist;
+-    song.album = existing.album;
+-    song.albumArtist = existing.albumArtist;
+-    song.genre = existing.genre;
+-    song.year = existing.year;
+-    song.trackNumber = existing.trackNumber;
+-    song.discNumber = existing.discNumber;
+-    song.hasLocalEdits = true;
+-  }
+-
+   List<SongEntity> _buildCueTrackEntities({
+     required String audioUri,
+     required CueSheet cueSheet,
+-- 
+2.55.0
+

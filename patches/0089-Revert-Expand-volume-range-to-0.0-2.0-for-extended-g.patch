@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Expand volume range to 0.0-2.0 for extended gain
+ support"
+
+This reverts commit b18b59e8c1b11a5ec5c2eb04c8ec1bf8a76eb119.
+
+diff --git a/lib/services/rust_audio_service.dart b/lib/services/rust_audio_service.dart
+index 7bf74fdba..f026ed425 100644
+--- a/lib/services/rust_audio_service.dart
++++ b/lib/services/rust_audio_service.dart
+@@ -374,10 +374,10 @@ class RustAudioService {
+     await rust_audio.audioSeek(positionSecs: position.inMilliseconds / 1000.0);
+   }
+ 
+-  /// Set the volume (0.0 to 2.0; values >1.0 apply extended gain).
++  /// Set the volume (0.0 to 1.0).
+   Future<void> setVolume(double volume) async {
+     if (!_initialized) return;
+-    final clampedVolume = volume.clamp(0.0, 2.0);
++    final clampedVolume = volume.clamp(0.0, 1.0);
+     volumeNotifier.value = clampedVolume;
+     await rust_audio.audioSetVolume(volume: clampedVolume);
+   }
+-- 
+2.55.0
+

@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Wed, 12 Aug 2026 00:34:02 +0700
+Subject: [PATCH] lib: aas: drop nwk 1
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/services/album_art_service.dart b/lib/services/album_art_service.dart
+index 6249549b7..e13ab2690 100644
+--- a/lib/services/album_art_service.dart
++++ b/lib/services/album_art_service.dart
+@@ -90,7 +90,6 @@ class AlbumArtService {
+       final path = song.filePath;
+       if (path.isEmpty) continue;
+       final scheme = Uri.tryParse(path)?.scheme;
+-      if (isSupportedNetworkProtocol(scheme)) continue;
+       await resolveArtworkPath(
+         existingPath: song.albumArtPath,
+         audioSourcePath: path,
+-- 
+2.55.0
+

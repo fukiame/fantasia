@@ -1,0 +1,89 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 31 Jul 2026 21:34:10 +0700
+Subject: [PATCH] lefto
+
+Signed-off-by: fukiame <fukiame@proton.me>
+
+diff --git a/lib/features/player/widgets/song_actions_sheet.dart b/lib/features/player/widgets/song_actions_sheet.dart
+index 3781fa7e8..9ff9a316b 100644
+--- a/lib/features/player/widgets/song_actions_sheet.dart
++++ b/lib/features/player/widgets/song_actions_sheet.dart
+@@ -10,7 +10,6 @@ import 'package:flick/features/player/widgets/player_navigation.dart';
+ import 'package:flick/widgets/common/cached_image_widget.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+ import 'package:flick/features/songs/widgets/album_art_picker_bottom_sheet.dart';
+-import 'package:flick/features/songs/widgets/metadata_editor_bottom_sheet.dart';
+ import 'package:flick/providers/providers.dart';
+ import 'package:flick/features/player/widgets/song_metadata_sheet.dart';
+ import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
+@@ -215,27 +214,6 @@ class SongActionsSheet extends ConsumerWidget {
+                               });
+                             },
+                           ),
+-                          if (activeSong.filePath != null &&
+-                              activeSong.startOffsetMs == null &&
+-                              !activeSong.isExternal)
+-                            _buildSongActionTile(
+-                              context: sheetContext,
+-                              icon: LucideIcons.pencil,
+-                              label: 'Edit Metadata',
+-                              onTap: () {
+-                                Navigator.pop(sheetContext);
+-                                Future.delayed(Duration.zero, () async {
+-                                  final saved =
+-                                      await MetadataEditorBottomSheet.show(
+-                                    context,
+-                                    activeSong,
+-                                  );
+-                                  if (saved && context.mounted) {
+-                                    ref.invalidate(songsProvider);
+-                                  }
+-                                });
+-                              },
+-                            ),
+                           _buildSongActionTile(
+                             context: sheetContext,
+                             icon: LucideIcons.info,
+diff --git a/lib/features/songs/widgets/song_actions_bottom_sheet.dart b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
+index 241b42af1..02feca7d3 100644
+--- a/lib/features/songs/widgets/song_actions_bottom_sheet.dart
++++ b/lib/features/songs/widgets/song_actions_bottom_sheet.dart
+@@ -7,7 +7,6 @@ import 'package:flick/core/theme/app_colors.dart';
+ import 'package:flick/core/theme/adaptive_color_provider.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/features/songs/widgets/album_art_picker_bottom_sheet.dart';
+-import 'package:flick/features/songs/widgets/metadata_editor_bottom_sheet.dart';
+ import 'package:flick/widgets/common/flick_artwork_placeholder.dart';
+ import 'package:flick/widgets/common/flick_dialog.dart';
+ import 'package:flick/models/song.dart';
+@@ -132,26 +131,6 @@ class SongActionsBottomSheet extends ConsumerWidget {
+               });
+             },
+           ),
+-          if (song.filePath != null &&
+-              song.startOffsetMs == null &&
+-              !song.isExternal)
+-            _buildActionTile(
+-              context: context,
+-              icon: LucideIcons.pencil,
+-              label: 'Edit Metadata',
+-              onTap: () {
+-                Navigator.pop(context);
+-                Future.delayed(Duration.zero, () async {
+-                  final saved = await MetadataEditorBottomSheet.show(
+-                    rootContext,
+-                    song,
+-                  );
+-                  if (saved && rootContext.mounted) {
+-                    ref.invalidate(songsProvider);
+-                  }
+-                });
+-              },
+-            ),
+           _buildActionTile(
+             context: context,
+             icon: LucideIcons.info,
+-- 
+2.55.0
+

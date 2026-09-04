@@ -1,0 +1,106 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: fukiame <fukiame@proton.me>
+Date: Fri, 14 Aug 2026 13:30:06 +0700
+Subject: [PATCH] Revert "Support separate mini player mode"
+
+This reverts commit 2584c46215821b566e920890c55c9226750abc25.
+
+diff --git a/lib/app/app.dart b/lib/app/app.dart
+index 82319f029..5a6b16cc4 100644
+--- a/lib/app/app.dart
++++ b/lib/app/app.dart
+@@ -23,7 +23,6 @@ import 'package:flick/features/search/screens/search_screen.dart';
+ import 'package:flick/core/navigation/root_navigator.dart';
+ import 'package:flick/core/utils/navigation_helper.dart';
+ import 'package:flick/core/utils/app_haptics.dart';
+-import 'package:flick/core/utils/responsive.dart';
+ import 'package:flick/core/constants/app_constants.dart';
+ import 'package:flick/features/player/widgets/ambient_background.dart';
+ import 'package:flick/features/player/widgets/audio_visualizer.dart';
+@@ -604,14 +603,6 @@ class _MainShellState extends ConsumerState<MainShell>
+   }
+ 
+   void _onNavBarVisibilityChanged(bool isVisible) {
+-    final separated = ref.read(appPreferencesProvider).separateMiniPlayerFromNavBar;
+-    if (separated) {
+-      if (_navBarAnimationController.isAnimating ||
+-          _navBarAnimationController.value != 0) {
+-        _navBarAnimationController.reverse();
+-      }
+-      return;
+-    }
+     if (isVisible) {
+       _navBarAnimationController.reverse();
+     } else {
+@@ -938,19 +929,13 @@ class _MainShellState extends ConsumerState<MainShell>
+   Widget _buildUnifiedBottomBar() {
+     final currentIndex = ref.watch(navigationIndexProvider);
+     final navBarConfig = ref.watch(navBarConfigProvider);
+-    final appPrefs = ref.watch(appPreferencesProvider);
+-    final separated = appPrefs.separateMiniPlayerFromNavBar;
+-    final alwaysVisible = ref.watch(navBarAlwaysVisibleProvider);
+-    final navBarVisible = ref.watch(navBarVisibleProvider);
+-    final scrollHidden = separated && !alwaysVisible && !navBarVisible;
+-    final collapsed = _isBottomBarCollapsed || scrollHidden;
+ 
+     return TutorialTargetAnchor(
+       target: TutorialTarget.navBar,
+       child: FlickNavBar(
+         currentIndex: currentIndex,
+         config: navBarConfig,
+-        collapsed: collapsed,
++        collapsed: _isBottomBarCollapsed,
+         onTap: (index) {
+           final nested = nestedNavigatorKey.currentState;
+           if (nested != null && nested.canPop()) {
+@@ -971,12 +956,10 @@ class _MainShellState extends ConsumerState<MainShell>
+           );
+         },
+         showMiniPlayer: true,
+-        separateMiniPlayer: separated,
+         miniPlayerWidget: TutorialTargetAnchor(
+           target: TutorialTarget.miniPlayer,
+           child: _EmbeddedMiniPlayer(
+-            collapsed: collapsed,
+-            matchNavBarWidth: separated && !collapsed,
++            collapsed: _isBottomBarCollapsed,
+           ),
+         ),
+       ),
+@@ -987,12 +970,8 @@ class _MainShellState extends ConsumerState<MainShell>
+ /// Embedded mini player widget that uses Riverpod for state.
+ class _EmbeddedMiniPlayer extends ConsumerStatefulWidget {
+   final bool collapsed;
+-  final bool matchNavBarWidth;
+ 
+-  const _EmbeddedMiniPlayer({
+-    this.collapsed = false,
+-    this.matchNavBarWidth = false,
+-  });
++  const _EmbeddedMiniPlayer({this.collapsed = false});
+ 
+   @override
+   ConsumerState<_EmbeddedMiniPlayer> createState() =>
+@@ -1216,16 +1195,11 @@ class _EmbeddedMiniPlayerState extends ConsumerState<_EmbeddedMiniPlayer> {
+       onHorizontalDragStart: (_) {},
+       onHorizontalDragUpdate: (_) {},
+       onHorizontalDragEnd: _onHorizontalDragEnd,
+-      child: AnimatedContainer(
+-        duration: AppConstants.animationNormal,
++      child: Container(
+         margin: EdgeInsets.fromLTRB(
+-          widget.matchNavBarWidth
+-              ? context.scaleSize(AppConstants.spacingLg)
+-              : 12,
+           12,
+-          widget.matchNavBarWidth
+-              ? context.scaleSize(AppConstants.spacingLg)
+-              : 12,
++          12,
++          12,
+           widget.collapsed ? 12 : 8,
+         ),
+         height: 56,
+-- 
+2.55.0
+

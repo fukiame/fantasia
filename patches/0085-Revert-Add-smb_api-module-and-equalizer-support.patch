@@ -17,10 +17,10 @@ index d8721c5d4..15eca3888 100644
  pub mod simple;
  pub mod uac2_api;
 diff --git a/rust/src/audio/manager.rs b/rust/src/audio/manager.rs
-index 630989be1..4adaaaa41 100644
+index ab6bce18b..4fc764abc 100644
 --- a/rust/src/audio/manager.rs
 +++ b/rust/src/audio/manager.rs
-@@ -379,11 +379,6 @@ impl EngineManager {
+@@ -389,11 +389,6 @@ impl EngineManager {
                  let _ = handle.set_crossfade_curve(curve);
              }
          }
