@@ -6,10 +6,10 @@ Subject: [PATCH] err
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 0090c609d..d4d583f04 100644
+index d848efe52..6de415a1c 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -24,7 +24,7 @@ import 'package:flick/providers/favorites_provider.dart';
+@@ -22,7 +22,7 @@ import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
  import 'package:flick/providers/navigation_provider.dart';
  import 'package:flick/providers/app_preferences_provider.dart';
  
@@ -18,7 +18,7 @@ index 0090c609d..d4d583f04 100644
  class AlbumDetailScreen extends ConsumerStatefulWidget {
    final String albumName;
    final String albumArtist;
-@@ -64,7 +64,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -62,7 +62,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    void initState() {
      super.initState();
      _scrollController.addListener(_onScroll);
@@ -26,7 +26,7 @@ index 0090c609d..d4d583f04 100644
      _extractAlbumColor();
      WidgetsBinding.instance.addPostFrameCallback((_) {
        if (mounted) ref.read(navBarVisibleProvider.notifier).setVisible(true);
-@@ -86,62 +85,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -84,62 +83,10 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      }
    }
  

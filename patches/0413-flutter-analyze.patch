@@ -34,10 +34,10 @@ index bb3230217..d407007b2 100644
      if (state == AppLifecycleState.resumed) {
        _startIdleTimer();
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index 49c9a72f6..0090c609d 100644
+index 1817596f9..d848efe52 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -58,8 +58,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -56,8 +56,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    final ScrollController _scrollController = ScrollController();
    bool _showAppBarActions = false;
  
@@ -46,7 +46,7 @@ index 49c9a72f6..0090c609d 100644
    Color? _albumColor;
  
    @override
-@@ -318,35 +316,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -276,35 +274,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      );
    }
  
@@ -82,7 +82,7 @@ index 49c9a72f6..0090c609d 100644
    @override
    Widget build(BuildContext context) {
      final bgColor = _tintBackground(_backgroundBlend);
-@@ -647,206 +616,3 @@ class _SongTile extends StatelessWidget {
+@@ -585,206 +554,3 @@ class _SongTile extends StatelessWidget {
      );
    }
  }

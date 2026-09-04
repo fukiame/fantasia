@@ -6,10 +6,10 @@ Subject: [PATCH] flutter analyze 2
 Signed-off-by: fukiame <fukiame@proton.me>
 
 diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
-index db4acb69d..45b4a6568 100644
+index 2e3f166b7..337eaeec2 100644
 --- a/lib/features/albums/screens/album_detail_screen.dart
 +++ b/lib/features/albums/screens/album_detail_screen.dart
-@@ -51,7 +51,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -49,7 +49,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
    static const Color _darkBase = Color(0xFF121212);
    static const double _backgroundBlend = 0.22;
  
@@ -17,7 +17,7 @@ index db4acb69d..45b4a6568 100644
    final ColorExtractionService _colorService = ColorExtractionService();
  
    final ScrollController _scrollController = ScrollController();
-@@ -84,10 +83,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+@@ -82,10 +81,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
      }
    }
  

@@ -8,6 +8,100 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: fukiame <fukiame@proton.me>
 
+diff --git a/lib/features/albums/screens/album_detail_screen.dart b/lib/features/albums/screens/album_detail_screen.dart
+index db7832bc4..5cd1f234b 100644
+--- a/lib/features/albums/screens/album_detail_screen.dart
++++ b/lib/features/albums/screens/album_detail_screen.dart
+@@ -19,8 +19,6 @@ import 'package:flick/widgets/common/animated_album_art.dart';
+ import 'package:flick/widgets/common/scroll_fade_wrapper.dart';
+ import 'package:flick/widgets/common/detail_header.dart';
+ import 'package:flick/features/player/widgets/add_to_playlist_sheet.dart';
+-import 'package:flick/features/player/widgets/sleep_timer_bottom_sheet.dart';
+-import 'package:flick/providers/favorites_provider.dart';
+ import 'package:flick/providers/navigation_provider.dart';
+ import 'package:flick/providers/app_preferences_provider.dart';
+ 
+@@ -265,40 +263,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+     );
+   }
+ 
+-  bool get _isAllFavorites {
+-    final favs = ref.watch(favoritesProvider).value;
+-    if (favs == null || widget.songs.isEmpty) return false;
+-    return widget.songs.every((s) => favs.isFavorite(s.id));
+-  }
+-
+-  Future<void> _toggleFavoriteAll() async {
+-    if (widget.songs.isEmpty) return;
+-    final favIds = ref.read(favoritesProvider).value?.favoriteIds ?? const <String>{};
+-    final notifier = ref.read(favoritesProvider.notifier);
+-    final isAll = widget.songs.every((s) => favIds.contains(s.id));
+-    if (isAll) {
+-      for (final song in widget.songs) {
+-        await notifier.removeFavorite(song.id);
+-      }
+-    } else {
+-      for (final song in widget.songs) {
+-        if (!favIds.contains(song.id)) {
+-          await notifier.addFavorite(song.id);
+-        }
+-      }
+-    }
+-    if (!mounted) return;
+-    ScaffoldMessenger.of(context).showSnackBar(
+-      SnackBar(
+-        content: Text(
+-          isAll
+-              ? 'Removed ${widget.songs.length} songs from favorites'
+-              : 'Added ${widget.songs.length} songs to favorites',
+-        ),
+-      ),
+-    );
+-  }
+-
+   void _showMore() {
+     DetailMoreSheet.show(
+       context,
+@@ -308,12 +272,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+           label: 'Add to playlist',
+           onTap: () => AddToPlaylistSheet.showSongs(context, widget.songs),
+         ),
+-        DetailMoreSheetItem(
+-          icon: LucideIcons.moonStar,
+-          label: 'Sleep timer',
+-          onTap: () =>
+-              SleepTimerBottomSheet.show(context, widget.playerService),
+-        ),
+       ],
+     );
+   }
+@@ -381,26 +339,6 @@ class _AlbumDetailScreenState extends ConsumerState<AlbumDetailScreen>
+                   fadeTo: resolvedBg,
+                   onBack: () => Navigator.of(context).pop(),
+                 ),
+-                const SliverToBoxAdapter(
+-                  child: SizedBox(height: AppConstants.spacingMd),
+-                ),
+-                SliverToBoxAdapter(
+-                  child: Padding(
+-                    padding: const EdgeInsets.symmetric(
+-                      horizontal: AppConstants.spacingLg,
+-                      vertical: AppConstants.spacingXxs,
+-                    ),
+-                    child: DetailActionCapsule(
+-                      isFavorite: _isAllFavorites,
+-                      onToggleFavorite: _toggleFavoriteAll,
+-                      onShuffle: _shuffleAll,
+-                      onPlay: _playAll,
+-                      onQueue: _queueAll,
+-                      onMore: _showMore,
+-                      primaryColor: _albumColor,
+-                    ),
+-                  ),
+-                ),
+                 const SliverToBoxAdapter(
+                   child: SizedBox(height: AppConstants.spacingLg),
+                 ),
 diff --git a/lib/features/artists/screens/artist_detail_screen.dart b/lib/features/artists/screens/artist_detail_screen.dart
 index 459b67ecf..0090f2d0d 100644
 --- a/lib/features/artists/screens/artist_detail_screen.dart
